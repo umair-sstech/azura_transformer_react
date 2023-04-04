@@ -1,0 +1,25 @@
+.stepper-list {
+    display: flex;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+.stepper-list .stepper-item {
+    position: relative;
+    font-weight: 600;
+    padding: 8px 16px;
+    color: #787878;
+}
+
+.stepper-list .stepper-item.active {
+    color: #49c5b6;
+}
+
+.stepper-list .stepper-item.active::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    background-color: #49c5b6;
+    height: 2px;
+}

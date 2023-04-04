@@ -1,0 +1,30 @@
+Role super admin 
+===============================
+_id : 6400293db4fa8f509d8175f1
+Name : hszsupperadmin
+email : hszope@gmail.com
+token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDAwMjkzZGI0ZmE4ZjUwOWQ4MTc1ZjEiLCJpYXQiOjE2Nzc3MzI1MTUsImV4cCI6MTcwOTI2ODUxNSwidHlwZSI6ImxvZ2luIn0.Z93_xoldWaF2pMFKd-j1jOONfe-k8wOBvxtb18ZNIlE
+
+
+Role company admin 
+===============================
+_id : 64003699dd8f3a2af4087ba5
+Name : hszcompanyadmin
+email : hszcompanyadmin@gmail.com
+token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDAwMzY5OWRkOGYzYTJhZjQwODdiYTUiLCJpYXQiOjE2Nzc3MzU2MTEsImV4cCI6MTcwOTI3MTYxMSwidHlwZSI6ImxvZ2luIn0.g-cjoQlLxApJMKkO07DGadrvmAj5mPLpEg6--i_qQT0
+
+Role retailer admin 
+===============================
+_id : 64003eac65e4e4be81ed567d
+Name : hszretaileradmin
+email : hszretaileradmin@gmail.com
+token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDAwM2VhYzY1ZTRlNGJlODFlZDU2N2QiLCJpYXQiOjE2Nzc3Mzc2ODAsImV4cCI6MTcwOTI3MzY4MCwidHlwZSI6ImxvZ2luIn0.6fof4GNYTRq3cggXwBAgiS7h5n75qMD-2hGHJVOrP_4
+
+Role retailer user 
+===============================
+_id : 64004634396d1d400ab9127b
+Name : hszretaileruser
+email : hszretaileruser@gmail.com
+Retailer : 64003e3b01644c6f32e11fc0
+
+
