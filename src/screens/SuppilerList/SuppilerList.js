@@ -108,7 +108,7 @@ const updateCompanyHandler = (id) => {
                         />
                     </div>
                             <Link className='link-btn' to={`/manage-suppiler`} >
-                                Add Suppiler
+                                Add Supplier
                             </Link>
                         </div>
 

@@ -3,7 +3,7 @@ import "./MultiStepProgressBar.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
 
 const stepNames = [
-  "Suppiler  Info",
+  "Supplier  Info",
   "Data file Upload",
   "Data file Mapping",
   "Image Resize",

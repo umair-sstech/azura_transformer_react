@@ -13,7 +13,6 @@ import SuppilerPage3 from "./SuppilerPage3";
 import SuppilerPage4 from "./SuppilerPage4";
 import SuppilerPage5 from "./SuppilerPage5";
 
-
 export const FormContext = createContext();
 
 function ManageSuppiler(props) {
@@ -66,7 +65,13 @@ function ManageSuppiler(props) {
   };
 
   const nextPage = (page) => {
-    setPage(page);
+    if (page === "pageone") {
+      setPage("pagetwo");
+    } else if (page === "pagetwo") {
+      setPage("pagethree");
+    } else {
+      setPage(page);
+    }
   };
 
   const nextPageNumber = (pageNumber) => {
@@ -83,20 +88,19 @@ function ManageSuppiler(props) {
       case "4":
         setPage("pagefour");
         break;
-        case "5":
-          setPage("pagefive");
-          break
-        
+      case "5":
+        setPage("pagefive");
+        break;
+
       default:
         setPage("1");
     }
   };
   const handleButtonClick = () => {
-    if (isSuppilerAdded) {
-      setPage("pagetwo");
-    } else {
-      setIsSuppilerAdded(true);
-    }
+    setPage("pagetwo");
+  };
+  const HandleButtonPage2Click = () => {
+    props.onButtonClick("pagethree");
   };
   return (
     <>
@@ -109,12 +113,12 @@ function ManageSuppiler(props) {
         <div>
           <div className="container-fluid">
             <PageHeader
-              HeaderText={isSuppilerAdded ? "Suppiler Update" : "suppiler Add"}
+              HeaderText={isSuppilerAdded ? "Supplier Update" : "Supplier Add"}
               Breadcrumb={[
                 { name: "Manage", navigate: "" },
-                { name: "Suppiler List", navigate: "" },
+                { name: "Supplier List", navigate: "" },
                 {
-                  name: isSuppilerAdded ? "Suppiler Update" : "Suppiler Add",
+                  name: isSuppilerAdded ? "Supplier Update" : "Supplier Add",
                   navigate: "",
                 },
               ]}
@@ -146,11 +150,17 @@ function ManageSuppiler(props) {
                     />
                     {
                       {
-                        pageone: <SupplierInfo onButtonClick={nextPage} />,
-                        pagetwo: <SuppilerPage2 onButtonClick={nextPage} />,
+                        pageone: (
+                          <SupplierInfo onButtonClick={handleButtonClick} />
+                        ),
+                        pagetwo: (
+                          <SuppilerPage2
+                            onButtonClick={HandleButtonPage2Click}
+                          />
+                        ),
                         pagethree: <SuppilerPage3 onButtonClick={nextPage} />,
                         pagefour: <SuppilerPage4 onButtonClick={nextPage} />,
-                        pagefive: <SuppilerPage5 onButtonClick={nextPage}/>,
+                        pagefive: <SuppilerPage5 onButtonClick={nextPage} />,
                       }[page]
                     }
                   </FormContext.Provider>

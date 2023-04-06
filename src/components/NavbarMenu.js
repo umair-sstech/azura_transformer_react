@@ -558,6 +558,11 @@ class NavbarMenu extends React.Component {
                         <Link to="supplier">Supplier</Link>
                       </li>
                     ) : null}
+                    {this.props.user?.data.role == "SUPER_ADMIN" ? (
+                      <li className={activeKey === "dashboard" ? "active" : ""}>
+                        <Link to="market-place">Market Place</Link>
+                      </li>
+                    ) : null}
                   </ul>
                 </li>
               </ul>

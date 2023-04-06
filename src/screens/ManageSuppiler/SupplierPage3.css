@@ -1,0 +1,16 @@
+table {
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+    width: 48%;
+  }
+  
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  td:first-child {
+    border-right: 1px solid #ccc;
+  }
+  

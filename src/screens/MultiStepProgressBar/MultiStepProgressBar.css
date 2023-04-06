@@ -104,3 +104,11 @@
   font-weight: 600;
   cursor: pointer;
 }
+@media screen and (max-width: 1024px) {
+  .stepNamesContainer {
+    margin-right: 11%;
+  }
+  .RSPBprogressBar {
+    width: 73%;
+  }
+}
