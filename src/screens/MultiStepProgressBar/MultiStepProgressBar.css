@@ -91,7 +91,8 @@
 }
 .stepNamesContainer {
   display: flex;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px */
+  margin-bottom: 19px;
   margin-left: 0%;
   justify-content: space-between;
   margin-right: 19%;
@@ -103,7 +104,9 @@
   margin-right: 68px;
   font-weight: 600;
   cursor: pointer;
+  margin-top: 19px;
 }
+
 @media screen and (max-width: 1024px) {
   .stepNamesContainer {
     margin-right: 11%;

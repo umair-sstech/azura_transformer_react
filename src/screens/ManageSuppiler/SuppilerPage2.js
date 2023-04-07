@@ -9,105 +9,106 @@ import { connect } from "react-redux";
 import { onLoading } from "../../actions";
 import { Spinner } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-
-function SuppilerPage2(props) {
-  const {setIsSuppilerAdded,
-    isSuppilerAdded,
-    formData,
-    setFormData,
-    processCancel,
-  } = useContext(FormContext);
-
-  const formdata = new FormData();
-  const history=useHistory()
+import "./SupplierPage.css";
 
 
+
+function SupplierPage2(props) {
+  const { setIsSupplierAdded, isSupplierAdded, formData, setFormData, processCancel } = useContext(FormContext);
+ 
   const [initFormData, setInitFormData] = useState({
     upload_file: "",
   });
+  const [fileError, setFileError] = useState("");
+  const history = useHistory();
 
   useEffect(() => {
     if (formData) {
       setInitFormData(formData);
     }
   }, [props]);
+
   const handleSubmit = (e) => {
-
     e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-    setFormData(formData);
-
-    setIsSuppilerAdded(false); 
-    props.onButtonClick();
+    const fileInput = document.querySelector('input[type="file"]');
+    if (fileInput.files.length === 0) {
+      setFileError("Please select a file to upload.");
+    } else {
+      const form = e.target;
+      const formData = new FormData(form);
+      setFormData(formData);
+      setIsSupplierAdded(false);
+      props.onButtonClick();
+    }
   };
-  const handleOnClick=()=>{
+
+  const handleOnClick = (e) => {
+    const fileInput = document.querySelector('input[type="file"]');
+    if (fileInput.files.length === 0) {
+      setFileError("Please select a file to upload.");
+    } else {
+      const form = e.target.closest("form");
+      const formData = new FormData(form);
+      setFormData(formData);
+      history.push("/supplier");
+    }
+  };
+  
+  const handleCancle=()=>{
     history.push("/supplier")
+  }
+  const handleFileInputChange = () => {
+    setFileError("");
   }
 
   return (
-    <form nSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <div style={{ marginTop: "30px" }}>
+      <div className="row">
+      <div className="col-lg-12 col-md-12 col-12 button-class">
+        <div className="d-flex">
+          <button className="btn btn-primary w-auto btn-lg mr-2" type="submit">
+            {props.isLoading ? (
+              <>
+                <Spinner animation="border" size="sm" /> Please wait...
+              </>
+            ) : isSupplierAdded ? (
+              "Update"
+            ) : (
+              "Save & Next"
+            )}
+          </button>
+          <button className="btn btn-primary w-auto btn-lg mr-2" type="button" onClick={handleOnClick}>
+            Save & Exit
+          </button>
+          <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={handleCancle}>
+            Exit
+          </button>
+          
+        </div>
+      </div>
+    </div>
         <div className="row">
           <div className="col-6">
             <div className="form-group">
               <label>
                 Upload File <span style={{ color: "red" }}>*</span>
               </label>
-              <input className="form-control" type="file" name="upload_file" />
+              <input className="form-control" type="file" name="upload_file"  accept=".csv, .xlsx, .pdf, .docx" onChange={handleFileInputChange}/>
+              {fileError && <p style={{ color: "red" }}>{fileError}</p>}
+              <small className="form-text text-muted">
+             
+                Allowed file types: CSV, XLSX, PDF, DOCX.
+              </small>
             </div>
           </div>
         </div>
-        <div className="row">
-          <div className="col-lg-12 col-md-12 col-12">
-            <div className="d-flex">
-              <button
-                className="btn btn-primary w-auto btn-lg mr-2"
-                type="submit"
-                
-              >
-                {props.isLoading ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : isSuppilerAdded ? (
-                  "Update"
-                ) : (
-                  "Save & Next"
-                )}
-              </button>
-
-              <button
-              className="btn btn-primary w-auto btn-lg mr-2"
-              type="submit"
-              onClick={handleOnClick}
-            >
-              Save & Exit
-            </button>
-            <button
-            className="btn btn-secondary w-auto btn-lg"
-            type="submit"
-            onClick={handleOnClick}
-          >
-          Exit
-          </button>
-              {isSuppilerAdded ? (
-                <button
-                  className="btn btn-secondary w-auto btn-lg"
-                  onClick={processCancel}
-                  disabled={props.isLoading}
-                >
-                  Cancel
-                </button>
-              ) : (
-                ""
-              )}
-            </div>
-          </div>
-        </div>
+       
       </div>
     </form>
   );
 }
 
-export default SuppilerPage2;
+export default SupplierPage2;
+
+

@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
-import "./SupplierPage3.css";
+import axios from "axios";
+
+import "./SupplierPage.css";
 
 function SuppilerPage3() {
   const options = [
@@ -21,90 +23,40 @@ function SuppilerPage3() {
     },
   ];
 
-  const [productFields, setProductFields] = useState([
-    { field: "Product 1" },
-    { field: "Product 2" },
-    { field: "Product 3" },
-    { field: "Product 4" },
-    { field: "Product 5" },
-    { field: "Product 6" },
-    { field: "Product 7" },
-    { field: "Product 8" },
-  ]);
+  const [productFields, setProductFields] = useState([]);
 
   const [selectedOptions, setSelectedOptions] = useState(
-    Array(options.length).fill(null)
+    Array(productFields.length).fill(null)
   );
 
+  useEffect(() => {
+    getProductField();
+  }, []);
+
   const handleFieldChange = (index, selectedOption) => {
-    const newSelectedOptions = [...selectedOptions];
-    const prevOption = newSelectedOptions[index];
+    setSelectedOptions((prevSelectedOptions) => {
+      const newSelectedOptions = [...prevSelectedOptions];
+      newSelectedOptions[index] = selectedOption;
+      return newSelectedOptions;
+    });
+  };
 
-    if (prevOption) {
-      prevOption.selections -= 1;
-      if (prevOption.selections === 0) {
-        prevOption.color = "black";
+  const getProductField = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/product/getStanderdProductCatalog"
+      );
+      if (response.data.success) {
+        setProductFields(response.data.data);
       }
+    } catch (error) {
+      console.error(error);
     }
-
-    selectedOption.selections += 1;
-    if (selectedOption.selections === 1) {
-      selectedOption.color = "green";
-    } else if (selectedOption.selections === 2) {
-      selectedOption.color = "orange";
-    } else {
-      selectedOption.color = "red";
-    }
-
-    newSelectedOptions[index] = selectedOption;
-    if (selectedOption?.textbox) {
-      selectedOption.textbox = true;
-    }
-    setSelectedOptions(newSelectedOptions);
   };
   return (
     <>
-      <table>
-        <thead>
-          <tr>
-            <th>Field</th>
-            <th>Value</th>
-            <th>Additional Info</th>
-          </tr>
-        </thead>
-        <tbody>
-          {productFields.map((productField, index) => {
-            const selectedOption = selectedOptions[index];
-            return (
-              <tr key={index}>
-                <td>{productField.field}</td>
-                <td>
-                  <Select
-                    options={options}
-                    value={selectedOption}
-                    onChange={(selectedOption) =>
-                      handleFieldChange(index, selectedOption)
-                    }
-                    isSearchable={true}
-                    getOptionLabel={(option) => (
-                      <span style={{ color: option.color }}>
-                        {option.label}
-                      </span>
-                    )}
-                  />
-                </td>
-                <td>
-                  {selectedOption?.textbox && (
-                    <input type="text" placeholder="Enter a value" />
-                  )}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <div className="row" style={{ marginTop: "4%" }}>
-        <div className="col-lg-12 col-md-12 col-12">
+    <div className="row">
+        <div className="col-lg-12 col-md-12 col-12 button-class">
           <div className="d-flex">
             <button
               className="btn btn-primary w-auto btn-lg mr-2"
@@ -126,6 +78,67 @@ function SuppilerPage3() {
           </div>
         </div>
       </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Product Field</th>
+            <th>Value</th>
+            <th>Additional Info</th>
+          </tr>
+        </thead>
+        <tbody>
+        {productFields.map((productField, index) => {
+          const keys = Object.keys(productField);
+          return (
+            <>
+              {keys.map((key) => {
+                const selectedOption =
+                  selectedOptions[index] && selectedOptions[index][key]
+                    ? selectedOptions[index][key]
+                    : null;
+
+                return (
+                  <tr key={key}>
+                    <td>{key}</td>
+                    <td>
+                    <Select
+                    key={`${index}-${key}`}
+                    options={options}
+                    value={selectedOption}
+                    onChange={(selectedOption) =>
+                      handleFieldChange(index, {
+                        ...selectedOptions[index],
+                        [key]: selectedOption
+                      })
+                    }
+                    isSearchable={true}
+                    getOptionLabel={(option) => (
+                      <span style={{ color: option.color }}>
+                        {option.label}
+                      </span>
+                    )}
+                    styles={{
+                      menu: (provided, state) => ({
+                        ...provided,
+                        padding: '0px 0',
+                      }),
+                    }}
+                  />
+                    </td>
+                    <td>
+                      {selectedOption && selectedOption.textbox && (
+                        <input type="text" placeholder="Enter a value" />
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </>
+          );
+        })}
+      </tbody>
+      </table>
+      
     </>
   );
 }

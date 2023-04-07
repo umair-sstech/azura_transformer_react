@@ -1,0 +1,39 @@
+/* supplierpage 1 */
+.button-class{
+  display: flex;
+  justify-content: end;
+}
+
+/* supplierpage3 */
+table {
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+    width: 48%;
+    padding: 0px;
+  }
+  
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0px;
+    text-align: left;
+  }
+  
+  td:first-child {
+    border-right: 1px solid #ccc;
+  }
+
+  
+  /* manageSupplier */
+  .supplier-heading{
+font-weight: 500;
+font-size: 17px;
+display: flex;
+justify-content: center;
+  }
+
+  /* Supplierpage5 */
+  .select-option{
+    margin-top: -40px;
+    margin-left: 23px;
+}
+  

@@ -12,6 +12,7 @@ import SuppilerPage2 from "./SuppilerPage2";
 import SuppilerPage3 from "./SuppilerPage3";
 import SuppilerPage4 from "./SuppilerPage4";
 import SuppilerPage5 from "./SuppilerPage5";
+import "./SupplierPage.css";
 
 export const FormContext = createContext();
 
@@ -144,6 +145,7 @@ function ManageSuppiler(props) {
                       processCancel,
                     }}
                   >
+                  <p className="supplier-heading">Supplier onBoarding</p>
                     <MultiStepProgressBar
                       page={page}
                       onPageNumberClick={nextPageNumber}
@@ -163,6 +165,7 @@ function ManageSuppiler(props) {
                         pagefive: <SuppilerPage5 onButtonClick={nextPage} />,
                       }[page]
                     }
+                   
                   </FormContext.Provider>
                 </div>
               </div>
