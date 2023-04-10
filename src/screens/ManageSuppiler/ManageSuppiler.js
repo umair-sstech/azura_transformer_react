@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
 import PageHeader from "../../components/PageHeader";
-import { Tab, Tabs } from "react-bootstrap";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
@@ -12,16 +11,18 @@ import SuppilerPage2 from "./SuppilerPage2";
 import SuppilerPage3 from "./SuppilerPage3";
 import SuppilerPage4 from "./SuppilerPage4";
 import SuppilerPage5 from "./SuppilerPage5";
+import SupplierPage6 from "./SupplierPage6";
 import "./SupplierPage.css";
+
 
 export const FormContext = createContext();
 
 function ManageSuppiler(props) {
-  const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [activeStepIndex, setActiveStepIndex] = useState(-1);
   const [formData, setFormData] = useState();
   const [logoData, setLogoData] = useState();
   const [isSuppilerAdded, setIsSuppilerAdded] = useState("");
-  const [page, setPage] = useState("pageone");
+  const [page, setPage] = useState("1");
 
   const history = useHistory();
 
@@ -66,43 +67,43 @@ function ManageSuppiler(props) {
   };
 
   const nextPage = (page) => {
-    if (page === "pageone") {
-      setPage("pagetwo");
-    } else if (page === "pagetwo") {
-      setPage("pagethree");
-    } else {
-      setPage(page);
-    }
+    setPage(page);
   };
 
   const nextPageNumber = (pageNumber) => {
+
     switch (pageNumber) {
       case "1":
-        setPage("pageone");
+        setPage("1");
         break;
       case "2":
-        setPage("pagetwo");
+        setPage("2");
         break;
       case "3":
-        setPage("pagethree");
+        setPage("3");
         break;
       case "4":
-        setPage("pagefour");
+        setPage("4");
         break;
       case "5":
-        setPage("pagefive");
+        setPage("5");
         break;
-
+      case "6":
+        setPage("6");
+        break;
       default:
         setPage("1");
     }
   };
   const handleButtonClick = () => {
-    setPage("pagetwo");
+    if (isSuppilerAdded) {
+      setActiveStepIndex(1);
+    } else {
+      setIsSuppilerAdded(true);
+      setActiveStepIndex(0);
+    }
   };
-  const HandleButtonPage2Click = () => {
-    props.onButtonClick("pagethree");
-  };
+
   return (
     <>
       <div
@@ -114,15 +115,16 @@ function ManageSuppiler(props) {
         <div>
           <div className="container-fluid">
             <PageHeader
-              HeaderText={isSuppilerAdded ? "Supplier Update" : "Supplier Add"}
+              HeaderText={isSuppilerAdded ? "Suppiler Update" : "suppiler Add"}
               Breadcrumb={[
                 { name: "Manage", navigate: "" },
-                { name: "Supplier List", navigate: "" },
+                { name: "Suppiler List", navigate: "" },
                 {
-                  name: isSuppilerAdded ? "Supplier Update" : "Supplier Add",
+                  name: isSuppilerAdded ? "Suppiler Update" : "Suppiler Add",
                   navigate: "",
                 },
               ]}
+              className="page-header"
             />
             <div className="tab-component">
               <div className="card">
@@ -133,40 +135,66 @@ function ManageSuppiler(props) {
                     </div>
                   ) : null}
                   <FormContext.Provider
-                    value={{
-                      setIsSuppilerAdded,
-                      isSuppilerAdded,
-                      activeStepIndex,
-                      setActiveStepIndex,
-                      formData,
-                      setFormData,
-                      setLogoData,
-                      logoData,
-                      processCancel,
-                    }}
-                  >
-                  <p className="supplier-heading">Supplier onBoarding</p>
-                    <MultiStepProgressBar
-                      page={page}
-                      onPageNumberClick={nextPageNumber}
-                    />
+                  value={{
+                    setIsSuppilerAdded,
+                    isSuppilerAdded,
+                    activeStepIndex,
+                    setActiveStepIndex,
+                    formData,
+                    setFormData,
+                    setLogoData,
+                    logoData,
+                    processCancel,
+                  }}
+                >
+                  <MultiStepProgressBar
+                    setPage={setPage}
+                    page={page}
+                    onPageNumberClick={nextPageNumber}
+                  />
+                  {
                     {
-                      {
-                        pageone: (
-                          <SupplierInfo onButtonClick={handleButtonClick} />
-                        ),
-                        pagetwo: (
-                          <SuppilerPage2
-                            onButtonClick={HandleButtonPage2Click}
-                          />
-                        ),
-                        pagethree: <SuppilerPage3 onButtonClick={nextPage} />,
-                        pagefour: <SuppilerPage4 onButtonClick={nextPage} />,
-                        pagefive: <SuppilerPage5 onButtonClick={nextPage} />,
-                      }[page]
-                    }
-                   
-                  </FormContext.Provider>
+                      1: (
+                        <SupplierInfo
+                          onButtonClick={handleButtonClick}
+                          setPage={setPage}
+                        />
+                      ),
+                      2: (
+                        <SuppilerPage2
+                          onButtonClick={nextPage}
+                          setPage={setPage}
+                        />
+                      ),
+                      3: (
+                        <SuppilerPage3
+                          onButtonClick={nextPage}
+                          setPage={setPage}
+                        />
+                      ),
+                      4: (
+                        <SuppilerPage4
+                          onButtonClick={nextPage}
+                          setPage={setPage}
+                        />
+                      ),
+                      5: (
+                        <SuppilerPage5
+                          onButtonClick={nextPage}
+                          setPage={setPage}
+                        />
+                      ),
+                      6: (
+                        <SupplierPage6
+                          onButtonClick={nextPage}
+                          setPage={setPage}
+                        />
+                      ),
+                    }[page]
+                  }
+                </FormContext.Provider>
+                
+                
                 </div>
               </div>
             </div>

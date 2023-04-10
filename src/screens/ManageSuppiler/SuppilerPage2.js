@@ -14,6 +14,7 @@ import "./SupplierPage.css";
 
 
 function SupplierPage2(props) {
+  const { setPage } = props;
   const { setIsSupplierAdded, isSupplierAdded, formData, setFormData, processCancel } = useContext(FormContext);
  
   const [initFormData, setInitFormData] = useState({
@@ -37,8 +38,8 @@ function SupplierPage2(props) {
       const form = e.target;
       const formData = new FormData(form);
       setFormData(formData);
-      setIsSupplierAdded(false);
-      props.onButtonClick();
+      // setIsSupplierAdded(false);
+      setPage("3");
     }
   };
 
@@ -62,6 +63,8 @@ function SupplierPage2(props) {
   }
 
   return (
+    <>
+    <hr className="hr"/>
     <form onSubmit={handleSubmit}>
       <div style={{ marginTop: "30px" }}>
       <div className="row">
@@ -94,11 +97,11 @@ function SupplierPage2(props) {
               <label>
                 Upload File <span style={{ color: "red" }}>*</span>
               </label>
-              <input className="form-control" type="file" name="upload_file"  accept=".csv, .xlsx, .pdf, .docx" onChange={handleFileInputChange}/>
+              <input className="form-control" type="file" name="upload_file"  accept=".csv" onChange={handleFileInputChange}/>
               {fileError && <p style={{ color: "red" }}>{fileError}</p>}
               <small className="form-text text-muted">
              
-                Allowed file types: CSV, XLSX, PDF, DOCX.
+                Allowed file types: CSV.
               </small>
             </div>
           </div>
@@ -106,6 +109,7 @@ function SupplierPage2(props) {
        
       </div>
     </form>
+    </>
   );
 }
 

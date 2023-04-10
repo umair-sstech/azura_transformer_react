@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Select from "react-select";
 import "./SupplierPage.css";
+import timeZoneData from "../../Data/timeZone";
+import axios from "axios";
 
 
 function SupplierSftpForm() {
@@ -17,6 +19,19 @@ function SupplierSftpForm() {
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const history=useHistory()
+  const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_API_URL_SUPPLIER}/general/getCronTime`)
+      .then(response => {
+        const options = response.data.data.map(item => ({
+          label: item.name,
+          value: item.value
+        }));
+        setSyncFrequencyOptions(options);
+      })
+      .catch(error => console.log(error));
+  }, []);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -80,6 +95,7 @@ function SupplierSftpForm() {
     { value: "FTP", label: "FTP" },
   ];
   return (
+    <>
     <form onSubmit={handleSubmit}>
       <div style={{ marginTop: "35px" }}>
       <div className="row">
@@ -126,7 +142,7 @@ function SupplierSftpForm() {
           </div>
           <div className="col-6">
             <div className="form-group">
-              <label>User Name </label>
+              <label>User Name <span style={{ color: "red" }}>*</span></label>
               <input
                 className="form-control"
                 type="text"
@@ -143,7 +159,7 @@ function SupplierSftpForm() {
           <div className="col-6">
             <div className="form-group">
               <label>
-                password <span style={{ color: "red" }}>*</span>
+                Password <span style={{ color: "red" }}>*</span>
               </label>
               <input
                 className="form-control"
@@ -161,7 +177,7 @@ function SupplierSftpForm() {
           <div className="col-6">
             <div className="form-group">
               <label>
-                port <span style={{ color: "red" }}>*</span>
+                Port <span style={{ color: "red" }}>*</span>
               </label>
               <input
                 className="form-control"
@@ -179,7 +195,7 @@ function SupplierSftpForm() {
           <div className="col-6">
             <div className="form-group">
               <label>
-                protocol <span style={{ color: "red" }}>*</span>
+                Protocol <span style={{ color: "red" }}>*</span>
               </label>
               <Select
                 placeholder="Select Protocol"
@@ -215,27 +231,24 @@ function SupplierSftpForm() {
             </div>
           </div>
           <div className="col-12">
-            <div className="form-group">
-              <label>
-                Sync Frequency <span style={{ color: "red" }}>*</span>
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                name="syncFrequency"
-                placeholder="Enter Sync Frequency"
-                onChange={handleInputChange}
-                value={formData.syncFrequency}
-              />
-              {formErrors.syncFrequency && (
-                <span className="text-danger">{formErrors.syncFrequency}</span>
-              )}
-            </div>
+          <div className="form-group">
+          <label>
+            Sync Frequency <span style={{ color: "red" }}>*</span>
+          </label>
+          <Select
+          placeholder="Select Frequency"
+          options={syncFrequencyOptions}
+        />
+          {formErrors.url && (
+            <span className="text-danger">{formErrors.syncFrequency}</span>
+          )}
+        </div>
           </div>
         </div>
         
       </div>
     </form>
+    </>
   );
 }
 

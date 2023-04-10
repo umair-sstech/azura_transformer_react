@@ -3,27 +3,38 @@ import "./MultiStepProgressBar.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
 
 const stepNames = [
-  "Supplier  Info",
+  "Suppiler  Info",
   "Data file Upload",
   "Data file Mapping",
   "Image Resize",
   "Data Import Settings",
+  "Barcodelookup.com"
 ];
 
-const MultiStepProgressBar = ({ page, onPageNumberClick }) => {
+const styles = {
+  Active: {
+    color: "black",
+  },
+  Inactive: {
+    color: "grey",
+  },
+};
+
+const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
   var stepPercentage = 0;
-  if (page === "pageone") {
-    stepPercentage = 20;
-  } else if (page === "pagetwo") {
-    stepPercentage = 40;
-  } else if (page === "pagethree") {
-    
-    stepPercentage = 60;
-  } else if (page === "pagefour") {
-    stepPercentage = 80;
-  } else if (page === "pagefive") {
+  if (page == "1") {
+    stepPercentage = 10;
+  } else if (page == "2") {
+    stepPercentage = 30;
+  } else if (page == "3") {
+    stepPercentage = 50;
+  } else if (page == "4") {
+    stepPercentage = 70;
+  } else if (page == "5") {
+    stepPercentage = 85;
+  } else if (page == "6") {
     stepPercentage = 100;
-  }else {
+  } else {
     stepPercentage = 0;
   }
 
@@ -32,11 +43,10 @@ const MultiStepProgressBar = ({ page, onPageNumberClick }) => {
       <p className="stepNamesContainer">
         {stepNames.map((name, index) => (
           <div
-            className={`stepName ${
-              page === `page${index + 1}` ? "active" : ""
-            }`}
+            className="stepName"
+            style={page == index + 1 ? styles.Active : styles.Inactive}
             key={index}
-            onClick={() => onPageNumberClick(`page${index + 1}`)}
+            onClick={() => (page > index + 1 ? setPage(index + 1) : "")}
           >
             {name}
           </div>
@@ -44,7 +54,7 @@ const MultiStepProgressBar = ({ page, onPageNumberClick }) => {
       </p>
 
       <div>
-        <ProgressBar percent={stepPercentage}>
+        <ProgressBar percent={stepPercentage} disabled>
           <Step>
             {({ accomplished, index }) => (
               <div
@@ -95,7 +105,16 @@ const MultiStepProgressBar = ({ page, onPageNumberClick }) => {
               ></div>
             )}
           </Step>
- 
+          <Step>
+            {({ accomplished, index }) => (
+              <div
+                className={`indexedStep ${
+                  accomplished ? "accomplished" : null
+                }`}
+                onClick={() => onPageNumberClick("6")}
+              ></div>
+            )}
+          </Step>
         </ProgressBar>
       </div>
     </div>
