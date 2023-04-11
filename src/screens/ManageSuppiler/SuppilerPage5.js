@@ -34,6 +34,8 @@ function SupplierPage5() {
   };
   return (
     <>
+    <hr className="hr"/>
+
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div style={{ marginRight: "32px", width: "200px" }}>
         <label htmlFor="combo-box-demo" style={{ marginBottom: "8px" }}>

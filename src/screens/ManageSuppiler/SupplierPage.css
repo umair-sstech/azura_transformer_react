@@ -4,32 +4,68 @@
   justify-content: end;
 }
 
+.hr {
+  position: relative;
+  width: 79.5vw;
+  right: 19px;
+  
+}
 /* supplierpage3 */
 table {
-    border-collapse: collapse;
-    border: 1px solid #ccc;
-    width: 48%;
-    padding: 0px;
-  }
-  
-  th, td {
-    border: 1px solid #ccc;
-    padding: 0px;
-    text-align: left;
-  }
-  
-  td:first-child {
-    border-right: 1px solid #ccc;
-  }
+  border-collapse: collapse;
+  width: 60%;
+  margin: 20px 0;
+  border: 1px solid #ccc;
+}
 
+ td {
+  border: 1px solid #ccc;
+  padding: 4px;
+  text-align: left; 
+  width: 32%;
+}
+
+th {
+  border: 1px solid #ccc;
+  background-color: #eee;
+  padding: 10px;
   
+}
+
+.select-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px;
+}
+.page-header {
+  position: sticky;
+  top: 0;
+  background-color: #fff; /* Optional background color */
+  z-index: 1; /* Optional z-index to control stacking order */
+}
+
+.select {
+  width: 100%;
+}
+.additional-textbox{
+  box-sizing: border-box;
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+
+
   /* manageSupplier */
-  .supplier-heading{
+.supplier-heading{
 font-weight: 500;
 font-size: 17px;
 display: flex;
 justify-content: center;
-  }
+}
+
 
   /* Supplierpage5 */
   .select-option{
@@ -37,3 +73,26 @@ justify-content: center;
     margin-left: 23px;
 }
   
+/* Supplierpage4 */
+.table {
+  width: 22%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+.table-responsive {
+  display: block;
+  width: 22%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.table th, .table td {
+  border: none;
+  
+}
+
+@media screen and (max-width: 1024px) {
+ .hr{
+  width: 97vw;
+  right: 20px;
+ }
+}

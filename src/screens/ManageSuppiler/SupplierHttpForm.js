@@ -52,6 +52,8 @@ function SupplierHttpForm() {
     history.push("/supplier")
   }
     return (
+      <>
+
         <form onSubmit={handleSubmit}>
           <div style={{ marginTop: "30px" }}>
           <div className="row">
@@ -120,6 +122,7 @@ function SupplierHttpForm() {
             
           </div>
         </form>
+        </>
       );
 }
 

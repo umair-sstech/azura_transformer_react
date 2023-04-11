@@ -38,7 +38,7 @@
 
 .RSPBprogressBar {
   height: 2px;
-  width: 68%;
+  width: 97%;
   line-height: 1;
   border-radius: 10px;
   position: relative;
@@ -95,7 +95,7 @@
   margin-bottom: 19px;
   margin-left: 0%;
   justify-content: space-between;
-  margin-right: 19%;
+  margin-right: -7%
 }
 
 .stepName {
@@ -108,10 +108,14 @@
 }
 
 @media screen and (max-width: 1024px) {
+  .stepName{
+    font-size: 12px;
+
+  }
   .stepNamesContainer {
-    margin-right: 11%;
+    margin-right: -7%;
   }
   .RSPBprogressBar {
-    width: 73%;
+    width: 99%;
   }
 }
