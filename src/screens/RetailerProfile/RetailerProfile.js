@@ -25,7 +25,7 @@ const RetailerProfile = (props) =>
         const id = props.user?.data.retailer
         if (id) {
             setIsCompanyAdded(id)
-            axios.get(`${process.env.REACT_APP_API_URL}/retailer/retailer-by-Id/${id}`)
+            axios.get(`${process.env.REACT_APP_RETAILER_SERVICE}/retailer-by-Id/${id}`)
                 .then(res =>
                 {
                     const data = res.data.retailerData

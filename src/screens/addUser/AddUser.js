@@ -51,7 +51,7 @@ const AddUser = () => {
                                         validationSchema={Schema}
                                         onSubmit={(data, { resetForm }) => {
                                             const { companyName, companyOwner, contactNo, email } = data;
-                                            axios.post(`${process.env.REACT_APP_API_URL}/company/add-company`, {
+                                            axios.post(`${process.env.REACT_APP_COMPANY_SERVICE}/add-company`, {
                                                 compnay_owner: companyOwner,
                                                 name: companyName,
                                                 email,

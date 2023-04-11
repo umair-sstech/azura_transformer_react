@@ -62,14 +62,13 @@ const RetailerSocialInfo = (props) =>
             enableReinitialize
             validationSchema={Schema}
             onSubmit={(data) => {
-                setFormData({ ...formData, ...data })
                 formdata.append("name", formData.name || "")
                 formdata.append("email", formData.email)
                 formdata.append("description", formData.description || "")
                 formdata.append("building_name", formData.building_name || "")
                 formdata.append("street_address", formData.street_address || "")
                 formdata.append("state_or_city", formData.state_or_city || "")
-                formdata.append("country", formData.country || "")
+                formdata.append("country", formData.country.value || "")
                 formdata.append("pincode", formData.pincode || "")
                 formdata.append("suburb", formData.suburb || "")
                 formdata.append("contact_no", formData.contact_no || "")
@@ -86,7 +85,7 @@ const RetailerSocialInfo = (props) =>
                 formdata.append("tiktok_url", data.tiktok_url || "")
                 formdata.append("footer_copyright", data.footer_copyright || "")
                 props.onLoading(true)
-                axios.post(`${process.env.REACT_APP_API_URL}/retailer/update-retailer/${isRetailerAdded}`, formdata)
+                axios.post(`${process.env.REACT_APP_RETAILER_SERVICE}/update-retailer/${isRetailerAdded}`, formdata)
                     .then(res => {
                         localStorage.setItem("newlyAddedRetailer", res.data.retailer._id)
                         setIsRetailerAdded(res.data.retailer._id)
@@ -108,6 +107,7 @@ const RetailerSocialInfo = (props) =>
                                     <label>Logo (optional)</label>
                                     <input
                                         className="form-control"
+                                        accept='image/png, image/jpeg'
                                         type="file"
                                         name="logo"
                                         onBlur={handleBlur}

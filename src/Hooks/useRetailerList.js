@@ -6,7 +6,7 @@ export const useRetailerList = () => {
     const [retailerList, setRetailerList] = useState([]);
 
     const getCompanies = () => {
-        axios.get(`${process.env.REACT_APP_API_URL}/retailer/get-retailer-list`)
+        axios.get(`${process.env.REACT_APP_RETAILER_SERVICE}/get-retailer-list`)
             .then(res => {
                 setRetailerList(res.data.retailers)
             })

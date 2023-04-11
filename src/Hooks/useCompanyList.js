@@ -6,7 +6,7 @@ export const useCompanyList = (role) =>
     const [companyList, setCompanyList] = useState([]);
 
     const getCompanies = () => {
-        axios.get(`${process.env.REACT_APP_API_URL}/company/get-company-list`)
+        axios.get(`${process.env.REACT_APP_COMPANY_SERVICE}/get-company-list`)
             .then(res => {
                 setCompanyList(res.data.companies)
             })

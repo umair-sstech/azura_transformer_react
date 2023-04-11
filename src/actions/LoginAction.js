@@ -29,13 +29,13 @@ export const onLoggedin = (val) => (disptch) => {
 export const onLoginSubmit = ({ email, password }) => (dispatch) => {
   dispatch(onLoading(true))
 
-  return axios.post(`${process.env.REACT_APP_API_URL}/auth/signin`, { email, password })
+  return axios.post(`${process.env.REACT_APP_AUTH_SERVICE}/signin`, { email, password })
 }
 
 export const getUser = (token) => (dispatch) => {
   dispatch(onSystemLoading(true))
 
-  axios.get(`${process.env.REACT_APP_API_URL}/auth/me`, {
+  axios.get(`${process.env.REACT_APP_AUTH_SERVICE}/me`, {
     headers:{
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`
@@ -55,5 +55,5 @@ export const getUser = (token) => (dispatch) => {
 }
 
 export const onLogOut = (token, userId) => (dispatch) => {
-  return axios.post(`${process.env.REACT_APP_API_URL}/auth/logout`)
+  return axios.post(`${process.env.REACT_APP_AUTH_SERVICE}/logout`)
 }

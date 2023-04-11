@@ -19,16 +19,17 @@ const UserList = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(2);
     const [dataLimit, setdataLimit] = useState(5);
+    const [searchText, setSearchText] = useState('active');
     const history = useHistory()
 
     useEffect(() =>
     {
-        getDataFromApi()
+        getDataFromApi(searchText)
     }, [currentPage, dataLimit]);
 
-    const getDataFromApi = () => {
+    const getDataFromApi = (search = 'active') => {
         props.onLoading(true)
-        axios.get(`${process.env.REACT_APP_API_URL}/user/get-all-user?page=${currentPage}&limit=${dataLimit}`)
+        axios.get(`${process.env.REACT_APP_USER_SERVICE}/user/get-all-user?page=${currentPage}&limit=${dataLimit}&searchText=${search}`)
             .then(res => {
                 let totlePage = Math.ceil(res.data.totlaRecord / res.data.limit)
                 setTotalPages(totlePage)
@@ -68,14 +69,14 @@ const UserList = (props) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 props.onLoading(true)
-                axios.post(`${process.env.REACT_APP_API_URL}/user/user-status/${id}`, { status })
+                axios.post(`${process.env.REACT_APP_USER_SERVICE}/user/user-status/${id}`, { status })
                     .then(res => {
                         toast.success(res.data.message)
-                        getDataFromApi();
+                        getDataFromApi(searchText);
                         props.onLoading(false)
                     }).catch(e => {
                         toast.error("Something Went Wrong")
-                        getDataFromApi();
+                        getDataFromApi(searchText);
                         props.onLoading(false)
                     })
             }
@@ -83,9 +84,9 @@ const UserList = (props) => {
     }
 
     let filterList = [
-        { label: "All", value: "ALL" },
-        { label: "Activate", value: "ACTIVATE" },
-        { label: "Deactivate", value: "DEACTIVATE" },
+        { label: "All", value: "all" },
+        { label: "Activate", value: "active" },
+        { label: "Deactivate", value: "deactivate" },
     ]
 
     return (
@@ -113,24 +114,13 @@ const UserList = (props) => {
                                         <div className='mr-2' style={{ minWidth: "110px" }}>
                                             <Select
                                                 options={filterList}
-                                                placeholder="All"
-                                                onChange={filterChangeHandler}
+                                                onChange={(data) => {
+                                                    setSearchText(data.value)
+                                                    getDataFromApi(data.value)
+                                                }}
+                                                defaultValue={filterList[1]}
                                             />
                                         </div>
-                                        {/* <div style={{ width: "300px" }}>
-                                            <Select
-                                                options={companyList.map(data => {
-                                                    return {
-                                                        value: data._id,
-                                                        label: data.name
-                                                    }
-                                                })}
-                                                placeholder="Select Company"
-                                                onChange={() => {
-
-                                                }}
-                                            /><Button>Search</Button>
-                                        </div> */}
                                     </div>{props.user.permissions.add_user ? <Link className='link-btn' to={`/manage-user`} >
                                         Add User
                                     </Link> : null}

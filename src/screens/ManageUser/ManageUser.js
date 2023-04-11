@@ -48,38 +48,38 @@ const ManageUser = (props) => {
   const retailerList = useRetailerList();
 
   const Schema = Yup.object().shape({
-    name: Yup.string().required("This field is require"),
+    name: Yup.string().required("This field is required"),
     email: Yup.string()
       .email("Insert Vaid Email")
-      .required("This field is require"),
-    country: Yup.object().required("This field is require"),
-    timeZone: Yup.object().required("This field is require"),
-    password: Yup.string().required("This field is require"),
-    role: Yup.object().required("This field is require"),
+      .required("This field is required"),
+    country: Yup.object().required("This field is required"),
+    timeZone: Yup.object().required("This field is required"),
+    password: Yup.string().required("This field is required"),
+    role: Yup.object().required("This field is required"),
     retailer: Yup.object(),
     company: Yup.object(),
   });
 
   const updateSchema = Yup.object().shape({
-    name: Yup.string().required("This field is require"),
+    name: Yup.string().required("This field is required"),
     email: Yup.string()
       .email("Insert Vaid Email")
-      .required("This field is require"),
-    country: Yup.object().required("This field is require"),
-    timeZone: Yup.object().required("This field is require"),
+      .required("This field is required"),
+    country: Yup.object().required("This field is required"),
+    timeZone: Yup.object().required("This field is required"),
     password: Yup.string(),
-    role: Yup.object().required("This field is require"),
+    role: Yup.object().required("This field is required"),
     retailer: Yup.object(),
     company: Yup.object(),
   });
 
   const retailerUserSchema = Yup.object().shape({
-    name: Yup.string().required("This field is require"),
+    name: Yup.string().required("This field is required"),
     email: Yup.string()
       .email("Insert Vaid Email")
-      .required("This field is require"),
-    country: Yup.object().required("This field is require"),
-    timeZone: Yup.object().required("This field is require"),
+      .required("This field is required"),
+    country: Yup.object().required("This field is required"),
+    timeZone: Yup.object().required("This field is required"),
     password: Yup.string(),
     retailer: Yup.object(),
     company: Yup.object(),
@@ -98,7 +98,7 @@ const ManageUser = (props) => {
   {
     props.onUpdateFormLoading(true)
     axios
-      .get(`${process.env.REACT_APP_API_URL}/user/user-by-id/${id}`)
+      .get(`${process.env.REACT_APP_USER_SERVICE}/user/user-by-id/${id}`)
       .then((res) => {
         const data = res.data.user;
         let timeZone = timeZoneData.find((tz) => tz.abbr == data.time_zone);
@@ -195,7 +195,7 @@ const ManageUser = (props) => {
                                     password: data.password || undefined,
                                     time_zone: data.timeZone.value,
                             };
-                            axios.post( `${process.env.REACT_APP_API_URL}/user/update-user/${updateUserId}`, reqBody)
+                          axios.post(`${process.env.REACT_APP_USER_SERVICE}/user/update-user/${updateUserId}`, reqBody)
                                 .then((res) => {
                                     toast.success(res.data.message);
                                     props.onLoading(false);
@@ -231,7 +231,7 @@ const ManageUser = (props) => {
                             reqBody.retailer = data.retailer.value
                           }
 
-                         axios.post( `${process.env.REACT_APP_API_URL}/user/create-user`, reqBody )
+                          axios.post(`${process.env.REACT_APP_USER_SERVICE}/user/create-user`, reqBody)
                             .then((res) => {
                                 toast.success(res.data.message);
                                 props.onLoading(false);
@@ -303,6 +303,7 @@ const ManageUser = (props) => {
                               onBlur={(e) => handleBlur(e)}
                               onChange={(data) => {
                                 if (data) {
+                                  console.log(data);
                                   let event = {
                                     target: { name: "country", value: data },
                                   };

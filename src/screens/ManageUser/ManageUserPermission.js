@@ -32,7 +32,7 @@ const ManageUserPermission = (props) =>
     const handleSubmit = (e) => {
         e.preventDefault();
         props.onLoading(true)
-        axios.post(`${process.env.REACT_APP_API_URL}/permission/update-permission/${userId}`, {
+        axios.post(`${process.env.REACT_APP_USER_SERVICE}/permission/update-permission/${userId}`, {
             route_permission: permissionValue
         })
             .then(res =>
@@ -42,7 +42,7 @@ const ManageUserPermission = (props) =>
             })
             .catch(e =>
             {
-                console.log(e)
+                toast.error(e.response.data.message); 
                 props.onLoading(false)
         })
     }
@@ -58,7 +58,7 @@ const ManageUserPermission = (props) =>
     const getPermissionDetailForUpdate = (id) =>
     {
         props.onUpdateFormLoading(true)
-        axios.get(`${process.env.REACT_APP_API_URL}/permission/get-permission/${id}`)
+        axios.get(`${process.env.REACT_APP_USER_SERVICE}/permission/get-permission/${id}`)
             .then(res => {
                 const data = res.data.permission
                 setPermissionValue(data.route_permission)

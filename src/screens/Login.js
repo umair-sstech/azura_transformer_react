@@ -46,6 +46,7 @@ class Login extends React.Component {
       })
       .catch(e =>
       {
+        console.log(e);
         toast.error(e.response.data.message || "Something went wrong")
         localStorage.removeItem('token')
         this.props.onLoading(false)

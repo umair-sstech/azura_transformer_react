@@ -85,7 +85,7 @@ const UpdateSocialInfo = (props) =>
                 formdata.append("tiktok_url", data.tiktok_url || "")
                 formdata.append("footer_copyright", data.footer_copyright || "")
 
-                axios.post(`${process.env.REACT_APP_API_URL}/company/update-company/${isCompanyAdded}`, formdata)
+                axios.post(`${process.env.REACT_APP_COMPANY_SERVICE}/update-company/${isCompanyAdded}`, formdata)
                     .then(res =>
                     {
                         localStorage.setItem("newlyAddedCompany", res.data.company._id)

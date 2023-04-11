@@ -84,7 +84,7 @@ const RetailerSocialInfo = (props) =>
                 formdata.append("tiktok_url", data.tiktok_url || "")
                 formdata.append("footer_copyright", data.footer_copyright || "")
 
-                axios.post(`${process.env.REACT_APP_API_URL}/retailer/update-retailer/${isCompanyAdded}`, formdata)
+                axios.post(`${process.env.REACT_APP_RETAILER_SERVICE}/update-retailer/${isCompanyAdded}`, formdata)
                     .then(res =>
                     {
                         setIsCompanyAdded(res.data.retailer._id)

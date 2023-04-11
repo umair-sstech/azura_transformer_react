@@ -40,19 +40,19 @@ const UpdateRetailerInfo = (props) =>
     }, [props]);
 
     const Schema = Yup.object().shape({
-        name: Yup.string().required("This field is require"),
+        name: Yup.string().required("This field is required"),
         description: Yup.string().max(250, "Maximum 250 character"),
-        country: Yup.string().required("This field is require"),
-        building_name: Yup.string().max(100, "Maximum 100 character").required("This field is require"),
-        street_address: Yup.string().max(100, "Maximum 100 character").required("This field is require"),
-        state_or_city: Yup.string().required("This field is require"),
+        country: Yup.string().required("This field is required"),
+        building_name: Yup.string().max(100, "Maximum 100 character").required("This field is required"),
+        street_address: Yup.string().max(100, "Maximum 100 character").required("This field is required"),
+        state_or_city: Yup.string().required("This field is required"),
         pincode: Yup.string().max(30, "Maximum 30 character"),
         contact_no: Yup.string().max(15, "Maximum 15 character"),
         email: Yup.string().email("Insert Vaid Email"),
         custom_domain_name: Yup.string().max(200, "URL must be less than 200 character"),
         site_url: Yup.string().max(200, "URL must be less than 200 character"),
         cost_center_name: Yup.string().max(50, "Cost Centre Name must be less than 50 character"),
-        suburb: Yup.string().max(100, "Suburb must be less than 100 character").required("This field is require")
+        suburb: Yup.string().max(100, "Suburb must be less than 100 character").required("This field is required")
     });
     return (
         <Formik
@@ -85,7 +85,7 @@ const UpdateRetailerInfo = (props) =>
                     formdata.append("tiktok_url", formData.hasOwnProperty('tiktok_url') ? formData.tiktok_url : "")
                     formdata.append("footer_copyright", formData.hasOwnProperty('footer_copyright') ? formData.footer_copyright : "")
 
-                    axios.post(`${process.env.REACT_APP_API_URL}/retailer/update-retailer/${isCompanyAdded}`, formdata)
+                    axios.post(`${process.env.REACT_APP_RETAILER_SERVICE}/update-retailer/${isCompanyAdded}`, formdata)
                         .then(res =>
                         {
                             setIsCompanyAdded(res.data.retailer._id)
@@ -97,7 +97,7 @@ const UpdateRetailerInfo = (props) =>
                         })
                 }
                 else {
-                    // axios.post(`${process.env.REACT_APP_API_URL}/retailer/update-retailer`, formdata)
+                    // axios.post(`${process.env.REACT_APP_RETAILER_SERVICE}/update-retailer`, formdata)
                     //     .then(res =>
                     //     {
                     //         localStorage.setItem("newlyAddedCompany", res.data.company._id)
