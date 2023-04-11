@@ -10,6 +10,7 @@ import { onLoading } from "../../actions";
 import { Spinner } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import "./SupplierPage.css";
+import Swal from "sweetalert2";
 
 
 
@@ -55,9 +56,23 @@ function SupplierPage2(props) {
     }
   };
   
-  const handleCancle=()=>{
-    history.push("/supplier")
-  }
+  const handleCancel = () => {
+    Swal.fire({
+      title: 'Are you sure, <br> you want to exit ? ',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      customClass: {
+        confirmButton: 'btn btn-primary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        history.push('/supplier');
+      }
+    });
+  };
+
   const handleFileInputChange = () => {
     setFileError("");
   }
@@ -84,7 +99,7 @@ function SupplierPage2(props) {
           <button className="btn btn-primary w-auto btn-lg mr-2" type="button" onClick={handleOnClick}>
             Save & Exit
           </button>
-          <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={handleCancle}>
+          <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={handleCancel}>
             Exit
           </button>
           

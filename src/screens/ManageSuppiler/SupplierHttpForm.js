@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import "./SupplierPage.css";
+import Swal from 'sweetalert2';
+import { validateHttpForm, validateSftpForm } from '../Validations/Validation';
 
 
 function SupplierHttpForm() {
@@ -19,28 +21,18 @@ function SupplierHttpForm() {
     setFormErrors({ ...formErrors, [name]: "" });
   };
 
-  function validateForm(formData) {
-    const errors = {};
-  
-    if (!formData.url) {
-      errors.url = "URL is required";
-    }
-    if (!formData.syncFrequency) {
-      errors.syncFrequency = "Sync Frequency is required";
-    }
-    return errors;
-  }
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const errors = validateForm(formData);
+    const errors = validateHttpForm(formData);
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
   const handleOnClick = (event) => {
     event.preventDefault();
-    const errors = validateForm(formData);
+    const errors = validateHttpForm(formData);
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
     if (Object.keys(errors).length === 0) {
@@ -48,9 +40,23 @@ function SupplierHttpForm() {
     }
   };
 
-  const handleCancle=()=>{
-    history.push("/supplier")
-  }
+  const handleCancel = () => {
+    Swal.fire({
+      title: 'Are you sure, <br> you want to exit ? ',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      customClass: {
+        confirmButton: 'btn btn-primary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        history.push('/supplier');
+      }
+    });
+  };
+
     return (
       <>
 
@@ -76,7 +82,7 @@ function SupplierHttpForm() {
                   <button
                     className="btn btn-secondary w-auto btn-lg"
                     type="submit"
-                    onClick={handleCancle}
+                    onClick={handleCancel}
                   >
                     Exit
                   </button>

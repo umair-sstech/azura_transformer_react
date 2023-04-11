@@ -11,6 +11,8 @@ import { useHistory } from "react-router-dom";
 import "./SupplierPage.css";
 import IntegrationType from "../Integrations/IntegrationType";
 import Select from "react-select";
+import Swal from "sweetalert2";
+import { validateSupplierInfoForm } from "../Validations/Validation";
 
 function SuppilerInfo(props) {
   const { setPage } = props;
@@ -78,39 +80,25 @@ function SuppilerInfo(props) {
     setPrefixName(prefix);
 
     const formData = new FormData(document.forms.myForm);
-    const errors = validateForm(formData);
+    const errors = validateSupplierInfoForm(formData);
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
   const handleLogoChange = (e) => {
     const formData = new FormData(document.forms.myForm);
-    const errors = validateForm(formData);
+    const errors = validateSupplierInfoForm(formData);
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
-  const validateForm = (formData) => {
-    let errors = {};
-
-    if (!formData.get("name")) {
-      errors.name = "Supplier name is required";
-    }
-
-    const logo = formData.get("logo");
-    if (logo && !logo.type.startsWith("image/")) {
-      errors.logo = "Please select file";
-    }
-
-    return errors;
-  };
-
+ 
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
 
-    const errors = validateForm(formData);
+    const errors = validateSupplierInfoForm(formData);
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
@@ -128,15 +116,29 @@ function SuppilerInfo(props) {
     }
 
     const formData = new FormData(form);
-    const errors = validateForm(formData);
+    const errors = validateSupplierInfoForm(formData);
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
       history.push("/supplier");
     }
   };
-  const handleCancle = () => {
-    history.push("/supplier");
+  
+  const handleCancel = () => {
+    Swal.fire({
+      title: 'Are you sure, <br> you want to exit ? ',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      customClass: {
+        confirmButton: 'btn btn-primary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        history.push('/supplier');
+      }
+    });
   };
 
   return (
@@ -175,7 +177,7 @@ function SuppilerInfo(props) {
                 <button
                   className="btn btn-secondary w-auto btn-lg"
                   type="submit"
-                  onClick={handleCancle}
+                  onClick={handleCancel}
                 >
                   Exit
                 </button>

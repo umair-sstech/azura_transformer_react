@@ -6,6 +6,8 @@ import { onLoading } from "../../actions";
 import axios from "axios";
 
 import "./SupplierPage.css";
+import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
 
 function SuppilerPage3(props) {
   const { setPage } = props;
@@ -33,6 +35,7 @@ function SuppilerPage3(props) {
     Array(productFields.length).fill(null)
   );
 
+  const history=useHistory()
   useEffect(() => {
     props.onLoading(true);
     getProductField();
@@ -61,6 +64,24 @@ function SuppilerPage3(props) {
       props.onLoading(false);
     }
   };
+
+  const handleCancel = () => {
+    Swal.fire({
+      title: 'Are you sure, <br> you want to exit ? ',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      customClass: {
+        confirmButton: 'btn btn-primary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        history.push('/supplier');
+      }
+    });
+  };
+
   return (
     <>
     <hr className="hr"/>
@@ -83,7 +104,7 @@ function SuppilerPage3(props) {
             Save & Exit
           </button>
   
-          <button className="btn btn-secondary w-auto btn-lg" type="submit">
+          <button className="btn btn-secondary w-auto btn-lg" type="submit" onClick={handleCancel}>
             Exit
           </button>
         </div>
