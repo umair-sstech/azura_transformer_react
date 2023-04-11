@@ -546,6 +546,30 @@ class NavbarMenu extends React.Component
                       </li>
                     </ul>
                   </li> : null}
+                  <li className="" id="dataInsertDropDown1">
+                  <a
+                    href="#!"
+                    className="has-arrow"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      this.activeMenutabContainer("dataInsertDropDown1");
+                    }}
+                  >
+                    <i className="icon-plus"></i> <span>Integration</span>
+                  </a>
+                  <ul className="collapse">
+                    {this.props.user?.data.role == "SUPER_ADMIN" ? (
+                      <li className={activeKey === "dashboard" ? "active" : ""}>
+                        <Link to="supplier">Supplier</Link>
+                      </li>
+                    ) : null}
+                    {this.props.user?.data.role == "SUPER_ADMIN" ? (
+                      <li className={activeKey === "dashboard" ? "active" : ""}>
+                        <Link to="market-place">Market Place</Link>
+                      </li>
+                    ) : null}
+                  </ul>
+                </li>
                 <li className="" id="reportDropDown">
                   <a
                     href="#!"

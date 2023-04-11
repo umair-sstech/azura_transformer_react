@@ -78,6 +78,10 @@ import ManageUserPermission from "./screens/ManageUser/ManageUserPermission";
 import PublicRoute from "./routers/PublicRoute";
 import UpdateProfile from "./screens/UpdateProfile/UpdateProfile";
 import RetailerProfile from "./screens/RetailerProfile/RetailerProfile";
+import SupplierList from "./screens/SuppilerList/SuppilerList"
+import ManageSuppiler from "./screens/ManageSuppiler/ManageSuppiler";
+import SuppilerPage3 from "./screens/ManageSuppiler/SuppilerPage3";
+import SuppilerPage2 from "./screens/ManageSuppiler/SuppilerPage2";
 window.__DEV__ = true;
 
 class App extends React.Component {
@@ -222,6 +226,18 @@ class App extends React.Component {
                   {this.props.user?.permissions.update_retailer ||
                       this.props.user?.permissions.add_retailer ? <Route exact path={`/manage-user`} component={ManageUser} /> : null}
                     {this.props.user?.permissions.update_user ? <Route exact path={`/user-permission`} component={ManageUserPermission} /> : null}
+                </>
+              ) : null}
+              {this.props.user?.data.role == "SUPER_ADMIN" ? (
+                <>
+                  <Route exact path={`/supplier`} component={SupplierList} />
+                  <Route exact path={`/manage-suppiler`} component={ManageSuppiler} />
+                  <Route exact path={`/file-upload`} component={SuppilerPage2} />
+
+                  <Route exact path={`/data-mapping`} component={SuppilerPage3} />
+
+                  
+
                 </>
               ) : null}
             </div>

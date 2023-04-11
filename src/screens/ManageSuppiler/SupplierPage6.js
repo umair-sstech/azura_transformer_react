@@ -28,6 +28,7 @@ function SupplierPage6() {
   };
   return (
     <>
+    <hr className="hr"/>
     <div className="row">
       <div className="col-lg-12 col-md-12 col-12 button-class">
         <div className="d-flex">

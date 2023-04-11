@@ -12,20 +12,18 @@ import { useHistory } from "react-router-dom";
 function SuppilerPage3(props) {
   const { setPage } = props;
   const options = [
-    { value: "Do nothing", label: "Do nothing", color: "black", selections: 0 },
+    { value: "Do nothing", label: "Do nothing",},
     {
       value: "Hardcode value",
       label: "Hardcode value",
       textbox: true,
-      color: "black",
-      selections: 0,
+      
     },
     {
       value: "Use AI",
       label: "Use AI",
       textbox: true,
-      color: "black",
-      selections: 0,
+   
     },
   ];
 
@@ -34,6 +32,7 @@ function SuppilerPage3(props) {
   const [selectedOptions, setSelectedOptions] = useState(
     Array(productFields.length).fill(null)
   );
+  const [selectedOptionCounts, setSelectedOptionCounts] = useState({});
 
   const history=useHistory()
   useEffect(() => {
@@ -47,7 +46,7 @@ function SuppilerPage3(props) {
       newSelectedOptions[index] = selectedOption;
       return newSelectedOptions;
     });
-  };
+  }; 
 
   const getProductField = async () => {
     try {

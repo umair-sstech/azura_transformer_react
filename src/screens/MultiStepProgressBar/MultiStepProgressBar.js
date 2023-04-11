@@ -8,7 +8,8 @@ const stepNames = [
   "Data file Mapping",
   "Image Resize",
   "Data Import Settings",
-  "Barcodelookup.com"
+  "Barcodelookup.com",
+  "Product Tier Setup"
 ];
 
 const styles = {
@@ -25,16 +26,18 @@ const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
   if (page == "1") {
     stepPercentage = 10;
   } else if (page == "2") {
-    stepPercentage = 30;
+    stepPercentage = 25;
   } else if (page == "3") {
-    stepPercentage = 50;
+    stepPercentage = 40;
   } else if (page == "4") {
-    stepPercentage = 70;
+    stepPercentage = 56;
   } else if (page == "5") {
-    stepPercentage = 85;
+    stepPercentage = 70;
   } else if (page == "6") {
+    stepPercentage = 88;
+  } else if (page == "7") {
     stepPercentage = 100;
-  } else {
+  }else {
     stepPercentage = 0;
   }
 
@@ -112,6 +115,16 @@ const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
                   accomplished ? "accomplished" : null
                 }`}
                 onClick={() => onPageNumberClick("6")}
+              ></div>
+            )}
+          </Step>
+          <Step>
+            {({ accomplished, index }) => (
+              <div
+                className={`indexedStep ${
+                  accomplished ? "accomplished" : null
+                }`}
+                onClick={() => onPageNumberClick("7")}
               ></div>
             )}
           </Step>

@@ -13,6 +13,7 @@ import SuppilerPage4 from "./SuppilerPage4";
 import SuppilerPage5 from "./SuppilerPage5";
 import SupplierPage6 from "./SupplierPage6";
 import "./SupplierPage.css";
+import SupplierPage7 from "./SupplierPage7";
 
 
 export const FormContext = createContext();
@@ -91,6 +92,9 @@ function ManageSuppiler(props) {
       case "6":
         setPage("6");
         break;
+        case "7":
+          setPage("7");
+          break;
       default:
         setPage("1");
     }
@@ -186,6 +190,12 @@ function ManageSuppiler(props) {
                       ),
                       6: (
                         <SupplierPage6
+                          onButtonClick={nextPage}
+                          setPage={setPage}
+                        />
+                      ),
+                      7: (
+                        <SupplierPage7
                           onButtonClick={nextPage}
                           setPage={setPage}
                         />
