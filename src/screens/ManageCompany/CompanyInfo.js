@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify'
 import countryList from '../../Data/countryList';
 import { FormContext } from './ManageCompany';
+import Select from 'react-select';
 import { connect } from 'react-redux';
 import { onLoading } from '../../actions';
 import { Spinner } from 'react-bootstrap';
@@ -40,24 +41,28 @@ const CompanyInfo = (props) =>
 
     useEffect(() => {
         if (formData) {
+            formData.country = {
+                value: formData.country,
+                label: formData.country
+            }
             setInitFormData(formData)
         }
-    }, [props]);
-
+    }, [formData]);
+    const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
     const Schema = Yup.object().shape({
-        name: Yup.string().required("This field is require"),
+        name: Yup.string().required("This field is required").max(50, "Maximum 50 character"),
         description: Yup.string().max(250, "Maximum 250 character"),
-        country: Yup.string().required("This field is require"),
-        building_name: Yup.string().max(100, "Maximum 100 character").required("This field is require"),
-        street_address: Yup.string().max(100, "Maximum 100 character").required("This field is require"),
-        state_or_city: Yup.string().required("This field is require"),
+        country: Yup.object().required("This field is required"),
+        building_name: Yup.string().max(100, "Maximum 100 character").required("This field is required"),
+        street_address: Yup.string().max(100, "Maximum 100 character").required("This field is required"),
+        state_or_city: Yup.string().required("This field is required").max(100, "Maximum 100 character"),
         pincode: Yup.string().max(30, "Maximum 30 character"),
-        contact_no: Yup.string().max(15, "Maximum 15 character"),
+        contact_no: Yup.string().matches(phoneRegExp, 'Phone number is not valid').max(15, "Maximum 15 character"),
         email: Yup.string().email("Insert Vaid Email"),
         custom_domain_name: Yup.string().max(200, "URL must be less than 200 character"),
         site_url: Yup.string().max(200, "URL must be less than 200 character"),
         cost_center_name: Yup.string().max(50, "Cost Centre Name must be less than 50 character"),
-        suburb: Yup.string().max(100, "Suburb must be less than 100 character").required("This field is require")
+        suburb: Yup.string().max(100, "Suburb must be less than 100 character").required("This field is required")
     });
     return (
         <Formik
@@ -71,7 +76,7 @@ const CompanyInfo = (props) =>
                 formdata.append("building_name", data.building_name || "")
                 formdata.append("street_address", data.street_address || "")
                 formdata.append("state_or_city", data.state_or_city || "")
-                formdata.append("country", data.country || "")
+                formdata.append("country", data.country.value || "")
                 formdata.append("pincode", data.pincode || "")
                 formdata.append("suburb", data.suburb || "")
                 formdata.append("contact_no", data.contact_no || "")
@@ -90,7 +95,7 @@ const CompanyInfo = (props) =>
                     formdata.append("tiktok_url", formData.hasOwnProperty('tiktok_url') ? formData.tiktok_url : "")
                     formdata.append("footer_copyright", formData.hasOwnProperty('footer_copyright') ? formData.footer_copyright : "")
                     props.onLoading(true)
-                    axios.post(`${process.env.REACT_APP_API_URL}/company/update-company/${isCompanyAdded}`, formdata)
+                    axios.post(`${process.env.REACT_APP_COMPANY_SERVICE}/update-company/${isCompanyAdded}`, formdata)
                         .then(res => {
                             localStorage.setItem("newlyAddedCompany", res.data.company._id)
                             setIsCompanyAdded(res.data.company._id)
@@ -104,7 +109,7 @@ const CompanyInfo = (props) =>
                 }
                 else {
                     props.onLoading(true)
-                    axios.post(`${process.env.REACT_APP_API_URL}/company/add-company`, formdata)
+                    axios.post(`${process.env.REACT_APP_COMPANY_SERVICE}/add-company`, formdata)
                         .then(res => {
                             localStorage.setItem("newlyAddedCompany", res.data.company._id)
                             setIsCompanyAdded(res.data.company._id)
@@ -249,18 +254,29 @@ const CompanyInfo = (props) =>
                                 </div>
                                 <div className='col-4'>
                                     <div className="form-group">
-                                        <label>Country <span style={{ color: "red" }}>*</span></label>
-                                        <select
-                                            name='country'
-                                            className="form-control"
+                                        <label>
+                                            Country <span style={{ color: "red" }}>*</span>
+                                        </label>
+                                        <Select
+                                            options={countryList?.map((data) => (
+                                                {
+                                                    value: data.name,
+                                                    label: data.name,
+                                                }
+                                            )
+                                            )}
+                                            placeholder="Select Country"
                                             value={values.country}
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}>
-                                            <option value="">-- Select Country --</option>
-                                            {countryList.map(data => {
-                                                return <option key={data.code} value={data.name}>{data.name}</option>
-                                            })}
-                                        </select>
+                                            onBlur={(e) => handleBlur(e)}
+                                            onChange={(data) => {
+                                                if (data) {
+                                                    let event = {
+                                                        target: { name: "country", value: data },
+                                                    };
+                                                    handleChange(event);
+                                                }
+                                            }}
+                                        />
                                         {errors.country && touched.country ? (
                                             <span className="error" style={{ color: "red" }}>
                                                 {errors.country}

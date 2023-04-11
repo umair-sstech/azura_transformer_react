@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { useHistory } from "react-router-dom"
 import { connect } from 'react-redux';
 import { onUpdateFormLoading } from '../../actions';
+import moment from 'moment';
 
 export const FormContext = createContext();
 
@@ -20,6 +21,7 @@ const ManageCompany = (props) =>
     const [formData, setFormData] = useState();
     const [logoData, setLogoData] = useState();
     const [isCompanyAdded, setIsCompanyAdded] = useState('');
+    const [createdDate, setCreatedDate] = useState("");
 
     const history = useHistory()
 
@@ -28,11 +30,13 @@ const ManageCompany = (props) =>
         if (id) {
             props.onUpdateFormLoading(true)
             setIsCompanyAdded(id)
-            axios.get(`${process.env.REACT_APP_API_URL}/company/company-by-Id/${id}`)
+            axios.get(`${process.env.REACT_APP_COMPANY_SERVICE}/company-by-Id/${id}`)
                 .then(res => {
                     const data = res.data.companyData
                     setFormData(data)
                     props.onUpdateFormLoading(false)
+                    console.log(data.created_on);
+                    setCreatedDate(data.created_on)
                 })
                 .catch(e => {
                     toast.error(e.response.data.message || "Something went wrong")
@@ -84,6 +88,9 @@ const ManageCompany = (props) =>
                                     {props.updateFormLoading ? <div className='loader-wrapper' >
                                         <i className="fa fa-refresh fa-spin"></i>
                                     </div> : null}
+                                    {createdDate ? <div className='date-wrapper' style={{ textAlign: "right" }}>
+                                        <span>Created on: {moment(createdDate).format("MM/DD/YYYY hh:mm a")}</span>
+                                    </div> : null}
                                     <FormContext.Provider value={{
                                         setIsCompanyAdded,
                                         isCompanyAdded,
@@ -93,7 +100,7 @@ const ManageCompany = (props) =>
                                         setFormData,
                                         setLogoData,
                                         logoData,
-                                        processCancel
+                                        processCancel,
                                     }}>
                                         <Tabs defaultActiveKey="companyInformation">
                                             <Tab eventKey="companyInformation" title="Company Information">

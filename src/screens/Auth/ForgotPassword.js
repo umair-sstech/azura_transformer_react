@@ -25,7 +25,7 @@ class ForgotPassword extends React.Component {
   {
     e.preventDefault();
     this.props.onLoading(true)
-    axios.post(`${process.env.REACT_APP_API_URL}/auth/forgot-password`, { email: this.state.email })
+    axios.post(`${process.env.REACT_APP_AUTH_SERVICE}/forgot-password`, { email: this.state.email })
       .then(res => {
         this.setState({ email: '' })
         toast.success(res.data.message)

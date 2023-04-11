@@ -4,7 +4,6 @@ import React, { useState, useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup'
 import { FormContext } from './ManageCompany';
-import "./companySocialInfo.css"
 import { Spinner } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { onLoading } from '../../actions';
@@ -61,7 +60,6 @@ const CompanySocialInfo = (props) => {
             enableReinitialize
             validationSchema={Schema}
             onSubmit={(data) => {
-                setFormData({ ...formData, ...data })
                 formdata.append("name", formData.name || "")
                 formdata.append("email", formData.email)
                 formdata.append("description", formData.description || "")
@@ -86,7 +84,7 @@ const CompanySocialInfo = (props) => {
                 formdata.append("tiktok_url", data.tiktok_url || "")
                 formdata.append("footer_copyright", data.footer_copyright || "")
                 props.onLoading(true)
-                axios.post(`${process.env.REACT_APP_API_URL}/company/update-company/${isCompanyAdded}`, formdata)
+                axios.post(`${process.env.REACT_APP_COMPANY_SERVICE}/update-company/${isCompanyAdded}`, formdata)
                     .then(res => {
                         localStorage.setItem("newlyAddedCompany", res.data.company._id)
                         setIsCompanyAdded(res.data.company._id)
@@ -108,6 +106,7 @@ const CompanySocialInfo = (props) => {
                                     <label>Logo (optional)</label>
                                     <input
                                         className="form-control"
+                                        accept='image/png, image/jpeg'
                                         type="file"
                                         name="logo"
                                         onBlur={handleBlur}

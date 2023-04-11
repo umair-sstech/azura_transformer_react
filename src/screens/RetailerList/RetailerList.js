@@ -21,17 +21,22 @@ const RetailerList = (props) => {
     const [totalPages, setTotalPages] = useState(2);
     const [dataLimit, setdataLimit] = useState(5);
     const history = useHistory()
-    const [searchCompanyId, setSearchCompanyId] = useState('');
+    const [searchText, setSearchText] = useState('active');
+
 
     const companyList = useCompanyList(props.user.data.role)
 
     useEffect(() => {
-        getDataFromApi()
+        getDataFromApi(searchText)
     }, [currentPage, dataLimit]);
 
-    const getDataFromApi = () => {
+    useEffect(() => {
+        getDataFromApi(searchText)
+    }, [searchText]);
+
+    const getDataFromApi = (search = 'active') => {
         props.onLoading(true)
-        axios.get(`${process.env.REACT_APP_API_URL}/retailer/get-retailer-list?page=${currentPage}&limit=${dataLimit}`)
+        axios.get(`${process.env.REACT_APP_RETAILER_SERVICE}/get-retailer-list?page=${currentPage}&limit=${dataLimit}&searchText=${search}`)
             .then(res => {
                 let totlePage = Math.ceil(res.data.totlaRecord / res.data.limit)
                 setTotalPages(totlePage)
@@ -65,14 +70,14 @@ const RetailerList = (props) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 props.onLoading(true)
-                axios.post(`${process.env.REACT_APP_API_URL}/retailer/retailer-status/${id}`, { status })
+                axios.post(`${process.env.REACT_APP_RETAILER_SERVICE}/retailer-status/${id}`, { status })
                     .then(res => {
                         toast.success(res.data.message)
-                        getDataFromApi();
+                        getDataFromApi(searchText);
                         props.onLoading(false)
                     }).catch(e => {
                         toast.error("Something Went Wrong")
-                        getDataFromApi();
+                        getDataFromApi(searchText);
                         props.onLoading(false)
                     })
             }
@@ -80,9 +85,9 @@ const RetailerList = (props) => {
     }
 
     let filterList = [
-        { label: "All", value: "ALL" },
-        { label: "Activate", value: "ACTIVATE" },
-        { label: "Deactivate", value: "DEACTIVATE" },
+        { label: "All", value: "all" },
+        { label: "Activate", value: "active" },
+        { label: "Deactivate", value: "deactivate" },
     ]
 
     return (
@@ -111,23 +116,13 @@ const RetailerList = (props) => {
                                             <Select
                                                 options={filterList}
                                                 placeholder="All"
-                                                onChange={filterChangeHandler}
+                                                onChange={(data) => {
+                                                    setSearchText(data.value)
+                                                    getDataFromApi(data.value)
+                                                }}
+                                                defaultValue={filterList[1]}
                                             />
                                         </div>
-                                        {/* <div style={{ width: "300px" }}>
-                                            <Select
-                                                options={companyList.map(data => {
-                                                    return {
-                                                        value: data._id,
-                                                        label: data.name
-                                                    }
-                                                })}
-                                                placeholder="Select Company"
-                                                onChange={() => {
-
-                                                }}
-                                            /><Button>Search</Button>
-                                        </div> */}
                                     </div>
                                     {props.user.permissions.add_retailer ? (<Link className='link-btn' to={`/manage-retailer`} >
                                         Add Retailer
@@ -158,7 +153,7 @@ const RetailerList = (props) => {
                                                     <td>{data.retailer_code}</td>
                                                     <td>
                                                         {data.logo?.contentType ?
-                                                            (<div className='list-logo'><img src={`${process.env.REACT_APP_API_URL}/retailer/retailer-logo/${data._id}`} /></div>) :
+                                                            (<div className='list-logo'><img src={`${process.env.REACT_APP_RETAILER_SERVICE}/retailer-logo/${data._id}`} /></div>) :
                                                             (<div className='list-logo placeholder'>N/A</div>)}
                                                     </td>
                                                     <td>{data.name}</td>

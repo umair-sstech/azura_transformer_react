@@ -26,7 +26,7 @@ const UpdateProfile = (props) =>
         const id = props.user?.data.company
         if (id) {
             setIsCompanyAdded(id)
-            axios.get(`${process.env.REACT_APP_API_URL}/company/company-by-Id/${id}`)
+            axios.get(`${process.env.REACT_APP_COMPANY_SERVICE}/company-by-Id/${id}`)
                 .then(res =>
                 {
                     const data = res.data.companyData

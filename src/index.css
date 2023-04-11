@@ -145,3 +145,18 @@ z-index: 11112 !important;
 .custom-control.custom-switch .custom-control-label::after {
   cursor: pointer;
 }
+.sidebar,
+#wrapper {
+  transition: 300ms;
+}
+
+.layout-fullwidth .sidebar {
+  z-index: 9;
+  transform: translateX(-100%);
+}
+
+.layout-fullwidth #wrapper {
+  margin-left: unset !important;
+  width: 100% !important;
+  transition: 300ms !important;
+}

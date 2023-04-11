@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
+import moment from 'moment';
 import PageHeader from '../../components/PageHeader';
 import { Tab, Tabs } from 'react-bootstrap';
 import axios from "axios"
@@ -20,6 +21,7 @@ const ManageRetailer = (props) =>
     const [formData, setFormData] = useState();
     const [logoData, setLogoData] = useState();
     const [isRetailerAdded, setIsRetailerAdded] = useState('');
+    const [createdDate, setCreatedDate] = useState("");
 
     const history = useHistory()
 
@@ -29,11 +31,12 @@ const ManageRetailer = (props) =>
         if (id) {
             props.onUpdateFormLoading(true)
             setIsRetailerAdded(id)
-            axios.get(`${process.env.REACT_APP_API_URL}/retailer/retailer-by-Id/${id}`)
+            axios.get(`${process.env.REACT_APP_RETAILER_SERVICE}/retailer-by-Id/${id}`)
                 .then(res => {
                     const data = res.data.retailerData
                     setFormData(data)
                     props.onUpdateFormLoading(false)
+                    setCreatedDate(data.created_on)
                 })
                 .catch(e => {
                     toast.error(e.response.data.message || "Something went wrong")
@@ -84,6 +87,9 @@ const ManageRetailer = (props) =>
                             <div className='body'>
                                 {props.updateFormLoading ? <div className='loader-wrapper' >
                                     <i className="fa fa-refresh fa-spin"></i>
+                                </div> : null}
+                                {createdDate ? <div className='date-wrapper' style={{ textAlign: "right" }}>
+                                    <span>Created on: {moment(createdDate).format("MM/DD/YYYY hh:mm a")}</span>
                                 </div> : null}
                                 <FormContext.Provider value={{
                                     setIsRetailerAdded,

@@ -19,17 +19,21 @@ const CompanyList = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(2);
     const [dataLimit, setdataLimit] = useState(5);
-    const [searchText, setSearchText] = useState('');
+    const [searchText, setSearchText] = useState('active');
     const history = useHistory()
 
     useEffect(() => {
         props.onLoading(true)
-        getDataFromApi()
+        getDataFromApi(searchText)
     }, [currentPage, dataLimit]);
 
-    const getDataFromApi = (search = 'all') => {
+    useEffect(() => {
+        getDataFromApi(searchText)
+    }, [searchText]);
+
+    const getDataFromApi = (search = 'active') => {
         props.onLoading(true)
-        axios.get(`${process.env.REACT_APP_API_URL}/company/get-company-list?page=${currentPage}&limit=${dataLimit}&searchText=${search}`)
+        axios.get(`${process.env.REACT_APP_COMPANY_SERVICE}/get-company-list?page=${currentPage}&limit=${dataLimit}&searchText=${search}`)
             .then(res => {
                 let totlePage = Math.ceil(res.data.totlaRecord / res.data.limit)
                 setTotalPages(totlePage)
@@ -54,14 +58,14 @@ const CompanyList = (props) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 props.onLoading(true)
-                axios.post(`${process.env.REACT_APP_API_URL}/company/company-status/${id}`, { status })
+                axios.post(`${process.env.REACT_APP_COMPANY_SERVICE}/company-status/${id}`, { status })
                     .then(res => {
                         toast.success(res.data.message)
-                        getDataFromApi();
+                        getDataFromApi(searchText);
                         props.onLoading(false)
                     }).catch(e => {
                         toast.error("Something Went Wrong")
-                        getDataFromApi();
+                        getDataFromApi(searchText);
                         props.onLoading(false)
                     })
             }
@@ -104,9 +108,10 @@ const CompanyList = (props) => {
                                         <Select
                                             options={filterList}
                                             onChange={(data) => {
+                                                setSearchText(data.value)
                                                 getDataFromApi(data.value)
                                             }}
-                                            defaultValue={filterList[0]}
+                                            defaultValue={filterList[1]}
                                         />
                                     </div>
                                     <Link className='link-btn' to={`/manage-company`} >
@@ -139,7 +144,7 @@ const CompanyList = (props) => {
                                                     <td>{data.company_code}</td>
                                                     <td>
                                                         {data.logo?.contentType ?
-                                                            (<div className='list-logo'><img src={`${process.env.REACT_APP_API_URL}/company/company-logo/${data._id}`} /></div>) :
+                                                            (<div className='list-logo'><img src={`${process.env.REACT_APP_COMPANY_SERVICE}/company-logo/${data._id}`} /></div>) :
                                                             (<div className='list-logo placeholder'>N/A</div>)}
                                                     </td>
                                                     <td>{data.name}</td>

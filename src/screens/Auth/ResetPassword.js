@@ -56,7 +56,7 @@ class ResetPassword extends React.Component {
                                             onSubmit={(data, { resetForm }) => {
                                                 this.props.onLoading(true)
                                                 const { password, confirmPassword } = data;
-                                                axios.post(`${process.env.REACT_APP_API_URL}/auth/reset-password`, { password, confirmPassword, token: this.state.token })
+                                                axios.post(`${process.env.REACT_APP_AUTH_SERVICE}/reset-password`, { password, confirmPassword, token: this.state.token })
                                                     .then(res =>
                                                     {
                                                         resetForm({ values: '' })
