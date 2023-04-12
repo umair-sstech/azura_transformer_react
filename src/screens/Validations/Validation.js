@@ -1,13 +1,13 @@
 export const validateSupplierInfoForm = (formData) => {
   let errors = {};
 
-  if (!formData.get("name")) {
-    errors.name = "Supplier name is required";
+  if (!formData.get("suplirName")) {
+    errors.suplirName = "Supplier name is required";
   }
 
-  const logo = formData.get("logo");
+  const logo = formData.get("suplireLogo");
   if (logo && !logo.type.startsWith("image/")) {
-    errors.logo = "Please select file";
+    errors.suplireLogo = "Please select file";
   }
 
   return errors;

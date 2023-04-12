@@ -82,6 +82,7 @@ import SupplierList from "./screens/SuppilerList/SuppilerList"
 import ManageSuppiler from "./screens/ManageSuppiler/ManageSuppiler";
 import SuppilerPage3 from "./screens/ManageSuppiler/SuppilerPage3";
 import SuppilerPage2 from "./screens/ManageSuppiler/SuppilerPage2";
+import IntegrationType from "./screens/Integrations/IntegrationType";
 window.__DEV__ = true;
 
 class App extends React.Component {
@@ -237,6 +238,13 @@ class App extends React.Component {
                   <Route exact path={`/data-mapping`} component={SuppilerPage3} />
 
                   
+
+                </>
+              ) : null}
+              {this.props.user?.data.role == "SUPER_ADMIN" ? (
+                <>
+                  <Route exact path={`/integration`} component={IntegrationType} />
+  
 
                 </>
               ) : null}

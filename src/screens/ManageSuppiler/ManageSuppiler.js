@@ -23,7 +23,10 @@ function ManageSuppiler(props) {
   const [formData, setFormData] = useState();
   const [logoData, setLogoData] = useState();
   const [isSuppilerAdded, setIsSuppilerAdded] = useState("");
+  const [supplierData, setSupplierData] = useState({});
+
   const [page, setPage] = useState("1");
+
 
   const history = useHistory();
 
@@ -155,6 +158,7 @@ function ManageSuppiler(props) {
                     setPage={setPage}
                     page={page}
                     onPageNumberClick={nextPageNumber}
+
                   />
                   {
                     {
@@ -162,6 +166,8 @@ function ManageSuppiler(props) {
                         <SupplierInfo
                           onButtonClick={handleButtonClick}
                           setPage={setPage}
+                          supplierData={supplierData}
+                          setSupplierData={setSupplierData}
                         />
                       ),
                       2: (

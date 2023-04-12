@@ -19,7 +19,8 @@ function SupplierPage2(props) {
   const { setIsSupplierAdded, isSupplierAdded, formData, setFormData, processCancel } = useContext(FormContext);
  
   const [initFormData, setInitFormData] = useState({
-    upload_file: "",
+    csvfile: "",
+    supplier_id:""
   });
   const [fileError, setFileError] = useState("");
   const history = useHistory();
@@ -30,7 +31,7 @@ function SupplierPage2(props) {
     }
   }, [props]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const fileInput = document.querySelector('input[type="file"]');
     if (fileInput.files.length === 0) {
@@ -38,11 +39,18 @@ function SupplierPage2(props) {
     } else {
       const form = e.target;
       const formData = new FormData(form);
-      setFormData(formData);
-      // setIsSupplierAdded(false);
+      formData.append('supplier_id', initFormData.supplier_id);
+      try {
+        const response = await axios.post('http://localhost:8001/csv/storeCSVdata', formData);
+        // handle the response here
+        console.log(response.data);
+      } catch (error) {
+        // handle the error here
+        console.error(error);
+      }
       setPage("3");
     }
-  };
+  }
 
   const handleOnClick = (e) => {
     const fileInput = document.querySelector('input[type="file"]');

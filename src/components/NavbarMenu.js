@@ -558,6 +558,11 @@ class NavbarMenu extends React.Component
                     <i className="icon-plus"></i> <span>Integration</span>
                   </a>
                   <ul className="collapse">
+                  {this.props.user?.data.role == "SUPER_ADMIN" ? (
+                    <li className={activeKey === "dashboard" ? "active" : ""}>
+                      <Link to="integration">Add New</Link>
+                    </li>
+                  ) : null}
                     {this.props.user?.data.role == "SUPER_ADMIN" ? (
                       <li className={activeKey === "dashboard" ? "active" : ""}>
                         <Link to="supplier">Supplier</Link>

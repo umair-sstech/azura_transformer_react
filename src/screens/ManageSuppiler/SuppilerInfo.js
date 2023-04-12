@@ -1,18 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
-import * as Yup from "yup";
-import { Formik } from "formik";
 import axios from "axios";
 import { toast } from "react-toastify";
-import countryList from "../../Data/countryList";
 import { FormContext } from "./ManageSuppiler";
 import { connect } from "react-redux";
 import { onLoading } from "../../actions";
 import { useHistory } from "react-router-dom";
 import "./SupplierPage.css";
-import IntegrationType from "../Integrations/IntegrationType";
 import Select from "react-select";
 import Swal from "sweetalert2";
 import { validateSupplierInfoForm } from "../Validations/Validation";
+import { Spinner } from "react-bootstrap";
 
 function SuppilerInfo(props) {
   const { setPage } = props;
@@ -35,17 +32,16 @@ function SuppilerInfo(props) {
   ];
 
   const [initFormData, setInitFormData] = useState({
-    supplier_name: "",
-    logo: "",
-    profix_name: "",
+    prefixName: "",
+    suplirName: "",
+    supplireLogo: "",
     type: "",
   });
+  console.log("formdata", initFormData);
   const [prefixName, setPrefixName] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0]);
-
-  
 
   const handleChange = (selectedOption) => {
     setSelectedOption(selectedOption);
@@ -86,13 +82,19 @@ function SuppilerInfo(props) {
   };
 
   const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    setInitFormData((prevState) => ({
+      ...prevState,
+      supplireLogo: file,
+    }));
+
     const formData = new FormData(document.forms.myForm);
+    formData.set("supplireLogo", file);
     const errors = validateSupplierInfoForm(formData);
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
- 
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -102,9 +104,32 @@ function SuppilerInfo(props) {
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      setFormData(formData);
-      setIsSuppilerAdded(true);
-      setPage("2");
+      const prefixName = generatePrefixName(formData.get("suplirName"));
+      setPrefixName(prefixName);
+      formData.set("prefixName", prefixName);
+
+      props.onLoading(true);
+
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createSupplireInfo`,
+          formData
+        )
+        .then((response) => {
+          console.log(response.data);
+          setFormData(formData);
+          setIsSuppilerAdded(true);
+          setPage("2");
+          toast.success("Add supplier successfully");
+
+          // Set isLoading back to false after the API call is complete
+          props.onLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+
+          props.onLoading(false);
+        });
     }
   };
 
@@ -120,23 +145,41 @@ function SuppilerInfo(props) {
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      history.push("/supplier");
+      const prefixName = generatePrefixName(formData.get("suplirName"));
+      setPrefixName(prefixName);
+      formData.set("prefixName", prefixName);
+
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createSupplireInfo`,
+          formData
+        )
+        .then((response) => {
+          console.log(response.data);
+          setFormData(formData);
+          setIsSuppilerAdded(true);
+          history.push("/supplier");
+          toast.success("Add supplier successfully");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
-  
+
   const handleCancel = () => {
     Swal.fire({
-      title: 'Are you sure, <br> you want to exit ? ',
-      icon: 'warning',
+      title: "Are you sure, <br> you want to exit ? ",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
       customClass: {
-        confirmButton: 'btn btn-primary',
+        confirmButton: "btn btn-primary",
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        history.push('/supplier');
+        history.push("/supplier");
       }
     });
   };
@@ -145,7 +188,7 @@ function SuppilerInfo(props) {
     <>
       <hr className="hr" />
 
-      <form onSubmit={handleSubmit} name="myForm">
+      <form onSubmit={handleSubmit} name="myForm" encType="multipart/form-data">
         <div style={{ marginTop: "35px" }}>
           <div className="row">
             <div className="col-lg-12 col-md-12 col-12 button-class">
@@ -154,16 +197,15 @@ function SuppilerInfo(props) {
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                 >
-                  {/* {props.isLoading ? (
-            <>
-              <Spinner animation="border" size="sm" /> Please wait...
-            </>
-          ) : isSuppilerAdded ? (
-            "Update"
-          ) : (
-            "Save & Next"
-          )}*/}
-                  Save & Next
+                  {props.isLoading ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Please wait...
+                    </>
+                  ) : isSuppilerAdded ? (
+                    "Update"
+                  ) : (
+                    "Save & Next"
+                  )}
                 </button>
 
                 <button
@@ -171,7 +213,16 @@ function SuppilerInfo(props) {
                   type="submit"
                   onClick={handleOnClick}
                 >
-                  Save & Exit
+                {props.isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : isSuppilerAdded ? (
+                  "Update"
+                ) : (
+                  "Save & Exit"
+                )}
+                  
                 </button>
 
                 <button
@@ -195,6 +246,7 @@ function SuppilerInfo(props) {
                   onChange={handleChange}
                   options={options}
                   isDisabled={false}
+                  name="type"
                 />
               </div>
             </div>
@@ -206,12 +258,12 @@ function SuppilerInfo(props) {
                 <input
                   className="form-control"
                   type="text"
-                  name="name"
+                  name="suplirName"
                   placeholder="Enter Suppiler Name"
                   onChange={handleNameChange}
                 />
-                {formErrors.name && (
-                  <span className="text-danger">{formErrors.name}</span>
+                {formErrors.suplirName && (
+                  <span className="text-danger">{formErrors.suplirName}</span>
                 )}
               </div>
             </div>
@@ -225,11 +277,11 @@ function SuppilerInfo(props) {
                 <input
                   className="form-control"
                   type="file"
-                  name="logo"
+                  name="supplireLogo"
                   onChange={handleLogoChange}
                 />
-                {formErrors.logo && (
-                  <span className="text-danger">{formErrors.logo}</span>
+                {formErrors.supplireLogo && (
+                  <span className="text-danger">{formErrors.supplireLogo}</span>
                 )}
               </div>
             </div>
@@ -242,6 +294,7 @@ function SuppilerInfo(props) {
                   type="text"
                   placeholder="Prefix name"
                   disabled
+                  name="prefixName"
                   value={prefixName}
                 />
               </div>
