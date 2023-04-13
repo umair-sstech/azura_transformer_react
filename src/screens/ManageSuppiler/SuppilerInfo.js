@@ -21,6 +21,7 @@ function SuppilerInfo(props) {
     processCancel,
   } = useContext(FormContext);
   const history = useHistory();
+
   const options = [
     { value: "Supplier", label: "Supplier" },
     { value: "Market Place", label: "Market Place", isDisabled: true },
@@ -37,11 +38,15 @@ function SuppilerInfo(props) {
     supplireLogo: "",
     type: "",
   });
-  console.log("formdata", initFormData);
   const [prefixName, setPrefixName] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0]);
+  useEffect(() => {
+    if (formData) {
+      setInitFormData(formData);
+    }
+  }, [props]);
 
   const handleChange = (selectedOption) => {
     setSelectedOption(selectedOption);
@@ -99,39 +104,79 @@ function SuppilerInfo(props) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-
+  
     const errors = validateSupplierInfoForm(formData);
     setFormErrors(errors);
-
+  
     if (Object.keys(errors).length === 0) {
       const prefixName = generatePrefixName(formData.get("suplirName"));
       setPrefixName(prefixName);
       formData.set("prefixName", prefixName);
-
+  
       props.onLoading(true);
-
-      axios
-        .post(
-          `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createSupplireInfo`,
-          formData
-        )
-        .then((response) => {
-          console.log(response.data);
-          setFormData(formData);
-          setIsSuppilerAdded(true);
-          setPage("2");
-          toast.success("Add supplier successfully");
-
-          // Set isLoading back to false after the API call is complete
-          props.onLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
-
-          props.onLoading(false);
-        });
+  
+      const supplierId = localStorage.getItem("supplierId");
+  
+      if (supplierId) {
+        axios
+          .patch(`${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/updateSupplireInfo?supplierId=${supplierId}`, formData)
+          .then((response) => {
+            console.log("response",response)
+            setIsSuppilerAdded(true);
+            setPage("2");
+            toast.success("Update supplier information successfully");
+  
+            props.onLoading(false);
+          })
+          .catch((error) => {
+            console.log("error", error);
+  
+            props.onLoading(false);
+          });
+      } else {
+        axios
+          .post(`${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createSupplireInfo`, formData)
+          .then((response) => {
+            const supplierId = response.data.data.id;
+            if (supplierId) {
+              localStorage.setItem("supplierId", supplierId);
+            }
+            const supplierName = response.data.data.suplirName;
+            if (supplierName) {
+              localStorage.setItem("supplierName", supplierName);
+            }
+            setIsSuppilerAdded(true);
+            setPage("2");
+            toast.success("Add supplier successfully");
+  
+            props.onLoading(false);
+          })
+          .catch((error) => {
+            console.log("error", error);
+  
+            props.onLoading(false);
+          });
+      }
     }
   };
+  
+
+  useEffect(() => {
+    const supplierId = localStorage.getItem("supplierId");
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/getSupplireInfoById?supplierId=${supplierId}`
+      )
+      .then((response) => {
+        const supplierData = response.data.data;
+        setSelectedOption({ value: supplierData.type, label: supplierData.type });
+        setPrefixName(supplierData.prefixName);
+        setFormData(supplierData);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  }, []);
 
   const handleOnClick = (e) => {
     e.preventDefault();
@@ -160,12 +205,16 @@ function SuppilerInfo(props) {
           setIsSuppilerAdded(true);
           history.push("/supplier");
           toast.success("Add supplier successfully");
+
+          // Remove items from local storage
+          localStorage.removeItem("supplierId");
+          localStorage.removeItem("supplierName");
         })
         .catch((error) => {
           console.log(error);
         });
     }
-  };
+};
 
   const handleCancel = () => {
     Swal.fire({
@@ -180,6 +229,8 @@ function SuppilerInfo(props) {
     }).then((result) => {
       if (result.isConfirmed) {
         history.push("/supplier");
+        localStorage.removeItem("supplierId");
+        localStorage.removeItem("supplierName");
       }
     });
   };
@@ -213,16 +264,7 @@ function SuppilerInfo(props) {
                   type="submit"
                   onClick={handleOnClick}
                 >
-                {props.isLoading ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : isSuppilerAdded ? (
-                  "Update"
-                ) : (
-                  "Save & Exit"
-                )}
-                  
+                  Save & Exit
                 </button>
 
                 <button
@@ -260,6 +302,7 @@ function SuppilerInfo(props) {
                   type="text"
                   name="suplirName"
                   placeholder="Enter Suppiler Name"
+                  // value={initFormData.suplirName}
                   onChange={handleNameChange}
                 />
                 {formErrors.suplirName && (
@@ -299,19 +342,6 @@ function SuppilerInfo(props) {
                 />
               </div>
             </div>
-            {/* <div className="col-6">
-            <div className="form-group">
-              <label>
-                Type 
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                placeholder="Type"
-                name="type"
-              />
-            </div>
-                </div>*/}
           </div>
         </div>
       </form>

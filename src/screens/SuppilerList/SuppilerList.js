@@ -15,6 +15,7 @@ import Select from "react-select";
 
 function SuppilerList(props) {
   const [supplierList, setSupplierList] = useState([]);
+  console.log("supplierList", supplierList.id);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(5);
@@ -160,10 +161,12 @@ function SuppilerList(props) {
                           <td>{supplier.suplirName}</td>
 
                           <td>
-                          {supplier.supplireLogo?supplier.supplireLogo
-                              :
-                              (<div className='list-logo placeholder'>N/A</div>)}
-                      </td>
+                            {supplier.supplireLogo ? (
+                              supplier.supplireLogo
+                            ) : (
+                              <div className="list-logo placeholder">N/A</div>
+                            )}
+                          </td>
                           <td>{supplier.prefixName}</td>
                           <td>{supplier.lastUpdate}</td>
                           {props.user.permissions.update_company ? (
@@ -177,9 +180,20 @@ function SuppilerList(props) {
                                   data-placement="top"
                                   title="Edit"
                                   className="fa fa-edit edit"
-                                  onClick={() =>
-                                    history.push(`/supplier/${supplier.id}`)
-                                  }
+                                  onClick={() => {
+                                    localStorage.setItem(
+                                      "supplierId",
+                                      supplier.id
+                                    );
+                                    localStorage.setItem(
+                                      "supplierName",
+                                      supplier.suplirName
+                                    );
+
+                                    history.push(
+                                      `/manage-suppiler`
+                                    );
+                                  }}
                                 ></i>
                               </td>
                             </>

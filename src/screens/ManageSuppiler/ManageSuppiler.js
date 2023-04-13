@@ -15,7 +15,6 @@ import SupplierPage6 from "./SupplierPage6";
 import "./SupplierPage.css";
 import SupplierPage7 from "./SupplierPage7";
 
-
 export const FormContext = createContext();
 
 function ManageSuppiler(props) {
@@ -27,30 +26,8 @@ function ManageSuppiler(props) {
 
   const [page, setPage] = useState("1");
 
-
   const history = useHistory();
 
-  useEffect(() => {
-    const id = localStorage.getItem("newlyAddedSuppiler");
-    if (id) {
-      props.onUpdateFormLoading(true);
-      setIsSuppilerAdded(id);
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/company/company-by-Id/${id}`)
-        .then((res) => {
-          const data = res.data.companyData;
-          setFormData(data);
-          props.onUpdateFormLoading(false);
-        })
-        .catch((e) => {
-          toast.error(e.response.data.message || "Something went wrong");
-          setFormData();
-          setIsSuppilerAdded("");
-          localStorage.removeItem("newlyAddedSuppiler");
-          props.onUpdateFormLoading(false);
-        });
-    }
-  }, []);
 
   useEffect(
     () => () => {
@@ -61,6 +38,7 @@ function ManageSuppiler(props) {
     },
     []
   );
+ 
 
   const processCancel = () => {
     setFormData();
@@ -75,7 +53,6 @@ function ManageSuppiler(props) {
   };
 
   const nextPageNumber = (pageNumber) => {
-
     switch (pageNumber) {
       case "1":
         setPage("1");
@@ -95,9 +72,9 @@ function ManageSuppiler(props) {
       case "6":
         setPage("6");
         break;
-        case "7":
-          setPage("7");
-          break;
+      case "7":
+        setPage("7");
+        break;
       default:
         setPage("1");
     }
@@ -142,75 +119,71 @@ function ManageSuppiler(props) {
                     </div>
                   ) : null}
                   <FormContext.Provider
-                  value={{
-                    setIsSuppilerAdded,
-                    isSuppilerAdded,
-                    activeStepIndex,
-                    setActiveStepIndex,
-                    formData,
-                    setFormData,
-                    setLogoData,
-                    logoData,
-                    processCancel,
-                  }}
-                >
-                  <MultiStepProgressBar
-                    setPage={setPage}
-                    page={page}
-                    onPageNumberClick={nextPageNumber}
-
-                  />
-                  {
+                    value={{
+                      setIsSuppilerAdded,
+                      isSuppilerAdded,
+                      activeStepIndex,
+                      setActiveStepIndex,
+                      formData,
+                      setFormData,
+                      setLogoData,
+                      logoData,
+                      processCancel,
+                      supplierData
+                    }}
+                  >
+                    <MultiStepProgressBar
+                      setPage={setPage}
+                      page={page}
+                      onPageNumberClick={nextPageNumber}
+                    />
                     {
-                      1: (
-                        <SupplierInfo
-                          onButtonClick={handleButtonClick}
-                          setPage={setPage}
-                          supplierData={supplierData}
-                          setSupplierData={setSupplierData}
-                        />
-                      ),
-                      2: (
-                        <SuppilerPage2
-                          onButtonClick={nextPage}
-                          setPage={setPage}
-                        />
-                      ),
-                      3: (
-                        <SuppilerPage3
-                          onButtonClick={nextPage}
-                          setPage={setPage}
-                        />
-                      ),
-                      4: (
-                        <SuppilerPage4
-                          onButtonClick={nextPage}
-                          setPage={setPage}
-                        />
-                      ),
-                      5: (
-                        <SuppilerPage5
-                          onButtonClick={nextPage}
-                          setPage={setPage}
-                        />
-                      ),
-                      6: (
-                        <SupplierPage6
-                          onButtonClick={nextPage}
-                          setPage={setPage}
-                        />
-                      ),
-                      7: (
-                        <SupplierPage7
-                          onButtonClick={nextPage}
-                          setPage={setPage}
-                        />
-                      ),
-                    }[page]
-                  }
-                </FormContext.Provider>
-                
-                
+                      {
+                        1: (
+                          <SupplierInfo
+                            onButtonClick={handleButtonClick}
+                            setPage={setPage}
+                          />
+                        ),
+                        2: (
+                          <SuppilerPage2
+                            onButtonClick={nextPage}
+                            setPage={setPage}
+                          />
+                        ),
+                        3: (
+                          <SuppilerPage3
+                            onButtonClick={nextPage}
+                            setPage={setPage}
+                          />
+                        ),
+                        4: (
+                          <SuppilerPage4
+                            onButtonClick={nextPage}
+                            setPage={setPage}
+                          />
+                        ),
+                        5: (
+                          <SuppilerPage5
+                            onButtonClick={nextPage}
+                            setPage={setPage}
+                          />
+                        ),
+                        6: (
+                          <SupplierPage6
+                            onButtonClick={nextPage}
+                            setPage={setPage}
+                          />
+                        ),
+                        7: (
+                          <SupplierPage7
+                            onButtonClick={nextPage}
+                            setPage={setPage}
+                          />
+                        ),
+                      }[page]
+                    }
+                  </FormContext.Provider>
                 </div>
               </div>
             </div>

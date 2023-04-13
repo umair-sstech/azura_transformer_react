@@ -12,16 +12,21 @@ import { useHistory } from "react-router-dom";
 import "./SupplierPage.css";
 import Swal from "sweetalert2";
 
-
-
 function SupplierPage2(props) {
   const { setPage } = props;
-  const { setIsSupplierAdded, isSupplierAdded, formData, setFormData, processCancel } = useContext(FormContext);
- 
+  const {
+    setIsSupplierAdded,
+    isSupplierAdded,
+    formData,
+    setFormData,
+    processCancel,
+  } = useContext(FormContext);
+
   const [initFormData, setInitFormData] = useState({
     csvfile: "",
-    supplier_id:""
+    supplier_id: "",
   });
+  console.log("formData", formData);
   const [fileError, setFileError] = useState("");
   const history = useHistory();
 
@@ -39,18 +44,22 @@ function SupplierPage2(props) {
     } else {
       const form = e.target;
       const formData = new FormData(form);
-      formData.append('supplier_id', initFormData.supplier_id);
+      formData.append("supplier_id", initFormData.id);
+      props.onLoading(true);
       try {
-        const response = await axios.post('http://localhost:8001/csv/storeCSVdata', formData);
-        // handle the response here
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL_SUPPLIER}/csv/storeCSVdata`
+        );
         console.log(response.data);
       } catch (error) {
-        // handle the error here
         console.error(error);
       }
+      toast.success("Add Csv file successfully");
+
+      props.onLoading(false);
       setPage("3");
     }
-  }
+  };
 
   const handleOnClick = (e) => {
     const fileInput = document.querySelector('input[type="file"]');
@@ -63,79 +72,94 @@ function SupplierPage2(props) {
       history.push("/supplier");
     }
   };
-  
+
   const handleCancel = () => {
     Swal.fire({
-      title: 'Are you sure, <br> you want to exit ? ',
-      icon: 'warning',
+      title: "Are you sure, <br> you want to exit ? ",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
       customClass: {
-        confirmButton: 'btn btn-primary',
+        confirmButton: "btn btn-primary",
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        history.push('/supplier');
+        history.push("/supplier");
       }
     });
   };
 
   const handleFileInputChange = () => {
     setFileError("");
-  }
+  };
 
   return (
     <>
-    <hr className="hr"/>
-    <form onSubmit={handleSubmit}>
-      <div style={{ marginTop: "30px" }}>
-      <div className="row">
-      <div className="col-lg-12 col-md-12 col-12 button-class">
-        <div className="d-flex">
-          <button className="btn btn-primary w-auto btn-lg mr-2" type="submit">
-            {props.isLoading ? (
-              <>
-                <Spinner animation="border" size="sm" /> Please wait...
-              </>
-            ) : isSupplierAdded ? (
-              "Update"
-            ) : (
-              "Save & Next"
-            )}
-          </button>
-          <button className="btn btn-primary w-auto btn-lg mr-2" type="button" onClick={handleOnClick}>
-            Save & Exit
-          </button>
-          <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={handleCancel}>
-            Exit
-          </button>
-          
-        </div>
-      </div>
-    </div>
-        <div className="row">
-          <div className="col-6">
-            <div className="form-group">
-              <label>
-                Upload File <span style={{ color: "red" }}>*</span>
-              </label>
-              <input className="form-control" type="file" name="upload_file"  accept=".csv" onChange={handleFileInputChange}/>
-              {fileError && <p style={{ color: "red" }}>{fileError}</p>}
-              <small className="form-text text-muted">
-             
-                Allowed file types: CSV.
-              </small>
+      <hr className="hr" />
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginTop: "30px" }}>
+          <div className="row">
+            <div className="col-lg-12 col-md-12 col-12 button-class">
+              <div className="d-flex">
+                <button
+                  className="btn btn-primary w-auto btn-lg mr-2"
+                  type="submit"
+                >
+                  {props.isLoading ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Please wait...
+                    </>
+                  ) : isSupplierAdded ? (
+                    "Update"
+                  ) : (
+                    "Save & Next"
+                  )}
+                </button>
+                <button
+                  className="btn btn-primary w-auto btn-lg mr-2"
+                  type="button"
+                  onClick={handleOnClick}
+                >
+                  Save & Exit
+                </button>
+                <button
+                  className="btn btn-secondary w-auto btn-lg"
+                  type="button"
+                  onClick={handleCancel}
+                >
+                  Exit
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-6">
+              <div className="form-group">
+                <label>
+                  Upload File <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  className="form-control"
+                  type="file"
+                  name="csvfile"
+                  accept=".csv"
+                  onChange={handleFileInputChange}
+                />
+                {fileError && <p style={{ color: "red" }}>{fileError}</p>}
+                <small className="form-text text-muted">
+                  Allowed file types: CSV.
+                </small>
+              </div>
             </div>
           </div>
         </div>
-       
-      </div>
-    </form>
+      </form>
     </>
   );
 }
 
-export default SupplierPage2;
-
-
+const mapStateToProps = ({ LoadingReducer }) => ({
+  isLoading: LoadingReducer.isLoading,
+});
+export default connect(mapStateToProps, { onLoading })(SupplierPage2);

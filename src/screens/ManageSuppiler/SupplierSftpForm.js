@@ -7,15 +7,21 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { validateHttpForm, validateSftpForm } from "../Validations/Validation";
 
-function SupplierSftpForm() {
+function SupplierSftpForm(props) {
+  const {setPage}=props
+  console.log("page",setPage)
   const [formData, setFormData] = useState({
-    hostname: "",
-    username: "",
+    supplierId: "",
+    supplierName: "",
+    settingType:"",
+    password: "",
+    hostName: "",
+    userName: "",
     password: "",
     port: "",
-    protocol: "",
-    url: "",
-    syncFrequency: "",
+    protocol:"",
+    syncFrequency:"",
+    timeZone:""
   });
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -59,13 +65,30 @@ function SupplierSftpForm() {
     setFormErrors({ ...formErrors, syncFrequency: "" });
   }
   
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = validateSftpForm(formData);
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
+    if (isFormValid) {
+      const supplierId = localStorage.getItem("supplierId");
+      const supplierName=localStorage.getItem("supplierName")
+      const payload = { ...formData, supplierId,supplierName };
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierImprortSetting`,
+          payload
+        )
+        .then((response) => {
+          console.log(response.data);
+          setPage("6");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   };
+  
 
   const handleOnClick = (e) => {
     e.preventDefault();
@@ -139,13 +162,13 @@ function SupplierSftpForm() {
                 <input
                   className="form-control"
                   type="text"
-                  name="hostname"
+                  name="hostName"
                   placeholder="Enter Host Name"
                   onChange={handleInputChange}
-                  value={formData.hostname}
+                  value={formData.hostName}
                 />
-                {formErrors.hostname && (
-                  <span className="text-danger">{formErrors.hostname}</span>
+                {formErrors.hostName && (
+                  <span className="text-danger">{formErrors.hostName}</span>
                 )}
               </div>
             </div>
@@ -157,13 +180,13 @@ function SupplierSftpForm() {
                 <input
                   className="form-control"
                   type="text"
-                  name="username"
+                  name="userName"
                   placeholder="Enter User Name"
                   onChange={handleInputChange}
-                  value={formData.username}
+                  value={formData.userName}
                 />
-                {formErrors.username && (
-                  <span className="text-danger">{formErrors.username}</span>
+                {formErrors.userName && (
+                  <span className="text-danger">{formErrors.userName}</span>
                 )}
               </div>
             </div>
@@ -232,12 +255,12 @@ function SupplierSftpForm() {
                   className="form-control"
                   type="text"
                   placeholder="Enter URL"
-                  name="url"
+                  name="urlPath"
                   onChange={handleInputChange}
-                  value={formData.url}
+                  value={formData.urlPath}
                 />
-                {formErrors.url && (
-                  <span className="text-danger">{formErrors.url}</span>
+                {formErrors.urlPath && (
+                  <span className="text-danger">{formErrors.urlPath}</span>
                 )}
               </div>
             </div>

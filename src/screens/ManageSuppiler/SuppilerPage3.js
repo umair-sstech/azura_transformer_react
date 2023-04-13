@@ -12,15 +12,15 @@ import { useHistory } from "react-router-dom";
 function SuppilerPage3(props) {
   const { setPage } = props;
   const options = [
-    { value: "Do nothing", label: "Do nothing",},
+    { value: "do_nothing", label: "Do nothing",},
     {
-      value: "Hardcode value",
+      value: "hardcode_value",
       label: "Hardcode value",
       textbox: true,
       
     },
     {
-      value: "Use AI",
+      value: "use_AI",
       label: "Use AI",
       textbox: true,
    

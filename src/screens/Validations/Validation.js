@@ -5,9 +5,9 @@ export const validateSupplierInfoForm = (formData) => {
     errors.suplirName = "Supplier name is required";
   }
 
-  const logo = formData.get("suplireLogo");
+  const logo = formData.get("supplireLogo");
   if (logo && !logo.type.startsWith("image/")) {
-    errors.suplireLogo = "Please select file";
+    errors.supplireLogo = "Please select file";
   }
 
   return errors;
@@ -15,11 +15,11 @@ export const validateSupplierInfoForm = (formData) => {
 
 export const validateSftpForm=(formData) =>{
     const errors = {};
-    if (!formData.hostname) {
-      errors.hostname = "Host Name is required";
+    if (!formData.hostName) {
+      errors.hostName = "Host Name is required";
     }
-    if (!formData.username) {
-      errors.username = "User Name is required";
+    if (!formData.userName) {
+      errors.userName = "User Name is required";
     }
     if (!formData.password) {
       errors.password = "Password is required";
@@ -30,8 +30,8 @@ export const validateSftpForm=(formData) =>{
     if (!formData.protocol) {
       errors.protocol = "Protocol is required";
     }
-    if (!formData.url) {
-      errors.url = "URL is required";
+    if (!formData.urlPath) {
+      errors.urlPath = "URL is required";
     }
     if (!formData.syncFrequency) {
       errors.syncFrequency = "Sync Frequency is required";
