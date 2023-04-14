@@ -15,7 +15,6 @@ import Select from "react-select";
 
 function SuppilerList(props) {
   const [supplierList, setSupplierList] = useState([]);
-  console.log("supplierList", supplierList.id);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(5);

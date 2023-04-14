@@ -42,6 +42,7 @@ function SuppilerInfo(props) {
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0]);
+
   useEffect(() => {
     if (formData) {
       setInitFormData(formData);
@@ -51,15 +52,14 @@ function SuppilerInfo(props) {
   const handleChange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
-  useEffect(() => {
-    if (formData) {
-      setInitFormData(formData);
-    }
-  }, [props]);
 
   useEffect(() => {
     setIsFormValid(Object.keys(formErrors).length === 0);
   }, [formErrors]);
+
+  useEffect(() => {
+    getSupplierDataById();
+  }, []);
 
   const generatePrefixName = (name) => {
     let prefix = "";
@@ -94,6 +94,7 @@ function SuppilerInfo(props) {
     }));
 
     const formData = new FormData(document.forms.myForm);
+
     formData.set("supplireLogo", file);
     const errors = validateSupplierInfoForm(formData);
     setFormErrors(errors);
@@ -104,79 +105,73 @@ function SuppilerInfo(props) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-  
+
     const errors = validateSupplierInfoForm(formData);
     setFormErrors(errors);
-  
+
     if (Object.keys(errors).length === 0) {
       const prefixName = generatePrefixName(formData.get("suplirName"));
       setPrefixName(prefixName);
       formData.set("prefixName", prefixName);
-  
+
       props.onLoading(true);
-  
+
       const supplierId = localStorage.getItem("supplierId");
-  
+
       if (supplierId) {
         axios
-          .patch(`${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/updateSupplireInfo?supplierId=${supplierId}`, formData)
+          .patch(
+            `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/updateSupplireInfo?supplierId=${supplierId}`,
+            formData
+          )
           .then((response) => {
-            console.log("response",response)
-            setIsSuppilerAdded(true);
-            setPage("2");
-            toast.success("Update supplier information successfully");
-  
+            const { success, message, data } = response.data;
+            if (success) {
+              setIsSuppilerAdded(true);
+              setPage("2");
+              toast.success(message);
+            } else {
+              toast.error(message);
+            }
             props.onLoading(false);
           })
           .catch((error) => {
             console.log("error", error);
-  
             props.onLoading(false);
           });
       } else {
         axios
-          .post(`${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createSupplireInfo`, formData)
+          .post(
+            `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createSupplireInfo`,
+            formData
+          )
           .then((response) => {
-            const supplierId = response.data.data.id;
-            if (supplierId) {
-              localStorage.setItem("supplierId", supplierId);
+            console.log("response", response);
+            const { success, message, data } = response.data;
+            if (success) {
+              const supplierId = data.id;
+              if (supplierId) {
+                localStorage.setItem("supplierId", supplierId);
+              }
+              const supplierName = data.suplirName;
+              if (supplierName) {
+                localStorage.setItem("supplierName", supplierName);
+              }
+              setIsSuppilerAdded(true);
+              setPage("2");
+              toast.success(message);
+            } else {
+              toast.error(message);
             }
-            const supplierName = response.data.data.suplirName;
-            if (supplierName) {
-              localStorage.setItem("supplierName", supplierName);
-            }
-            setIsSuppilerAdded(true);
-            setPage("2");
-            toast.success("Add supplier successfully");
-  
             props.onLoading(false);
           })
           .catch((error) => {
             console.log("error", error);
-  
             props.onLoading(false);
           });
       }
     }
   };
-  
-
-  useEffect(() => {
-    const supplierId = localStorage.getItem("supplierId");
-    axios
-      .get(
-        `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/getSupplireInfoById?supplierId=${supplierId}`
-      )
-      .then((response) => {
-        const supplierData = response.data.data;
-        setSelectedOption({ value: supplierData.type, label: supplierData.type });
-        setPrefixName(supplierData.prefixName);
-        setFormData(supplierData);
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
-  }, []);
 
   const handleOnClick = (e) => {
     e.preventDefault();
@@ -214,7 +209,27 @@ function SuppilerInfo(props) {
           console.log(error);
         });
     }
-};
+  };
+
+  const getSupplierDataById = () => {
+    const supplierId = localStorage.getItem("supplierId");
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/getSupplireInfoById?supplierId=${supplierId}`
+      )
+      .then((response) => {
+        const supplierData = response.data.data;
+        setSelectedOption({
+          value: supplierData.type,
+          label: supplierData.type,
+        });
+        setPrefixName(supplierData.prefixName);
+        setFormData(supplierData);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
 
   const handleCancel = () => {
     Swal.fire({
@@ -302,7 +317,9 @@ function SuppilerInfo(props) {
                   type="text"
                   name="suplirName"
                   placeholder="Enter Suppiler Name"
-                  // value={initFormData.suplirName}
+                  defaultValue={
+                    initFormData.suplirName ? initFormData.suplirName : ""
+                  }
                   onChange={handleNameChange}
                 />
                 {formErrors.suplirName && (

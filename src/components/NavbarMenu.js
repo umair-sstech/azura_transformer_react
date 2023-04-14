@@ -564,9 +564,15 @@ class NavbarMenu extends React.Component
                     </li>
                   ) : null}
                     {this.props.user?.data.role == "SUPER_ADMIN" ? (
-                      <li className={activeKey === "dashboard" ? "active" : ""}>
-                        <Link to="supplier">Supplier</Link>
-                      </li>
+                      <li
+                      className={activeKey === "dashboard" ? "active" : ""}
+                      onClick={() => {
+                        localStorage.removeItem("supplierId");
+                        localStorage.removeItem("supplierName");
+                      }}
+                    >
+                      <Link to="supplier">Supplier</Link>
+                    </li>
                     ) : null}
                     {this.props.user?.data.role == "SUPER_ADMIN" ? (
                       <li className={activeKey === "dashboard" ? "active" : ""}>

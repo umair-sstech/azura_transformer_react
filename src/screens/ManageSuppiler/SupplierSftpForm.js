@@ -1,27 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Select from "react-select";
 import "./SupplierPage.css";
 import timeZoneData from "../../Data/timeZone";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { validateHttpForm, validateSftpForm } from "../Validations/Validation";
+import { validateSftpForm } from "../Validations/Validation";
+import { toast } from "react-toastify";
+import { connect } from "react-redux";
+import { onLoading } from "../../actions";
+import { Spinner } from "react-bootstrap";
+import { FormContext } from "./ManageSuppiler";
 
 function SupplierSftpForm(props) {
-  const {setPage}=props
-  console.log("page",setPage)
+  const { setPage } = props;
+  const { isSuppilerAdded } = useContext(FormContext);
   const [formData, setFormData] = useState({
     supplierId: "",
     supplierName: "",
-    settingType:"",
+    settingType: "",
     password: "",
     hostName: "",
     userName: "",
     password: "",
     port: "",
-    protocol:"",
-    syncFrequency:"",
-    timeZone:""
+    protocol: "",
+    urlPath: "",
+    syncFrequency: "",
+    timeZone: "",
   });
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -60,35 +66,53 @@ function SupplierSftpForm(props) {
     setFormData({ ...formData, protocol: selectedOption.value });
     setFormErrors({ ...formErrors, protocol: "" });
   };
-  const handleSyncFrequency=(selectedOption)=>{
-    setFormData({ ...formData, syncFrequency: selectedOption.value })
+  const handleSyncFrequency = (selectedOption) => {
+    setFormData({ ...formData, syncFrequency: selectedOption.value });
     setFormErrors({ ...formErrors, syncFrequency: "" });
-  }
-  
+  };
+  const handleTimeZoneChange = (selectedOption) => {
+    setFormData({ ...formData, timeZone: selectedOption });
+    setFormErrors({ ...formErrors, timeZone: "" });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = validateSftpForm(formData);
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
+
     if (isFormValid) {
       const supplierId = localStorage.getItem("supplierId");
-      const supplierName=localStorage.getItem("supplierName")
-      const payload = { ...formData, supplierId,supplierName };
+      const supplierName = localStorage.getItem("supplierName");
+
+      const { value, label } = formData.timeZone;
+
+      const timeZoneString = `${value} (${label})`;
+
+      const payload = {
+        ...formData,
+        timeZone: timeZoneString,
+        supplierId,
+        supplierName,
+      };
       axios
         .post(
           `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierImprortSetting`,
           payload
         )
         .then((response) => {
-          console.log(response.data);
-          setPage("6");
+          const { success, message, data } = response.data;
+          if (success) {
+            toast.success(message);
+          } else {
+            toast.error(message);
+          }
         })
         .catch((error) => {
           console.error(error);
         });
     }
   };
-  
 
   const handleOnClick = (e) => {
     e.preventDefault();
@@ -97,7 +121,30 @@ function SupplierSftpForm(props) {
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
     if (Object.keys(errors).length === 0) {
-      history.push("/supplier");
+      if (isFormValid) {
+        const supplierId = localStorage.getItem("supplierId");
+        const supplierName = localStorage.getItem("supplierName");
+        const payload = { ...formData, supplierId, supplierName };
+        axios
+          .post(
+            `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierImprortSetting`,
+            payload
+          )
+          .then((response) => {
+            const { success, message, data } = response.data;
+            if (success) {
+              history.push("/supplier");
+              toast.success(message);
+              localStorage.removeItem("supplierId");
+              localStorage.removeItem("supplierName");
+            } else {
+              toast.error(message);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     }
   };
 
@@ -114,6 +161,8 @@ function SupplierSftpForm(props) {
     }).then((result) => {
       if (result.isConfirmed) {
         history.push("/supplier");
+        localStorage.removeItem("supplierId");
+        localStorage.removeItem("supplierName");
       }
     });
   };
@@ -134,6 +183,15 @@ function SupplierSftpForm(props) {
                   type="submit"
                 >
                   Save & Next
+                  {/*{props.isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : isSuppilerAdded ? (
+                  "Update"
+                ) : (
+                  "Save & Next"
+                )}*/}
                 </button>
                 <button
                   className="btn btn-primary w-auto btn-lg mr-2"
@@ -270,15 +328,35 @@ function SupplierSftpForm(props) {
                   Sync Frequency <span style={{ color: "red" }}>*</span>
                 </label>
                 <Select
-                placeholder="Select Frequency"
-                options={syncFrequencyOptions}
-               onChange={handleSyncFrequency}
-                  
-              />
+                  placeholder="Select Frequency"
+                  options={syncFrequencyOptions}
+                  onChange={handleSyncFrequency}
+                />
                 {formErrors.syncFrequency && (
                   <span className="text-danger">
                     {formErrors.syncFrequency}
                   </span>
+                )}
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="form-group">
+                <label>
+                  TimeZone <span style={{ color: "red" }}>*</span>
+                </label>
+                <Select
+                  options={timeZoneData?.map((data) => {
+                    return {
+                      value: data.abbr,
+                      label: data.text,
+                    };
+                  })}
+                  placeholder="Select TimeZone"
+                  value={formData.timeZone}
+                  onChange={handleTimeZoneChange}
+                />
+                {formErrors.timeZone && (
+                  <span className="text-danger">{formErrors.timeZone}</span>
                 )}
               </div>
             </div>
@@ -289,4 +367,7 @@ function SupplierSftpForm(props) {
   );
 }
 
-export default SupplierSftpForm;
+const mapStateToProps = ({ LoadingReducer }) => ({
+  isLoading: LoadingReducer.isLoading,
+});
+export default connect(mapStateToProps, { onLoading })(SupplierSftpForm);

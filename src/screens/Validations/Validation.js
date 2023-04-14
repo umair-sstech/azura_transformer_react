@@ -34,18 +34,21 @@ export const validateSftpForm=(formData) =>{
       errors.urlPath = "URL is required";
     }
     if (!formData.syncFrequency) {
-      errors.syncFrequency = "Sync Frequency is required";
+      errors.syncFrequency = "Please Select Sync Frequency";
+    }
+    if (!formData.timeZone) {
+      errors.timeZone = "Please Select TimeZone";
     }
     return errors;
   }
 export const   validateHttpForm=(formData) =>{
     const errors = {};
   
-    if (!formData.url) {
-      errors.url = "URL is required";
+    if (!formData.urlPath) {
+      errors.urlPath = "URL is required";
     }
     if (!formData.syncFrequency) {
-      errors.syncFrequency = "Sync Frequency is required";
+      errors.syncFrequency = "Please Select Sync Frequency";
     }
     return errors;
   }

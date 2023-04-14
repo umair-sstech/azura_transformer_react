@@ -11,6 +11,7 @@ import { Spinner } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import "./SupplierPage.css";
 import Swal from "sweetalert2";
+import Papa from "papaparse";
 
 function SupplierPage2(props) {
   const { setPage } = props;
@@ -26,7 +27,6 @@ function SupplierPage2(props) {
     csvfile: "",
     supplier_id: "",
   });
-  console.log("formData", formData);
   const [fileError, setFileError] = useState("");
   const history = useHistory();
 
@@ -48,28 +48,63 @@ function SupplierPage2(props) {
       props.onLoading(true);
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_URL_SUPPLIER}/csv/storeCSVdata`
+          `${process.env.REACT_APP_API_URL_SUPPLIER}/csv/storeCSVdata`,
+          formData
         );
-        console.log(response.data);
+        const { success, message } = response.data;
+        if (success) {
+          // const { csvPath, csvName, csvJSON } = response.data.data;
+          setFormData({
+            ...formData,
+            // csvPath, csvName, csvJSON
+          });
+          toast.success(message);
+
+          props.onLoading(false);
+          setPage("3");
+        }else{
+          toast.error(message)
+        }
       } catch (error) {
         console.error(error);
+        props.onLoading(false);
       }
-      toast.success("Add Csv file successfully");
-
-      props.onLoading(false);
-      setPage("3");
+   
     }
   };
 
-  const handleOnClick = (e) => {
+  const handleOnClick = async (e) => {
     const fileInput = document.querySelector('input[type="file"]');
     if (fileInput.files.length === 0) {
       setFileError("Please select a file to upload.");
     } else {
       const form = e.target.closest("form");
       const formData = new FormData(form);
-      setFormData(formData);
-      history.push("/supplier");
+      formData.append("supplier_id", initFormData.id);
+      props.onLoading(true);
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL_SUPPLIER}/csv/storeCSVdata`,
+          formData
+        );
+        const { success, message } = response.data;
+        if (success) {
+          // const { csvPath, csvName, csvJSON } = response.data.data;
+          setFormData({
+            ...formData,
+            // csvPath, csvName, csvJSON
+          });
+          toast.success(message);
+
+          props.onLoading(false);
+         history.push("/supplier")
+        }else{
+          toast.error(message)
+        }
+      } catch (error) {
+        console.error(error);
+        props.onLoading(false);
+      }
     }
   };
 
@@ -121,7 +156,8 @@ function SupplierPage2(props) {
                   type="button"
                   onClick={handleOnClick}
                 >
-                  Save & Exit
+             
+                Save & Exit
                 </button>
                 <button
                   className="btn btn-secondary w-auto btn-lg"
