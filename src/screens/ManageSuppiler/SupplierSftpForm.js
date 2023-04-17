@@ -15,6 +15,7 @@ import { FormContext } from "./ManageSuppiler";
 function SupplierSftpForm(props) {
   const { setPage } = props;
   const { isSuppilerAdded } = useContext(FormContext);
+  
   const [formData, setFormData] = useState({
     supplierId: "",
     supplierName: "",

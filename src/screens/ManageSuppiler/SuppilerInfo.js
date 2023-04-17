@@ -146,7 +146,6 @@ function SuppilerInfo(props) {
             formData
           )
           .then((response) => {
-            console.log("response", response);
             const { success, message, data } = response.data;
             if (success) {
               const supplierId = data.id;
@@ -317,10 +316,10 @@ function SuppilerInfo(props) {
                   type="text"
                   name="suplirName"
                   placeholder="Enter Suppiler Name"
+                  onChange={handleNameChange}
                   defaultValue={
                     initFormData.suplirName ? initFormData.suplirName : ""
                   }
-                  onChange={handleNameChange}
                 />
                 {formErrors.suplirName && (
                   <span className="text-danger">{formErrors.suplirName}</span>
@@ -339,6 +338,9 @@ function SuppilerInfo(props) {
                   type="file"
                   name="supplireLogo"
                   onChange={handleLogoChange}
+                  defaultValue={
+                    initFormData.supplireLogo ? initFormData.supplireLogo : ""
+                  }
                 />
                 {formErrors.supplireLogo && (
                   <span className="text-danger">{formErrors.supplireLogo}</span>
