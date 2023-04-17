@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
 import { connect } from "react-redux";
 import { onLoading } from "../../actions";
@@ -8,34 +8,66 @@ import axios from "axios";
 import "./SupplierPage.css";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Spinner } from "react-bootstrap";
+import { FormContext } from "./ManageSuppiler";
 
 function SuppilerPage3(props) {
   const { setPage } = props;
-
-  const options = [
-    { value: "do_nothing", label: "Do nothing" },
+  const { isSuppilerAdded } = useContext(FormContext);
+  const [options, setOptions] = useState([
+    {
+      value: "do_nothing",
+      label: "Do nothing",
+      color: "gray",
+      count: 0,
+    },
     {
       value: "hardcode_value",
       label: "Hardcode value",
       textbox: true,
+      color: "gray",
+      count: 0,
     },
     {
       value: "use_AI",
       label: "Use AI",
       textbox: true,
+      color: "gray",
+      count: 0,
     },
-  ];
-
-  const [standardField, setStandardField] = useState("");
-  const [supplierField, setSupplierField] = useState("");
-  const [additionalValue, setadditionalValue] = useState("");
+  ]);
   const [productFields, setProductFields] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [mappingArray, setMappingArray] = useState([]);
   const history = useHistory();
+
   useEffect(() => {
     props.onLoading(true);
     getProductField();
   }, []);
+
+  // useEffect(() => {
+  //   const fetchMappings = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         "http://localhost:8001/supplire/getSupplierFields",
+  //         {
+  //           params: {
+  //             supplierId: localStorage.getItem("supplierId"),
+  //           },
+  //         }
+  //       );
+  //       if (response.data.success) {
+  //         const mappings = response.data.data;
+  //         setMappingArray(mappings);
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   fetchMappings();
+  // }, []);
 
   const handleFieldChange = (index, key, selectedOption) => {
     setSelectedOptions((prevSelectedOptions) => {
@@ -43,71 +75,24 @@ function SuppilerPage3(props) {
       if (!newSelectedOptions[index]) {
         newSelectedOptions[index] = {};
       }
-      Object.keys(newSelectedOptions[index]).forEach((optionKey) => {
-        if (optionKey !== key) {
-          newSelectedOptions[index][optionKey] = { value: "do_nothing" };
-        }
-      });
       newSelectedOptions[index][key] = selectedOption;
       return newSelectedOptions;
     });
-  
-    // Update the additionalValue state
-    if (selectedOption && selectedOption.textbox) {
-      setadditionalValue(selectedOption.value);
-    } else {
-      setadditionalValue("");
-    }
-  
-    // Update the productFields state
-    setProductFields((prevProductFields) => {
-      const newProductFields = [...prevProductFields];
-      if (!newProductFields[index]) {
-        newProductFields[index] = {};
+  };
+
+  const handleAdditionalValueChange = (index, key, additionalValue) => {
+    setSelectedOptions((prevSelectedOptions) => {
+      const newSelectedOptions = [...prevSelectedOptions];
+      if (!newSelectedOptions[index]) {
+        newSelectedOptions[index] = {};
       }
-      newProductFields[index][key] = selectedOption ? selectedOption.value : "";
-  
-      // Update the standardField if a standard field is selected
-      if (key === "standardField") {
-        setStandardField(selectedOption.value);
-      }
-      // Update the supplierField if a supplier field is selected
-      if (!selectedOption || !selectedOption.textbox) {
-        setSupplierField(selectedOption ? selectedOption.value : "");
-      }
-      return newProductFields;
+      newSelectedOptions[index][key] = {
+        ...newSelectedOptions[index][key],
+        additionalValue,
+      };
+      return newSelectedOptions;
     });
   };
-  
-  
-  const handleAdditionalValueChange = (index, key, value) => {
-    setadditionalValue(value);
-  };
-
-  // const handleFieldChange = (index, key, selectedOption) => {
-  //   setSelectedOptions((prevSelectedOptions) => {
-  //     const newSelectedOptions = [...prevSelectedOptions];
-  //     if (!newSelectedOptions[index]) {
-  //       newSelectedOptions[index] = {};
-  //     }
-  //     newSelectedOptions[index][key] = selectedOption;
-  //     return newSelectedOptions;
-  //   });
-  // };
-
-  // const handleAdditionalValueChange = (index, key, additionalValue) => {
-  //   setSelectedOptions((prevSelectedOptions) => {
-  //     const newSelectedOptions = [...prevSelectedOptions];
-  //     if (!newSelectedOptions[index]) {
-  //       newSelectedOptions[index] = {};
-  //     }
-  //     newSelectedOptions[index][key] = {
-  //       ...newSelectedOptions[index][key],
-  //       additionalValue,
-  //     };
-  //     return newSelectedOptions;
-  //   });
-  // };
 
   const getProductField = async () => {
     try {
@@ -125,92 +110,101 @@ function SuppilerPage3(props) {
     }
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const supplierId = localStorage.getItem("supplierId");
-  //     const supplierName = localStorage.getItem("supplierName");
-
-  //     const selectedData = productFields.filter((productField, index) => {
-  //       const selectedOption =
-  //         selectedOptions[index][productField.standardField];
-  //       return selectedOption?.value !== "do_nothing";
-  //     });
-
-  //     const mappedData = selectedData.flatMap((productField, index) =>
-  //       Object.entries(productField).map(([key, value]) => {
-  //         console.log("key", key);
-  //         const selectedOption = selectedOptions[index][key];
-  //         return {
-  //           supplierId,
-  //           supplierName,
-  //           standardField: key,
-  //           standardValue: "",
-  //           supplierField: selectedOption?.value,
-  //           additionalValue: selectedOption?.additionalValue,
-  //         };
-  //       })
-  //     );
-  //     console.log("mapped data", mappedData);
-  //     const response = await axios.post(
-  //       "http://localhost:8001/supplire/createOrUpdateSupplierFields",
-  //       mappedData
-  //     );
-  //     if (response.data.success) {
-  //       console.log("Data saved successfully");
-  //     }
-  //     props.onLoading(false);
-  //   } catch (error) {
-  //     console.error(error);
-  //     props.onLoading(false);
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const mappingArray = [];
+    selectedOptions.forEach((selectedOption, index) => {
+      const keys = Object.keys(selectedOption);
+      keys.forEach((key) => {
+        const option = selectedOption[key];
+        if (option) {
+          const mappingObject = {
+            supplierId: localStorage.getItem("supplierId"),
+            supplierName: localStorage.getItem("supplierName"),
+            standardField: key,
+            standardValue: "",
+            supplierField: option.value,
+            additionalValue:
+              option.textbox &&
+              selectedOptions[index] &&
+              selectedOptions[index][key] &&
+              selectedOptions[index][key].additionalValue
+                ? selectedOptions[index][key].additionalValue
+                : "",
+          };
+          mappingArray.push(mappingObject);
+          console.log("mapping", mappingArray);
+        }
+      });
+    });
+    props.onLoading(true);
     try {
-      props.onLoading(true);
-  
-      const supplierFields = [];
-  
-      for (let i = 0; i < productFields.length; i++) {
-        const selectedOption = selectedOptions[i];
-        const standardField = productFields[i]?.standardField || "";
-        const supplierFieldValue = selectedOption?.textbox ? additionalValue : selectedOption?.value || "";
-        console.log("supplierFiedlsValue",supplierFieldValue)
-        const supplierField = selectedOption?.textbox ? additionalValue : selectedOption?.value || "";
-        supplierFields.push({
-          supplierId: localStorage.getItem("supplierId"),
-          supplierName: localStorage.getItem("supplierName"),
-          standardField,
-          supplierField,
-          additionalValue: selectedOption?.textbox ? additionalValue : "",
-        });
-      }
-  
-      console.log("supplierFields", supplierFields);
-      return false;
-      
       const response = await axios.post(
-        "http://localhost:8001/supplire/createOrUpdateSupplierFields",
-        supplierFields
+        `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierFields`,
+        mappingArray
       );
-      if (response.data.success) {
-        console.log("response", response.data);
-        // handle success
+      const { success, message, data } = response.data;
+      if (success) {
+        toast.success(message);
+        setPage("4");
       } else {
-        // handle error
+        toast.error(message);
       }
     } catch (error) {
       console.error(error);
-      // handle error
     } finally {
       props.onLoading(false);
     }
   };
-  
-  
 
+  const handleOnClick = async (e) => {
+    e.preventDefault();
+    const mappingArray = [];
+    selectedOptions.forEach((selectedOption, index) => {
+      const keys = Object.keys(selectedOption);
+      keys.forEach((key) => {
+        const option = selectedOption[key];
+        if (option) {
+          const mappingObject = {
+            supplierId: localStorage.getItem("supplierId"),
+            supplierName: localStorage.getItem("supplierName"),
+            standardField: key,
+            standardValue: "",
+            supplierField: option.value,
+            additionalValue:
+              option.textbox &&
+              selectedOptions[index] &&
+              selectedOptions[index][key] &&
+              selectedOptions[index][key].additionalValue
+                ? selectedOptions[index][key].additionalValue
+                : "",
+          };
+          mappingArray.push(mappingObject);
+        }
+      });
+    });
+    props.onLoading(true);
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierFields`,
+        mappingArray
+      );
+      const { success, message, data } = response.data;
+      if (success) {
+        toast.success(message);
+        localStorage.removeItem("supplierId");
+        localStorage.removeItem("supplierName");
+        history.push("/supplier");
+
+      } else {
+        toast.error(message);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      props.onLoading(false);
+    }
+  };
   const handleCancel = () => {
     Swal.fire({
       title: "Are you sure, <br> you want to exit ? ",
@@ -231,22 +225,29 @@ function SuppilerPage3(props) {
   return (
     <>
       <hr className="hr" />
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
-                // onClick={() => setPage("4")}
-                onClick={(e) => handleSubmit(e)}
               >
-                Save & Next
+                {props.isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : isSuppilerAdded ? (
+                  "Update"
+                ) : (
+                  "Save & Next"
+                )}
               </button>
 
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
+                onClick={(e)=>handleOnClick(e)}
               >
                 Save & Exit
               </button>
@@ -314,11 +315,27 @@ function SuppilerPage3(props) {
                                     )
                                   }
                                   isSearchable={true}
-                                  getOptionLabel={(option) => (
-                                    <span style={{ color: option.color }}>
-                                      {option.label}
-                                    </span>
-                                  )}
+                                  getOptionLabel={(option) => {
+                                    const mappingCount = mappingArray.filter(
+                                      (mapping) =>
+                                        mapping.supplierField ===
+                                          option.value &&
+                                        mapping.standardField === key
+                                    ).length;
+                                    let color = "grey";
+                                    if (mappingCount === 1) {
+                                      color = "green";
+                                    } else if (mappingCount === 2) {
+                                      color = "orange";
+                                    } else if (mappingCount >= 3) {
+                                      color = "red";
+                                    }
+                                    return (
+                                      <span style={{ color: color }}>
+                                        {option.label}
+                                      </span>
+                                    );
+                                  }}
                                   styles={{
                                     menu: (provided, state) => ({
                                       ...provided,
