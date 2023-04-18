@@ -105,23 +105,25 @@ function SuppilerInfo(props) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-
+  
     const errors = validateSupplierInfoForm(formData);
     setFormErrors(errors);
-
+  
     if (Object.keys(errors).length === 0) {
       const prefixName = generatePrefixName(formData.get("suplirName"));
       setPrefixName(prefixName);
       formData.set("prefixName", prefixName);
-
+  
       props.onLoading(true);
-
+  
       const supplierId = localStorage.getItem("supplierId");
-
+  
       if (supplierId) {
+        // Remove the supplierId from the URL and add it to the request body
+        formData.set("supplierId", supplierId);
         axios
-          .patch(
-            `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/updateSupplireInfo?supplierId=${supplierId}`,
+          .post(
+            `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/updateSupplireInfo`,
             formData
           )
           .then((response) => {
@@ -171,6 +173,7 @@ function SuppilerInfo(props) {
       }
     }
   };
+  
 
   const handleOnClick = (e) => {
     e.preventDefault();
