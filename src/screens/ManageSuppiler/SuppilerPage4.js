@@ -16,6 +16,7 @@ function SuppilerPage4(props) {
     "Original",
   ];
   const [selectedSizes, setSelectedSizes] = useState([]);
+  const [formErrors, setFormErrors] = useState({});
   const [prefix, setPrefix] = useState("");
   const [suffix, setSuffix] = useState("");
 
@@ -33,6 +34,15 @@ function SuppilerPage4(props) {
         setSelectedSizes((prev) => prev.filter((size) => size !== value));
       }
     });
+    const allChecked = [...childCheckboxes].every(
+      (checkbox) => checkbox.checked
+    );
+    setFormErrors((prevErrors) => {
+      if (allChecked) {
+        delete prevErrors.checkbox;
+      }
+      return prevErrors;
+    });
   };
 
   const handleCheckboxChange = (e) => {
@@ -42,9 +52,41 @@ function SuppilerPage4(props) {
     } else {
       setSelectedSizes((prev) => prev.filter((size) => size !== value));
     }
+    setFormErrors((prevErrors) => {
+      delete prevErrors.checkbox;
+      return prevErrors;
+    });
   };
+
+  const handlePrefixChange = (e) => {
+    setPrefix(e.target.value);
+    setFormErrors((prevErrors) => {
+      delete prevErrors.prefix;
+      return prevErrors;
+    });
+  };
+
+  const handleSuffixChange = (e) => {
+    setSuffix(e.target.value);
+    setFormErrors((prevErrors) => {
+      delete prevErrors.suffix;
+      return prevErrors;
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    let errors = {};
+    if (selectedSizes.length === 0) {
+      errors.checkbox = "Please select at least one size.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
     axios
       .post(
         `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierImageResize`,
@@ -61,9 +103,9 @@ function SuppilerPage4(props) {
         if (success) {
           toast.success(message);
           setPage("5");
-          // setSelectedSizes([]);
-          // setPrefix("");
-          // setSuffix("");
+          setSelectedSizes([]);
+          setPrefix("");
+          setSuffix("");
         } else {
           toast.error(message);
         }
@@ -73,6 +115,16 @@ function SuppilerPage4(props) {
 
   const handleOnClick = async (e) => {
     e.preventDefault();
+    let errors = {};
+    if (selectedSizes.length === 0) {
+      errors.checkbox = "Please select at least one size.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
     axios
       .post(
         `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierImageResize`,
@@ -150,6 +202,9 @@ function SuppilerPage4(props) {
         </div>
         <div className="d-flex flex-wrap">
           <div className="table-responsive w-50 pr-3">
+            {formErrors.checkbox && (
+              <span className="text-danger">{formErrors.checkbox}</span>
+            )}
             <table className="table w-50">
               <thead>
                 <tr>
@@ -195,7 +250,7 @@ function SuppilerPage4(props) {
                 className="form-control"
                 id="prefix"
                 value={prefix}
-                onChange={(e) => setPrefix(e.target.value)}
+                onChange={handlePrefixChange}
               />
             </div>
 
@@ -206,7 +261,7 @@ function SuppilerPage4(props) {
                 className="form-control"
                 id="suffix"
                 value={suffix}
-                onChange={(e) => setSuffix(e.target.value)}
+                onChange={handleSuffixChange}
               />
             </div>
           </div>

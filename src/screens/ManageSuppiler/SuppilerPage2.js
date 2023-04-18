@@ -81,7 +81,7 @@ function SupplierPage2(props) {
       const form = e.target.closest("form");
       const formData = new FormData(form);
       formData.append("supplier_id", initFormData.id);
-      props.onLoading(true);
+      // props.onLoading(true);
       try {
         const response = await axios.post(
           `${process.env.REACT_APP_API_URL_SUPPLIER}/csv/storeCSVdata`,
@@ -95,9 +95,9 @@ function SupplierPage2(props) {
             // csvPath, csvName, csvJSON
           });
           toast.success(message);
-
-          props.onLoading(false);
-         history.push("/supplier")
+          localStorage.removeItem("supplierId");
+          localStorage.removeItem("supplierName");
+          history.push("/supplier");
         }else{
           toast.error(message)
         }
@@ -105,6 +105,7 @@ function SupplierPage2(props) {
         console.error(error);
         props.onLoading(false);
       }
+   
     }
   };
 
@@ -153,7 +154,7 @@ function SupplierPage2(props) {
                 </button>
                 <button
                   className="btn btn-primary w-auto btn-lg mr-2"
-                  type="button"
+                  type="submit"
                   onClick={handleOnClick}
                 >
              

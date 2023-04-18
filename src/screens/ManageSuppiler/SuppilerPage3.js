@@ -14,7 +14,8 @@ import { FormContext } from "./ManageSuppiler";
 
 function SuppilerPage3(props) {
   const { setPage } = props;
-  const { isSuppilerAdded } = useContext(FormContext);
+  const { isSuppilerAdded, formData, setFormData } = useContext(FormContext);
+  
   const [options, setOptions] = useState([
     {
       value: "do_nothing",
@@ -37,9 +38,28 @@ function SuppilerPage3(props) {
       count: 0,
     },
   ]);
+  const dimensionUnitsOptions = [
+    { label: "cm", value: "cm" },
+    { label: "in", value: "in" },
+    { label: "mm", value: "mm" }
+  ];
+  
+  const weightUnitOptions = [
+    { label: "lbs", value: "lbs" },
+    { label: "kg", value: "kg" }
+  ];
+  
+  const conditionOptions = [
+    { label: "new", value: "new" },
+    { label: "preloved", value: "preloved" }
+  ];
   const [productFields, setProductFields] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [mappingArray, setMappingArray] = useState([]);
+  const [dropdownName, setDropdownName] = useState("");
+
+  const [formErrors, setFormErrors] = useState([]);
+
   const history = useHistory();
 
   useEffect(() => {
@@ -69,16 +89,24 @@ function SuppilerPage3(props) {
   //   fetchMappings();
   // }, []);
 
-  const handleFieldChange = (index, key, selectedOption) => {
+  const handleFieldChange = (index, key, selectedOption, dropdownName) => {
     setSelectedOptions((prevSelectedOptions) => {
       const newSelectedOptions = [...prevSelectedOptions];
       if (!newSelectedOptions[index]) {
         newSelectedOptions[index] = {};
       }
       newSelectedOptions[index][key] = selectedOption;
+      
+      // Only update dropdownName if it's not already set
+      if (!dropdownName) {
+        setDropdownName("Dimension_Units");
+      }
+      
       return newSelectedOptions;
     });
   };
+  
+  
 
   const handleAdditionalValueChange = (index, key, additionalValue) => {
     setSelectedOptions((prevSelectedOptions) => {
@@ -112,48 +140,53 @@ function SuppilerPage3(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const mappingArray = [];
-    selectedOptions.forEach((selectedOption, index) => {
-      const keys = Object.keys(selectedOption);
-      keys.forEach((key) => {
-        const option = selectedOption[key];
-        if (option) {
-          const mappingObject = {
-            supplierId: localStorage.getItem("supplierId"),
-            supplierName: localStorage.getItem("supplierName"),
-            standardField: key,
-            standardValue: "",
-            supplierField: option.value,
-            additionalValue:
-              option.textbox &&
-              selectedOptions[index] &&
-              selectedOptions[index][key] &&
-              selectedOptions[index][key].additionalValue
-                ? selectedOptions[index][key].additionalValue
-                : "",
-          };
-          mappingArray.push(mappingObject);
-          console.log("mapping", mappingArray);
-        }
+
+    const isValid = validateForm();
+
+    if (isValid) {
+      const mappingArray = [];
+      selectedOptions.forEach((selectedOption, index) => {
+        const keys = Object.keys(selectedOption);
+        keys.forEach((key) => {
+          const option = selectedOption[key];
+          if (option) {
+            const mappingObject = {
+              supplierId: localStorage.getItem("supplierId"),
+              supplierName: localStorage.getItem("supplierName"),
+              standardField: key,
+              standardValue: "",
+              supplierField: option.value,
+              additionalValue:
+                option.textbox &&
+                selectedOptions[index] &&
+                selectedOptions[index][key] &&
+                selectedOptions[index][key].additionalValue
+                  ? selectedOptions[index][key].additionalValue
+                  : "",
+            };
+            mappingArray.push(mappingObject);
+            console.log("mapping", mappingArray);
+          }
+        });
       });
-    });
-    props.onLoading(true);
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierFields`,
-        mappingArray
-      );
-      const { success, message, data } = response.data;
-      if (success) {
-        toast.success(message);
-        setPage("4");
-      } else {
-        toast.error(message);
+      props.onLoading(true);
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierFields`,
+          mappingArray
+        );
+        const { success, message, data } = response.data;
+        if (success) {
+          toast.success(message);
+          setPage("4");
+        } else {
+          toast.error(message);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        props.onLoading(false);
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      props.onLoading(false);
     }
   };
 
@@ -195,7 +228,6 @@ function SuppilerPage3(props) {
         localStorage.removeItem("supplierId");
         localStorage.removeItem("supplierName");
         history.push("/supplier");
-
       } else {
         toast.error(message);
       }
@@ -205,6 +237,7 @@ function SuppilerPage3(props) {
       props.onLoading(false);
     }
   };
+
   const handleCancel = () => {
     Swal.fire({
       title: "Are you sure, <br> you want to exit ? ",
@@ -221,6 +254,75 @@ function SuppilerPage3(props) {
       }
     });
   };
+
+  const validateForm = () => {
+    const errors = [];
+
+    selectedOptions.forEach((selectedOption, index) => {
+      const keys = Object.keys(selectedOption);
+      keys.forEach((key) => {
+        const option = selectedOption[key];
+        if (!option) {
+          errors.push(`Please map ${key} to a supplier field`);
+        }
+      });
+    });
+
+    setFormErrors(errors);
+
+    return errors.length === 0;
+  };
+  useEffect(() => {
+    getSupplierDataById();
+  }, []);
+
+  const getSupplierDataById = () => {
+    const supplierId = localStorage.getItem("supplierId");
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/getSupplireInfoById?supplierId=${supplierId}`
+      )
+      .then((response) => {
+        const supplierData = response.data.data;
+        setFormData(supplierData);
+  
+        const csvJSON = supplierData.csvJSON || [];
+        const newOptions = [
+          {
+            value: "do_nothing",
+            label: "Do nothing",
+            color: "gray",
+            count: 0,
+          },
+          {
+            value: "hardcode_value",
+            label: "Hardcode value",
+            textbox: true,
+            color: "gray",
+            count: 0,
+          },
+          {
+            value: "use_AI",
+            label: "Use AI",
+            textbox: true,
+            color: "gray",
+            count: 0,
+          },
+          ...csvJSON.map((option) => ({
+            value: option,
+            label: option,
+            color: "gray",
+            count: 0,
+          })),
+        ];
+        console.log("options",newOptions)
+        setOptions(newOptions);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
+  
 
   return (
     <>
@@ -247,7 +349,7 @@ function SuppilerPage3(props) {
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
-                onClick={(e)=>handleOnClick(e)}
+                onClick={(e) => handleOnClick(e)}
               >
                 Save & Exit
               </button>
@@ -263,6 +365,13 @@ function SuppilerPage3(props) {
           </div>
         </div>
         <div className="table-container" style={{ position: "relative" }}>
+          {formErrors.length > 0 && (
+            <div className="form-errors">
+              {formErrors.map((error, index) => (
+                <div key={index}>{error}</div>
+              ))}
+            </div>
+          )}
           <table>
             <thead>
               <tr>
@@ -288,16 +397,98 @@ function SuppilerPage3(props) {
               </tbody>
             ) : (
               <tbody>
-                {productFields.map((productField, index) => {
-                  const keys = Object.keys(productField);
-                  return (
-                    <>
-                      {keys.map((key) => {
-                        const selectedOption =
-                          selectedOptions[index] && selectedOptions[index][key]
-                            ? selectedOptions[index][key]
-                            : null;
-
+              {productFields.map((productField, index) => {
+                const keys = Object.keys(productField);
+                return (
+                  <>
+                    {keys.map((key) => {
+                      const selectedOption =
+                        selectedOptions[index] && selectedOptions[index][key]
+                          ? selectedOptions[index][key]
+                          : null;
+                      let additionalInfo = null;
+                      if (key === "Dimension_Units") {
+                        additionalInfo = (
+                          <div className="select-container">
+                            <Select
+                              key={`${index}-${key}-additional`}
+                              options={[
+                                { label: "cm", value: "cm" },
+                                { label: "in", value: "in" },
+                                { label: "mm", value: "mm" },
+                              ]}
+                              value={selectedOption}
+                              onChange={(selectedOption) =>
+                                handleFieldChange(
+                                  index,
+                                  key,
+                                  selectedOption,
+                                  "Dimension_Units" // pass the name of the dropdown here
+                                )
+                              }
+                              
+                              isSearchable={true}
+                              className="select"
+                            />
+                          </div>
+                        );
+                      } else if (key === "Weight_Unit") {
+                        additionalInfo = (
+                          <div className="select-container">
+                            <Select
+                              key={`${index}-${key}-additional`}
+                              options={[
+                                { label: "lbs", value: "lbs" },
+                                { label: "kg", value: "kg" },
+                              ]}
+                              value={selectedOption}
+                              onChange={(selectedOption) =>
+                                handleFieldChange(index, key, selectedOption)
+                              }
+                              isSearchable={true}
+                              className="select"
+                            />
+                          </div>
+                        );
+                      } else if (key === "Condition") {
+                        additionalInfo = (
+                          <div className="select-container">
+                            <Select
+                              key={`${index}-${key}-additional`}
+                              options={[
+                                { label: "New", value: "New" },
+                                { label: "Preloved", value: "Preloved" },
+                              ]}
+                              value={selectedOption}
+                              onChange={(selectedOption) =>
+                                handleFieldChange(index, key, selectedOption)
+                              }
+                              isSearchable={true}
+                              className="select"
+                            />
+                          </div>
+                        );
+                        } else {
+                          additionalInfo = (
+                            <>
+                              {selectedOption && selectedOption.textbox && (
+                                <input
+                                  type="text"
+                                  placeholder="Enter a value"
+                                  className="additional-textbox"
+                                  onChange={(e) =>
+                                    handleAdditionalValueChange(
+                                      index,
+                                      key,
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              )}
+                            </>
+                          );
+                        }
+              
                         return (
                           <tr key={key}>
                             <td>{key}</td>
@@ -322,7 +513,8 @@ function SuppilerPage3(props) {
                                           option.value &&
                                         mapping.standardField === key
                                     ).length;
-                                    let color = "grey";
+              
+                                    let color = "gray";
                                     if (mappingCount === 1) {
                                       color = "green";
                                     } else if (mappingCount === 2) {
@@ -330,8 +522,9 @@ function SuppilerPage3(props) {
                                     } else if (mappingCount >= 3) {
                                       color = "red";
                                     }
+              
                                     return (
-                                      <span style={{ color: color }}>
+                                      <span style={{ color }}>
                                         {option.label}
                                       </span>
                                     );
@@ -346,22 +539,7 @@ function SuppilerPage3(props) {
                                 />
                               </div>
                             </td>
-                            <td>
-                              {selectedOption && selectedOption.textbox && (
-                                <input
-                                  type="text"
-                                  placeholder="Enter a value"
-                                  className="additional-textbox"
-                                  onChange={(e) =>
-                                    handleAdditionalValueChange(
-                                      index,
-                                      key,
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                              )}
-                            </td>
+                            <td>{additionalInfo}</td>
                           </tr>
                         );
                       })}

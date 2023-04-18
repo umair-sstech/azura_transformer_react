@@ -7,19 +7,25 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 function SupplierPage7() {
+  const [errorMessage, setErrorMessage] = useState("");
   const history = useHistory();
   const options = [
-    { value: "two_tire", label: "Two Tiers" },
-    { value: "three_tire", label: "Three Tiers" },
+    { value: "two_tire", label: "Two Tier" },
+    { value: "three_tire", label: "Three Tier" },
   ];
 
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleSelectChange = (selectedOption) => {
     setSelectedOption(selectedOption);
+    setErrorMessage("");
   };
   const handleSaveAndExit = (e) => {
     e.preventDefault();
+    if (!selectedOption) {
+      setErrorMessage("Please select a value");
+      return;
+    }
 
     if (selectedOption) {
       const params = {
@@ -28,7 +34,10 @@ function SupplierPage7() {
       };
 
       axios
-        .post(`${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/productTierSetup`, params)
+        .post(
+          `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/productTierSetup`,
+          params
+        )
         .then((response) => {
           const { success, message, data } = response.data;
           if (success) {
@@ -81,7 +90,6 @@ function SupplierPage7() {
         localStorage.removeItem("supplierId");
         localStorage.removeItem("supplierName");
         history.push("/supplier");
-        
       }
     });
   };
@@ -125,6 +133,9 @@ function SupplierPage7() {
                 options={options}
                 onChange={handleSelectChange}
               />
+              {errorMessage && (
+                <span className="text-danger">{errorMessage}</span>
+              )}
             </div>
           </div>
         </div>
