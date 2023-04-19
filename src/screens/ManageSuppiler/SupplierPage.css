@@ -55,6 +55,10 @@ th {
   border: 1px solid #ccc;
 }
 
+.blue-label .Select-value-label {
+  color: blue;
+}
+
 /* manageSupplier */
 .supplier-heading {
   font-weight: 500;

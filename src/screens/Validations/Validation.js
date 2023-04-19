@@ -41,6 +41,7 @@ export const validateSftpForm=(formData) =>{
     }
     return errors;
   }
+  
 export const   validateHttpForm=(formData) =>{
     const errors = {};
   

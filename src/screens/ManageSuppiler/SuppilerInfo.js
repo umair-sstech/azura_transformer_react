@@ -254,7 +254,7 @@ function SuppilerInfo(props) {
 
   return (
     <>
-      <hr className="hr" />
+      <hr className="hr " />
 
       <form onSubmit={handleSubmit} name="myForm" encType="multipart/form-data">
         <div style={{ marginTop: "35px" }}>

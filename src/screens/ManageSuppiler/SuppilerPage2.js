@@ -27,6 +27,7 @@ function SupplierPage2(props) {
     csvfile: "",
     supplier_id: "",
   });
+  console.log("supplierId", initFormData.id);
   const [fileError, setFileError] = useState("");
   const history = useHistory();
 
@@ -44,7 +45,8 @@ function SupplierPage2(props) {
     } else {
       const form = e.target;
       const formData = new FormData(form);
-      formData.append("supplier_id", initFormData.id);
+      const supplierId = localStorage.getItem("supplierId");
+      formData.set("supplier_id", supplierId);
       props.onLoading(true);
       try {
         const response = await axios.post(
@@ -62,14 +64,13 @@ function SupplierPage2(props) {
 
           props.onLoading(false);
           setPage("3");
-        }else{
-          toast.error(message)
+        } else {
+          toast.error(message);
         }
       } catch (error) {
         console.error(error);
         props.onLoading(false);
       }
-   
     }
   };
 
@@ -98,14 +99,13 @@ function SupplierPage2(props) {
           localStorage.removeItem("supplierId");
           localStorage.removeItem("supplierName");
           history.push("/supplier");
-        }else{
-          toast.error(message)
+        } else {
+          toast.error(message);
         }
       } catch (error) {
         console.error(error);
         props.onLoading(false);
       }
-   
     }
   };
 
@@ -157,8 +157,7 @@ function SupplierPage2(props) {
                   type="submit"
                   onClick={handleOnClick}
                 >
-             
-                Save & Exit
+                  Save & Exit
                 </button>
                 <button
                   className="btn btn-secondary w-auto btn-lg"
