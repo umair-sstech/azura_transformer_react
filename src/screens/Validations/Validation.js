@@ -53,3 +53,18 @@ export const   validateHttpForm=(formData) =>{
     }
     return errors;
   }
+
+  export const validateMarketPlaceInfoForm = (formData) => {
+    let errors = {};
+  
+    if (!formData.get("marketPlaceName")) {
+      errors.marketPlaceName = "Market Place name is required";
+    }
+  
+    const logo = formData.get("marketPlaceLogo");
+    if (logo && !logo.type.startsWith("image/")) {
+      errors.marketPlaceLogo = "Please select file";
+    }
+  
+    return errors;
+  };

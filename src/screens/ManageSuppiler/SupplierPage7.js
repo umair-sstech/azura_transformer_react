@@ -82,21 +82,18 @@ function SupplierPage7() {
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
-      customClass: {
-        confirmButton: "btn btn-primary",
-      },
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
     }).then((result) => {
       if (result.isConfirmed) {
+        history.push("/supplier");
         localStorage.removeItem("supplierId");
         localStorage.removeItem("supplierName");
-        history.push("/supplier");
       }
     });
   };
   return (
     <>
-      <hr className="hr" />
-
       <form>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
@@ -111,7 +108,7 @@ function SupplierPage7() {
 
               <button
                 className="btn btn-secondary w-auto btn-lg"
-                type="submit"
+                type="button"
                 onClick={handleCancel}
               >
                 Exit

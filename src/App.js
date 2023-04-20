@@ -67,8 +67,8 @@ import leafletmap from "./screens/Maps/GoogleMaps";
 import ManageCompany from "./screens/ManageCompany/ManageCompany";
 import ResetPassword from "./screens/Auth/ResetPassword";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import './App.css'
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 import CompanyList from "./screens/CompanyList/CompanyList";
 import RetailerList from "./screens/RetailerList/RetailerList";
 import ManageRetailer from "./screens/ManageRetailer/ManageRetailer";
@@ -78,11 +78,13 @@ import ManageUserPermission from "./screens/ManageUser/ManageUserPermission";
 import PublicRoute from "./routers/PublicRoute";
 import UpdateProfile from "./screens/UpdateProfile/UpdateProfile";
 import RetailerProfile from "./screens/RetailerProfile/RetailerProfile";
-import SupplierList from "./screens/SuppilerList/SuppilerList"
+import SupplierList from "./screens/SuppilerList/SuppilerList";
 import ManageSuppiler from "./screens/ManageSuppiler/ManageSuppiler";
 import SuppilerPage3 from "./screens/ManageSuppiler/SuppilerPage3";
 import SuppilerPage2 from "./screens/ManageSuppiler/SuppilerPage2";
 import IntegrationType from "./screens/Integrations/IntegrationType";
+import ManageMarketPlace from "./screens/ManageMarketPlace/ManageMarketPlace";
+import MarketPlaceList from "./screens/ManageMarketPlace/MarketPlaceList";
 window.__DEV__ = true;
 
 class App extends React.Component {
@@ -91,16 +93,15 @@ class App extends React.Component {
     this.state = {
       isLoad: true,
     };
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
     if (token) {
-      this.props.onLoggedin(true)
-      this.props.getUser(token)
+      this.props.onLoggedin(true);
+      this.props.getUser(token);
     } else {
-      this.props.onLoggedin(false)
+      this.props.onLoggedin(false);
     }
   }
-  render()
-  {
+  render() {
     var res = window.location.pathname;
     var baseUrl = process.env.PUBLIC_URL;
     baseUrl = baseUrl.split("/");
@@ -110,7 +111,6 @@ class App extends React.Component {
     const activeKey1 = res;
 
     return (
-
       <>
         <ToastContainer
           position="top-right"
@@ -122,16 +122,27 @@ class App extends React.Component {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          theme="light" />
-        <div className="page-loader-wrapper" style={{ display: this.props.systemLoading ? 'block' : 'none' }}>
+          theme="light"
+        />
+        <div
+          className="page-loader-wrapper"
+          style={{ display: this.props.systemLoading ? "block" : "none" }}
+        >
           <div className="loader">
-            <div className="m-t-30"><img src={require('./assets/images/logo-icon.svg')} width="48" height="48" alt="Lucid" /></div>
+            <div className="m-t-30">
+              <img
+                src={require("./assets/images/logo-icon.svg")}
+                width="48"
+                height="48"
+                alt="Lucid"
+              />
+            </div>
             <p>Please wait...</p>
           </div>
         </div>
         <PublicRoute>
           <Switch>
-            <Route exact path='/login' component={Login} />
+            <Route exact path="/login" component={Login} />
             <Route exact path="/" component={Login} />
             <Route exact path={`/forgotpassword`} component={forgotpassword} />
             <Route path={`/reset-password`} component={ResetPassword} />
@@ -160,7 +171,11 @@ class App extends React.Component {
               <Route exact path={`/appcalendar`} component={appCalendar} />
               <Route exact path={`/appcontact`} component={appContact} />
               <Route exact path={`/apptaskbar`} component={appTaskbar} />
-              <Route exact path={`/filemanagerdashboard`} component={filemanagerdashboard} />
+              <Route
+                exact
+                path={`/filemanagerdashboard`}
+                component={filemanagerdashboard}
+              />
               <Route exact path={`/filedocuments`} component={filedocuments} />
               <Route exact path={`/filemedia`} component={filemedia} />
               <Route exact path={`/fileimages`} component={fileimages} />
@@ -171,7 +186,11 @@ class App extends React.Component {
               <Route exact path={`/uitabs`} component={uitabs} />
               <Route exact path={`/bootstrapui`} component={bootstrapui} />
               <Route exact path={`/uiicons`} component={uiicons} />
-              <Route exact path={`/uinotifications`} component={uinotifications} />
+              <Route
+                exact
+                path={`/uinotifications`}
+                component={uinotifications}
+              />
               <Route exact path={`/uicolors`} component={uicolors} />
               <Route exact path={`/uilistgroup`} component={uilistgroup} />
               <Route exact path={`/uimediaobject`} component={uimediaobject} />
@@ -179,13 +198,25 @@ class App extends React.Component {
               <Route exact path={`/uibuttons`} component={uibuttons} />
               <Route exact path={`/uiprogressbar`} component={uiprogressbar} />
               <Route exact path={`/widgetsdata`} component={widgetsdata} />
-              <Route exact path={`/widgetsweather`} component={widgetsweather} />
+              <Route
+                exact
+                path={`/widgetsweather`}
+                component={widgetsweather}
+              />
               <Route exact path={`/widgetsblog`} component={widgetsblog} />
-              <Route exact path={`/widgetsecommers`} component={widgetsecommers} />
+              <Route
+                exact
+                path={`/widgetsecommers`}
+                component={widgetsecommers}
+              />
               <Route exact path={`/blankpage`} component={blankpage} />
               <Route exact path={`/profilev1page`} component={profilev1page} />
               <Route exact path={`/profilev2page`} component={profilev2page} />
-              <Route exact path={`/imagegalleryprofile`} component={imagegalleryprofile} />
+              <Route
+                exact
+                path={`/imagegalleryprofile`}
+                component={imagegalleryprofile}
+              />
               <Route exact path={`/timeline`} component={timeline} />
               <Route exact path={`/pricing`} component={pricing} />
               <Route exact path={`/invoices`} component={invoices} />
@@ -196,56 +227,111 @@ class App extends React.Component {
               <Route exact path={`/projectslist`} component={projectslist} />
               <Route exact path={`/testimonials`} component={testimonials} />
               <Route exact path={`/faqs`} component={faqs} />
-              <Route exact path={`/formvalidation`} component={formvalidation} />
+              <Route
+                exact
+                path={`/formvalidation`}
+                component={formvalidation}
+              />
               <Route exact path={`/basicelements`} component={basicelements} />
               <Route exact path={`/tablenormal`} component={tablenormal} />
               <Route exact path={`/echart`} component={echart} />
               <Route exact path={`/leafletmap`} component={leafletmap} />
-              <Route exact path={`/company-profile`} component={UpdateProfile} />
-              <Route exact path={`/retailer-profile`} component={RetailerProfile} />
+              <Route
+                exact
+                path={`/company-profile`}
+                component={UpdateProfile}
+              />
+              <Route
+                exact
+                path={`/retailer-profile`}
+                component={RetailerProfile}
+              />
               {this.props.user?.data.role == "SUPER_ADMIN" ? (
                 <>
                   <Route exact path={`/company`} component={CompanyList} />
-                  <Route exact path={`/manage-company`} component={ManageCompany} />
+                  <Route
+                    exact
+                    path={`/manage-company`}
+                    component={ManageCompany}
+                  />
                 </>
               ) : null}
 
               {this.props.user?.data.role == "SUPER_ADMIN" ||
-                this.props.user?.data.role == "COMPANY_ADMIN" ? (
+              this.props.user?.data.role == "COMPANY_ADMIN" ? (
                 <>
                   <Route exact path={`/retailer`} component={RetailerList} />
                   {this.props.user?.permissions.update_retailer ||
-                    this.props.user?.permissions.add_retailer ? <Route exact path={`/manage-retailer`} component={ManageRetailer} /> : null}
+                  this.props.user?.permissions.add_retailer ? (
+                    <Route
+                      exact
+                      path={`/manage-retailer`}
+                      component={ManageRetailer}
+                    />
+                  ) : null}
                 </>
               ) : null}
 
               {this.props.user?.data.role == "SUPER_ADMIN" ||
-                this.props.user?.data.role == "COMPANY_ADMIN" ||
-                this.props.user?.data.role == "RETAILER_ADMIN" ? (
+              this.props.user?.data.role == "COMPANY_ADMIN" ||
+              this.props.user?.data.role == "RETAILER_ADMIN" ? (
                 <>
                   <Route exact path={`/user`} component={UserList} />
                   {this.props.user?.permissions.update_retailer ||
-                      this.props.user?.permissions.add_retailer ? <Route exact path={`/manage-user`} component={ManageUser} /> : null}
-                    {this.props.user?.permissions.update_user ? <Route exact path={`/user-permission`} component={ManageUserPermission} /> : null}
+                  this.props.user?.permissions.add_retailer ? (
+                    <Route exact path={`/manage-user`} component={ManageUser} />
+                  ) : null}
+                  {this.props.user?.permissions.update_user ? (
+                    <Route
+                      exact
+                      path={`/user-permission`}
+                      component={ManageUserPermission}
+                    />
+                  ) : null}
+                </>
+              ) : null}
+              {this.props.user?.data.role == "SUPER_ADMIN" ? (
+                <>
+                  <Route
+                    exact
+                    path={`/integration`}
+                    component={IntegrationType}
+                  />
+                  
                 </>
               ) : null}
               {this.props.user?.data.role == "SUPER_ADMIN" ? (
                 <>
                   <Route exact path={`/supplier`} component={SupplierList} />
-                  <Route exact path={`/manage-suppiler`} component={ManageSuppiler} />
-                  <Route exact path={`/file-upload`} component={SuppilerPage2} />
-
-                  <Route exact path={`/data-mapping`} component={SuppilerPage3} />
-
-                  
-
+                  <Route
+                    exact
+                    path={`/manage-suppiler`}
+                    component={ManageSuppiler}
+                  />
+                  <Route
+                    exact
+                    path={`/file-upload`}
+                    component={SuppilerPage2}
+                  />
+                  <Route
+                    exact
+                    path={`/data-mapping`}
+                    component={SuppilerPage3}
+                  />
                 </>
               ) : null}
               {this.props.user?.data.role == "SUPER_ADMIN" ? (
                 <>
-                  <Route exact path={`/integration`} component={IntegrationType} />
-  
-
+                  <Route
+                    exact
+                    path={`/market-place`}
+                    component={MarketPlaceList}
+                  />
+                  <Route
+                    exact
+                    path={`/manage-marketPlace`}
+                    component={ManageMarketPlace}
+                  />
                 </>
               ) : null}
             </div>
@@ -253,14 +339,15 @@ class App extends React.Component {
         </Switch>
       </>
     );
-
   }
 }
 
 const mapStateToProps = ({ loginReducer, LoadingReducer }) => ({
   isLoggedin: loginReducer.isLoggedin,
   user: loginReducer.user,
-  systemLoading: LoadingReducer.systemLoading
+  systemLoading: LoadingReducer.systemLoading,
 });
 
-export default withRouter(connect(mapStateToProps, { onLoggedin, getUser })(App));
+export default withRouter(
+  connect(mapStateToProps, { onLoggedin, getUser })(App)
+);

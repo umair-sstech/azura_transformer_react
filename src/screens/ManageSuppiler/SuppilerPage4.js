@@ -149,6 +149,7 @@ function SuppilerPage4(props) {
       })
       .catch((err) => console.log(err));
   };
+
   const handleCancel = () => {
     Swal.fire({
       title: "Are you sure, <br> you want to exit ? ",
@@ -156,19 +157,19 @@ function SuppilerPage4(props) {
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
-      customClass: {
-        confirmButton: "btn btn-primary",
-      },
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
     }).then((result) => {
       if (result.isConfirmed) {
         history.push("/supplier");
+        localStorage.removeItem("supplierId");
+        localStorage.removeItem("supplierName");
       }
     });
   };
 
   return (
     <>
-      <hr className="hr" />
       <form>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
@@ -192,7 +193,7 @@ function SuppilerPage4(props) {
 
               <button
                 className="btn btn-secondary w-auto btn-lg"
-                type="submit"
+                type="button"
                 onClick={handleCancel}
               >
                 Exit
@@ -249,6 +250,7 @@ function SuppilerPage4(props) {
                 type="text"
                 className="form-control"
                 id="prefix"
+                placeholder="Enter Prefix Name"
                 value={prefix}
                 onChange={handlePrefixChange}
               />
@@ -260,6 +262,7 @@ function SuppilerPage4(props) {
                 type="text"
                 className="form-control"
                 id="suffix"
+                placeholder="Enter Suffix Name"
                 value={suffix}
                 onChange={handleSuffixChange}
               />

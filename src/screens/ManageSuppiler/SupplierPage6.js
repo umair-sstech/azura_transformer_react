@@ -53,12 +53,13 @@ function SupplierPage6(props) {
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
-      customClass: {
-        confirmButton: "btn btn-primary",
-      },
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
     }).then((result) => {
       if (result.isConfirmed) {
         history.push("/supplier");
+        localStorage.removeItem("supplierId");
+        localStorage.removeItem("supplierName")
       }
     });
   };
@@ -85,7 +86,7 @@ function SupplierPage6(props) {
 
               <button
                 className="btn btn-secondary w-auto btn-lg"
-                type="submit"
+                type="button"
                 onClick={handleCancel}
               >
                 Exit

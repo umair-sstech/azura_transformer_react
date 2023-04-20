@@ -107,13 +107,24 @@
   margin-top: 19px;
 }
 
+.supplier-onboarding{
+  display: flex;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+}
+.hr {
+  position: relative;
+  width: 79.5vw;
+  right: 19px;
+}
 @media screen and (max-width: 1024px) {
   .stepName{
     font-size: 12px;
 
   }
   .stepNamesContainer {
-    margin-right: -10%;
+    margin-right: -8%;
     margin-left: -2%;
   }
   .RSPBprogressBar {

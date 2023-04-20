@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import moment from "moment";
 import Pagination from "react-responsive-pagination";
 import axios from "axios";
-import "./SuppilerList.css";
 import { onLoading } from "../../actions";
 import { connect } from "react-redux";
 import PageHeader from "../../components/PageHeader";
@@ -10,79 +9,40 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { Form } from "react-bootstrap";
 import Select from "react-select";
+import { useState } from "react";
+import { useEffect } from "react";
+import "./MarketPlaceList.css";
 
-function SuppilerList(props) {
-  const [supplierList, setSupplierList] = useState([]);
+function MarketPlaceList(props) {
+  const [marketPlaceList, setMarketPlaceList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(5);
 
-  const history = useHistory();
-
   useEffect(() => {
     props.onLoading(true);
-    getSupplierInfo(currentPage, dataLimit)
-      .then((response) => {
-        setSupplierList(response.data);
-        setTotalPages(Math.ceil(response.totalCount / dataLimit));
-      })
-      .finally(() => {
-        props.onLoading(false);
-      });
+    getDataFromApi()
   }, [currentPage, dataLimit]);
 
-
-
-  const getSupplierInfo = (currentPage, dataLimit) => {
-    try {
-      return axios
-        .get(
-          `http://localhost:8001/supplire/getSupplireInfo?page=${currentPage}&limit=${dataLimit}`
-        )
-        .then((response) => response.data);
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
-  const activateDeactivate = (event, id) => {
-    const status = event.target.checked;
-    Swal.fire({
-      title: `${status ? "Activate" : "Deactivate"} Supplier?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: `Yes, ${status ? "Activate" : "Deactivate"} it!`,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        props.onLoading(true);
-        axios
-          .post(
-            `${process.env.REACT_APP_API_URL}/company/company-status/${id}`,
-            { status }
-          )
-          .then((res) => {
-            toast.success(res.data.message);
-            
-            props.onLoading(false);
-          })
-          .catch((e) => {
-            toast.error("Something Went Wrong");
-            
-            props.onLoading(false);
-          });
-      }
-    });
-  };
+  const getDataFromApi = (search = 'active') => {
+    props.onLoading(true)
+    axios.get(`${process.env.REACT_APP_COMPANY_SERVICE}/get-company-list?page=${currentPage}&limit=${dataLimit}&searchText=${search}`)
+        .then(res => {
+            let totlePage = Math.ceil(res.data.totlaRecord / res.data.limit)
+            setTotalPages(totlePage)
+           
+            props.onLoading(false)
+        })
+        .catch(e => {
+            props.onLoading(false)
+        })
+}
   let filterList = [
     { label: "All", value: "all" },
     { label: "Activate", value: "active" },
     { label: "Deactivate", value: "deactivate" },
   ];
-
   return (
     <div
       style={{ flex: 1 }}
@@ -93,26 +53,21 @@ function SuppilerList(props) {
       <div>
         <div className="container-fluid">
           <PageHeader
-            HeaderText="Suppiler List"
+            HeaderText="Market Place List"
             Breadcrumb={[
               { name: "Manage", navigate: "" },
-              { name: "Suppiler List", navigate: "" },
+              { name: "Market Place List", navigate: "" },
             ]}
-            style={{ position: "sticky", top: 0, zIndex: 999 }}
           />
           <div className="tab-component">
             <div className="card">
               <div className="body">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <div style={{ minWidth: "110px" }}>
-                    <Select
-                      options={filterList}
-                      
-                      defaultValue={filterList[0]}
-                    />
+                    <Select options={filterList} defaultValue={filterList[0]} />
                   </div>
-                  <Link className="link-btn" to={`/manage-suppiler`}>
-                    Add Supplier
+                  <Link className="link-btn" to={`/manage-marketPlace`}>
+                    Add Market Place
                   </Link>
                 </div>
 
@@ -125,7 +80,7 @@ function SuppilerList(props) {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>Supplier Name</th>
+                        <th>Market Place Name</th>
                         <th>Logo</th>
                         <th>Prefix Name</th>
                         <th>Last Update</th>
@@ -137,7 +92,7 @@ function SuppilerList(props) {
                         ) : null}
                       </tr>
                     </thead>
-                    <tbody>
+                    {/* <tbody>
                       {supplierList.map((supplier) => (
                         <tr key={supplier.id}>
                           <td>{supplier.suplirName}</td>
@@ -153,13 +108,9 @@ function SuppilerList(props) {
                           <td>{supplier.lastUpdate}</td>
                           {props.user.permissions.update_company ? (
                             <>
-                            <td><Form.Check
-                            type="switch"
-                            id={`${supplier.id}`}
-                            checked={supplier.status}
-                            onChange={(e) => activateDeactivate(e, supplier.id)}
-
-                        /></td>
+                              <td>
+                                {supplier.status == 1 ? "Active" : "Inactive"}
+                              </td>
 
                               <td className="action-group">
                                 <i
@@ -167,17 +118,9 @@ function SuppilerList(props) {
                                   title="Edit"
                                   className="fa fa-edit edit"
                                   onClick={() => {
-                                    localStorage.setItem(
-                                      "supplierId",
-                                      supplier.id
-                                    );
-                                    localStorage.setItem(
-                                      "supplierName",
-                                      supplier.suplirName
-                                    );
 
                                     history.push(
-                                      `/manage-suppiler`
+                                      `/manage-marketPlace`
                                     );
                                   }}
                                 ></i>
@@ -186,7 +129,7 @@ function SuppilerList(props) {
                           ) : null}
                         </tr>
                       ))}
-                    </tbody>
+                                </tbody>*/}
                   </table>
                   <div className="pagination-wrapper">
                     <Pagination
@@ -222,4 +165,4 @@ const mapStateToProps = ({ LoadingReducer, loginReducer }) => ({
   loading: LoadingReducer.isLoading,
   user: loginReducer.user,
 });
-export default connect(mapStateToProps, { onLoading })(SuppilerList);
+export default connect(mapStateToProps, { onLoading })(MarketPlaceList);

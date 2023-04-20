@@ -5,42 +5,40 @@ import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { onUpdateFormLoading } from "../../actions";
-import MultiStepProgressBar from "../MultiStepProgressBar/MultiStepProgressBar";
-import SupplierInfo from "./SuppilerInfo";
-import SuppilerPage2 from "./SuppilerPage2";
-import SuppilerPage3 from "./SuppilerPage3";
-import SuppilerPage4 from "./SuppilerPage4";
-import SuppilerPage5 from "./SuppilerPage5";
-import SupplierPage6 from "./SupplierPage6";
-import SupplierPage7 from "./SupplierPage7";
-import "./SupplierPage.css";
+import MultiStepProgressBar from "./MultiStepProgressBar";
+import MarketPlacePage1 from "./MarketPlacePage1";
+import MarketPlacePage2 from "./MarketPlacePage2";
+import MarketPlacePage3 from "./MarketPlacePage3";
+import MarketPlacePage4 from "./MarketPlacePage4";
+import MarketPlacePage5 from "./MarketPlacePage5";
+import MarketPlacePage6 from "./MarketPlacePage6";
+import  "./MarketPlace.css"
+
 
 export const FormContext = createContext();
 
-function ManageSuppiler(props) {
+function ManageMarketPlace(props) {
   const [activeStepIndex, setActiveStepIndex] = useState(-1);
   const [formData, setFormData] = useState();
   const [logoData, setLogoData] = useState();
-  const [isSuppilerAdded, setIsSuppilerAdded] = useState("");
+  const [isMarketPlaceAdded, setIsMarketPlaceAdded] = useState("");
 
   const [page, setPage] = useState("1");
-
-  const history = useHistory();
 
   useEffect(
     () => () => {
       setFormData();
       setLogoData();
-      setIsSuppilerAdded("");
+      setIsMarketPlaceAdded("");
       localStorage.removeItem("newlyAddedSuppiler");
     },
     []
   );
-
+ 
   const processCancel = () => {
     setFormData();
     setLogoData();
-    setIsSuppilerAdded("");
+    setIsMarketPlaceAdded("");
     localStorage.removeItem("newlyAddedSuppiler");
     history.push("/suppiler");
   };
@@ -69,22 +67,20 @@ function ManageSuppiler(props) {
       case "6":
         setPage("6");
         break;
-      case "7":
-        setPage("7");
-        break;
       default:
         setPage("1");
     }
   };
   const handleButtonClick = () => {
-    if (isSuppilerAdded) {
+    if (isMarketPlaceAdded) {
       setActiveStepIndex(1);
     } else {
-      setIsSuppilerAdded(true);
+      setIsMarketPlaceAdded(true);
       setActiveStepIndex(0);
     }
   };
 
+  const history = useHistory();
   return (
     <>
       <div
@@ -96,12 +92,12 @@ function ManageSuppiler(props) {
         <div>
           <div className="container-fluid">
             <PageHeader
-              HeaderText={isSuppilerAdded ? "Suppiler Update" : "suppiler Add"}
+              HeaderText={isMarketPlaceAdded ? "Market Place Update" : "Market Place Add"}
               Breadcrumb={[
                 { name: "Manage", navigate: "" },
-                { name: "Suppiler List", navigate: "" },
+                { name: "Market Place List", navigate: "" },
                 {
-                  name: isSuppilerAdded ? "Suppiler Update" : "Suppiler Add",
+                  name: isMarketPlaceAdded ? "Market Place Update" : "MArket Place Add",
                   navigate: "",
                 },
               ]}
@@ -117,8 +113,8 @@ function ManageSuppiler(props) {
                   ) : null}
                   <FormContext.Provider
                     value={{
-                      setIsSuppilerAdded,
-                      isSuppilerAdded,
+                      setIsMarketPlaceAdded,
+                      isMarketPlaceAdded,
                       activeStepIndex,
                       setActiveStepIndex,
                       formData,
@@ -128,7 +124,7 @@ function ManageSuppiler(props) {
                       processCancel,
                     }}
                   >
-               
+                
                     <MultiStepProgressBar
                       setPage={setPage}
                       page={page}
@@ -137,47 +133,42 @@ function ManageSuppiler(props) {
                     {
                       {
                         1: (
-                          <SupplierInfo
+                          <MarketPlacePage1
                             onButtonClick={handleButtonClick}
                             setPage={setPage}
                           />
                         ),
                         2: (
-                          <SuppilerPage2
+                          <MarketPlacePage2
                             onButtonClick={nextPage}
                             setPage={setPage}
                           />
                         ),
                         3: (
-                          <SuppilerPage3
+                          <MarketPlacePage3
                             onButtonClick={nextPage}
                             setPage={setPage}
                           />
                         ),
                         4: (
-                          <SuppilerPage4
+                          <MarketPlacePage4
                             onButtonClick={nextPage}
                             setPage={setPage}
                           />
                         ),
                         5: (
-                          <SuppilerPage5
+                          <MarketPlacePage5
                             onButtonClick={nextPage}
                             setPage={setPage}
                           />
                         ),
                         6: (
-                          <SupplierPage6
+                          <MarketPlacePage6
                             onButtonClick={nextPage}
                             setPage={setPage}
                           />
                         ),
-                        7: (
-                          <SupplierPage7
-                            onButtonClick={nextPage}
-                            setPage={setPage}
-                          />
-                        ),
+                       
                       }[page]
                     }
                   </FormContext.Provider>
@@ -195,5 +186,5 @@ const mapStateToProps = ({ LoadingReducer }) => ({
   updateFormLoading: LoadingReducer.updateFormLoading,
 });
 export default connect(mapStateToProps, { onUpdateFormLoading })(
-  ManageSuppiler
+  ManageMarketPlace
 );

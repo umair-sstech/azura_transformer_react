@@ -9,6 +9,14 @@
   width: 79.5vw;
   right: 19px;
 }
+
+/* supplierpage2 */
+
+small.form-text.text-muted.csv-text {
+  color: #49c5b6 !important;
+  font-weight: 600;
+  font-size: 12px;
+}
 /* supplierpage3 */
 table {
   border-collapse: collapse;
@@ -60,13 +68,12 @@ th {
 }
 
 /* manageSupplier */
-.supplier-heading {
-  font-weight: 500;
-  font-size: 17px;
+.supplier-onboarding{
   display: flex;
   justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
 }
-
 /* Supplierpage5 */
 .select-option {
   margin-top: -40px;

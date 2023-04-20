@@ -156,9 +156,8 @@ function SupplierSftpForm(props) {
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
-      customClass: {
-        confirmButton: "btn btn-primary",
-      },
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
     }).then((result) => {
       if (result.isConfirmed) {
         history.push("/supplier");
@@ -204,7 +203,7 @@ function SupplierSftpForm(props) {
 
                 <button
                   className="btn btn-secondary w-auto btn-lg"
-                  type="submit"
+                  type="button"
                   onClick={handleCancel}
                 >
                   Exit
@@ -276,7 +275,7 @@ function SupplierSftpForm(props) {
                   className="form-control"
                   type="text"
                   name="port"
-                  placeholder="Enter port"
+                  placeholder="Enter Port"
                   onChange={handleInputChange}
                   value={formData.port}
                 />
@@ -321,6 +320,9 @@ function SupplierSftpForm(props) {
                 {formErrors.urlPath && (
                   <span className="text-danger">{formErrors.urlPath}</span>
                 )}
+                <small className="form-text text-muted csv-text">
+                  Please Enter.
+                </small>
               </div>
             </div>
             <div className="col-12">

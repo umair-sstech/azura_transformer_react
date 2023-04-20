@@ -3,12 +3,11 @@ import React, { useState } from "react";
 import Select from "react-select";
 import PageHeader from "../../components/PageHeader";
 import { Link, useHistory } from "react-router-dom";
-import SuppilerList from "../SuppilerList/SuppilerList";
 
 function IntegrationType(props) {
   const options = [
     { value: "Supplier", label: "Supplier" },
-    { value: "Market Place", label: "Market Place" },
+    { value: "market_place", label: "Market Place" },
     { value: "Shopping Cart", label: "Shopping Cart" },
     { value: "Carrier", label: "Carrier" },
     { value: "TMS", label: "TMS" },
@@ -23,6 +22,9 @@ function IntegrationType(props) {
     setSelectedOption(selectedOption);
     if (selectedOption.value === "Supplier") {
       history.push("/supplier");
+    }
+    if (selectedOption.value === "market_place") {
+      history.push("/market-place");
     }
   };
   

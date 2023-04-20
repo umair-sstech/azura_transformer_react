@@ -105,21 +105,20 @@ function SuppilerInfo(props) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-  
+
     const errors = validateSupplierInfoForm(formData);
     setFormErrors(errors);
-  
+
     if (Object.keys(errors).length === 0) {
       const prefixName = generatePrefixName(formData.get("suplirName"));
       setPrefixName(prefixName);
       formData.set("prefixName", prefixName);
-  
+
       props.onLoading(true);
-  
+
       const supplierId = localStorage.getItem("supplierId");
-  
+
       if (supplierId) {
-        // Remove the supplierId from the URL and add it to the request body
         formData.set("supplierId", supplierId);
         axios
           .post(
@@ -173,7 +172,6 @@ function SuppilerInfo(props) {
       }
     }
   };
-  
 
   const handleOnClick = (e) => {
     e.preventDefault();
@@ -240,9 +238,8 @@ function SuppilerInfo(props) {
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
-      customClass: {
-        confirmButton: "btn btn-primary",
-      },
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
     }).then((result) => {
       if (result.isConfirmed) {
         history.push("/supplier");
@@ -254,8 +251,6 @@ function SuppilerInfo(props) {
 
   return (
     <>
-      <hr className="hr " />
-
       <form onSubmit={handleSubmit} name="myForm" encType="multipart/form-data">
         <div style={{ marginTop: "35px" }}>
           <div className="row">
@@ -286,7 +281,7 @@ function SuppilerInfo(props) {
 
                 <button
                   className="btn btn-secondary w-auto btn-lg"
-                  type="submit"
+                  type="button"
                   onClick={handleCancel}
                 >
                   Exit
@@ -333,7 +328,7 @@ function SuppilerInfo(props) {
               <div className="form-group">
                 <label>
                   {" "}
-                  Logo <span style={{ color: "red" }}>*</span>
+                  Supplier Logo <span style={{ color: "red" }}>*</span>
                 </label>
 
                 <input

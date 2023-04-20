@@ -119,9 +119,8 @@ function SupplierHttpForm() {
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
-      customClass: {
-        confirmButton: "btn btn-primary",
-      },
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
     }).then((result) => {
       if (result.isConfirmed) {
         history.push("/supplier");
@@ -154,7 +153,7 @@ function SupplierHttpForm() {
 
                 <button
                   className="btn btn-secondary w-auto btn-lg"
-                  type="submit"
+                  type="button"
                   onClick={handleCancel}
                 >
                   Exit

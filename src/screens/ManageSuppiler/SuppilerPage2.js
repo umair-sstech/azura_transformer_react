@@ -37,6 +37,9 @@ function SupplierPage2(props) {
     }
   }, [props]);
 
+  const handleFileInputChange = () => {
+    setFileError("");
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const fileInput = document.querySelector('input[type="file"]');
@@ -116,9 +119,8 @@ function SupplierPage2(props) {
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
-      customClass: {
-        confirmButton: "btn btn-primary",
-      },
+      confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
     }).then((result) => {
       if (result.isConfirmed) {
         history.push("/supplier");
@@ -126,13 +128,11 @@ function SupplierPage2(props) {
     });
   };
 
-  const handleFileInputChange = () => {
-    setFileError("");
-  };
+
 
   return (
     <>
-      <hr className="hr" />
+      
       <form onSubmit={handleSubmit}>
         <div style={{ marginTop: "30px" }}>
           <div className="row">
@@ -183,7 +183,7 @@ function SupplierPage2(props) {
                   onChange={handleFileInputChange}
                 />
                 {fileError && <p style={{ color: "red" }}>{fileError}</p>}
-                <small className="form-text text-muted">
+                <small className="form-text text-muted csv-text">
                   Allowed file types: CSV.
                 </small>
               </div>
