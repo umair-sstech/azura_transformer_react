@@ -9,7 +9,7 @@ import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Spinner } from "react-bootstrap";
 import { FormContext } from "./ManageSuppiler";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { API_PATH } from "../ApiPath/Apipath";
 
 function SuppilerPage3(props) {
   const { setPage } = props;
@@ -19,7 +19,6 @@ function SuppilerPage3(props) {
     {
       value: "do_nothing",
       label: "Do nothing",
-     
     },
     {
       value: "hardcode_value",
@@ -35,6 +34,7 @@ function SuppilerPage3(props) {
 
   const [productFields, setProductFields] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  console.log("options", selectedOptions);
   const [formErrors, setFormErrors] = useState([]);
   const history = useHistory();
 
@@ -44,6 +44,19 @@ function SuppilerPage3(props) {
     getSupplierDataById();
   }, []);
 
+  // const handleFieldChange = (index, key, selectedOption) => {
+  //   setSelectedOptions((prevSelectedOptions) => {
+  //     const newSelectedOptions = [...prevSelectedOptions];
+  //     if (!newSelectedOptions[index]) {
+  //       newSelectedOptions[index] = {};
+  //     }
+  //     if (selectedOption) {
+  //       newSelectedOptions[index][key] = selectedOption;
+  //     }
+  //     return newSelectedOptions;
+  //   });
+  // };
+
   const handleFieldChange = (index, key, selectedOption) => {
     setSelectedOptions((prevSelectedOptions) => {
       const newSelectedOptions = [...prevSelectedOptions];
@@ -52,10 +65,37 @@ function SuppilerPage3(props) {
       }
       if (selectedOption) {
         newSelectedOptions[index][key] = selectedOption;
+
+        const selectedValue = selectedOption.value;
+        const selectedOptionIndex = options.findIndex(
+          (option) => option.value === selectedValue
+        );
+        const option = options[selectedOptionIndex];
+        const count = option.count || 0;
+        console.log("count", count);
+        let color = "gray";
+
+        if (count === 0) {
+          color = "green";
+        } else if (count === 1) {
+          color = "orange";
+        } else if (count >= 2) {
+          color = "red";
+        }
+
+        const newCount = count + 1;
+        const newOptions = [...options];
+        newOptions[selectedOptionIndex] = {
+          ...newOptions[selectedOptionIndex],
+          count: newCount,
+          color: color,
+        };
+        setOptions(newOptions);
       }
       return newSelectedOptions;
     });
   };
+
 
   const handleAdditionalValueChange = (index, key, additionalValue) => {
     setSelectedOptions((prevSelectedOptions) => {
@@ -74,9 +114,7 @@ function SuppilerPage3(props) {
   const getProductField = async () => {
     try {
       props.onLoading(true);
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL_PRODUCT}/product/getStanderdProductCatalog`
-      );
+      const response = await axios.get(`${API_PATH.GET_PRODUCT_CATALOG}`);
       if (response.data.success) {
         setProductFields(response.data.data);
         props.onLoading(false);
@@ -121,7 +159,7 @@ function SuppilerPage3(props) {
       props.onLoading(true);
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierFields`,
+          `${API_PATH.DATA_FILE_MAPPING}`,
           mappingArray
         );
         const { success, message, data } = response.data;
@@ -168,7 +206,7 @@ function SuppilerPage3(props) {
     props.onLoading(true);
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierFields`,
+        `${API_PATH.DATA_FILE_MAPPING}`,
         mappingArray
       );
       const { success, message, data } = response.data;
@@ -194,13 +232,13 @@ function SuppilerPage3(props) {
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
     }).then((result) => {
       if (result.isConfirmed) {
         history.push("/supplier");
-        localStorage.removeItem("supplierId")
-        localStorage.removeItem("supplierName")
+        localStorage.removeItem("supplierId");
+        localStorage.removeItem("supplierName");
       }
     });
   };
@@ -223,9 +261,7 @@ function SuppilerPage3(props) {
   const getSupplierDataById = () => {
     const supplierId = localStorage.getItem("supplierId");
     axios
-      .get(
-        `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/getSupplireInfoById?supplierId=${supplierId}`
-      )
+      .get(`${API_PATH.GET_INTEGRATION_INFO_BY_ID}=${supplierId}`)
       .then((response) => {
         const supplierData = response.data.data;
         setFormData(supplierData);
@@ -236,8 +272,6 @@ function SuppilerPage3(props) {
           ...csvJSON.map((option) => ({
             value: option,
             label: option,
-            color: "gray",
-            count: 0,
           })),
         ];
 
@@ -250,7 +284,6 @@ function SuppilerPage3(props) {
 
   return (
     <>
-      
       <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
@@ -324,15 +357,13 @@ function SuppilerPage3(props) {
                 {productFields.map((productField, index) => {
                   const keys = Object.keys(productField);
                   return (
-                   
                     <>
                       {keys.map((key) => {
-                        
                         const selectedOption =
                           selectedOptions[index] && selectedOptions[index][key]
                             ? selectedOptions[index][key]
                             : null;
-                           
+
                         let additionalInfo = null;
                         if (key === "Dimension_Units") {
                           additionalInfo = (
@@ -427,6 +458,14 @@ function SuppilerPage3(props) {
                                   }
                                   isSearchable={true}
                                   className="select"
+                                  styles={{
+                                    option: (styles, { data }) => {
+                                      return {
+                                        ...styles,
+                                        background: data.color,
+                                      };
+                                    },
+                                  }}
                                 />
                               </div>
                             </td>
@@ -435,7 +474,6 @@ function SuppilerPage3(props) {
                         );
                       })}
                     </>
-                    
                   );
                 })}
               </tbody>

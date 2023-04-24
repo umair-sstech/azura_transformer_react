@@ -5,58 +5,39 @@ import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { onUpdateFormLoading } from "../../actions";
-import MultiStepProgressBar from "../MultiStepProgressBar/MultiStepProgressBar";
-import SupplierInfo from "./SuppilerInfo";
-import SuppilerPage2 from "./SuppilerPage2";
-import SuppilerPage3 from "./SuppilerPage3";
-import SuppilerPage4 from "./SuppilerPage4";
-import SuppilerPage5 from "./SuppilerPage5";
-import SupplierPage6 from "./SupplierPage6";
-import SupplierPage7 from "./SupplierPage7";
-import "./SupplierPage.css";
-import Swal from "sweetalert2";
+import MultiStepProgressBar from "./MultiStepProgressBar";
+import IntegratorInfo from "./IntegratorInfo";
+import IntegratorPage2 from "./IntegratorPage2";
+import IntegratorPage3 from "./IntegratorPage3";
+import IntegratorPage4 from "./IntegratorPage4";
+import IntegratorPage5 from "./IntegratorPage5";
+import IntegratorPage6 from "./IntegratorPage6";
 
 export const FormContext = createContext();
 
-function ManageSuppiler(props) {
+function ManageIntegrator(props) {
   const [activeStepIndex, setActiveStepIndex] = useState(-1);
   const [formData, setFormData] = useState();
   const [logoData, setLogoData] = useState();
-  const [isSuppilerAdded, setIsSuppilerAdded] = useState("");
+  const [isMarketPlaceAdded, setIsMarketPlaceAdded] = useState("");
 
   const [page, setPage] = useState("1");
-
-  const history = useHistory();
-
   useEffect(
     () => () => {
       setFormData();
       setLogoData();
-      setIsSuppilerAdded("");
+      setIsMarketPlaceAdded("");
       localStorage.removeItem("newlyAddedSuppiler");
     },
     []
   );
 
   const processCancel = () => {
-    Swal.fire({
-      title: "Are you sure, <br> you want to exit ? ",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setFormData();
-        setLogoData();
-        setIsSuppilerAdded("");
-        history.push("/supplier");
-        localStorage.removeItem("supplierId");
-        localStorage.removeItem("supplierName");
-      }
-    });
+    setFormData();
+    setLogoData();
+    setIsMarketPlaceAdded("");
+    localStorage.removeItem("newlyAddedSuppiler");
+    history.push("/suppiler");
   };
 
   const nextPage = (page) => {
@@ -83,22 +64,20 @@ function ManageSuppiler(props) {
       case "6":
         setPage("6");
         break;
-      case "7":
-        setPage("7");
-        break;
       default:
         setPage("1");
     }
   };
   const handleButtonClick = () => {
-    if (isSuppilerAdded) {
+    if (isMarketPlaceAdded) {
       setActiveStepIndex(1);
     } else {
-      setIsSuppilerAdded(true);
+      setIsMarketPlaceAdded(true);
       setActiveStepIndex(0);
     }
   };
 
+  const history = useHistory();
   return (
     <>
       <div
@@ -110,12 +89,16 @@ function ManageSuppiler(props) {
         <div>
           <div className="container-fluid">
             <PageHeader
-              HeaderText={isSuppilerAdded ? "Suppiler Update" : "suppiler Add"}
+              HeaderText={
+                isMarketPlaceAdded ? "Integrator Update" : "Integrator Add"
+              }
               Breadcrumb={[
                 { name: "Manage", navigate: "" },
-                { name: "Suppiler List", navigate: "" },
+                { name: "Integrator List", navigate: "" },
                 {
-                  name: isSuppilerAdded ? "Suppiler Update" : "Suppiler Add",
+                  name: isMarketPlaceAdded
+                    ? "Integrator Update"
+                    : "Integrator Add",
                   navigate: "",
                 },
               ]}
@@ -131,8 +114,8 @@ function ManageSuppiler(props) {
                   ) : null}
                   <FormContext.Provider
                     value={{
-                      setIsSuppilerAdded,
-                      isSuppilerAdded,
+                      setIsMarketPlaceAdded,
+                      isMarketPlaceAdded,
                       activeStepIndex,
                       setActiveStepIndex,
                       formData,
@@ -150,43 +133,37 @@ function ManageSuppiler(props) {
                     {
                       {
                         1: (
-                          <SupplierInfo
+                          <IntegratorInfo
                             onButtonClick={handleButtonClick}
                             setPage={setPage}
                           />
                         ),
                         2: (
-                          <SuppilerPage2
+                          <IntegratorPage2
                             onButtonClick={nextPage}
                             setPage={setPage}
                           />
                         ),
                         3: (
-                          <SuppilerPage3
+                          <IntegratorPage3
                             onButtonClick={nextPage}
                             setPage={setPage}
                           />
                         ),
                         4: (
-                          <SuppilerPage4
+                          <IntegratorPage4
                             onButtonClick={nextPage}
                             setPage={setPage}
                           />
                         ),
                         5: (
-                          <SuppilerPage5
+                          <IntegratorPage5
                             onButtonClick={nextPage}
                             setPage={setPage}
                           />
                         ),
                         6: (
-                          <SupplierPage6
-                            onButtonClick={nextPage}
-                            setPage={setPage}
-                          />
-                        ),
-                        7: (
-                          <SupplierPage7
+                          <IntegratorPage6
                             onButtonClick={nextPage}
                             setPage={setPage}
                           />
@@ -208,5 +185,5 @@ const mapStateToProps = ({ LoadingReducer }) => ({
   updateFormLoading: LoadingReducer.updateFormLoading,
 });
 export default connect(mapStateToProps, { onUpdateFormLoading })(
-  ManageSuppiler
+  ManageIntegrator
 );

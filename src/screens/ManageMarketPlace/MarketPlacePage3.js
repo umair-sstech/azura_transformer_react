@@ -18,7 +18,7 @@ function MarketPlacePage3() {
   const history = useHistory();
 
   useEffect(() => {
-    // getCronTimeData();
+    getCronTimeData();
   }, []);
 
   const getCronTimeData = () => {
@@ -55,8 +55,8 @@ function MarketPlacePage3() {
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
     }).then((result) => {
       if (result.isConfirmed) {
         history.push("/market-place");

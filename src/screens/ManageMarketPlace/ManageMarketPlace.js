@@ -30,7 +30,6 @@ function ManageMarketPlace(props) {
       setFormData();
       setLogoData();
       setIsMarketPlaceAdded("");
-      localStorage.removeItem("newlyAddedSuppiler");
     },
     []
   );
@@ -39,8 +38,7 @@ function ManageMarketPlace(props) {
     setFormData();
     setLogoData();
     setIsMarketPlaceAdded("");
-    localStorage.removeItem("newlyAddedSuppiler");
-    history.push("/suppiler");
+    history.push("/market-place");
   };
 
   const nextPage = (page) => {
@@ -97,7 +95,7 @@ function ManageMarketPlace(props) {
                 { name: "Manage", navigate: "" },
                 { name: "Market Place List", navigate: "" },
                 {
-                  name: isMarketPlaceAdded ? "Market Place Update" : "MArket Place Add",
+                  name: isMarketPlaceAdded ? "Market Place Update" : "Market Place Add",
                   navigate: "",
                 },
               ]}

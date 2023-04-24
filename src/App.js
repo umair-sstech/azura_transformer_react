@@ -85,6 +85,8 @@ import SuppilerPage2 from "./screens/ManageSuppiler/SuppilerPage2";
 import IntegrationType from "./screens/Integrations/IntegrationType";
 import ManageMarketPlace from "./screens/ManageMarketPlace/ManageMarketPlace";
 import MarketPlaceList from "./screens/ManageMarketPlace/MarketPlaceList";
+import IntegratorList from "./screens/ManageIntegrator/IntegratorList";
+import ManageIntegrator from "./screens/ManageIntegrator/ManageIntegrator";
 window.__DEV__ = true;
 
 class App extends React.Component {
@@ -297,7 +299,6 @@ class App extends React.Component {
                     path={`/integration`}
                     component={IntegrationType}
                   />
-                  
                 </>
               ) : null}
               {this.props.user?.data.role == "SUPER_ADMIN" ? (
@@ -332,6 +333,13 @@ class App extends React.Component {
                     path={`/manage-marketPlace`}
                     component={ManageMarketPlace}
                   />
+                </>
+              ) : null}
+              {this.props.user?.data.role == "SUPER_ADMIN" ? (
+                <>
+                  <Route exact path={`/integrator`} component={IntegratorList} />
+                  <Route exact path={`/manage-integrator`} component={ManageIntegrator} />
+
                 </>
               ) : null}
             </div>

@@ -214,11 +214,7 @@ class NavbarMenu extends React.Component
             <div className="navbar-brand">
               <a href="dashboard">
                 <img
-                  src={
-                    document.body.classList.contains("full-dark")
-                      ? LogoWhite
-                      : Logo
-                  }
+                  src="logo.png"
                   alt="Lucid Logo"
                   className="img-responsive logo"
                 />
@@ -438,19 +434,20 @@ class NavbarMenu extends React.Component
             <div className="user-account">
               <img
                 src={UserImage}
-                className="rounded-circle user-photo"
+                className="rounded-circle user-photo" 
                 alt="User Profile Picture"
               />
               <Dropdown>
-                <span>Welcome,</span>
-                <Dropdown.Toggle
+                <span style={{display: "flex",
+                  marginTop: "10px"}}>Welcome</span> 
+                {/*<Dropdown.Toggle
                   variant="none"
                   as="a"
                   id="dropdown-basic"
                   className="user-name"
                 >
                   <strong>{this.props.user?.data.name}</strong>
-                </Dropdown.Toggle>
+                </Dropdown.Toggle>*/}
 
                 <Dropdown.Menu className="dropdown-menu-right account">
                   {/* <Dropdown.Item> */}
@@ -477,7 +474,7 @@ class NavbarMenu extends React.Component
                 </Dropdown.Menu>
               </Dropdown>
               <hr />
-              <ul className="row list-unstyled">
+            { /* <ul className="row list-unstyled">
                 <li className="col-4">
                   <small>Sales</small>
                   <h6>456</h6>
@@ -490,7 +487,7 @@ class NavbarMenu extends React.Component
                   <small>Revenue</small>
                   <h6>$2.13B</h6>
                 </li>
-              </ul>
+                    </ul>*/}
             </div>
             <Nav id="left-sidebar-nav" className="sidebar-nav">
               <ul id="main-menu" className="metismenu">
@@ -577,6 +574,11 @@ class NavbarMenu extends React.Component
                     {this.props.user?.data.role == "SUPER_ADMIN" ? (
                       <li className={activeKey === "dashboard" ? "active" : ""}>
                         <Link to="market-place">Market Place</Link>
+                      </li>
+                    ) : null}
+                    {this.props.user?.data.role == "SUPER_ADMIN" ? (
+                      <li className={activeKey === "dashboard" ? "active" : ""}>
+                        <Link to="integrator">Integrator</Link>
                       </li>
                     ) : null}
                   </ul>

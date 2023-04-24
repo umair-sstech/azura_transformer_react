@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./SupplierPage.css";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API_PATH } from "../ApiPath/Apipath";
+import { FormContext } from "./ManageSuppiler";
 
 function SuppilerPage4(props) {
   const { setPage } = props;
+  const {
+    processCancel,
+  } = useContext(FormContext);
   const history = useHistory();
   const imageSize = [
     "762x1100",
@@ -89,7 +94,7 @@ function SuppilerPage4(props) {
 
     axios
       .post(
-        `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierImageResize`,
+        `${API_PATH.IMAGE_RESIZE}`,
         {
           supplierId: localStorage.getItem("supplierId"),
           supplierName: localStorage.getItem("supplierName"),
@@ -127,7 +132,7 @@ function SuppilerPage4(props) {
 
     axios
       .post(
-        `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierImageResize`,
+        `${API_PATH.IMAGE_RESIZE}`,
         {
           supplierId: localStorage.getItem("supplierId"),
           supplierName: localStorage.getItem("supplierName"),
@@ -150,23 +155,6 @@ function SuppilerPage4(props) {
       .catch((err) => console.log(err));
   };
 
-  const handleCancel = () => {
-    Swal.fire({
-      title: "Are you sure, <br> you want to exit ? ",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        history.push("/supplier");
-        localStorage.removeItem("supplierId");
-        localStorage.removeItem("supplierName");
-      }
-    });
-  };
 
   return (
     <>
@@ -190,14 +178,13 @@ function SuppilerPage4(props) {
               >
                 Save & Exit
               </button>
-
               <button
-                className="btn btn-secondary w-auto btn-lg"
-                type="button"
-                onClick={handleCancel}
-              >
-                Exit
-              </button>
+              className="btn btn-secondary w-auto btn-lg"
+              type="button"
+              onClick={processCancel}
+            >
+              Exit
+            </button>
             </div>
           </div>
         </div>

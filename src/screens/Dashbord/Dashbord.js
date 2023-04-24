@@ -393,10 +393,10 @@ class Dashbord extends React.Component {
               </div>
             </div>
 
-            <div className="row clearfix">
+          {/*  <div className="row clearfix">
               <div className="col-lg-12">
                 <div className="card">
-                  <div className="header">
+                  <div className="header">  
                     <h2>Lucid Activities</h2>
                   </div>
                   <div className="body">
@@ -554,7 +554,7 @@ class Dashbord extends React.Component {
                   </div>
                 </div>
               </div>
-            </div>
+                          </div>*/}
           </div>
         </div>
       </div>

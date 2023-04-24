@@ -12,6 +12,8 @@ import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { Form } from "react-bootstrap";
 import Select from "react-select";
+import apiRequest from "../ApiPath";
+import { API_PATH } from "../ApiPath/Apipath";
 
 function SuppilerList(props) {
   const [supplierList, setSupplierList] = useState([]);
@@ -37,9 +39,8 @@ function SuppilerList(props) {
 
   const getSupplierInfo = (currentPage, dataLimit) => {
     try {
-      return axios
-        .get(
-          `http://localhost:8001/supplire/getSupplireInfo?page=${currentPage}&limit=${dataLimit}`
+      return axios.get(
+          `${API_PATH.GET_SUPPLIER_LIST}?page=${currentPage}&limit=${dataLimit}`
         )
         .then((response) => response.data);
     } catch (error) {
@@ -140,11 +141,11 @@ function SuppilerList(props) {
                     <tbody>
                       {supplierList.map((supplier) => (
                         <tr key={supplier.id}>
-                          <td>{supplier.suplirName}</td>
+                          <td>{supplier.name}</td>
 
                           <td>
-                            {supplier.supplireLogo ? (
-                              supplier.supplireLogo
+                            {supplier.logo ? (
+                              supplier.logo
                             ) : (
                               <div className="list-logo placeholder">N/A</div>
                             )}

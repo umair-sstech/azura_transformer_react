@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import "./SupplierPage.css";
 import Swal from "sweetalert2";
@@ -6,8 +6,13 @@ import { validateHttpForm } from "../Validations/Validation";
 import axios from "axios";
 import Select from "react-select";
 import { toast } from "react-toastify";
+import { API_PATH } from "../ApiPath/Apipath";
+import { FormContext } from "./ManageSuppiler";
 
-function SupplierHttpForm() {
+function SupplierHttpForm(props) {
+  const {
+    processCancel,
+  } = useContext(FormContext);
   const [formData, setFormData] = useState({
     urlPath: "",
     syncFrequency: "",
@@ -62,7 +67,7 @@ function SupplierHttpForm() {
       const payload = { ...formData, supplierId, supplierName };
       axios
         .post(
-          `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierImprortSetting`,
+          `${API_PATH.IMPORT_SETTING}`,
           payload
         )
         .then((response) => {
@@ -91,7 +96,7 @@ function SupplierHttpForm() {
         const payload = { ...formData, supplierId, supplierName };
         axios
           .post(
-            `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierImprortSetting`,
+            `${API_PATH.IMPORT_SETTING}`,
             payload
           )
           .then((response) => {
@@ -112,23 +117,6 @@ function SupplierHttpForm() {
     }
   };
 
-  const handleCancel = () => {
-    Swal.fire({
-      title: "Are you sure, <br> you want to exit ? ",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        history.push("/supplier");
-        localStorage.removeItem("supplierId");
-        localStorage.removeItem("supplierName");
-      }
-    });
-  };
 
   return (
     <>
@@ -152,12 +140,12 @@ function SupplierHttpForm() {
                 </button>
 
                 <button
-                  className="btn btn-secondary w-auto btn-lg"
-                  type="button"
-                  onClick={handleCancel}
-                >
-                  Exit
-                </button>
+                className="btn btn-secondary w-auto btn-lg"
+                type="button"
+                onClick={processCancel}
+              >
+                Exit
+              </button>
               </div>
             </div>
           </div>

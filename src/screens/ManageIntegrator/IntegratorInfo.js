@@ -1,17 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
-import { FormContext } from "./ManageMarketPlace";
-import { connect } from "react-redux";
-import { onLoading } from "../../actions";
+import { FormContext } from "./ManageIntegrator";
+import { validateMarketPlaceInfoForm } from "../Validations/Validation";
+import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import Select from "react-select";
-import Swal from "sweetalert2";
-import "../ManageMarketPlace/MarketPlace.css";
-import { validateIntegrationInfoForm } from "../Validations/Validation";
-import { API_PATH } from "../ApiPath/Apipath";
-function MarketPlacePage1(props) {
+
+function IntegratorInfo(props) {
   const { setPage } = props;
   const {
     isMarketPlaceAdded,
@@ -20,27 +15,28 @@ function MarketPlacePage1(props) {
     setFormData,
     processCancel,
   } = useContext(FormContext);
-  const history = useHistory();
   const options = [
-    { value: "market_place", label: "Market Place" },
+    { value: "Integrator", label: "Integrator" },
     { value: "Supplier", label: "Supplier", isDisabled: true },
+    { value: "market_place", label: "Market Place", isDisabled: true },
     { value: "shopping_cart", label: "Shopping Cart", isDisabled: true },
     { value: "Carrier", label: "Carrier", isDisabled: true },
     { value: "TMS", label: "TMS", isDisabled: true },
     { value: "WMS", label: "WMS", isDisabled: true },
-    { value: "Integrator", label: "Integrator", isDisabled: true },
   ];
-
+ 
   const [initFormData, setInitFormData] = useState({
     prefixName: "",
     name: "",
     logo: "",
     type: "",
   });
+
   const [prefixName, setPrefixName] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0]);
+  const history = useHistory();
 
   useEffect(() => {
     if (formData) {
@@ -65,13 +61,14 @@ function MarketPlacePage1(props) {
     }
     return prefix;
   };
+
   const handleNameChange = (e) => {
     const name = e.target.value;
     const prefix = generatePrefixName(name);
     setPrefixName(prefix);
 
     const formData = new FormData(document.forms.myForm);
-    const errors = validateIntegrationInfoForm(formData);
+    const errors = validateMarketPlaceInfoForm(formData);
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   };
@@ -80,88 +77,23 @@ function MarketPlacePage1(props) {
     const file = e.target.files[0];
     setInitFormData((prevState) => ({
       ...prevState,
-      marketPlaceLogo: file,
+      logo: file,
     }));
 
     const formData = new FormData(document.forms.myForm);
 
-    formData.set("marketPlaceLogo", file);
-    const errors = validateIntegrationInfoForm(formData);
+    formData.set("logo", file);
+    const errors = validateMarketPlaceInfoForm(formData);
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
 
-    const errors = validateIntegrationInfoForm(formData);
+    const errors = validateMarketPlaceInfoForm(formData);
     setFormErrors(errors);
-
-    if (Object.keys(errors).length === 0) {
-      const prefixName = generatePrefixName(formData.get("name"));
-      setPrefixName(prefixName);
-      formData.set("prefixName", prefixName);
-
-      props.onLoading(true);
-
-      const marketPlaceId = localStorage.getItem("marketPlaceId");
-
-      // if (marketPlaceId) {
-      //   formData.set("marketPlaceId", marketPlaceId);
-      //   axios
-      //     .post(
-      //       `${process.env.REACT_APP_API_URL_SUPPLIER}/integration/updateIntegrationInfo`,
-      //       formData
-      //     )
-      //     .then((response) => {
-      //       const { success, message, data } = response.data;
-      //       if (success) {
-      //         setIsMarketPlaceAdded(true);
-      //         setPage("2");
-      //         toast.success(message);
-      //       } else {
-      //         toast.error(message);
-      //       }
-      //       props.onLoading(false);
-      //     })
-      //     .catch((error) => {
-      //       console.log("error", error);
-      //       props.onLoading(false);
-      //     });
-      // } else {
-      axios
-        .post(
-          `${process.env.REACT_APP_API_URL_SUPPLIER}${API_PATH.CREATE_INTEGRATION_INFO}`,
-          formData
-        )
-        .then((response) => {
-          console.log("response", response);
-          const { success, message, data } = response.data;
-          if (success) {
-            const marketPlaceId = data.id;
-            if (marketPlaceId) {
-              localStorage.setItem("marketPlaceId", marketPlaceId);
-            }
-            const marketPlaceName = data.name;
-            if (marketPlaceName) {
-              localStorage.setItem("marketPlaceName", marketPlaceName);
-            }
-            setIsMarketPlaceAdded(true);
-            setPage("2");
-            toast.success(message);
-          } else {
-            toast.error(message);
-          }
-          props.onLoading(false);
-        })
-        .catch((error) => {
-          console.log("error", error);
-          props.onLoading(false);
-        });
-      // }
-    }
   };
 
   const handleCancel = () => {
@@ -175,7 +107,7 @@ function MarketPlacePage1(props) {
       cancelButtonColor: "#d33",
     }).then((result) => {
       if (result.isConfirmed) {
-        history.push("/market-place");
+        history.push("/market-integrator");
       }
     });
   };
@@ -236,18 +168,24 @@ function MarketPlacePage1(props) {
             <div className="col-6">
               <div className="form-group">
                 <label>
-                  Market Place Name <span style={{ color: "red" }}>*</span>
+                  Integrator Name <span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   className="form-control"
                   type="text"
                   name="name"
-                  placeholder="Enter Market Place Name"
+                  placeholder="Enter Integrator Name"
                   onChange={handleNameChange}
-                  defaultValue={initFormData.name ? initFormData.name : ""}
+                  defaultValue={
+                    initFormData.name
+                      ? initFormData.name
+                      : ""
+                  }
                 />
                 {formErrors.name && (
-                  <span className="text-danger">{formErrors.name}</span>
+                  <span className="text-danger">
+                    {formErrors.name}
+                  </span>
                 )}
               </div>
             </div>
@@ -255,7 +193,7 @@ function MarketPlacePage1(props) {
               <div className="form-group">
                 <label>
                   {" "}
-                  Market Place Logo <span style={{ color: "red" }}>*</span>
+                  Integrator Logo <span style={{ color: "red" }}>*</span>
                 </label>
 
                 <input
@@ -263,10 +201,16 @@ function MarketPlacePage1(props) {
                   type="file"
                   name="logo"
                   onChange={handleLogoChange}
-                  defaultValue={initFormData.logo ? initFormData.logo : ""}
+                  defaultValue={
+                    initFormData.logo
+                      ? initFormData.logo
+                      : ""
+                  }
                 />
                 {formErrors.logo && (
-                  <span className="text-danger">{formErrors.logo}</span>
+                  <span className="text-danger">
+                    {formErrors.logo}
+                  </span>
                 )}
               </div>
             </div>
@@ -291,7 +235,4 @@ function MarketPlacePage1(props) {
   );
 }
 
-const mapStateToProps = ({ LoadingReducer }) => ({
-  isLoading: LoadingReducer.isLoading,
-});
-export default connect(mapStateToProps, { onLoading })(MarketPlacePage1);
+export default IntegratorInfo;

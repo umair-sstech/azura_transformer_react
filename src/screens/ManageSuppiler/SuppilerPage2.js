@@ -12,6 +12,7 @@ import { useHistory } from "react-router-dom";
 import "./SupplierPage.css";
 import Swal from "sweetalert2";
 import Papa from "papaparse";
+import { API_PATH } from "../ApiPath/Apipath";
 
 function SupplierPage2(props) {
   const { setPage } = props;
@@ -53,7 +54,7 @@ function SupplierPage2(props) {
       props.onLoading(true);
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_URL_SUPPLIER}/csv/storeCSVdata`,
+          `${API_PATH.ADD_CSV_DATA}`,
           formData
         );
         const { success, message } = response.data;
@@ -88,7 +89,7 @@ function SupplierPage2(props) {
       // props.onLoading(true);
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_URL_SUPPLIER}/csv/storeCSVdata`,
+          `${API_PATH.ADD_CSV_DATA}`,
           formData
         );
         const { success, message } = response.data;
@@ -160,12 +161,12 @@ function SupplierPage2(props) {
                   Save & Exit
                 </button>
                 <button
-                  className="btn btn-secondary w-auto btn-lg"
-                  type="button"
-                  onClick={handleCancel}
-                >
-                  Exit
-                </button>
+                className="btn btn-secondary w-auto btn-lg"
+                type="button"
+                onClick={processCancel}
+              >
+                Exit
+              </button>
               </div>
             </div>
           </div>

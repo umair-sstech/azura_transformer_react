@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Select from "react-select";
 import "./SupplierPage.css";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import { FormContext } from "./ManageSuppiler";
+
 import { toast } from "react-toastify";
 
 function SupplierPage7() {
+  const {
+    processCancel,
+  } = useContext(FormContext);
   const [errorMessage, setErrorMessage] = useState("");
   const history = useHistory();
   const options = [
@@ -20,6 +25,7 @@ function SupplierPage7() {
     setSelectedOption(selectedOption);
     setErrorMessage("");
   };
+
   const handleSaveAndExit = (e) => {
     e.preventDefault();
     if (!selectedOption) {
@@ -35,7 +41,7 @@ function SupplierPage7() {
 
       axios
         .post(
-          `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/productTierSetup`,
+          `${process.env.REACT_APP_API_URL_SUPPLIER}/integration/productTierSetup`,
           params
         )
         .then((response) => {
@@ -75,23 +81,6 @@ function SupplierPage7() {
     }
   };
 
-  const handleCancel = () => {
-    Swal.fire({
-      title: "Are you sure, <br> you want to exit ? ",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        history.push("/supplier");
-        localStorage.removeItem("supplierId");
-        localStorage.removeItem("supplierName");
-      }
-    });
-  };
   return (
     <>
       <form>
@@ -107,12 +96,12 @@ function SupplierPage7() {
               </button>
 
               <button
-                className="btn btn-secondary w-auto btn-lg"
-                type="button"
-                onClick={handleCancel}
-              >
-                Exit
-              </button>
+              className="btn btn-secondary w-auto btn-lg"
+              type="button"
+              onClick={processCancel}
+            >
+              Exit
+            </button>
             </div>
           </div>
         </div>

@@ -11,10 +11,11 @@ import { connect } from "react-redux";
 import { onLoading } from "../../actions";
 import { Spinner } from "react-bootstrap";
 import { FormContext } from "./ManageSuppiler";
+import { API_PATH } from "../ApiPath/Apipath";
 
 function SupplierSftpForm(props) {
   const { setPage } = props;
-  const { isSuppilerAdded } = useContext(FormContext);
+  const { isSuppilerAdded,processCancel } = useContext(FormContext);
 
   const [formData, setFormData] = useState({
     supplierId: "",
@@ -98,7 +99,7 @@ function SupplierSftpForm(props) {
       };
       axios
         .post(
-          `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierImprortSetting`,
+          `${API_PATH.IMPORT_SETTING}`,
           payload
         )
         .then((response) => {
@@ -128,7 +129,7 @@ function SupplierSftpForm(props) {
         const payload = { ...formData, supplierId, supplierName };
         axios
           .post(
-            `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createOrUpdateSupplierImprortSetting`,
+            `${API_PATH.IMPORT_SETTING}`,
             payload
           )
           .then((response) => {
@@ -147,24 +148,6 @@ function SupplierSftpForm(props) {
           });
       }
     }
-  };
-
-  const handleCancel = () => {
-    Swal.fire({
-      title: "Are you sure, <br> you want to exit ? ",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        history.push("/supplier");
-        localStorage.removeItem("supplierId");
-        localStorage.removeItem("supplierName");
-      }
-    });
   };
 
   const option = [
@@ -200,14 +183,13 @@ function SupplierSftpForm(props) {
                 >
                   Save & Exit
                 </button>
-
                 <button
-                  className="btn btn-secondary w-auto btn-lg"
-                  type="button"
-                  onClick={handleCancel}
-                >
-                  Exit
-                </button>
+                className="btn btn-secondary w-auto btn-lg"
+                type="button"
+                onClick={processCancel}
+              >
+                Exit
+              </button>
               </div>
             </div>
           </div>

@@ -8,8 +8,9 @@ import { useHistory } from "react-router-dom";
 import "./SupplierPage.css";
 import Select from "react-select";
 import Swal from "sweetalert2";
-import { validateSupplierInfoForm } from "../Validations/Validation";
+import { validateIntegrationInfoForm } from "../Validations/Validation";
 import { Spinner } from "react-bootstrap";
+import { API_PATH } from "../ApiPath/Apipath";
 
 function SuppilerInfo(props) {
   const { setPage } = props;
@@ -34,8 +35,8 @@ function SuppilerInfo(props) {
 
   const [initFormData, setInitFormData] = useState({
     prefixName: "",
-    suplirName: "",
-    supplireLogo: "",
+    name: "",
+    logo: "",
     type: "",
   });
   const [prefixName, setPrefixName] = useState("");
@@ -81,7 +82,7 @@ function SuppilerInfo(props) {
     setPrefixName(prefix);
 
     const formData = new FormData(document.forms.myForm);
-    const errors = validateSupplierInfoForm(formData);
+    const errors = validateIntegrationInfoForm(formData);
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   };
@@ -90,13 +91,13 @@ function SuppilerInfo(props) {
     const file = e.target.files[0];
     setInitFormData((prevState) => ({
       ...prevState,
-      supplireLogo: file,
+      logo: file,
     }));
 
     const formData = new FormData(document.forms.myForm);
 
-    formData.set("supplireLogo", file);
-    const errors = validateSupplierInfoForm(formData);
+    formData.set("logo", file);
+    const errors = validateIntegrationInfoForm(formData);
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   };
@@ -106,11 +107,11 @@ function SuppilerInfo(props) {
     const form = e.target;
     const formData = new FormData(form);
 
-    const errors = validateSupplierInfoForm(formData);
+    const errors = validateIntegrationInfoForm(formData);
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      const prefixName = generatePrefixName(formData.get("suplirName"));
+      const prefixName = generatePrefixName(formData.get("name"));
       setPrefixName(prefixName);
       formData.set("prefixName", prefixName);
 
@@ -121,10 +122,7 @@ function SuppilerInfo(props) {
       if (supplierId) {
         formData.set("supplierId", supplierId);
         axios
-          .post(
-            `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/updateSupplireInfo`,
-            formData
-          )
+          .post(`${API_PATH.UPDATE_INTEGRATION_INFO}`, formData)
           .then((response) => {
             const { success, message, data } = response.data;
             if (success) {
@@ -142,18 +140,16 @@ function SuppilerInfo(props) {
           });
       } else {
         axios
-          .post(
-            `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createSupplireInfo`,
-            formData
-          )
+          .post(`${API_PATH.CREATE_INTEGRATION_INFO}`, formData)
           .then((response) => {
+            console.log("response", response);
             const { success, message, data } = response.data;
             if (success) {
               const supplierId = data.id;
               if (supplierId) {
                 localStorage.setItem("supplierId", supplierId);
               }
-              const supplierName = data.suplirName;
+              const supplierName = data.name;
               if (supplierName) {
                 localStorage.setItem("supplierName", supplierName);
               }
@@ -181,7 +177,7 @@ function SuppilerInfo(props) {
     }
 
     const formData = new FormData(form);
-    const errors = validateSupplierInfoForm(formData);
+    const errors = validateIntegrationInfoForm(formData);
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
@@ -190,10 +186,7 @@ function SuppilerInfo(props) {
       formData.set("prefixName", prefixName);
 
       axios
-        .post(
-          `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/createSupplireInfo`,
-          formData
-        )
+        .post(`${API_PATH.CREATE_INTEGRATION_INFO}`, formData)
         .then((response) => {
           console.log(response.data);
           setFormData(formData);
@@ -214,9 +207,7 @@ function SuppilerInfo(props) {
   const getSupplierDataById = () => {
     const supplierId = localStorage.getItem("supplierId");
     axios
-      .get(
-        `${process.env.REACT_APP_API_URL_SUPPLIER}/supplire/getSupplireInfoById?supplierId=${supplierId}`
-      )
+      .get(`${API_PATH.GET_INTEGRATION_INFO_BY_ID}=${supplierId}`)
       .then((response) => {
         const supplierData = response.data.data;
         setSelectedOption({
@@ -229,24 +220,6 @@ function SuppilerInfo(props) {
       .catch((error) => {
         console.log("error", error);
       });
-  };
-
-  const handleCancel = () => {
-    Swal.fire({
-      title: "Are you sure, <br> you want to exit ? ",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        history.push("/supplier");
-        localStorage.removeItem("supplierId");
-        localStorage.removeItem("supplierName");
-      }
-    });
   };
 
   return (
@@ -278,11 +251,10 @@ function SuppilerInfo(props) {
                 >
                   Save & Exit
                 </button>
-
                 <button
                   className="btn btn-secondary w-auto btn-lg"
                   type="button"
-                  onClick={handleCancel}
+                  onClick={processCancel}
                 >
                   Exit
                 </button>
@@ -312,15 +284,13 @@ function SuppilerInfo(props) {
                 <input
                   className="form-control"
                   type="text"
-                  name="suplirName"
+                  name="name"
                   placeholder="Enter Suppiler Name"
                   onChange={handleNameChange}
-                  defaultValue={
-                    initFormData.suplirName ? initFormData.suplirName : ""
-                  }
+                  defaultValue={initFormData.name ? initFormData.name : ""}
                 />
-                {formErrors.suplirName && (
-                  <span className="text-danger">{formErrors.suplirName}</span>
+                {formErrors.name && (
+                  <span className="text-danger">{formErrors.name}</span>
                 )}
               </div>
             </div>
@@ -334,14 +304,12 @@ function SuppilerInfo(props) {
                 <input
                   className="form-control"
                   type="file"
-                  name="supplireLogo"
+                  name="logo"
                   onChange={handleLogoChange}
-                  defaultValue={
-                    initFormData.supplireLogo ? initFormData.supplireLogo : ""
-                  }
+                  defaultValue={initFormData.logo ? initFormData.logo : ""}
                 />
-                {formErrors.supplireLogo && (
-                  <span className="text-danger">{formErrors.supplireLogo}</span>
+                {formErrors.logo && (
+                  <span className="text-danger">{formErrors.logo}</span>
                 )}
               </div>
             </div>

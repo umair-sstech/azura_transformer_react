@@ -1,4 +1,4 @@
-import React, { useState,useEffect }from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import Pagination from "react-responsive-pagination";
 import axios from "axios";
@@ -10,32 +10,34 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Select from "react-select";
-import "./MarketPlaceList.css";
 
-function MarketPlaceList(props) {
-  const [marketPlaceList, setMarketPlaceList] = useState([]);
+function IntegratorList(props) {
+  const [integratorPlaceList, setIntegratorList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(5);
 
   useEffect(() => {
     props.onLoading(true);
-    getDataFromApi()
+    getDataFromApi();
   }, [currentPage, dataLimit]);
 
-  const getDataFromApi = (search = 'active') => {
-    props.onLoading(true)
-    axios.get(`${process.env.REACT_APP_COMPANY_SERVICE}/get-company-list?page=${currentPage}&limit=${dataLimit}&searchText=${search}`)
-        .then(res => {
-            let totlePage = Math.ceil(res.data.totlaRecord / res.data.limit)
-            setTotalPages(totlePage)
-           
-            props.onLoading(false)
-        })
-        .catch(e => {
-            props.onLoading(false)
-        })
-}
+  const getDataFromApi = (search = "active") => {
+    props.onLoading(true);
+    axios
+      .get(
+        `${process.env.REACT_APP_COMPANY_SERVICE}/get-company-list?page=${currentPage}&limit=${dataLimit}&searchText=${search}`
+      )
+      .then((res) => {
+        let totlePage = Math.ceil(res.data.totlaRecord / res.data.limit);
+        setTotalPages(totlePage);
+
+        props.onLoading(false);
+      })
+      .catch((e) => {
+        props.onLoading(false);
+      });
+  };
   let filterList = [
     { label: "All", value: "all" },
     { label: "Activate", value: "active" },
@@ -64,8 +66,8 @@ function MarketPlaceList(props) {
                   <div style={{ minWidth: "110px" }}>
                     <Select options={filterList} defaultValue={filterList[0]} />
                   </div>
-                  <Link className="link-btn" to={`/manage-marketPlace`}>
-                    Add Market Place
+                  <Link className="link-btn" to={`/manage-integrator`}>
+                    Add Integrator
                   </Link>
                 </div>
 
@@ -78,7 +80,7 @@ function MarketPlaceList(props) {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>Market Place Name</th>
+                        <th>Integrator Name</th>
                         <th>Logo</th>
                         <th>Prefix Name</th>
                         <th>Last Update</th>
@@ -91,43 +93,43 @@ function MarketPlaceList(props) {
                       </tr>
                     </thead>
                     {/* <tbody>
-                      {supplierList.map((supplier) => (
-                        <tr key={supplier.id}>
-                          <td>{supplier.suplirName}</td>
+                    {supplierList.map((supplier) => (
+                      <tr key={supplier.id}>
+                        <td>{supplier.suplirName}</td>
 
-                          <td>
-                            {supplier.supplireLogo ? (
-                              supplier.supplireLogo
-                            ) : (
-                              <div className="list-logo placeholder">N/A</div>
-                            )}
-                          </td>
-                          <td>{supplier.prefixName}</td>
-                          <td>{supplier.lastUpdate}</td>
-                          {props.user.permissions.update_company ? (
-                            <>
-                              <td>
-                                {supplier.status == 1 ? "Active" : "Inactive"}
-                              </td>
+                        <td>
+                          {supplier.supplireLogo ? (
+                            supplier.supplireLogo
+                          ) : (
+                            <div className="list-logo placeholder">N/A</div>
+                          )}
+                        </td>
+                        <td>{supplier.prefixName}</td>
+                        <td>{supplier.lastUpdate}</td>
+                        {props.user.permissions.update_company ? (
+                          <>
+                            <td>
+                              {supplier.status == 1 ? "Active" : "Inactive"}
+                            </td>
 
-                              <td className="action-group">
-                                <i
-                                  data-placement="top"
-                                  title="Edit"
-                                  className="fa fa-edit edit"
-                                  onClick={() => {
+                            <td className="action-group">
+                              <i
+                                data-placement="top"
+                                title="Edit"
+                                className="fa fa-edit edit"
+                                onClick={() => {
 
-                                    history.push(
-                                      `/manage-marketPlace`
-                                    );
-                                  }}
-                                ></i>
-                              </td>
-                            </>
-                          ) : null}
-                        </tr>
-                      ))}
-                                </tbody>*/}
+                                  history.push(
+                                    `/manage-marketPlace`
+                                  );
+                                }}
+                              ></i>
+                            </td>
+                          </>
+                        ) : null}
+                      </tr>
+                    ))}
+                              </tbody>*/}
                   </table>
                   <div className="pagination-wrapper">
                     <Pagination
@@ -159,8 +161,9 @@ function MarketPlaceList(props) {
     </div>
   );
 }
+
 const mapStateToProps = ({ LoadingReducer, loginReducer }) => ({
   loading: LoadingReducer.isLoading,
   user: loginReducer.user,
 });
-export default connect(mapStateToProps, { onLoading })(MarketPlaceList);
+export default connect(mapStateToProps, { onLoading })(IntegratorList);

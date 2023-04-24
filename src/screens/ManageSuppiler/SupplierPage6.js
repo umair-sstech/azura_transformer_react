@@ -1,11 +1,14 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
-import Swal from "sweetalert2";
+import { API_PATH } from "../ApiPath/Apipath";
+import { FormContext } from "./ManageSuppiler";
 
 function SupplierPage6(props) {
   const { setPage } = props;
+  const { processCancel } = useContext(FormContext);
+
   const [formData, setFormData] = useState();
   const [isChecked, setIsChecked] = useState(false);
   const history = useHistory();
@@ -20,14 +23,14 @@ function SupplierPage6(props) {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
     const { barcodeName } = formData;
     const supplierId = localStorage.getItem("supplierId");
     const isBarcodeRequired = isChecked;
 
     axios
-      .post("http://localhost:8001/supplire/barcode", {
+      .post(`${API_PATH.BARCODE}`, {
         barcodeName,
         supplierId,
         isBarcodeRequired,
@@ -36,7 +39,7 @@ function SupplierPage6(props) {
         const { success, message, data } = response.data;
         if (success) {
           toast.success(message);
-          setPage("7")
+          setPage("7");
         } else {
           toast.error(message);
         }
@@ -46,23 +49,6 @@ function SupplierPage6(props) {
       });
   };
 
-  const handleCancel = () => {
-    Swal.fire({
-      title: "Are you sure, <br> you want to exit ? ",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        history.push("/supplier");
-        localStorage.removeItem("supplierId");
-        localStorage.removeItem("supplierName")
-      }
-    });
-  };
   return (
     <>
       <hr className="hr" />
@@ -83,11 +69,10 @@ function SupplierPage6(props) {
               >
                 Save & Exit
               </button>
-
               <button
                 className="btn btn-secondary w-auto btn-lg"
                 type="button"
-                onClick={handleCancel}
+                onClick={processCancel}
               >
                 Exit
               </button>
