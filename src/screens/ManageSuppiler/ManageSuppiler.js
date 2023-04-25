@@ -24,7 +24,7 @@ function ManageSuppiler(props) {
   const [logoData, setLogoData] = useState();
   const [isSuppilerAdded, setIsSuppilerAdded] = useState("");
 
-  const [page, setPage] = useState("1");
+  const [page, setPage] = useState(1);
 
   const history = useHistory();
 

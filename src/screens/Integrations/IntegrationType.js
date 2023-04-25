@@ -26,6 +26,9 @@ function IntegrationType(props) {
     if (selectedOption.value === "market_place") {
       history.push("/market-place");
     }
+    if (selectedOption.value === "Integrator") {
+      history.push("/integrator");
+    }
   };
   
   return (

@@ -12,27 +12,27 @@ class PageHeader extends React.Component {
       toggleMenu: false,
     };
   }
-  componentDidMount() {
-    this.chartPlace();
-    this.chartPlace1();
-  }
-  chartPlace = () => {
-    var chartDom = document.getElementById("visitorsSparcalChart");
-    var visitorsSparcalChart = echarts.init(chartDom);
-    var option;
-    option = visitorsSparcalOption;
+  // componentDidMount() {
+  //   this.chartPlace();
+  //   this.chartPlace1();
+  // }
+  // chartPlace = () => {
+  //   var chartDom = document.getElementById("visitorsSparcalChart");
+  //   var visitorsSparcalChart = echarts.init(chartDom);
+  //   var option;
+  //   option = visitorsSparcalOption;
 
-    option && visitorsSparcalChart.setOption(option);
-  };
+  //   option && visitorsSparcalChart.setOption(option);
+  // };
 
-  chartPlace1 = () => {
-    var chartDom = document.getElementById("visitsSparcalChart");
-    var visitsSparcalChart = echarts.init(chartDom);
-    var option;
-    option = visitsSparcalOption;
+  // chartPlace1 = () => {
+  //   var chartDom = document.getElementById("visitsSparcalChart");
+  //   var visitsSparcalChart = echarts.init(chartDom);
+  //   var option;
+  //   option = visitsSparcalOption;
 
-    option && visitsSparcalChart.setOption(option);
-  };
+  //   option && visitsSparcalChart.setOption(option);
+  // };
 
   onToggleMenu = async () => {
     await this.setState({
@@ -90,7 +90,7 @@ class PageHeader extends React.Component {
               })}
             </ul>
           </div>
-          <div className="col-lg-7 col-md-4 col-sm-12 text-right">
+  {       /* <div className="col-lg-7 col-md-4 col-sm-12 text-right">
             <div className="inlineblock text-center m-r-15 m-l-15 hidden-sm">
               <div
                 id="visitorsSparcalChart"
@@ -107,7 +107,7 @@ class PageHeader extends React.Component {
               ></div>
               <span>Visits</span>
             </div>
-          </div>
+            </div>*/}
         </div>
       </div>
     );

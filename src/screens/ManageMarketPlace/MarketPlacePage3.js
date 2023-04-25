@@ -5,6 +5,7 @@ import axios from "axios";
 import Select from "react-select";
 import { toast } from "react-toastify";
 import timeZoneData from "../../Data/timeZone";
+import { API_PATH } from "../ApiPath/Apipath";
 
 function MarketPlacePage3() {
   const [formData, setFormData] = useState({
@@ -24,7 +25,7 @@ function MarketPlacePage3() {
   const getCronTimeData = () => {
     try {
       axios
-        .get(`${process.env.REACT_APP_API_URL_SUPPLIER}/general/getCronTime`)
+        .get(`${API_PATH.GET_CRON_TIME}`)
         .then((response) => {
           const options = response.data.data.map((item) => ({
             label: item.name,

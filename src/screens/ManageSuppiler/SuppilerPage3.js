@@ -34,7 +34,6 @@ function SuppilerPage3(props) {
 
   const [productFields, setProductFields] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
-  console.log("options", selectedOptions);
   const [formErrors, setFormErrors] = useState([]);
   const history = useHistory();
 
@@ -42,6 +41,7 @@ function SuppilerPage3(props) {
     props.onLoading(true);
     getProductField();
     getSupplierDataById();
+    getMappingData();
   }, []);
 
   // const handleFieldChange = (index, key, selectedOption) => {
@@ -71,7 +71,8 @@ function SuppilerPage3(props) {
           (option) => option.value === selectedValue
         );
         const option = options[selectedOptionIndex];
-        const count = option.count || 0;
+        console.log("option", option);
+        const count = option?.count || 0;
         console.log("count", count);
         let color = "gray";
 
@@ -91,11 +92,11 @@ function SuppilerPage3(props) {
           color: color,
         };
         setOptions(newOptions);
+        setFormErrors([]);
       }
       return newSelectedOptions;
     });
   };
-
 
   const handleAdditionalValueChange = (index, key, additionalValue) => {
     setSelectedOptions((prevSelectedOptions) => {
@@ -245,17 +246,15 @@ function SuppilerPage3(props) {
 
   const validateForm = () => {
     const errors = [];
+    let isValid = true;
 
-    selectedOptions.forEach((selectedOption, index) => {
-      if (!selectedOption) {
-        errors.push(`Please select a value for dropdown ${index + 1}`);
-        return;
-      }
-    });
+    if (selectedOptions.length === 0) {
+      errors.push("Please do at least one mapping.");
+      isValid = false;
+    }
 
     setFormErrors(errors);
-
-    return errors.length === 0;
+    return isValid;
   };
 
   const getSupplierDataById = () => {
@@ -282,6 +281,30 @@ function SuppilerPage3(props) {
       });
   };
 
+  const getMappingData = () => {
+    const supplierId = localStorage.getItem("supplierId");
+    axios
+      .get(
+        `http://localhost:8001/Integration/getSupplierFields?supplierId=${supplierId}`
+      )
+      .then((response) => {
+        const supplierData = response.data.data;
+        console.log("mappingdata", supplierData);
+        setFormData(supplierData);
+  
+        const options = {};
+        supplierData.forEach((field) => {
+          const { standardField, supplierField } = field;
+          options[standardField] = { label: supplierField, value: supplierField };
+        });
+  
+        setSelectedOptions([options]);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
+  
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -322,13 +345,12 @@ function SuppilerPage3(props) {
           </div>
         </div>
         <div className="table-container" style={{ position: "relative" }}>
-          {formErrors.length > 0 && (
-            <div className="form-errors">
-              {formErrors.map((error, index) => (
-                <div key={index}>{error}</div>
-              ))}
+          {formErrors.map((error, index) => (
+            <div key={index} className="form-error">
+              <span className="text-danger"> {error}</span>
             </div>
-          )}
+          ))}
+
           <table>
             <thead>
               <tr>
@@ -371,9 +393,9 @@ function SuppilerPage3(props) {
                               <Select
                                 key={`${index}-${key}-additional`}
                                 options={[
-                                  { label: "cm", value: "cm" },
-                                  { label: "in", value: "in" },
-                                  { label: "mm", value: "mm" },
+                                  { label: "cm", value: "cm", count: 0 },
+                                  { label: "in", value: "in", count: 0 },
+                                  { label: "mm", value: "mm", count: 0 },
                                 ]}
                                 value={selectedOption}
                                 onChange={(selectedOption) =>
@@ -390,8 +412,8 @@ function SuppilerPage3(props) {
                               <Select
                                 key={`${index}-${key}-additional`}
                                 options={[
-                                  { label: "lbs", value: "lbs" },
-                                  { label: "kg", value: "kg" },
+                                  { label: "lbs", value: "lbs", count: 0 },
+                                  { label: "kg", value: "kg", count: 0 },
                                 ]}
                                 value={selectedOption}
                                 onChange={(selectedOption) =>
@@ -408,8 +430,12 @@ function SuppilerPage3(props) {
                               <Select
                                 key={`${index}-${key}-additional`}
                                 options={[
-                                  { label: "New", value: "New" },
-                                  { label: "Preloved", value: "Preloved" },
+                                  { label: "New", value: "New", count: 0 },
+                                  {
+                                    label: "Preloved",
+                                    value: "Preloved",
+                                    count: 0,
+                                  },
                                 ]}
                                 value={selectedOption}
                                 onChange={(selectedOption) =>

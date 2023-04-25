@@ -214,15 +214,15 @@ class NavbarMenu extends React.Component
             <div className="navbar-brand">
               <a href="dashboard">
                 <img
-                  src="logo.png"
-                  alt="Lucid Logo"
-                  className="img-responsive logo"
+                  src="azura-logo.png"
+                  alt="Azura Logo"
+                  className="img-responsive logo website-logo"
                 />
               </a>
             </div>
 
             <div className="navbar-right">
-              <form id="navbar-search" className="navbar-form search-form">
+          {  /*  <form id="navbar-search" className="navbar-form search-form">
                 <input
                   className="form-control"
                   placeholder="Search here..."
@@ -231,11 +231,11 @@ class NavbarMenu extends React.Component
                 <button type="button" className="btn btn-default">
                   <i className="icon-magnifier"></i>
                 </button>
-              </form>
+              </form>*/}
 
               <div id="navbar-menu">
                 <ul className="nav navbar-nav">
-                  <li>
+             { /*    <li>
                     <a
                       href="filedocuments"
                       className="icon-menu d-none d-sm-block d-md-none d-lg-block"
@@ -255,13 +255,13 @@ class NavbarMenu extends React.Component
                     <a href="appchat" className="icon-menu d-none d-sm-block">
                       <i className="icon-bubbles"></i>
                     </a>
-                  </li>
+            </li>
                   <li>
                     <a href="appinbox" className="icon-menu d-none d-sm-block">
                       <i className="icon-envelope"></i>
                       <span className="notification-dot"></span>
                     </a>
-                  </li>
+                  </li>*/}
                   <li
                     className={
                       toggleNotification ? "show dropdown" : "dropdown"
@@ -360,7 +360,7 @@ class NavbarMenu extends React.Component
                   <li
                     className={toggleEqualizer ? "show dropdown" : "dropdown"}
                   >
-                    <a
+                   {/* <a
                       href="#!"
                       className="dropdown-toggle icon-menu"
                       data-toggle="dropdown"
@@ -370,7 +370,7 @@ class NavbarMenu extends React.Component
                       }}
                     >
                       <i className="icon-equalizer"></i>
-                    </a>
+                    </a>*/}
                     <ul
                       className={
                         toggleEqualizer
@@ -433,7 +433,7 @@ class NavbarMenu extends React.Component
           <div className="sidebar-scroll">
             <div className="user-account">
               <img
-                src={UserImage}
+                src="user2.jpg"
                 className="rounded-circle user-photo" 
                 alt="User Profile Picture"
               />

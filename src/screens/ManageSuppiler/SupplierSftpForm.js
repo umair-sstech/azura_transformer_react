@@ -4,7 +4,6 @@ import Select from "react-select";
 import "./SupplierPage.css";
 import timeZoneData from "../../Data/timeZone";
 import axios from "axios";
-import Swal from "sweetalert2";
 import { validateSftpForm } from "../Validations/Validation";
 import { toast } from "react-toastify";
 import { connect } from "react-redux";
@@ -14,8 +13,10 @@ import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
 
 function SupplierSftpForm(props) {
+  console.log("props", props);
   const { setPage } = props;
-  const { isSuppilerAdded,processCancel } = useContext(FormContext);
+
+  const { processCancel } = useContext(FormContext);
 
   const [formData, setFormData] = useState({
     supplierId: "",
@@ -32,7 +33,6 @@ function SupplierSftpForm(props) {
     timeZone: "",
   });
   const [formErrors, setFormErrors] = useState({});
-  const [isFormValid, setIsFormValid] = useState(false);
   const history = useHistory();
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
 
@@ -43,7 +43,7 @@ function SupplierSftpForm(props) {
   const getCronTimeData = () => {
     try {
       axios
-        .get(`${process.env.REACT_APP_API_URL_SUPPLIER}/general/getCronTime`)
+        .get(`${API_PATH.GET_CRON_TIME}`)
         .then((response) => {
           const options = response.data.data.map((item) => ({
             label: item.name,
@@ -58,10 +58,12 @@ function SupplierSftpForm(props) {
     }
   };
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-    setFormErrors({ ...formErrors, [name]: "" });
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+    setFormErrors({ ...formErrors, [e.target.name]: "" });
   };
 
   const handleProtocolChange = (selectedOption) => {
@@ -76,14 +78,15 @@ function SupplierSftpForm(props) {
     setFormData({ ...formData, timeZone: selectedOption });
     setFormErrors({ ...formErrors, timeZone: "" });
   };
-
+  useEffect(() => {
+    getSupplierDataById()
+  }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = validateSftpForm(formData);
     setFormErrors(errors);
-    setIsFormValid(Object.keys(errors).length === 0);
 
-    if (isFormValid) {
+    if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
 
@@ -98,14 +101,13 @@ function SupplierSftpForm(props) {
         supplierName,
       };
       axios
-        .post(
-          `${API_PATH.IMPORT_SETTING}`,
-          payload
-        )
+        .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
           const { success, message, data } = response.data;
+          console.log("response", response);
           if (success) {
             toast.success(message);
+            setFormData({});
           } else {
             toast.error(message);
           }
@@ -118,35 +120,39 @@ function SupplierSftpForm(props) {
 
   const handleOnClick = (e) => {
     e.preventDefault();
-
     const errors = validateSftpForm(formData);
     setFormErrors(errors);
-    setIsFormValid(Object.keys(errors).length === 0);
+
     if (Object.keys(errors).length === 0) {
-      if (isFormValid) {
-        const supplierId = localStorage.getItem("supplierId");
-        const supplierName = localStorage.getItem("supplierName");
-        const payload = { ...formData, supplierId, supplierName };
-        axios
-          .post(
-            `${API_PATH.IMPORT_SETTING}`,
-            payload
-          )
-          .then((response) => {
-            const { success, message, data } = response.data;
-            if (success) {
-              history.push("/supplier");
-              toast.success(message);
-              localStorage.removeItem("supplierId");
-              localStorage.removeItem("supplierName");
-            } else {
-              toast.error(message);
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      }
+      const supplierId = localStorage.getItem("supplierId");
+      const supplierName = localStorage.getItem("supplierName");
+
+      const { value, label } = formData.timeZone;
+
+      const timeZoneString = `${value} (${label})`;
+
+      const payload = {
+        ...formData,
+        timeZone: timeZoneString,
+        supplierId,
+        supplierName,
+      };
+      axios
+        .post(`${API_PATH.IMPORT_SETTING}`, payload)
+        .then((response) => {
+          const { success, message, data } = response.data;
+          if (success) {
+            history.push("/supplier");
+            toast.success(message);
+            localStorage.removeItem("supplierId");
+            localStorage.removeItem("supplierName");
+          } else {
+            toast.error(message);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
 
@@ -154,6 +160,20 @@ function SupplierSftpForm(props) {
     { value: "SFTP", label: "SFTP" },
     { value: "FTP", label: "FTP" },
   ];
+
+  const getSupplierDataById = () => {
+    const supplierId = localStorage.getItem("supplierId");
+    axios
+      .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
+      .then((response) => {
+        const supplierData = response.data.data;
+        setFormData(supplierData);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -166,15 +186,6 @@ function SupplierSftpForm(props) {
                   type="submit"
                 >
                   Save & Next
-                  {/*{props.isLoading ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : isSuppilerAdded ? (
-                  "Update"
-                ) : (
-                  "Save & Next"
-                )}*/}
                 </button>
                 <button
                   className="btn btn-primary w-auto btn-lg mr-2"
@@ -184,12 +195,12 @@ function SupplierSftpForm(props) {
                   Save & Exit
                 </button>
                 <button
-                className="btn btn-secondary w-auto btn-lg"
-                type="button"
-                onClick={processCancel}
-              >
-                Exit
-              </button>
+                  className="btn btn-secondary w-auto btn-lg"
+                  type="button"
+                  onClick={processCancel}
+                >
+                  Exit
+                </button>
               </div>
             </div>
           </div>
@@ -205,7 +216,7 @@ function SupplierSftpForm(props) {
                   name="hostName"
                   placeholder="Enter Host Name"
                   onChange={handleInputChange}
-                  value={formData.hostName}
+                  defaultValue={formData.hostName ? formData.hostName : ""}
                 />
                 {formErrors.hostName && (
                   <span className="text-danger">{formErrors.hostName}</span>
@@ -223,7 +234,7 @@ function SupplierSftpForm(props) {
                   name="userName"
                   placeholder="Enter User Name"
                   onChange={handleInputChange}
-                  value={formData.userName}
+                  defaultValue={formData.userName ? formData.userName : ""}
                 />
                 {formErrors.userName && (
                   <span className="text-danger">{formErrors.userName}</span>
@@ -241,7 +252,7 @@ function SupplierSftpForm(props) {
                   name="password"
                   placeholder="Enter Password"
                   onChange={handleInputChange}
-                  value={formData.password}
+                  defaultValue={formData.password ? formData.password : ""}
                 />
                 {formErrors.password && (
                   <span className="text-danger">{formErrors.password}</span>
@@ -259,7 +270,7 @@ function SupplierSftpForm(props) {
                   name="port"
                   placeholder="Enter Port"
                   onChange={handleInputChange}
-                  value={formData.port}
+                  defaultValue={formData.port ? formData.port : ""}
                 />
                 {formErrors.port && (
                   <span className="text-danger">{formErrors.port}</span>
@@ -297,13 +308,14 @@ function SupplierSftpForm(props) {
                   placeholder="Enter URL"
                   name="urlPath"
                   onChange={handleInputChange}
-                  value={formData.urlPath}
+                  defaultValue={formData.urlPath ? formData.urlPath : ""}
                 />
                 {formErrors.urlPath && (
                   <span className="text-danger">{formErrors.urlPath}</span>
                 )}
                 <small className="form-text text-muted csv-text">
-                  Please Enter.
+                  Please Enter Full Name With File. &nbsp;&nbsp;&nbsp; Ex:
+                  /var/www/html/abc.csv
                 </small>
               </div>
             </div>
@@ -316,6 +328,9 @@ function SupplierSftpForm(props) {
                   placeholder="Select Frequency"
                   options={syncFrequencyOptions}
                   onChange={handleSyncFrequency}
+                  defaultValue={
+                    formData.syncFrequency ? formData.syncFrequency : ""
+                  }
                 />
                 {formErrors.syncFrequency && (
                   <span className="text-danger">
@@ -337,8 +352,8 @@ function SupplierSftpForm(props) {
                     };
                   })}
                   placeholder="Select TimeZone"
-                  value={formData.timeZone}
                   onChange={handleTimeZoneChange}
+                  defaultValue={formData.timeZone ? formData.timeZone : ""}
                 />
                 {formErrors.timeZone && (
                   <span className="text-danger">{formErrors.timeZone}</span>

@@ -10,27 +10,30 @@ import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageSuppiler";
 
 function SupplierHttpForm(props) {
-  const {
-    processCancel,
-  } = useContext(FormContext);
-  const [formData, setFormData] = useState({
+  const { processCancel,formData,setFormData } = useContext(FormContext);
+  const [initFormData, setInitFormData] = useState({
     urlPath: "",
     syncFrequency: "",
   });
   const [formErrors, setFormErrors] = useState({});
-  const [isFormValid, setIsFormValid] = useState(false);
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
 
   const history = useHistory();
+  useEffect(() => {
+    if (formData) {
+      setInitFormData(formData);
+    }
+  }, [props]);
 
   useEffect(() => {
     getCronTimeData();
+    getSupplierDataById()
   }, []);
 
   const getCronTimeData = () => {
     try {
       axios
-        .get(`${process.env.REACT_APP_API_URL_SUPPLIER}/general/getCronTime`)
+        .get(`${API_PATH.GET_CRON_TIME}`)
         .then((response) => {
           const options = response.data.data.map((item) => ({
             label: item.name,
@@ -49,31 +52,33 @@ function SupplierHttpForm(props) {
     setFormData({ ...formData, syncFrequency: selectedOption.value });
     setFormErrors({ ...formErrors, syncFrequency: "" });
   };
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-    setFormErrors({ ...formErrors, [name]: "" });
+
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+    setFormErrors({ ...formErrors, [e.target.name]: "" });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const errors = validateHttpForm(formData);
     setFormErrors(errors);
-    setIsFormValid(Object.keys(errors).length === 0);
 
-    if (isFormValid) {
+    if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
       const payload = { ...formData, supplierId, supplierName };
       axios
-        .post(
-          `${API_PATH.IMPORT_SETTING}`,
-          payload
-        )
+        .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
           const { success, message, data } = response.data;
           if (success) {
             toast.success(message);
+            setFormData({});
+
           } else {
             toast.error(message);
           }
@@ -84,40 +89,48 @@ function SupplierHttpForm(props) {
     }
   };
 
-  const handleOnClick = (event) => {
-    event.preventDefault();
+  const handleOnClick = (e) => {
+    e.preventDefault();
+
     const errors = validateHttpForm(formData);
     setFormErrors(errors);
-    setIsFormValid(Object.keys(errors).length === 0);
+
     if (Object.keys(errors).length === 0) {
-      if (isFormValid) {
-        const supplierId = localStorage.getItem("supplierId");
-        const supplierName = localStorage.getItem("supplierName");
-        const payload = { ...formData, supplierId, supplierName };
-        axios
-          .post(
-            `${API_PATH.IMPORT_SETTING}`,
-            payload
-          )
-          .then((response) => {
-            const { success, message, data } = response.data;
-            if (success) {
-              history.push("/supplier");
-              toast.success(message);
-              localStorage.removeItem("supplierId");
-              localStorage.removeItem("supplierName");
-            } else {
-              toast.error(message);
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      }
+      const supplierId = localStorage.getItem("supplierId");
+      const supplierName = localStorage.getItem("supplierName");
+      const payload = { ...formData, supplierId, supplierName };
+      axios
+        .post(`${API_PATH.IMPORT_SETTING}`, payload)
+        .then((response) => {
+          const { success, message, data } = response.data;
+          if (success) {
+            history.push("/supplier");
+            toast.success(message);
+            localStorage.removeItem("supplierId");
+            localStorage.removeItem("supplierName");
+          } else {
+            toast.error(message);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
 
-
+  const getSupplierDataById = () => {
+    const supplierId = localStorage.getItem("supplierId");
+    axios
+      .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
+      .then((response) => {
+        const supplierData = response.data.data;
+        console.log("data", supplierData);
+        setFormData(supplierData);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -140,12 +153,12 @@ function SupplierHttpForm(props) {
                 </button>
 
                 <button
-                className="btn btn-secondary w-auto btn-lg"
-                type="button"
-                onClick={processCancel}
-              >
-                Exit
-              </button>
+                  className="btn btn-secondary w-auto btn-lg"
+                  type="button"
+                  onClick={processCancel}
+                >
+                  Exit
+                </button>
               </div>
             </div>
           </div>
@@ -161,6 +174,7 @@ function SupplierHttpForm(props) {
                   name="urlPath"
                   placeholder="Enter URL"
                   onChange={handleInputChange}
+                  defaultValue={initFormData.urlPath?initFormData.urlPath:""}
                 />
                 {formErrors.urlPath && (
                   <span className="text-danger">{formErrors.urlPath}</span>
@@ -176,6 +190,7 @@ function SupplierHttpForm(props) {
                   placeholder="Select Frequency"
                   options={syncFrequencyOptions}
                   onChange={handleSyncFrequency}
+                  defaultInputValue={initFormData.syncFrequency || ""}
                 />
                 {formErrors.syncFrequency && (
                   <span className="text-danger">

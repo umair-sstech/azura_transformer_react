@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import Pagination from "react-responsive-pagination";
 import axios from "axios";
-import "./SuppilerList.css";
+import "../SuppilerList/SuppilerList.css";
 import { onLoading } from "../../actions";
 import { connect } from "react-redux";
 import PageHeader from "../../components/PageHeader";
@@ -19,36 +19,43 @@ function SuppilerList(props) {
   const [supplierList, setSupplierList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
+  console.log("totalPages", totalPages);
   const [dataLimit, setdataLimit] = useState(5);
 
   const history = useHistory();
 
-  useEffect(() => {
-    props.onLoading(true);
-    getSupplierInfo(currentPage, dataLimit)
-      .then((response) => {
-        setSupplierList(response.data);
-        setTotalPages(Math.ceil(response.totalCount / dataLimit));
-      })
-      .finally(() => {
-        props.onLoading(false);
-      });
-  }, [currentPage, dataLimit]);
-
-
-
-  const getSupplierInfo = (currentPage, dataLimit) => {
+  const getSupplierInfo = async (currentPage, dataLimit) => {
     try {
-      return axios.get(
-          `${API_PATH.GET_SUPPLIER_LIST}?page=${currentPage}&limit=${dataLimit}`
-        )
-        .then((response) => response.data);
+      const response = await axios.post(
+        "http://localhost:8001/integration/getIntegrationInfo",
+        {
+          page: currentPage,
+          limit: dataLimit,
+        }
+      );
+      console.log("resposne", response.data.data);
+      return response.data;
     } catch (error) {
       console.log("error", error);
+      return null;
     }
   };
 
-  const activateDeactivate = (event, id) => {
+  useEffect(() => {
+    const fetchSupplierInfo = async () => {
+      const response = await getSupplierInfo(currentPage, dataLimit);
+      if (response) {
+        let totlePage = Math.ceil(response.totlaRecord / response.limit)
+        console.log("totalpages in body",totlePage)
+        setTotalPages(totlePage)
+        setSupplierList(response.data);
+      }
+    };
+    fetchSupplierInfo();
+  }, [currentPage, dataLimit]);
+
+  const activateDeactivate = (event, supplierId) => {
+    console.log("supplierId", supplierId);
     const status = event.target.checked;
     Swal.fire({
       title: `${status ? "Activate" : "Deactivate"} Supplier?`,
@@ -61,23 +68,39 @@ function SuppilerList(props) {
       if (result.isConfirmed) {
         props.onLoading(true);
         axios
-          .post(
-            `${process.env.REACT_APP_API_URL}/company/company-status/${id}`,
-            { status }
-          )
+          .post("http://localhost:8001/integration/changeIntegrationStatus", {
+            supplierId: supplierId,
+            status: status,
+          })
           .then((res) => {
             toast.success(res.data.message);
-            
+  
+            // Find the index of the supplier object in the array
+            const index = supplierList.findIndex(
+              (supplier) => supplier.id === supplierId
+            );
+  
+            // Update the status property of the supplier object
+            setSupplierList((prevState) => [
+              ...prevState.slice(0, index),
+              {
+                ...prevState[index],
+                status: status,
+              },
+              ...prevState.slice(index + 1),
+            ]);
+  
             props.onLoading(false);
           })
           .catch((e) => {
             toast.error("Something Went Wrong");
-            
+  
             props.onLoading(false);
           });
       }
     });
   };
+
   let filterList = [
     { label: "All", value: "all" },
     { label: "Activate", value: "active" },
@@ -106,11 +129,7 @@ function SuppilerList(props) {
               <div className="body">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <div style={{ minWidth: "110px" }}>
-                    <Select
-                      options={filterList}
-                      
-                      defaultValue={filterList[0]}
-                    />
+                    <Select options={filterList} defaultValue={filterList[0]} />
                   </div>
                   <Link className="link-btn" to={`/manage-suppiler`}>
                     Add Supplier
@@ -139,52 +158,62 @@ function SuppilerList(props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {supplierList.map((supplier) => (
+                      {supplierList?.map((supplier) => (
                         <tr key={supplier.id}>
                           <td>{supplier.name}</td>
 
                           <td>
                             {supplier.logo ? (
-                              supplier.logo
+                              <img
+                                src={supplier.logo}
+                                alt={supplier.name}
+                                className="list-logo"
+                              />
                             ) : (
                               <div className="list-logo placeholder">N/A</div>
                             )}
                           </td>
                           <td>{supplier.prefixName}</td>
-                          <td>{supplier.lastUpdate}</td>
-                          {props.user.permissions.update_company ? (
-                            <>
-                            <td><Form.Check
-                            type="switch"
-                            id={`${supplier.id}`}
-                            checked={supplier.status}
-                            onChange={(e) => activateDeactivate(e, supplier.id)}
+                          <td>
+                            {supplier.updatedAt
+                              ? moment(supplier.updated_on).format(
+                                  "MM/DD/YYYY hh:mm a"
+                                )
+                              : "N/A"}
+                          </td>
 
-                        /></td>
+                          <>
+                            <td>
+                              <Form.Check
+                                type="switch"
+                                id={`${supplier.id}`}
+                                checked={supplier.status}
+                                onChange={(e) =>
+                                  activateDeactivate(e, supplier.id)
+                                }
+                              />
+                            </td>
 
-                              <td className="action-group">
-                                <i
-                                  data-placement="top"
-                                  title="Edit"
-                                  className="fa fa-edit edit"
-                                  onClick={() => {
-                                    localStorage.setItem(
-                                      "supplierId",
-                                      supplier.id
-                                    );
-                                    localStorage.setItem(
-                                      "supplierName",
-                                      supplier.suplirName
-                                    );
+                            <td className="action-group">
+                              <i
+                                data-placement="top"
+                                title="Edit"
+                                className="fa fa-edit edit"
+                                onClick={() => {
+                                  localStorage.setItem(
+                                    "supplierId",
+                                    supplier.id
+                                  );
+                                  localStorage.setItem(
+                                    "supplierName",
+                                    supplier.suplirName
+                                  );
 
-                                    history.push(
-                                      `/manage-suppiler`
-                                    );
-                                  }}
-                                ></i>
-                              </td>
-                            </>
-                          ) : null}
+                                  history.push(`/manage-suppiler`);
+                                }}
+                              ></i>
+                            </td>
+                          </>
                         </tr>
                       ))}
                     </tbody>

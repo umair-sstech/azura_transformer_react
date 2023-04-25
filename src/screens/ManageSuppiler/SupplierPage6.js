@@ -51,7 +51,6 @@ function SupplierPage6(props) {
 
   return (
     <>
-      <hr className="hr" />
       <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">

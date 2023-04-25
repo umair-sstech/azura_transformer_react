@@ -10,5 +10,7 @@ export const API_PATH = {
   DATA_FILE_MAPPING:`${API_BASE_URL}/integration/createOrUpdateSupplierFields`,
   IMAGE_RESIZE:`${API_BASE_URL}/integration/createOrUpdateSupplierImageResize`,
   IMPORT_SETTING:`${API_BASE_URL}/integration/createOrUpdateSupplierImprortSetting`,
-  BARCODE:`${API_BASE_URL}/integration/barcod`
+  BARCODE:`${API_BASE_URL}/integration/barcod`,
+  GET_CRON_TIME:`${API_BASE_URL}/general/getCronTime`,
+  GET_IMPORT_SETTING_DATA_BY_ID:`${API_BASE_URL}/Integration/getSupplierImprortSetting?supplierId`
 };

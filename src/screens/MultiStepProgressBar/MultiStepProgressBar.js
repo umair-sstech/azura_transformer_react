@@ -96,7 +96,7 @@
 // export default MultiStepProgressBar;
 
 import React from "react";
-import "./MultiStepProgressBar.css";
+import "../MultiStepProgressBar/MultiStepProgressBar.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
 
 const stepNames = [
@@ -140,7 +140,7 @@ const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
 
   return (
     <div>
-    <p className="supplier-onboarding">Supplier onBoarding</p>
+    <p className="supplier-onboarding">Supplier On Boarding</p>
       <p className="stepNamesContainer ">
         {stepNames.map((name, index) => (
           <div

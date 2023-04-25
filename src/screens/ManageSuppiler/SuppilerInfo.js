@@ -118,7 +118,7 @@ function SuppilerInfo(props) {
       props.onLoading(true);
 
       const supplierId = localStorage.getItem("supplierId");
-
+       
       if (supplierId) {
         formData.set("supplierId", supplierId);
         axios

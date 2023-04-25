@@ -2,3 +2,8 @@
     background-color: transparent;
     border: none;
 }
+img.img-responsive.logo.website-logo{
+    width: 125px;
+    vertical-align: top;
+    margin-top: 2px;
+}

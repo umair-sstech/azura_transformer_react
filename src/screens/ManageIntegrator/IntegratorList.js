@@ -19,6 +19,7 @@ function IntegratorList(props) {
 
   useEffect(() => {
     props.onLoading(true);
+    
     getDataFromApi();
   }, [currentPage, dataLimit]);
 
@@ -53,10 +54,10 @@ function IntegratorList(props) {
       <div>
         <div className="container-fluid">
           <PageHeader
-            HeaderText="Market Place List"
+            HeaderText="Integrator List"
             Breadcrumb={[
               { name: "Manage", navigate: "" },
-              { name: "Market Place List", navigate: "" },
+              { name: "Integrator List", navigate: "" },
             ]}
           />
           <div className="tab-component">

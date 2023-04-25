@@ -87,6 +87,7 @@ import ManageMarketPlace from "./screens/ManageMarketPlace/ManageMarketPlace";
 import MarketPlaceList from "./screens/ManageMarketPlace/MarketPlaceList";
 import IntegratorList from "./screens/ManageIntegrator/IntegratorList";
 import ManageIntegrator from "./screens/ManageIntegrator/ManageIntegrator";
+import SupplierPage6 from "./screens/ManageSuppiler/SupplierPage6";
 window.__DEV__ = true;
 
 class App extends React.Component {
@@ -319,6 +320,11 @@ class App extends React.Component {
                     path={`/data-mapping`}
                     component={SuppilerPage3}
                   />
+                  <Route
+                  exact
+                  path={`/barcode`}
+                  component={SupplierPage6}
+                />
                 </>
               ) : null}
               {this.props.user?.data.role == "SUPER_ADMIN" ? (

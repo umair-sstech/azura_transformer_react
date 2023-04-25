@@ -107,11 +107,12 @@
   margin-top: 19px;
 }
 
-.supplier-onboarding {
+p.supplier-onboarding {
   display: flex;
   justify-content: center;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
+  color: #49c5b6;
 }
 .hr {
   position: relative;
