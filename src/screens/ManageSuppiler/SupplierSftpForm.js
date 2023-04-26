@@ -13,7 +13,6 @@ import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
 
 function SupplierSftpForm(props) {
-  console.log("props", props);
   const { setPage } = props;
 
   const { processCancel } = useContext(FormContext);
@@ -32,6 +31,21 @@ function SupplierSftpForm(props) {
     syncFrequency: "",
     timeZone: "",
   });
+  useEffect(() => {
+    const supplierId = localStorage.getItem("supplierId");
+  
+    if (supplierId) {
+      axios
+        .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
+        .then((response) => {
+          const supplierData = response.data.data;
+          setFormData(supplierData);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    }
+  }, []);
   const [formErrors, setFormErrors] = useState({});
   const history = useHistory();
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
@@ -78,9 +92,7 @@ function SupplierSftpForm(props) {
     setFormData({ ...formData, timeZone: selectedOption });
     setFormErrors({ ...formErrors, timeZone: "" });
   };
-  useEffect(() => {
-    getSupplierDataById()
-  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = validateSftpForm(formData);
@@ -160,19 +172,6 @@ function SupplierSftpForm(props) {
     { value: "SFTP", label: "SFTP" },
     { value: "FTP", label: "FTP" },
   ];
-
-  const getSupplierDataById = () => {
-    const supplierId = localStorage.getItem("supplierId");
-    axios
-      .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
-      .then((response) => {
-        const supplierData = response.data.data;
-        setFormData(supplierData);
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
-  };
 
   return (
     <>

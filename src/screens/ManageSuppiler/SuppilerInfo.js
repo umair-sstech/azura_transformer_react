@@ -53,7 +53,6 @@ function SuppilerInfo(props) {
   const handleChange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
-
   useEffect(() => {
     setIsFormValid(Object.keys(formErrors).length === 0);
   }, [formErrors]);
@@ -311,6 +310,9 @@ function SuppilerInfo(props) {
                 {formErrors.logo && (
                   <span className="text-danger">{formErrors.logo}</span>
                 )}
+                <small className="form-text text-muted csv-text">
+                  Allowed Logo types & size: JPEG, JPG, PNG with 50kb 
+                </small>
               </div>
             </div>
 

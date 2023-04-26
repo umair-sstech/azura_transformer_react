@@ -19,24 +19,30 @@ function SuppilerList(props) {
   const [supplierList, setSupplierList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
-  console.log("totalPages", totalPages);
   const [dataLimit, setdataLimit] = useState(5);
+  const [status, setStatus] = useState("active");
+  const [type, setType] = useState("Supplier");
 
   const history = useHistory();
 
   const getSupplierInfo = async (currentPage, dataLimit) => {
+    props.onLoading(true);
+
     try {
       const response = await axios.post(
         "http://localhost:8001/integration/getIntegrationInfo",
         {
           page: currentPage,
           limit: dataLimit,
+          type: type,
+          status: status !== "all" ? (status === "active" ? 1 : 0) : null,
         }
       );
-      console.log("resposne", response.data.data);
+
       return response.data;
     } catch (error) {
       console.log("error", error);
+
       return null;
     }
   };
@@ -45,14 +51,26 @@ function SuppilerList(props) {
     const fetchSupplierInfo = async () => {
       const response = await getSupplierInfo(currentPage, dataLimit);
       if (response) {
-        let totlePage = Math.ceil(response.totlaRecord / response.limit)
-        console.log("totalpages in body",totlePage)
-        setTotalPages(totlePage)
-        setSupplierList(response.data);
+        let totalPage = Math.ceil(response.totlaRecord / response.limit);
+        setTotalPages(totalPage);
+        if (status === "deactive") {
+          setSupplierList(
+            response.data.filter((supplier) => supplier.status === 0)
+          );
+        } else if (status === "all") {
+          setSupplierList(response.data);
+        } else {
+          setSupplierList(
+            response.data.filter((supplier) => supplier.status === 1)
+          );
+        }
+        setType(type);
+
+        props.onLoading(false); // set loading to false after data is fetched
       }
     };
     fetchSupplierInfo();
-  }, [currentPage, dataLimit]);
+  }, [currentPage, dataLimit, status]);
 
   const activateDeactivate = (event, supplierId) => {
     console.log("supplierId", supplierId);
@@ -74,12 +92,12 @@ function SuppilerList(props) {
           })
           .then((res) => {
             toast.success(res.data.message);
-  
+
             // Find the index of the supplier object in the array
             const index = supplierList.findIndex(
               (supplier) => supplier.id === supplierId
             );
-  
+
             // Update the status property of the supplier object
             setSupplierList((prevState) => [
               ...prevState.slice(0, index),
@@ -89,12 +107,12 @@ function SuppilerList(props) {
               },
               ...prevState.slice(index + 1),
             ]);
-  
+
             props.onLoading(false);
           })
           .catch((e) => {
             toast.error("Something Went Wrong");
-  
+
             props.onLoading(false);
           });
       }
@@ -102,9 +120,9 @@ function SuppilerList(props) {
   };
 
   let filterList = [
-    { label: "All", value: "all" },
     { label: "Activate", value: "active" },
-    { label: "Deactivate", value: "deactivate" },
+    { label: "Deactivate", value: "deactive" },
+    { label: "All", value: "all" },
   ];
 
   return (
@@ -129,7 +147,14 @@ function SuppilerList(props) {
               <div className="body">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <div style={{ minWidth: "110px" }}>
-                    <Select options={filterList} defaultValue={filterList[0]} />
+                    <Select
+                      options={filterList}
+                      onChange={(data) => {
+                        setStatus(data.value);
+                        setCurrentPage(1); // reset page to 1 when changing filter
+                      }}
+                      defaultValue={filterList[0]} // set default filter to All
+                    />
                   </div>
                   <Link className="link-btn" to={`/manage-suppiler`}>
                     Add Supplier
@@ -148,7 +173,7 @@ function SuppilerList(props) {
                         <th>Supplier Name</th>
                         <th>Logo</th>
                         <th>Prefix Name</th>
-                        <th>Last Update</th>
+                        <th>Last Update(UTC)</th>
                         {props.user.permissions.update_company ? (
                           <>
                             <th>Activate / Deactivate</th>

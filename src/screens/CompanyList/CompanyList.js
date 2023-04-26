@@ -18,7 +18,6 @@ const CompanyList = (props) => {
     const [companyList, setCompanyList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(2);
-    console.log("total pages",totalPages)
     const [dataLimit, setdataLimit] = useState(5);
     const [searchText, setSearchText] = useState('active');
     const history = useHistory()

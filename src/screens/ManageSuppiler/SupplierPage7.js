@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
 import "./SupplierPage.css";
 import Swal from "sweetalert2";
@@ -7,10 +7,12 @@ import axios from "axios";
 import { FormContext } from "./ManageSuppiler";
 
 import { toast } from "react-toastify";
+import { API_PATH } from "../ApiPath/Apipath";
 
-function SupplierPage7() {
+function SupplierPage7(props) {
+
   const {
-    processCancel,
+    processCancel,setFormData
   } = useContext(FormContext);
   const [errorMessage, setErrorMessage] = useState("");
   const history = useHistory();
@@ -18,7 +20,9 @@ function SupplierPage7() {
     { value: "two_tire", label: "Two Tier" },
     { value: "three_tire", label: "Three Tier" },
   ];
-
+useEffect(()=>{
+  getData()
+},[])
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleSelectChange = (selectedOption) => {
@@ -26,7 +30,7 @@ function SupplierPage7() {
     setErrorMessage("");
   };
 
-  const handleSaveAndExit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!selectedOption) {
       setErrorMessage("Please select a value");
@@ -80,6 +84,27 @@ function SupplierPage7() {
         });
     }
   };
+  const getData = () => {
+    const supplierId = localStorage.getItem("supplierId");
+  
+    if (supplierId) {
+      axios
+        .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
+        .then((response) => {
+          const supplierData = response.data.data;
+          setFormData(supplierData);
+          const productTierValue = supplierData.productTier;
+          const selectedOption = options.find(
+            (option) => option.value === productTierValue
+          );
+          setSelectedOption(selectedOption);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    }
+  };
+  
 
   return (
     <>
@@ -90,7 +115,7 @@ function SupplierPage7() {
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
-                onClick={handleSaveAndExit}
+                onClick={handleSubmit}
               >
                 Save & Exit
               </button>

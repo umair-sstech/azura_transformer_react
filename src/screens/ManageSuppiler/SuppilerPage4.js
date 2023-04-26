@@ -9,17 +9,17 @@ import { FormContext } from "./ManageSuppiler";
 
 function SuppilerPage4(props) {
   const { setPage } = props;
-  const {
-    processCancel,
-  } = useContext(FormContext);
+  const { processCancel, setFormData } = useContext(FormContext);
   const history = useHistory();
   const imageSize = [
     "762x1100",
     "1200x1600",
     "1000x1000",
     "1600x2000",
-    "Original",
   ];
+  useEffect(() => {
+    getSupplierDataById();
+  }, []);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [formErrors, setFormErrors] = useState({});
   const [prefix, setPrefix] = useState("");
@@ -93,16 +93,13 @@ function SuppilerPage4(props) {
     }
 
     axios
-      .post(
-        `${API_PATH.IMAGE_RESIZE}`,
-        {
-          supplierId: localStorage.getItem("supplierId"),
-          supplierName: localStorage.getItem("supplierName"),
-          imageResize: selectedSizes.join(),
-          imagePrefix: prefix,
-          imageSuffix: suffix,
-        }
-      )
+      .post(`${API_PATH.IMAGE_RESIZE}`, {
+        supplierId: localStorage.getItem("supplierId"),
+        supplierName: localStorage.getItem("supplierName"),
+        imageResize: selectedSizes.join(),
+        imagePrefix: prefix,
+        imageSuffix: suffix,
+      })
       .then((response) => {
         const { success, message, data } = response.data;
         if (success) {
@@ -131,16 +128,13 @@ function SuppilerPage4(props) {
     }
 
     axios
-      .post(
-        `${API_PATH.IMAGE_RESIZE}`,
-        {
-          supplierId: localStorage.getItem("supplierId"),
-          supplierName: localStorage.getItem("supplierName"),
-          imageResize: selectedSizes.join(),
-          imagePrefix: prefix,
-          imageSuffix: suffix,
-        }
-      )
+      .post(`${API_PATH.IMAGE_RESIZE}`, {
+        supplierId: localStorage.getItem("supplierId"),
+        supplierName: localStorage.getItem("supplierName"),
+        imageResize: selectedSizes.join(),
+        imagePrefix: prefix,
+        imageSuffix: suffix,
+      })
       .then((response) => {
         const { success, message, data } = response.data;
         if (success) {
@@ -155,6 +149,22 @@ function SuppilerPage4(props) {
       .catch((err) => console.log(err));
   };
 
+  const getSupplierDataById = () => {
+    const supplierId = localStorage.getItem("supplierId");
+    axios
+      .get(`${API_PATH.GET_INTEGRATION_INFO_BY_ID}=${supplierId}`)
+      .then((response) => {
+        const supplierData = response.data.data;
+        setFormData(supplierData);
+
+        setSelectedSizes(supplierData.imageResize.split(","));
+        setPrefix(supplierData.imagePrefix);
+        setSuffix(supplierData.imageSuffix);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
 
   return (
     <>
@@ -179,12 +189,12 @@ function SuppilerPage4(props) {
                 Save & Exit
               </button>
               <button
-              className="btn btn-secondary w-auto btn-lg"
-              type="button"
-              onClick={processCancel}
-            >
-              Exit
-            </button>
+                className="btn btn-secondary w-auto btn-lg"
+                type="button"
+                onClick={processCancel}
+              >
+                Exit
+              </button>
             </div>
           </div>
         </div>

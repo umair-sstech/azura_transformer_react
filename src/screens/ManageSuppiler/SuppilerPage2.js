@@ -53,10 +53,7 @@ function SupplierPage2(props) {
       formData.set("supplier_id", supplierId);
       props.onLoading(true);
       try {
-        const response = await axios.post(
-          `${API_PATH.ADD_CSV_DATA}`,
-          formData
-        );
+        const response = await axios.post(`${API_PATH.ADD_CSV_DATA}`, formData);
         const { success, message } = response.data;
         if (success) {
           // const { csvPath, csvName, csvJSON } = response.data.data;
@@ -88,10 +85,7 @@ function SupplierPage2(props) {
       formData.append("supplier_id", initFormData.id);
       // props.onLoading(true);
       try {
-        const response = await axios.post(
-          `${API_PATH.ADD_CSV_DATA}`,
-          formData
-        );
+        const response = await axios.post(`${API_PATH.ADD_CSV_DATA}`, formData);
         const { success, message } = response.data;
         if (success) {
           // const { csvPath, csvName, csvJSON } = response.data.data;
@@ -112,28 +106,25 @@ function SupplierPage2(props) {
       }
     }
   };
+  const getSupplierDataById = () => {
+    const supplierId = localStorage.getItem("supplierId");
+    axios
+      .get(`${API_PATH.GET_INTEGRATION_INFO_BY_ID}=${supplierId}`)
+      .then((response) => {
+        const supplierData = response.data.data;
 
-  const handleCancel = () => {
-    Swal.fire({
-      title: "Are you sure, <br> you want to exit ? ",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        history.push("/supplier");
-      }
-    });
+        setFormData(supplierData);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
   };
-
-
+  useEffect(() => {
+    getSupplierDataById();
+  }, []);
 
   return (
     <>
-      
       <form onSubmit={handleSubmit}>
         <div style={{ marginTop: "30px" }}>
           <div className="row">
@@ -161,12 +152,12 @@ function SupplierPage2(props) {
                   Save & Exit
                 </button>
                 <button
-                className="btn btn-secondary w-auto btn-lg"
-                type="button"
-                onClick={processCancel}
-              >
-                Exit
-              </button>
+                  className="btn btn-secondary w-auto btn-lg"
+                  type="button"
+                  onClick={processCancel}
+                >
+                  Exit
+                </button>
               </div>
             </div>
           </div>
