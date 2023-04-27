@@ -285,7 +285,7 @@ function SuppilerPage3(props) {
     const supplierId = localStorage.getItem("supplierId");
     axios
       .get(
-        `http://localhost:8001/Integration/getSupplierFields?supplierId=${supplierId}`
+        `${API_PATH.GET_SUPPLIER_FILE_MAPPING}=${supplierId}`
       )
       .then((response) => {
         const supplierData = response.data.data;
@@ -450,18 +450,21 @@ function SuppilerPage3(props) {
                           additionalInfo = (
                             <>
                               {selectedOption && selectedOption.textbox && (
-                                <input
-                                  type="text"
-                                  placeholder="Enter a value"
-                                  className="additional-textbox"
-                                  onChange={(e) =>
-                                    handleAdditionalValueChange(
-                                      index,
-                                      key,
-                                      e.target.value
-                                    )
-                                  }
-                                />
+                                <>
+                                  <input
+                                    type="text"
+                                    placeholder="Enter a value"
+                                    className="additional-textbox rounded"
+                                    onChange={(e) =>
+                                      handleAdditionalValueChange(
+                                        index,
+                                        key,
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <small>Enter a value for </small>
+                                </>
                               )}
                             </>
                           );

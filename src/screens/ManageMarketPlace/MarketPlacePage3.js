@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import Swal from "sweetalert2";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Select from "react-select";
 import { toast } from "react-toastify";
 import timeZoneData from "../../Data/timeZone";
 import { API_PATH } from "../ApiPath/Apipath";
+import { FormContext } from "./ManageMarketPlace";
+import { useHistory } from "react-router-dom";
 
-function MarketPlacePage3() {
+function MarketPlacePage3(props) {
+  const { setPage } = props;
+  const { processCancel } = useContext(FormContext);
+
+  const history=useHistory()
+
   const [formData, setFormData] = useState({
-    timeZone: "",
-    syncFrequency: "",
+    productSyncFrequency: "",
+    productTimeZone: "",
+    type: "product",
   });
   const [formErrors, setFormErrors] = useState({});
-  const [isFormValid, setIsFormValid] = useState(false);
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
-
-  const history = useHistory();
 
   useEffect(() => {
     getCronTimeData();
@@ -31,7 +34,6 @@ function MarketPlacePage3() {
             label: item.name,
             value: item.value,
           }));
-          console.log("item", options);
           setSyncFrequencyOptions(options);
         })
         .catch((error) => console.log(error));
@@ -41,31 +43,89 @@ function MarketPlacePage3() {
   };
 
   const handleSyncFrequency = (selectedOption) => {
-    setFormData({ ...formData, syncFrequency: selectedOption.value });
-    setFormErrors({ ...formErrors, syncFrequency: "" });
+    setFormData({ ...formData, productSyncFrequency: selectedOption.value });
+    setFormErrors({ ...formErrors, productSyncFrequency: "" });
   };
 
   const handleTimeZoneChange = (selectedOption) => {
-    setFormData({ ...formData, timeZone: selectedOption });
+    setFormData({ ...formData, productTimeZone: selectedOption });
   };
 
-  const handleCancel = () => {
-    Swal.fire({
-      title: "Are you sure, <br> you want to exit ? ",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        history.push("/market-place");
-      }
-    });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const integrationId = localStorage.getItem("marketPlaceId");
+    const integrationName = localStorage.getItem("marketPlaceName");
+
+    const { value, label } = formData.productTimeZone;
+
+    const timeZoneString = `${value} (${label})`;
+
+    const payload = {
+      ...formData,
+      productTimeZone: timeZoneString,
+      integrationId,
+      integrationName,
+    };
+    axios
+      .post(
+        `${API_PATH.MARKET_PLACE_SYNCSETTING}`,
+        payload
+      )
+      .then((response) => {
+        const { success, message, data } = response.data;
+        console.log("response", response);
+        if (success) {
+          toast.success(message);
+          setFormData({});
+          setPage(4);
+        } else {
+          toast.error(message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
+
+  const handleOnClick=(e)=>{
+    e.preventDefault();
+    const integrationId = localStorage.getItem("marketPlaceId");
+    const integrationName = localStorage.getItem("marketPlaceName");
+
+    const { value, label } = formData.productTimeZone;
+
+    const timeZoneString = `${value} (${label})`;
+
+    const payload = {
+      ...formData,
+      productTimeZone: timeZoneString,
+      integrationId,
+      integrationName,
+    };
+    axios
+      .post(
+        `${API_PATH.MARKET_PLACE_SYNCSETTING}`,
+        payload
+      )
+      .then((response) => {
+        const { success, message, data } = response.data;
+        console.log("response", response);
+        if (success) {
+          toast.success(message);
+          setFormData({});
+          history.push("/market-place")
+          localStorage.removeItem("marketPlaceId")
+          localStorage.removeItem("marketPLaceName")
+        } else {
+          toast.error(message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div style={{ marginTop: "30px" }}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
@@ -79,6 +139,7 @@ function MarketPlacePage3() {
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
+                onClick={handleOnClick}
               >
                 Save & Exit
               </button>
@@ -86,7 +147,7 @@ function MarketPlacePage3() {
               <button
                 className="btn btn-secondary w-auto btn-lg"
                 type="button"
-                onClick={handleCancel}
+                onClick={processCancel}
               >
                 Exit
               </button>

@@ -41,6 +41,7 @@ function SupplierPage2(props) {
   const handleFileInputChange = () => {
     setFileError("");
   };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const fileInput = document.querySelector('input[type="file"]');
@@ -62,7 +63,6 @@ function SupplierPage2(props) {
             // csvPath, csvName, csvJSON
           });
           toast.success(message);
-
           props.onLoading(false);
           setPage("3");
         } else {
@@ -83,7 +83,6 @@ function SupplierPage2(props) {
       const form = e.target.closest("form");
       const formData = new FormData(form);
       formData.append("supplier_id", initFormData.id);
-      // props.onLoading(true);
       try {
         const response = await axios.post(`${API_PATH.ADD_CSV_DATA}`, formData);
         const { success, message } = response.data;
@@ -93,16 +92,17 @@ function SupplierPage2(props) {
             ...formData,
             // csvPath, csvName, csvJSON
           });
-          toast.success(message);
+          // toast.success("data.....");
+          history.push("/supplier");
           localStorage.removeItem("supplierId");
           localStorage.removeItem("supplierName");
-          history.push("/supplier");
+      
+          
         } else {
           toast.error(message);
         }
       } catch (error) {
         console.error(error);
-        props.onLoading(false);
       }
     }
   };
@@ -134,15 +134,8 @@ function SupplierPage2(props) {
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                 >
-                  {props.isLoading ? (
-                    <>
-                      <Spinner animation="border" size="sm" /> Please wait...
-                    </>
-                  ) : isSupplierAdded ? (
-                    "Update"
-                  ) : (
-                    "Save & Next"
-                  )}
+                 
+                  Save & Next
                 </button>
                 <button
                   className="btn btn-primary w-auto btn-lg mr-2"

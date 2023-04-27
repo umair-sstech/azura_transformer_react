@@ -18,9 +18,11 @@ function MarketPlacePage1(props) {
     setIsMarketPlaceAdded,
     formData,
     setFormData,
+    setLogoData,
     processCancel,
   } = useContext(FormContext);
   const history = useHistory();
+
   const options = [
     { value: "market_place", label: "Market Place" },
     { value: "Supplier", label: "Supplier", isDisabled: true },
@@ -41,6 +43,7 @@ function MarketPlacePage1(props) {
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [isSubmitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (formData) {
@@ -51,6 +54,9 @@ function MarketPlacePage1(props) {
   const handleChange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
+  useEffect(() => {
+    getSupplierDataById();
+  }, []);
 
   const generatePrefixName = (name) => {
     let prefix = "";
@@ -65,6 +71,7 @@ function MarketPlacePage1(props) {
     }
     return prefix;
   };
+
   const handleNameChange = (e) => {
     const name = e.target.value;
     const prefix = generatePrefixName(name);
@@ -98,7 +105,7 @@ function MarketPlacePage1(props) {
 
     const errors = validateIntegrationInfoForm(formData);
     setFormErrors(errors);
-
+    setSubmitting(true);
     if (Object.keys(errors).length === 0) {
       const prefixName = generatePrefixName(formData.get("name"));
       setPrefixName(prefixName);
@@ -107,78 +114,159 @@ function MarketPlacePage1(props) {
       props.onLoading(true);
 
       const marketPlaceId = localStorage.getItem("marketPlaceId");
+      console.log("marketPlaceId", marketPlaceId);
 
-      // if (marketPlaceId) {
-      //   formData.set("marketPlaceId", marketPlaceId);
-      //   axios
-      //     .post(
-      //       `${process.env.REACT_APP_API_URL_SUPPLIER}/integration/updateIntegrationInfo`,
-      //       formData
-      //     )
-      //     .then((response) => {
-      //       const { success, message, data } = response.data;
-      //       if (success) {
-      //         setIsMarketPlaceAdded(true);
-      //         setPage("2");
-      //         toast.success(message);
-      //       } else {
-      //         toast.error(message);
-      //       }
-      //       props.onLoading(false);
-      //     })
-      //     .catch((error) => {
-      //       console.log("error", error);
-      //       props.onLoading(false);
-      //     });
-      // } else {
-      axios
-        .post(
-          `${process.env.REACT_APP_API_URL_SUPPLIER}${API_PATH.CREATE_INTEGRATION_INFO}`,
-          formData
-        )
-        .then((response) => {
-          console.log("response", response);
-          const { success, message, data } = response.data;
-          if (success) {
-            const marketPlaceId = data.id;
-            if (marketPlaceId) {
-              localStorage.setItem("marketPlaceId", marketPlaceId);
+      if (marketPlaceId) {
+        formData.set("supplierId", marketPlaceId);
+        axios
+          .post(
+            `${process.env.REACT_APP_API_URL_SUPPLIER}/integration/updateIntegrationInfo`,
+            formData
+          )
+          .then((response) => {
+            const { success, message, data } = response.data;
+            if (success) {
+              setIsMarketPlaceAdded(true);
+              setPage("2");
+              toast.success(message);
+            } else {
+              toast.error(message);
             }
-            const marketPlaceName = data.name;
-            if (marketPlaceName) {
-              localStorage.setItem("marketPlaceName", marketPlaceName);
+            props.onLoading(false);
+          })
+          .catch((error) => {
+            console.log("error", error);
+            setSubmitting(false);
+          });
+      } else {
+        axios
+          .post(`${API_PATH.CREATE_INTEGRATION_INFO}`, formData)
+          .then((response) => {
+            console.log("response", response);
+            const { success, message, data } = response.data;
+            if (success) {
+              const marketPlaceId = data.id;
+              if (marketPlaceId) {
+                localStorage.setItem("marketPlaceId", marketPlaceId);
+              }
+              const marketPlaceName = data.name;
+              if (marketPlaceName) {
+                localStorage.setItem("marketPlaceName", marketPlaceName);
+              }
+              setIsMarketPlaceAdded(true);
+              setPage("2");
+              toast.success(message);
+            } else {
+              toast.error(message);
             }
-            setIsMarketPlaceAdded(true);
-            setPage("2");
-            toast.success(message);
-          } else {
-            toast.error(message);
-          }
-          props.onLoading(false);
-        })
-        .catch((error) => {
-          console.log("error", error);
-          props.onLoading(false);
-        });
-      // }
+            setSubmitting(false);
+          })
+          .catch((error) => {
+            console.log("error", error);
+            setSubmitting(false);
+          });
+      }
     }
   };
 
-  const handleCancel = () => {
-    Swal.fire({
-      title: "Are you sure, <br> you want to exit ? ",
-      icon: "warning",
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        history.push("/market-place");
-      }
-    });
+  const getSupplierDataById = () => {
+    const marketPlaceId = localStorage.getItem("marketPlaceId");
+    axios
+      .get(`${API_PATH.GET_INTEGRATION_INFO_BY_ID}=${marketPlaceId}`)
+      .then((response) => {
+        const marketPlaceData = response.data.data;
+        setSelectedOption({
+          value: marketPlaceData.type,
+          label: marketPlaceData.type,
+        });
+        setPrefixName(marketPlaceData.prefixName);
+        setFormData(marketPlaceData);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
   };
+
+  const handleOnClick = (e) => {
+    e.preventDefault();
+    const form = e.currentTarget.closest("form");
+    if (!form) {
+      return;
+    }
+    const formData = new FormData(form);
+
+    const errors = validateIntegrationInfoForm(formData);
+    setFormErrors(errors);
+    setSubmitting(true);
+    if (Object.keys(errors).length === 0) {
+      const prefixName = generatePrefixName(formData.get("name"));
+      setPrefixName(prefixName);
+      formData.set("prefixName", prefixName);
+
+      props.onLoading(true);
+
+      const marketPlaceId = localStorage.getItem("marketPlaceId");
+      console.log("marketPlaceId", marketPlaceId);
+
+      if (marketPlaceId) {
+        formData.set("supplierId", marketPlaceId);
+        axios
+          .post(
+            `${process.env.REACT_APP_API_URL_SUPPLIER}/integration/updateIntegrationInfo`,
+            formData
+          )
+          .then((response) => {
+            const { success, message, data } = response.data;
+            if (success) {
+              setIsMarketPlaceAdded(true);
+              toast.success(message);
+              history.push("/market-place");
+
+              localStorage.removeItem("marketPlaceId");
+              localStorage.removeItem("marketPlaceName");
+            } else {
+              toast.error(message);
+            }
+            props.onLoading(false);
+          })
+          .catch((error) => {
+            console.log("error", error);
+            setSubmitting(false);
+          });
+      } else {
+        axios
+          .post(`${API_PATH.CREATE_INTEGRATION_INFO}`, formData)
+          .then((response) => {
+            console.log("response", response);
+            const { success, message, data } = response.data;
+            if (success) {
+              const marketPlaceId = data.id;
+              if (marketPlaceId) {
+                localStorage.setItem("marketPlaceId", marketPlaceId);
+              }
+              const marketPlaceName = data.name;
+              if (marketPlaceName) {
+                localStorage.setItem("marketPlaceName", marketPlaceName);
+              }
+              setIsMarketPlaceAdded(true);
+              toast.success(message);
+              history.push("/market-place");
+
+              localStorage.removeItem("marketPlaceId");
+              localStorage.removeItem("marketPlaceName");
+            } else {
+              toast.error(message);
+            }
+            setSubmitting(false);
+          })
+          .catch((error) => {
+            console.log("error", error);
+            setSubmitting(false);
+          });
+      }
+    }
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit} name="myForm" encType="multipart/form-data">
@@ -190,28 +278,20 @@ function MarketPlacePage1(props) {
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                 >
-                  {props.isLoading ? (
-                    <>
-                      <Spinner animation="border" size="sm" /> Please wait...
-                    </>
-                  ) : isMarketPlaceAdded ? (
-                    "Update"
-                  ) : (
-                    "Save & Next"
-                  )}
+                  Save & Next
                 </button>
 
                 <button
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
+                  onClick={handleOnClick}
                 >
                   Save & Exit
                 </button>
-
                 <button
                   className="btn btn-secondary w-auto btn-lg"
                   type="button"
-                  onClick={handleCancel}
+                  onClick={processCancel}
                 >
                   Exit
                 </button>

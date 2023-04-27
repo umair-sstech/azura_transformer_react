@@ -112,11 +112,13 @@
     width: 79.5vw;
     right: 19px;
   }
-  .market-onboarding{
+
+  p.market-onboarding{
     display: flex;
     justify-content: center;
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 600;
+    color: #49c5b6;
   }
   @media screen and (max-width: 1024px) {
     .stepName{

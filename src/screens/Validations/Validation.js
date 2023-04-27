@@ -5,9 +5,14 @@ export const validateIntegrationInfoForm = (formData) => {
     errors.name = "Name is required";
   }
 
+
   const logo = formData.get("logo");
-  if (logo && !logo.type.startsWith("image/")) {
-    errors.logo = "Please select file";
+  if (logo) {
+    if (!logo.type.startsWith("image/")) {
+      errors.logo = "Please select an image file";
+    } else if (logo.size > 50 * 1024) {
+      errors.logo = "Image file size must be less than 50kb";
+    }
   }
 
   return errors;
@@ -57,13 +62,13 @@ export const validateHttpForm = (formData) => {
 export const validateMarketPlaceInfoForm = (formData) => {
   let errors = {};
 
-  if (!formData.get("marketPlaceName")) {
-    errors.marketPlaceName = "Market Place name is required";
+  if (!formData.get("name")) {
+    errors.name = "Market Place name is required";
   }
 
-  const logo = formData.get("marketPlaceLogo");
+  const logo = formData.get("logo");
   if (logo && !logo.type.startsWith("image/")) {
-    errors.marketPlaceLogo = "Please select file";
+    errors.logo = "Please select file";
   }
 
   return errors;

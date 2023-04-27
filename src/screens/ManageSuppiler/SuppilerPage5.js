@@ -207,6 +207,7 @@ function SupplierPage5(props) {
       axios
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
+          console.log("responsedaa", response.data);
           const { success, message, data } = response.data;
           if (success) {
             history.push("/supplier");
@@ -227,6 +228,7 @@ function SupplierPage5(props) {
     { value: "SFTP", label: "SFTP" },
     { value: "FTP", label: "FTP" },
   ];
+
   const sftpForm = () => {
     return (
       <>
@@ -399,8 +401,10 @@ function SupplierPage5(props) {
                   <Select
                     placeholder="Select Frequency"
                     options={syncFrequencyOptions}
+                    value={syncFrequencyOptions.find(
+                      (option) => option.value === sftpformData.syncFrequency
+                    )}
                     onChange={handleSyncFrequency}
-                    value={sftpformData.syncFrequency}
                   />
                   {formErrors.syncFrequency && (
                     <span className="text-danger">
@@ -423,10 +427,7 @@ function SupplierPage5(props) {
                     })}
                     placeholder="Select TimeZone"
                     onChange={handleTimeZoneChange}
-                    defaultValue={{
-                      value: timeZoneData[0].abbr,
-                      label: timeZoneData[0].text,
-                    }}
+                  
                   />
 
                   {formErrors.timeZone && (

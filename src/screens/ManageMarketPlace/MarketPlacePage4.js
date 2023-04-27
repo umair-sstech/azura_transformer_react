@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import Swal from "sweetalert2";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Select from "react-select";
 import { toast } from "react-toastify";
 import timeZoneData from "../../Data/timeZone";
 import { API_PATH } from "../ApiPath/Apipath";
+import { FormContext } from "./ManageMarketPlace";
+import { useHistory } from "react-router-dom";
 
-function MarketPlacePage4() {
+function MarketPlacePage4(props) {
+  const { setPage } = props;
+  const { processCancel } = useContext(FormContext);
+
   const [formData, setFormData] = useState({
-    timeZone: "",
-    syncFrequency: "",
+    orderSyncFrequency: "",
+    orderTimeZone: "",
+    type: "order",
   });
   const [formErrors, setFormErrors] = useState({});
-  const [isFormValid, setIsFormValid] = useState(false);
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
-
-  const history = useHistory();
+  const history=useHistory()
 
   useEffect(() => {
     getCronTimeData();
@@ -41,31 +43,86 @@ function MarketPlacePage4() {
   };
 
   const handleSyncFrequency = (selectedOption) => {
-    setFormData({ ...formData, syncFrequency: selectedOption.value });
-    setFormErrors({ ...formErrors, syncFrequency: "" });
+    setFormData({ ...formData, orderSyncFrequency: selectedOption.value });
   };
 
   const handleTimeZoneChange = (selectedOption) => {
-    setFormData({ ...formData, timeZone: selectedOption });
+    setFormData({ ...formData, orderTimeZone: selectedOption });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const integrationId = localStorage.getItem("marketPlaceId");
+    const integrationName = localStorage.getItem("marketPlaceName");
+
+    const { value, label } = formData.orderTimeZone;
+
+    const timeZoneString = `${value} (${label})`;
+
+    const payload = {
+      ...formData,
+      orderTimeZone: timeZoneString,
+      integrationId,
+      integrationName,
+    };
+    axios
+      .post(
+        `${API_PATH.MARKET_PLACE_SYNCSETTING}`,
+        payload
+      )
+      .then((response) => {
+        const { success, message, data } = response.data;
+        if (success) {
+          toast.success(message);
+          setFormData({});
+          setPage(5)
+        } else {
+          toast.error(message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
-  const handleCancel = () => {
-    Swal.fire({
-      title: "Are you sure, <br> you want to exit ? ",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        history.push("/market-place");
-      }
-    });
+  const handleOnClick = (e) => {
+    e.preventDefault();
+    const integrationId = localStorage.getItem("marketPlaceId");
+    const integrationName = localStorage.getItem("marketPlaceName");
+
+    const { value, label } = formData.orderTimeZone;
+
+    const timeZoneString = `${value} (${label})`;
+
+    const payload = {
+      ...formData,
+      orderTimeZone: timeZoneString,
+      integrationId,
+      integrationName,
+    };
+    axios
+      .post(
+        `${API_PATH.MARKET_PLACE_SYNCSETTING}`,
+        payload
+      )
+      .then((response) => {
+        const { success, message, data } = response.data;
+        if (success) {
+          toast.success(message);
+          setFormData({});
+          history.push("/market-place")
+          localStorage.removeItem("marketPlaceId")
+          localStorage.removeItem("marketPLaceName")
+        } else {
+          toast.error(message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
+ 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div style={{ marginTop: "30px" }}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
@@ -79,6 +136,7 @@ function MarketPlacePage4() {
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
+                onClick={handleOnClick}
               >
                 Save & Exit
               </button>
@@ -86,7 +144,7 @@ function MarketPlacePage4() {
               <button
                 className="btn btn-secondary w-auto btn-lg"
                 type="button"
-                onClick={handleCancel}
+                onClick={processCancel}
               >
                 Exit
               </button>
@@ -133,7 +191,7 @@ function MarketPlacePage4() {
         </div>
       </div>
     </form>
-  )
+  );
 }
 
-export default MarketPlacePage4
+export default MarketPlacePage4;

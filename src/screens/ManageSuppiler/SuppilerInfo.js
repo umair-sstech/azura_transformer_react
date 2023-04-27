@@ -63,13 +63,13 @@ function SuppilerInfo(props) {
 
   const generatePrefixName = (name) => {
     let prefix = "";
-    const words = name.split(" ");
-    for (let i = 0; i < words.length && i < 3; i++) {
+    const words = name?.split(" ");
+    for (let i = 0; i < words?.length && i < 3; i++) {
       prefix += words[i].charAt(0);
     }
     prefix = prefix.toUpperCase();
-    if (prefix.length < 3) {
-      const remainingChars = 3 - prefix.length;
+    if (prefix?.length < 3) {
+      const remainingChars = 3 - prefix?.length;
       prefix += name.substring(0, remainingChars).toUpperCase();
     }
     return prefix;
@@ -179,28 +179,57 @@ function SuppilerInfo(props) {
     const errors = validateIntegrationInfoForm(formData);
     setFormErrors(errors);
 
-    if (Object.keys(errors).length === 0) {
-      const prefixName = generatePrefixName(formData.get("suplirName"));
-      setPrefixName(prefixName);
-      formData.set("prefixName", prefixName);
-
+    const supplierId = localStorage.getItem("supplierId");
+       
+    if (supplierId) {
+      formData.set("supplierId", supplierId);
+      axios
+        .post(`${API_PATH.UPDATE_INTEGRATION_INFO}`, formData)
+        .then((response) => {
+          const { success, message, data } = response.data;
+          if (success) {
+           history.push("/supplier");
+           localStorage.removeItem("supplierId");
+           localStorage.removeItem("supplierName")
+            toast.success(message);
+          } else {
+            toast.error(message);
+          }
+          props.onLoading(false);
+        })
+        .catch((error) => {
+          console.log("error", error);
+          props.onLoading(false);
+        });
+    } else {
       axios
         .post(`${API_PATH.CREATE_INTEGRATION_INFO}`, formData)
         .then((response) => {
-          console.log(response.data);
-          setFormData(formData);
-          setIsSuppilerAdded(true);
-          history.push("/supplier");
-          toast.success("Add supplier successfully");
-
-          // Remove items from local storage
-          localStorage.removeItem("supplierId");
-          localStorage.removeItem("supplierName");
+          console.log("response", response);
+          const { success, message, data } = response.data;
+          if (success) {
+            const supplierId = data.id;
+            if (supplierId) {
+              localStorage.setItem("supplierId", supplierId);
+            }
+            const supplierName = data.name;
+            if (supplierName) {
+              localStorage.setItem("supplierName", supplierName);
+            }
+            setIsSuppilerAdded(true);
+            setPage("2");
+            toast.success(message);
+          } else {
+            toast.error(message);
+          }
+          props.onLoading(false);
         })
         .catch((error) => {
-          console.log(error);
+          console.log("error", error);
+          props.onLoading(false);
         });
     }
+  
   };
 
   const getSupplierDataById = () => {

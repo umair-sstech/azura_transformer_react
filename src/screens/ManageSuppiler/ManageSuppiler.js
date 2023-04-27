@@ -1,7 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
 import PageHeader from "../../components/PageHeader";
-import axios from "axios";
-import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { onUpdateFormLoading } from "../../actions";

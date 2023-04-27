@@ -13,6 +13,7 @@ import MarketPlacePage4 from "./MarketPlacePage4";
 import MarketPlacePage5 from "./MarketPlacePage5";
 import MarketPlacePage6 from "./MarketPlacePage6";
 import  "./MarketPlace.css"
+import Swal from "sweetalert2";
 
 
 export const FormContext = createContext();
@@ -35,10 +36,22 @@ function ManageMarketPlace(props) {
   );
  
   const processCancel = () => {
-    setFormData();
-    setLogoData();
-    setIsMarketPlaceAdded("");
-    history.push("/market-place");
+    Swal.fire({
+      title: "Are you sure, <br> you want to exit ? ",
+      icon: "warning",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        history.push("/market-place");
+        localStorage.removeItem("marketPlaceId");
+        localStorage.removeItem("marketPlaceName")
+      }
+    });
+ 
   };
 
   const nextPage = (page) => {
@@ -89,18 +102,18 @@ function ManageMarketPlace(props) {
       >
         <div>
           <div className="container-fluid">
-            <PageHeader
-              HeaderText={isMarketPlaceAdded ? "Market Place Update" : "Market Place Add"}
-              Breadcrumb={[
-                { name: "Manage", navigate: "" },
-                { name: "Market Place List", navigate: "" },
-                {
-                  name: isMarketPlaceAdded ? "Market Place Update" : "Market Place Add",
-                  navigate: "",
-                },
-              ]}
-              className="page-header"
-            />
+          <PageHeader 
+          HeaderText={isMarketPlaceAdded ? "Market Place Update" : "Market Place Add"}
+          Breadcrumb={[
+            { name: "Manage", navigate: "" },
+            { name: "Market Place List", navigate: "" },
+            {
+              name: isMarketPlaceAdded ? "Market Place Update" : "Market Place Add",
+              navigate: "",
+            },
+          ]}
+          className="page-header"
+        />
             <div className="tab-component">
               <div className="card">
                 <div className="body">

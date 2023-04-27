@@ -30,7 +30,7 @@ function SuppilerList(props) {
 
     try {
       const response = await axios.post(
-        "http://localhost:8001/integration/getIntegrationInfo",
+        `${API_PATH.GET_LIST}`,
         {
           page: currentPage,
           limit: dataLimit,
@@ -73,7 +73,6 @@ function SuppilerList(props) {
   }, [currentPage, dataLimit, status]);
 
   const activateDeactivate = (event, supplierId) => {
-    console.log("supplierId", supplierId);
     const status = event.target.checked;
     Swal.fire({
       title: `${status ? "Activate" : "Deactivate"} Supplier?`,
@@ -86,7 +85,7 @@ function SuppilerList(props) {
       if (result.isConfirmed) {
         props.onLoading(true);
         axios
-          .post("http://localhost:8001/integration/changeIntegrationStatus", {
+          .post(`${API_PATH.CHANGE_STATUS}`, {
             supplierId: supplierId,
             status: status,
           })
@@ -151,9 +150,9 @@ function SuppilerList(props) {
                       options={filterList}
                       onChange={(data) => {
                         setStatus(data.value);
-                        setCurrentPage(1); // reset page to 1 when changing filter
+                        setCurrentPage(1); 
                       }}
-                      defaultValue={filterList[0]} // set default filter to All
+                      defaultValue={filterList[0]}
                     />
                   </div>
                   <Link className="link-btn" to={`/manage-suppiler`}>
@@ -170,13 +169,14 @@ function SuppilerList(props) {
                   <table className="table">
                     <thead>
                       <tr>
+                      <th>Logo</th>
                         <th>Supplier Name</th>
-                        <th>Logo</th>
+                        
                         <th>Prefix Name</th>
                         <th>Last Update(UTC)</th>
                         {props.user.permissions.update_company ? (
                           <>
-                            <th>Activate / Deactivate</th>
+                            <th>Status</th>
                             <th>Action</th>
                           </>
                         ) : null}
@@ -185,19 +185,20 @@ function SuppilerList(props) {
                     <tbody>
                       {supplierList?.map((supplier) => (
                         <tr key={supplier.id}>
+                        <td>
+                        {supplier.logo ? (
+                          <img
+                            src={supplier.logo}
+                            alt={supplier.name}
+                            className="list-logo"
+                          />
+                        ) : (
+                          <div className="list-logo placeholder">N/A</div>
+                        )}
+                      </td>
                           <td>{supplier.name}</td>
 
-                          <td>
-                            {supplier.logo ? (
-                              <img
-                                src={supplier.logo}
-                                alt={supplier.name}
-                                className="list-logo"
-                              />
-                            ) : (
-                              <div className="list-logo placeholder">N/A</div>
-                            )}
-                          </td>
+                        
                           <td>{supplier.prefixName}</td>
                           <td>
                             {supplier.updatedAt
@@ -231,7 +232,7 @@ function SuppilerList(props) {
                                   );
                                   localStorage.setItem(
                                     "supplierName",
-                                    supplier.suplirName
+                                    supplier.name
                                   );
 
                                   history.push(`/manage-suppiler`);
