@@ -367,7 +367,7 @@ function SuppilerPage3(props) {
                   <td
                     colSpan="3"
                     className="loader-wrapper"
-                    style={{ padding: "2.3rem", width: "60%" }}
+                    style={{ padding: "2.3rem", width: "80%" }}
                   >
                     <i
                       className="fa fa-refresh fa-spin"

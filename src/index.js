@@ -19,7 +19,7 @@ const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunk)))
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter basename="/pma/lk/data/saas-devkit">
+    <BrowserRouter basename="/azura_transformer_front">
       {/* <BrowserRouter> */}
       <App />
     </BrowserRouter>

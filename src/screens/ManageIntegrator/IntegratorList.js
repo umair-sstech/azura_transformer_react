@@ -10,39 +10,116 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Select from "react-select";
+import { API_PATH } from "../ApiPath/Apipath";
+import { Form } from "react-bootstrap";
 
 function IntegratorList(props) {
-  const [integratorPlaceList, setIntegratorList] = useState([]);
+  const [integratorList, setIntegratorList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(5);
+  const [status, setStatus] = useState("active");
+  const [type, setType] = useState("Integrator");
+  const history = useHistory();
+
+
+  const getSupplierInfo = async (currentPage, dataLimit) => {
+    props.onLoading(true);
+
+    try {
+      const response = await axios.post(
+        `${API_PATH.GET_LIST}`,
+        {
+          page: currentPage,
+          limit: dataLimit,
+          type: type,
+          status: status !== "all" ? (status === "active" ? 1 : 0) : null,
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.log("error", error);
+
+      return null;
+    }
+  };
 
   useEffect(() => {
-    props.onLoading(true);
-    
-    getDataFromApi();
-  }, [currentPage, dataLimit]);
-
-  const getDataFromApi = (search = "active") => {
-    props.onLoading(true);
-    axios
-      .get(
-        `${process.env.REACT_APP_COMPANY_SERVICE}/get-company-list?page=${currentPage}&limit=${dataLimit}&searchText=${search}`
-      )
-      .then((res) => {
-        let totlePage = Math.ceil(res.data.totlaRecord / res.data.limit);
-        setTotalPages(totlePage);
+    const fetchMarketPlaceInfo = async () => {
+      const response = await getSupplierInfo(currentPage, dataLimit);
+      if (response) {
+        let totalPage = Math.ceil(response.totlaRecord / response.limit);
+        setTotalPages(totalPage);
+        if (status === "deactive") {
+          setIntegratorList(
+            response.data.filter((integrator) => integrator.status === 0)
+          );
+        } else if (status === "all") {
+          setIntegratorList(response.data);
+        } else {
+          setIntegratorList(
+            response.data.filter((integrator) => integrator.status === 1)
+          );
+        }
+        setType(type);
 
         props.onLoading(false);
-      })
-      .catch((e) => {
-        props.onLoading(false);
-      });
+      }
+    };
+    fetchMarketPlaceInfo();
+  }, [currentPage, dataLimit, status]);
+
+  const activateDeactivate = (event, supplierId) => {
+    const status = event.target.checked;
+    Swal.fire({
+      title: `${status ? "Activate" : "Deactivate"} Supplier?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: `Yes, ${status ? "Activate" : "Deactivate"} it!`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        props.onLoading(true);
+        axios
+          .post(`${API_PATH.CHANGE_STATUS}`, {
+            supplierId: supplierId,
+            status: status,
+          })
+          .then((res) => {
+            toast.success(res.data.message);
+
+            // Find the index of the supplier object in the array
+            const index = integratorList.findIndex(
+              (integrator) => integrator.id === supplierId
+            );
+
+            // Update the status property of the supplier object
+            setIntegratorList((prevState) => [
+              ...prevState.slice(0, index),
+              {
+                ...prevState[index],
+                status: status,
+              },
+              ...prevState.slice(index + 1),
+            ]);
+
+            props.onLoading(false);
+          })
+          .catch((e) => {
+            toast.error("Something Went Wrong");
+
+            props.onLoading(false);
+          });
+      }
+    });
   };
+
   let filterList = [
-    { label: "All", value: "all" },
     { label: "Activate", value: "active" },
-    { label: "Deactivate", value: "deactivate" },
+    { label: "Deactivate", value: "deactive" },
+    { label: "All", value: "all" },
   ];
   return (
     <div
@@ -65,7 +142,14 @@ function IntegratorList(props) {
               <div className="body">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <div style={{ minWidth: "110px" }}>
-                    <Select options={filterList} defaultValue={filterList[0]} />
+                  <Select
+                      options={filterList}
+                      onChange={(data) => {
+                        setStatus(data.value);
+                        setCurrentPage(1); 
+                      }}
+                      defaultValue={filterList[0]} 
+                    />
                   </div>
                   <Link className="link-btn" to={`/manage-integrator`}>
                     Add Integrator
@@ -81,37 +165,56 @@ function IntegratorList(props) {
                   <table className="table">
                     <thead>
                       <tr>
+                      <th>Logo</th>
                         <th>Integrator Name</th>
-                        <th>Logo</th>
+                    
                         <th>Prefix Name</th>
                         <th>Last Update</th>
                         {props.user.permissions.update_company ? (
                           <>
-                            <th>Activate / Deactivate</th>
+                            <th>Status</th>
                             <th>Action</th>
                           </>
                         ) : null}
                       </tr>
                     </thead>
-                    {/* <tbody>
-                    {supplierList.map((supplier) => (
-                      <tr key={supplier.id}>
-                        <td>{supplier.suplirName}</td>
+                    <tbody>
+                    {integratorList.map((integrator) => (
+                      <tr key={integrator.id}>
+                      <td>
+                      {integrator.logo ? (
+                        <img
+                          src={integrator.logo}
+                          alt={integrator.name}
+                          className="list-logo"
+                        />
+                      ) : (
+                        <div className="list-logo placeholder">N/A</div>
+                      )}
+                    </td>
+                        <td>{integrator.name}</td>
 
+                       
+                        <td>{integrator.prefixName}</td>
                         <td>
-                          {supplier.supplireLogo ? (
-                            supplier.supplireLogo
-                          ) : (
-                            <div className="list-logo placeholder">N/A</div>
-                          )}
-                        </td>
-                        <td>{supplier.prefixName}</td>
-                        <td>{supplier.lastUpdate}</td>
-                        {props.user.permissions.update_company ? (
+                            {integrator.updatedAt
+                              ? moment(integrator.updated_on).format(
+                                  "MM/DD/YYYY hh:mm a"
+                                )
+                              : "N/A"}
+                          </td>
+                  
                           <>
-                            <td>
-                              {supplier.status == 1 ? "Active" : "Inactive"}
-                            </td>
+                          <td>
+                          <Form.Check
+                            type="switch"
+                            id={`${integrator.id}`}
+                            checked={integrator.status}
+                            onChange={(e) =>
+                              activateDeactivate(e, integrator.id)
+                            }
+                          />
+                        </td>
 
                             <td className="action-group">
                               <i
@@ -127,10 +230,10 @@ function IntegratorList(props) {
                               ></i>
                             </td>
                           </>
-                        ) : null}
+                       
                       </tr>
                     ))}
-                              </tbody>*/}
+                              </tbody>
                   </table>
                   <div className="pagination-wrapper">
                     <Pagination

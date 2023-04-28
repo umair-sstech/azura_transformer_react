@@ -6,8 +6,9 @@ import "./MarketPlace.css";
 import axios from "axios";
 
 function MarketPlacePage2(props) {
-  const {setPage}=props
+  const { setPage } = props;
   const [categoryFields, setCategoryFields] = useState(null);
+  console.log("categoryFields", categoryFields);
 
   const getCategoryData = () => {
     try {
@@ -51,43 +52,58 @@ function MarketPlacePage2(props) {
           </div>
         </div>
         <div class="row mt-4 ml-3">
-        {!categoryFields ? (
-          <div class="loader-wrapper w-100" style={{marginTop:"14%"}} >
-            <i class="fa fa-refresh fa-spin"></i>
-          </div>
-        ) : (
-          ""
-        )}
-        {categoryFields && (
-          <Accordion defaultActiveKey="0">
-            {Object.keys(categoryFields).map((category, index) => (
-              <Card key={index}>
-                <Card.Header>
-                  <Accordion.Toggle
-                    as={Button}
-                    variant="link"
-                    eventKey={index.toString()}
-                    className="accordion"
-                  >
-                    <i class="fa fa-angle-down"></i>
-                    <span class="categoryname">{category}</span>
-                  </Accordion.Toggle>
-                </Card.Header>
-                <Accordion.Collapse eventKey={index.toString()}>
-                  <Card.Body>
-                    <ul>
-                      {categoryFields[category].map((field, index) => (
-                        <li key={index}>{field.category_2}</li>
-                      
-                      ))}
-                    </ul>
-                  </Card.Body>
-                </Accordion.Collapse>
-              </Card>
-            ))}
-          </Accordion>
-        )}
-      </div>
+          {!categoryFields ? (
+            <div class="loader-wrapper w-100" style={{ marginTop: "14%" }}>
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>
+          ) : (
+            ""
+          )}
+          {categoryFields && (
+            <Accordion defaultActiveKey="0">
+              {Object.keys(categoryFields).map((category, index) => (
+                <Card key={index}>
+                  <Card.Header>
+                    <Accordion.Toggle
+                      as={Button}
+                      eventKey={index.toString()}
+                      className="accordion"
+                    >
+                      <i class="fa fa-angle-down arrow"></i>
+                      <span class="categoryname">{category}</span>
+                    </Accordion.Toggle>
+                  </Card.Header>
+                  <Accordion.Collapse eventKey={index.toString()}>
+                    <Card.Body>
+                      {categoryFields[category].length ? (
+                        <table className="table table-bordered w-25 mt-0">
+                          <thead>
+                            <tr>
+                              <th className="p-1">Category </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {categoryFields[category].map((field, index) =>
+                              field.category_3 ? (
+                                <tr key={index}>
+                                  <td className="p-1 font-weight-normal">
+                                    {field.category_3}
+                                  </td>
+                                </tr>
+                              ) : null
+                            )}
+                          </tbody>
+                        </table>
+                      ) : (
+                        <p>No records found.</p>
+                      )}
+                    </Card.Body>
+                  </Accordion.Collapse>
+                </Card>
+              ))}
+            </Accordion>
+          )}
+        </div>
       </form>
     </>
   );

@@ -18,7 +18,7 @@ function MarketPlacePage4(props) {
   });
   const [formErrors, setFormErrors] = useState({});
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
-  const history=useHistory()
+  const history = useHistory();
 
   useEffect(() => {
     getCronTimeData();
@@ -49,6 +49,7 @@ function MarketPlacePage4(props) {
   const handleTimeZoneChange = (selectedOption) => {
     setFormData({ ...formData, orderTimeZone: selectedOption });
   };
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     const integrationId = localStorage.getItem("marketPlaceId");
@@ -56,7 +57,7 @@ function MarketPlacePage4(props) {
 
     const { value, label } = formData.orderTimeZone;
 
-    const timeZoneString = `${value} (${label})`;
+    const timeZoneString = `${value}`;
 
     const payload = {
       ...formData,
@@ -65,16 +66,13 @@ function MarketPlacePage4(props) {
       integrationName,
     };
     axios
-      .post(
-        `${API_PATH.MARKET_PLACE_SYNCSETTING}`,
-        payload
-      )
+      .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
         const { success, message, data } = response.data;
         if (success) {
           toast.success(message);
           setFormData({});
-          setPage(5)
+          setPage(5);
         } else {
           toast.error(message);
         }
@@ -91,7 +89,7 @@ function MarketPlacePage4(props) {
 
     const { value, label } = formData.orderTimeZone;
 
-    const timeZoneString = `${value} (${label})`;
+    const timeZoneString = `${value}`;
 
     const payload = {
       ...formData,
@@ -100,18 +98,15 @@ function MarketPlacePage4(props) {
       integrationName,
     };
     axios
-      .post(
-        `${API_PATH.MARKET_PLACE_SYNCSETTING}`,
-        payload
-      )
+      .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
         const { success, message, data } = response.data;
         if (success) {
           toast.success(message);
           setFormData({});
-          history.push("/market-place")
-          localStorage.removeItem("marketPlaceId")
-          localStorage.removeItem("marketPLaceName")
+          history.push("/market-place");
+          localStorage.removeItem("marketPlaceId");
+          localStorage.removeItem("marketPLaceName");
         } else {
           toast.error(message);
         }
@@ -120,7 +115,38 @@ function MarketPlacePage4(props) {
         console.error(error);
       });
   };
- 
+
+  const getProductData = () => {
+    const integrationId = localStorage.getItem("marketPlaceId");
+
+    axios
+      .get(
+        `http://localhost:8001/integration/getMarketplaceIntegratorSyncSetting?integrationId=${integrationId}`
+      )
+      .then((response) => {
+        const { success, message, data } = response.data;
+        if (success) {
+          let orderTimeZone = timeZoneData.find(
+            (tz) => tz.abbr == data.orderTimeZone
+          );
+          setFormData({
+            orderSyncFrequency: data.orderSyncFrequency,
+            orderTimeZone: {
+              value: orderTimeZone.abbr,
+              label: orderTimeZone.text,
+            },
+            type: "order",
+          });
+        } else {
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  useEffect(() => {
+    getProductData();
+  }, []);
   return (
     <form onSubmit={handleSubmit}>
       <div style={{ marginTop: "30px" }}>
@@ -161,6 +187,9 @@ function MarketPlacePage4(props) {
                 placeholder="Select Frequency"
                 options={syncFrequencyOptions}
                 onChange={handleSyncFrequency}
+                value={syncFrequencyOptions.find(
+                  (option) => option.value === formData.orderSyncFrequency
+                )}
               />
               {formErrors.syncFrequency && (
                 <span className="text-danger">{formErrors.syncFrequency}</span>
@@ -180,7 +209,7 @@ function MarketPlacePage4(props) {
                   };
                 })}
                 placeholder="Select TimeZone"
-                value={formData.timeZone}
+                value={formData.orderTimeZone ? formData.orderTimeZone : ""}
                 onChange={handleTimeZoneChange}
               />
               {formErrors.timeZone && (

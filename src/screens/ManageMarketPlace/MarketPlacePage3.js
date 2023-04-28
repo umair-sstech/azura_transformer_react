@@ -11,7 +11,7 @@ function MarketPlacePage3(props) {
   const { setPage } = props;
   const { processCancel } = useContext(FormContext);
 
-  const history=useHistory()
+  const history = useHistory();
 
   const [formData, setFormData] = useState({
     productSyncFrequency: "",
@@ -58,7 +58,7 @@ function MarketPlacePage3(props) {
 
     const { value, label } = formData.productTimeZone;
 
-    const timeZoneString = `${value} (${label})`;
+    const timeZoneString = `${value}`;
 
     const payload = {
       ...formData,
@@ -67,10 +67,7 @@ function MarketPlacePage3(props) {
       integrationName,
     };
     axios
-      .post(
-        `${API_PATH.MARKET_PLACE_SYNCSETTING}`,
-        payload
-      )
+      .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
         const { success, message, data } = response.data;
         console.log("response", response);
@@ -87,14 +84,14 @@ function MarketPlacePage3(props) {
       });
   };
 
-  const handleOnClick=(e)=>{
+  const handleOnClick = (e) => {
     e.preventDefault();
     const integrationId = localStorage.getItem("marketPlaceId");
     const integrationName = localStorage.getItem("marketPlaceName");
 
     const { value, label } = formData.productTimeZone;
 
-    const timeZoneString = `${value} (${label})`;
+    const timeZoneString = `${value}`;
 
     const payload = {
       ...formData,
@@ -103,19 +100,16 @@ function MarketPlacePage3(props) {
       integrationName,
     };
     axios
-      .post(
-        `${API_PATH.MARKET_PLACE_SYNCSETTING}`,
-        payload
-      )
+      .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
         const { success, message, data } = response.data;
         console.log("response", response);
         if (success) {
           toast.success(message);
           setFormData({});
-          history.push("/market-place")
-          localStorage.removeItem("marketPlaceId")
-          localStorage.removeItem("marketPLaceName")
+          history.push("/market-place");
+          localStorage.removeItem("marketPlaceId");
+          localStorage.removeItem("marketPLaceName");
         } else {
           toast.error(message);
         }
@@ -123,7 +117,42 @@ function MarketPlacePage3(props) {
       .catch((error) => {
         console.error(error);
       });
-  }
+  };
+
+  const getProductData = () => {
+    const integrationId = localStorage.getItem("marketPlaceId");
+
+    axios
+      .get(
+        `http://localhost:8001/integration/getMarketplaceIntegratorSyncSetting?integrationId=${integrationId}`
+      )
+      .then((response) => {
+        const { success, message, data } = response.data;
+        console.log("response", data);
+        if (success) {
+          let productTimeZone = timeZoneData.find(
+            (tz) => tz.abbr == data.productTimeZone
+          );
+          setFormData({
+            productSyncFrequency: data.productSyncFrequency,
+            productTimeZone: {
+              value: productTimeZone.abbr,
+              label: productTimeZone.text,
+            },
+            type: "product",
+          });
+        } else {
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  
+  useEffect(() => {
+    getProductData();
+  }, []);
+
   return (
     <form onSubmit={handleSubmit}>
       <div style={{ marginTop: "30px" }}>
@@ -163,10 +192,15 @@ function MarketPlacePage3(props) {
               <Select
                 placeholder="Select Frequency"
                 options={syncFrequencyOptions}
+                value={syncFrequencyOptions.find(
+                  (option) => option.value === formData.productSyncFrequency
+                )}
                 onChange={handleSyncFrequency}
               />
-              {formErrors.syncFrequency && (
-                <span className="text-danger">{formErrors.syncFrequency}</span>
+              {formErrors.productSyncFrequency && (
+                <span className="text-danger">
+                  {formErrors.productSyncFrequency}
+                </span>
               )}
             </div>
           </div>
@@ -183,7 +217,7 @@ function MarketPlacePage3(props) {
                   };
                 })}
                 placeholder="Select TimeZone"
-                value={formData.timeZone}
+                value={formData.productTimeZone ? formData.productTimeZone : ""}
                 onChange={handleTimeZoneChange}
               />
               {formErrors.timeZone && (

@@ -20,7 +20,7 @@ function MarketPlacePage5(props) {
   const [formErrors, setFormErrors] = useState({});
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
   const [isSubmitting, setSubmitting] = useState(false);
-  const history=useHistory()
+  const history = useHistory();
 
   useEffect(() => {
     getCronTimeData();
@@ -58,9 +58,9 @@ function MarketPlacePage5(props) {
     setSubmitting(true); // set the submitting state to true
     const integrationId = localStorage.getItem("marketPlaceId");
     const integrationName = localStorage.getItem("marketPlaceName");
-  
+
     const { value, label } = formData.trackingTimeZone;
-    const timeZoneString = `${value} (${label})`;
+    const timeZoneString = `${value}`;
     const payload = {
       ...formData,
       trackingTimeZone: timeZoneString,
@@ -68,10 +68,7 @@ function MarketPlacePage5(props) {
       integrationName,
     };
     axios
-      .post(
-        `${API_PATH.MARKET_PLACE_SYNCSETTING}`,
-        payload
-      )
+      .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
         const { success, message, data } = response.data;
         console.log("response", response);
@@ -93,12 +90,12 @@ function MarketPlacePage5(props) {
 
   const handleOnClick = (e) => {
     e.preventDefault();
-    setSubmitting(true); // set the submitting state to true
+    setSubmitting(true);
     const integrationId = localStorage.getItem("marketPlaceId");
     const integrationName = localStorage.getItem("marketPlaceName");
-  
+
     const { value, label } = formData.trackingTimeZone;
-    const timeZoneString = `${value} (${label})`;
+    const timeZoneString = `${value}`;
     const payload = {
       ...formData,
       trackingTimeZone: timeZoneString,
@@ -106,19 +103,16 @@ function MarketPlacePage5(props) {
       integrationName,
     };
     axios
-      .post(
-        `${API_PATH.MARKET_PLACE_SYNCSETTING}`,
-        payload
-      )
+      .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
         const { success, message, data } = response.data;
         console.log("response", response);
         if (success) {
           toast.success(message);
           setFormData({});
-          history.push("/market-place")
-          localStorage.removeItem("marketPlaceId")
-          localStorage.removeItem("marketPLaceName")
+          history.push("/market-place");
+          localStorage.removeItem("marketPlaceId");
+          localStorage.removeItem("marketPLaceName");
         } else {
           toast.error(message);
         }
@@ -127,10 +121,42 @@ function MarketPlacePage5(props) {
         console.error(error);
       })
       .finally(() => {
-        setSubmitting(false); 
+        setSubmitting(false);
+      });
+  };
+  const getProductData = () => {
+    const integrationId = localStorage.getItem("marketPlaceId");
+
+    axios
+      .get(
+        `http://localhost:8001/integration/getMarketplaceIntegratorSyncSetting?integrationId=${integrationId}`
+      )
+      .then((response) => {
+        const { success, message, data } = response.data;
+        console.log("response", data);
+        if (success) {
+          let trackingTimeZone = timeZoneData.find(
+            (tz) => tz.abbr == data.trackingTimeZone
+          );
+          setFormData({
+            trackingSyncFrequency: data.trackingSyncFrequency,
+            trackingTimeZone: {
+              value: trackingTimeZone.abbr,
+              label: trackingTimeZone.text,
+            },
+            type: "tracking",
+          });
+        } else {
+        }
+      })
+      .catch((error) => {
+        console.error(error);
       });
   };
 
+  useEffect(() => {
+    getProductData();
+  }, []);
   return (
     <form onSubmit={handleSubmit}>
       <div style={{ marginTop: "30px" }}>
@@ -141,12 +167,12 @@ function MarketPlacePage5(props) {
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
-              {/*{isSubmitting ? (
+                {/*{isSubmitting ? (
                 <Spinner animation="border" size="sm" />
               ) : (
                 ""
               )}*/}
-              Save & Next
+                Save & Next
               </button>
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
@@ -176,6 +202,9 @@ function MarketPlacePage5(props) {
                 placeholder="Select Frequency"
                 options={syncFrequencyOptions}
                 onChange={handleSyncFrequency}
+                value={syncFrequencyOptions.find(
+                  (option) => option.value === formData.trackingSyncFrequency
+                )}
               />
               {formErrors.syncFrequency && (
                 <span className="text-danger">{formErrors.syncFrequency}</span>
@@ -195,7 +224,9 @@ function MarketPlacePage5(props) {
                   };
                 })}
                 placeholder="Select TimeZone"
-                value={formData.timeZone}
+                value={
+                  formData.trackingTimeZone ? formData.trackingTimeZone : ""
+                }
                 onChange={handleTimeZoneChange}
               />
               {formErrors.timeZone && (

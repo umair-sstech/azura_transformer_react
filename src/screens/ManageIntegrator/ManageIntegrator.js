@@ -19,14 +19,14 @@ function ManageIntegrator(props) {
   const [activeStepIndex, setActiveStepIndex] = useState(-1);
   const [formData, setFormData] = useState();
   const [logoData, setLogoData] = useState();
-  const [isMarketPlaceAdded, setIsMarketPlaceAdded] = useState("");
+  const [isIntegrator, setIsIntegrator] = useState("");
 
   const [page, setPage] = useState("1");
   useEffect(
     () => () => {
       setFormData();
       setLogoData();
-      setIsMarketPlaceAdded("");
+      setIsIntegrator("");
       localStorage.removeItem("newlyAddedSuppiler");
     },
     []
@@ -35,7 +35,7 @@ function ManageIntegrator(props) {
   const processCancel = () => {
     setFormData();
     setLogoData();
-    setIsMarketPlaceAdded("");
+    setIsIntegrator("");
     localStorage.removeItem("newlyAddedSuppiler");
     history.push("/suppiler");
   };
@@ -69,10 +69,10 @@ function ManageIntegrator(props) {
     }
   };
   const handleButtonClick = () => {
-    if (isMarketPlaceAdded) {
+    if (isIntegrator) {
       setActiveStepIndex(1);
     } else {
-      setIsMarketPlaceAdded(true);
+      setIsIntegrator(true);
       setActiveStepIndex(0);
     }
   };
@@ -90,13 +90,13 @@ function ManageIntegrator(props) {
           <div className="container-fluid">
             <PageHeader
               HeaderText={
-                isMarketPlaceAdded ? "Integrator Update" : "Integrator Add"
+                isIntegrator ? "Integrator Update" : "Integrator Add"
               }
               Breadcrumb={[
                 { name: "Manage", navigate: "" },
                 { name: "Integrator List", navigate: "" },
                 {
-                  name: isMarketPlaceAdded
+                  name: isIntegrator
                     ? "Integrator Update"
                     : "Integrator Add",
                   navigate: "",
@@ -114,8 +114,8 @@ function ManageIntegrator(props) {
                   ) : null}
                   <FormContext.Provider
                     value={{
-                      setIsMarketPlaceAdded,
-                      isMarketPlaceAdded,
+                      setIsIntegrator,
+                      isIntegrator,
                       activeStepIndex,
                       setActiveStepIndex,
                       formData,

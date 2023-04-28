@@ -607,7 +607,10 @@ class NavbarMenu extends React.Component {
                       </li>
                     ) : null}
                     {this.props.user?.data.role == "SUPER_ADMIN" ? (
-                      <li className={activeKey === "dashboard" ? "active" : ""}>
+                      <li className={activeKey === "dashboard" ? "active" : ""} onClick={() => {
+                        localStorage.removeItem("integratorId");
+                        localStorage.removeItem("integratorName");
+                      }}>
                         <Link to="integrator">Integrator</Link>
                       </li>
                     ) : null}

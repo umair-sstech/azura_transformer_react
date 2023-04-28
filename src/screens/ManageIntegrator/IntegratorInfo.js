@@ -1,16 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FormContext } from "./ManageIntegrator";
-import { validateMarketPlaceInfoForm } from "../Validations/Validation";
+import { validateIntegrationInfoForm } from "../Validations/Validation";
 import Swal from "sweetalert2";
+import { connect } from "react-redux";
+import { onLoading } from "../../actions"
 import { useHistory } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import Select from "react-select";
+import { API_PATH } from "../ApiPath/Apipath";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 function IntegratorInfo(props) {
   const { setPage } = props;
   const {
-    isMarketPlaceAdded,
-    setIsMarketPlaceAdded,
+    isIntegrator, setIsIntegrator,
     formData,
     setFormData,
     processCancel,
@@ -34,7 +38,6 @@ function IntegratorInfo(props) {
 
   const [prefixName, setPrefixName] = useState("");
   const [formErrors, setFormErrors] = useState({});
-  const [isFormValid, setIsFormValid] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const history = useHistory();
 
@@ -68,9 +71,8 @@ function IntegratorInfo(props) {
     setPrefixName(prefix);
 
     const formData = new FormData(document.forms.myForm);
-    const errors = validateMarketPlaceInfoForm(formData);
+    const errors = validateIntegrationInfoForm(formData);
     setFormErrors(errors);
-    setIsFormValid(Object.keys(errors).length === 0);
   };
 
   const handleLogoChange = (e) => {
@@ -83,17 +85,74 @@ function IntegratorInfo(props) {
     const formData = new FormData(document.forms.myForm);
 
     formData.set("logo", file);
-    const errors = validateMarketPlaceInfoForm(formData);
+    const errors = validateIntegrationInfoForm(formData);
     setFormErrors(errors);
-    setIsFormValid(Object.keys(errors).length === 0);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
 
-    const errors = validateMarketPlaceInfoForm(formData);
+    const errors = validateIntegrationInfoForm(formData);
     setFormErrors(errors);
+    if (Object.keys(errors).length === 0) {
+      const prefixName = generatePrefixName(formData.get("name"));
+      setPrefixName(prefixName);
+      formData.set("prefixName", prefixName);
+
+      props.onLoading(true);
+
+      const integratorId = localStorage.getItem("integratorId");
+      console.log("integratorId", integratorId);
+
+      if (integratorId) {
+        formData.set("supplierId", integratorId);
+        axios
+          .post(
+            `${process.env.REACT_APP_API_URL_SUPPLIER}/integration/updateIntegrationInfo`,
+            formData
+          )
+          .then((response) => {
+            const { success, message, data } = response.data;
+            if (success) {
+              setIsIntegrator(true);
+              setPage("2");
+              toast.success(message);
+            } else {
+              toast.error(message);
+            }
+            props.onLoading(false);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      } else {
+        axios
+          .post(`${API_PATH.CREATE_INTEGRATION_INFO}`, formData)
+          .then((response) => {
+            console.log("response", response);
+            const { success, message, data } = response.data;
+            if (success) {
+              const integratorId = data.id;
+              if (integratorId) {
+                localStorage.setItem("integratorId", integratorId);
+              }
+              const integratorName = data.name;
+              if (integratorName) {
+                localStorage.setItem("integratorName", integratorName);
+              }
+              setIsIntegrator(true)
+              setPage("2");
+              toast.success(message);
+            } else {
+              toast.error(message);
+            }
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
+    }
   };
 
   const handleCancel = () => {
@@ -126,7 +185,7 @@ function IntegratorInfo(props) {
                     <>
                       <Spinner animation="border" size="sm" /> Please wait...
                     </>
-                  ) : isMarketPlaceAdded ? (
+                  ) : isIntegrator ? (
                     "Update"
                   ) : (
                     "Save & Next"
@@ -235,4 +294,8 @@ function IntegratorInfo(props) {
   );
 }
 
-export default IntegratorInfo;
+const mapStateToProps = ({ LoadingReducer }) => ({
+  isLoading: LoadingReducer.isLoading,
+});
+export default connect(mapStateToProps, { onLoading })(IntegratorInfo);
+

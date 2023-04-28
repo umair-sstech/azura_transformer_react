@@ -56,7 +56,7 @@ function SupplierPage5(props) {
     protocol: "",
     urlPath: "",
     syncFrequency: "",
-    timeZone: "",
+    timeZone:null
   });
 
   const [initFormData, setInitFormData] = useState({
@@ -72,15 +72,17 @@ function SupplierPage5(props) {
         .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
         .then((response) => {
           const supplierData = response.data.data;
-
-          setFormData(supplierData);
+          let timeZone = timeZoneData.find((tz) => tz.abbr == supplierData.timeZone);
+          console.log("timezone",timeZone)
+          setFormData(supplierData);  
           setSftpFormData({
             protocol: supplierData.protocol,
             syncFrequency: supplierData.syncFrequency,
-            timeZone: supplierData.timeZone,
+            timeZone: {
+              value: timeZone.abbr,
+              label: timeZone.text,
+            },
           });
-          console.log("syncFrequency", supplierData.syncFrequency);
-          console.log("timeZone", supplierData.timeZone);
         })
         .catch((error) => {
           console.log("error", error);
@@ -158,7 +160,7 @@ function SupplierPage5(props) {
 
       const { value, label } = formData.timeZone;
 
-      const timeZoneString = `${value} (${label})`;
+      const timeZoneString = `${value}`;
 
       const payload = {
         ...formData,
@@ -196,7 +198,7 @@ function SupplierPage5(props) {
 
       const { value, label } = formData.timeZone;
 
-      const timeZoneString = `${value} (${label})`;
+      const timeZoneString = `${value} `;
 
       const payload = {
         ...formData,
@@ -427,6 +429,7 @@ function SupplierPage5(props) {
                     })}
                     placeholder="Select TimeZone"
                     onChange={handleTimeZoneChange}
+                    value={sftpformData.timeZone}
                   
                   />
 

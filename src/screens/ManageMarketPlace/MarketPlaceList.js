@@ -147,9 +147,9 @@ function MarketPlaceList(props) {
                       options={filterList}
                       onChange={(data) => {
                         setStatus(data.value);
-                        setCurrentPage(1); // reset page to 1 when changing filter
+                        setCurrentPage(1); 
                       }}
-                      defaultValue={filterList[0]} // set default filter to All
+                      defaultValue={filterList[0]} 
                     />
                   </div>
                   <Link className="link-btn" to={`/manage-marketPlace`}>
@@ -166,13 +166,14 @@ function MarketPlaceList(props) {
                   <table className="table">
                     <thead>
                       <tr>
+                      <th>Logo</th>
                         <th>Market Place Name</th>
-                        <th>Logo</th>
+                        
                         <th>Prefix Name</th>
                         <th>Last Update(UTC)</th>
                         {props.user.permissions.update_company ? (
                           <>
-                            <th>Activate / Deactivate</th>
+                            <th>Status</th>
                             <th>Action</th>
                           </>
                         ) : null}
@@ -181,18 +182,19 @@ function MarketPlaceList(props) {
                     <tbody>
                       {marketPlaceList.map((market_place) => (
                         <tr key={market_place.id}>
+                        <td>
+                        {market_place.logo ? (
+                          <img
+                            src={market_place.logo}
+                            alt={market_place.name}
+                            className="list-logo"
+                          />
+                        ) : (
+                          <div className="list-logo placeholder">N/A</div>
+                        )}
+                      </td>
                           <td>{market_place.name}</td>
-                          <td>
-                            {market_place.logo ? (
-                              <img
-                                src={market_place.logo}
-                                alt={market_place.name}
-                                className="list-logo"
-                              />
-                            ) : (
-                              <div className="list-logo placeholder">N/A</div>
-                            )}
-                          </td>
+                        
                           <td>{market_place.prefixName}</td>
                           <td>
                             {market_place.updatedAt

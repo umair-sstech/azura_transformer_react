@@ -1,5 +1,3 @@
-
-
 /* manage market place */
 .market-onboarding {
   display: flex;
@@ -23,10 +21,15 @@
 }
 
 /* market place page 2 */
-button.accordion.btn.btn-link {
-  background-color: #f1f1f1;
+button.accordion.btn {
+  background-color: #f1f1f1 !important;
+  border: none;
 }
-
+button.accordion.btn:focus,
+button.accordion.btn:active {
+  outline: none  !important;
+  box-shadow: none !important;
+}
 .accordion {
   font-weight: bold;
   color: #333;
@@ -39,7 +42,8 @@ button.accordion.btn.btn-link {
 }
 .categoryname {
   margin-left: 5px;
-  color: black;
+  color: #49c5b6;
+  font-weight: 500; 
 }
 .card {
   border: none;
@@ -54,8 +58,13 @@ button.accordion.btn.btn-link {
   box-shadow: none;
 } */
 .accordion .card .card-header {
-  background-color: #f1f1f1
+  background-color: #f1f1f1;
 }
-.fa {
+.fa.arrow {
   margin-right: 5px;
+  color: black;
+}
+/* market place page 2 */
+table tbody tr {
+  padding: 0;
 }
