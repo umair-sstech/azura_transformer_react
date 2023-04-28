@@ -352,6 +352,7 @@ function SuppilerPage3(props) {
           ))}
 
           <table>
+       
             <thead>
               <tr>
                 <th>Product Field</th>
@@ -359,6 +360,7 @@ function SuppilerPage3(props) {
                 <th>Additional Info</th>
               </tr>
             </thead>
+   
             {props.loading ? (
               <tbody>
                 <tr>
@@ -463,7 +465,7 @@ function SuppilerPage3(props) {
                                       )
                                     }
                                   />
-                                  <small>Enter a value for </small>
+                              <small>Please use </small>
                                 </>
                               )}
                             </>

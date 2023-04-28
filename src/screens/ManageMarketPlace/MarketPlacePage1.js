@@ -24,7 +24,7 @@ function MarketPlacePage1(props) {
   const history = useHistory();
 
   const options = [
-    { value: "market_place", label: "Market Place" },
+    { value: "MarketPlace", label: "Market Place" },
     { value: "Supplier", label: "Supplier", isDisabled: true },
     { value: "shopping_cart", label: "Shopping Cart", isDisabled: true },
     { value: "Carrier", label: "Carrier", isDisabled: true },

@@ -167,6 +167,7 @@ function SuppilerList(props) {
                     </div>
                   ) : null}
                   <table className="table">
+
                     <thead>
                       <tr>
                       <th>Logo</th>

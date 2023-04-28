@@ -20,7 +20,7 @@ small.form-text.text-muted.csv-text {
 /* supplierpage3 */
 table {
   border-collapse: collapse;
-  width: 60%;
+  width: 80%;
   margin: 20px 0;
   border: 1px solid #ccc;
 }
@@ -30,6 +30,15 @@ td {
   padding: 4px;
   text-align: left;
   width: 32%;
+}
+td:nth-child(1) {
+  width: 20%;
+}
+td:nth-child(2) {
+  width: 25%;
+}
+td:nth-child(3) {
+  width: 35%;
 }
 
 th {
@@ -61,6 +70,9 @@ th {
   box-sizing: border-box;
   padding: 5px;
   border: 1px solid #ccc;
+  position: relative;
+    width: 90%;
+    left: 13px;
 }
 
 .blue-label .Select-value-label {
@@ -68,7 +80,7 @@ th {
 }
 
 /* manageSupplier */
-.supplier-onboarding{
+.supplier-onboarding {
   display: flex;
   justify-content: center;
   font-size: 15px;

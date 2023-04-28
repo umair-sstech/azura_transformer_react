@@ -16,12 +16,11 @@ import { API_PATH } from "../ApiPath/Apipath";
 
 function MarketPlaceList(props) {
   const [marketPlaceList, setMarketPlaceList] = useState([]);
-  console.log("marketplace", marketPlaceList);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(5);
   const [status, setStatus] = useState("active");
-  const [type, setType] = useState("market_place");
+  const [type, setType] = useState("MarketPlace");
 
   const history = useHistory();
 
