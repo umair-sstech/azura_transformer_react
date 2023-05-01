@@ -41,9 +41,6 @@ function SupplierPage5(props) {
 
   const [selectedValue, setSelectedValue] = useState(null);
 
-  const handleSelectChange = (selectedOption) => {
-    setSelectedValue(selectedOption);
-  };
   const [sftpformData, setSftpFormData] = useState({
     supplierId: "",
     supplierName: "",
@@ -56,13 +53,18 @@ function SupplierPage5(props) {
     protocol: "",
     urlPath: "",
     syncFrequency: "",
-    timeZone:null
+    timeZone: null,
   });
+  console.log("option", sftpformData.settingType);
 
   const [initFormData, setInitFormData] = useState({
     urlPath: "",
     syncFrequency: "",
   });
+
+  const [formErrors, setFormErrors] = useState({});
+  const history = useHistory();
+  const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
 
   useEffect(() => {
     const supplierId = localStorage.getItem("supplierId");
@@ -72,9 +74,11 @@ function SupplierPage5(props) {
         .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
         .then((response) => {
           const supplierData = response.data.data;
-          let timeZone = timeZoneData.find((tz) => tz.abbr == supplierData.timeZone);
-          console.log("timezone",timeZone)
-          setFormData(supplierData);  
+          let timeZone = timeZoneData.find(
+            (tz) => tz.abbr == supplierData.timeZone
+          );
+          console.log("timezone", timeZone);
+          setFormData(supplierData);
           setSftpFormData({
             protocol: supplierData.protocol,
             syncFrequency: supplierData.syncFrequency,
@@ -90,18 +94,17 @@ function SupplierPage5(props) {
     }
   }, []);
 
-  const [formErrors, setFormErrors] = useState({});
-  const history = useHistory();
-  const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
+  useEffect(() => {
+    if (formData && formData.settingType) {
+      setSelectedValue(
+        options.find((option) => option.value === formData.settingType)
+      );
+    }
+  }, [formData]);
 
   useEffect(() => {
     if (formData) {
       setSftpFormData(formData);
-    }
-  }, [props]);
-
-  useEffect(() => {
-    if (formData) {
       setInitFormData(formData);
     }
   }, [props]);
@@ -126,6 +129,13 @@ function SupplierPage5(props) {
     } catch (error) {
       console.error(error);
     }
+  };
+  const handleSelectChange = (selectedOption) => {
+    setSelectedValue(selectedOption);
+    setSftpFormData({
+      ...formData,
+      settingType: selectedOption.value,
+    });
   };
 
   const handleInputChange = (e) => {
@@ -164,6 +174,7 @@ function SupplierPage5(props) {
 
       const payload = {
         ...formData,
+        settingType: selectedValue.value,
         timeZone: timeZoneString,
         supplierId,
         supplierName,
@@ -172,7 +183,6 @@ function SupplierPage5(props) {
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
           const { success, message, data } = response.data;
-          console.log("response", response);
           if (success) {
             toast.success(message);
             setFormData({});
@@ -430,7 +440,6 @@ function SupplierPage5(props) {
                     placeholder="Select TimeZone"
                     onChange={handleTimeZoneChange}
                     value={sftpformData.timeZone}
-                  
                   />
 
                   {formErrors.timeZone && (
@@ -488,8 +497,8 @@ function SupplierPage5(props) {
                     name="urlPath"
                     onChange={handleInputChange}
                     defaultValue={
-                      initFormData && initFormData.urlPath
-                        ? initFormData.urlPath
+                      sftpformData && sftpformData.urlPath
+                        ? sftpformData.urlPath
                         : ""
                     }
                   />
@@ -511,11 +520,9 @@ function SupplierPage5(props) {
                     placeholder="Select Frequency"
                     options={syncFrequencyOptions}
                     onChange={handleSyncFrequency}
-                    defaultValue={
-                      initFormData && initFormData.syncFrequency
-                        ? initFormData.syncFrequency
-                        : ""
-                    }
+                    value={syncFrequencyOptions.find(
+                      (option) => option.value === sftpformData.syncFrequency
+                    )}
                   />
                   {formErrors.syncFrequency && (
                     <span className="text-danger">
@@ -540,8 +547,12 @@ function SupplierPage5(props) {
           <Select
             options={options}
             styles={customStyles}
+            value={selectedValue}
             onChange={handleSelectChange}
             className="select-option"
+            defaultValue={options.find(
+              (option) => option.value === sftpformData.settingType
+            )}
           />
         </div>
         <div>{selectedValue?.value === "SFTP" ? sftpForm() : ""}</div>

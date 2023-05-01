@@ -7,7 +7,6 @@ import { onLoading } from "../../actions";
 import { useHistory } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import Select from "react-select";
-import Swal from "sweetalert2";
 import "../ManageMarketPlace/MarketPlace.css";
 import { validateIntegrationInfoForm } from "../Validations/Validation";
 import { API_PATH } from "../ApiPath/Apipath";
@@ -33,6 +32,10 @@ function MarketPlacePage1(props) {
     { value: "Integrator", label: "Integrator", isDisabled: true },
   ];
 
+  const opt = [
+    { value: "MarketPlace", label: "MarketPlace" },
+    { value: "FlaxPoint", label: "FlaxPoint" },
+  ];
   const [initFormData, setInitFormData] = useState({
     prefixName: "",
     name: "",
@@ -44,6 +47,7 @@ function MarketPlacePage1(props) {
   const [isFormValid, setIsFormValid] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const [isSubmitting, setSubmitting] = useState(false);
+  const [selectedOpt, setSelectedOpt] = useState(null);
 
   useEffect(() => {
     if (formData) {
@@ -51,12 +55,23 @@ function MarketPlacePage1(props) {
     }
   }, [props]);
 
-  const handleChange = (selectedOption) => {
-    setSelectedOption(selectedOption);
-  };
   useEffect(() => {
     getSupplierDataById();
   }, []);
+
+  // const generatePrefixName = (name) => {
+  //   let prefix = "";
+  //   const words = name.split(" ");
+  //   for (let i = 0; i < words.length && i < 3; i++) {
+  //     prefix += words[i].charAt(0);
+  //   }
+  //   prefix = prefix.toUpperCase();
+  //   if (prefix.length < 3) {
+  //     const remainingChars = 3 - prefix.length;
+  //     prefix += name.substring(0, remainingChars).toUpperCase();
+  //   }
+  //   return prefix;
+  // };
 
   const generatePrefixName = (name) => {
     let prefix = "";
@@ -71,7 +86,17 @@ function MarketPlacePage1(props) {
     }
     return prefix;
   };
-
+  const handleSelectChange = (selectedOpt) => {
+    setSelectedOpt(selectedOpt);
+    const name = selectedOpt ? selectedOpt.value : "";
+    setFormErrors({}); 
+    const formData = new FormData(document.forms.myForm);
+    const errors = validateIntegrationInfoForm(formData);
+    setFormErrors(errors);
+    setPrefixName(generatePrefixName(name)); 
+    setIsFormValid(Object.keys(errors).length === 0);
+  };
+  
   const handleNameChange = (e) => {
     const name = e.target.value;
     const prefix = generatePrefixName(name);
@@ -306,7 +331,7 @@ function MarketPlacePage1(props) {
                 <Select
                   defaultValue={selectedOption}
                   value={selectedOption}
-                  onChange={handleChange}
+                  onChange={handleSelectChange}
                   options={options}
                   isDisabled={false}
                   name="type"
@@ -318,13 +343,20 @@ function MarketPlacePage1(props) {
                 <label>
                   Market Place Name <span style={{ color: "red" }}>*</span>
                 </label>
-                <input
+                {/*<input
                   className="form-control"
                   type="text"
                   name="name"
                   placeholder="Enter Market Place Name"
                   onChange={handleNameChange}
                   defaultValue={initFormData.name ? initFormData.name : ""}
+  />*/}
+                <Select
+                value={options.find((opt) => opt.value === initFormData.name)}
+                  onChange={handleSelectChange}
+                  options={opt}
+                  name="name"
+                  placeholder="Enter Market Place Name"
                 />
                 {formErrors.name && (
                   <span className="text-danger">{formErrors.name}</span>

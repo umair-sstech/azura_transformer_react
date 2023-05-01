@@ -35,6 +35,8 @@ function SuppilerPage3(props) {
   const [productFields, setProductFields] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [formErrors, setFormErrors] = useState([]);
+  const [selectedRadio, setSelectedRadio] = useState([]);
+
   const history = useHistory();
 
   useEffect(() => {
@@ -112,6 +114,14 @@ function SuppilerPage3(props) {
     });
   };
 
+  const handleRadioChange = (index, value) => {
+    setSelectedRadio((prevSelectedRadio) => {
+      const newSelectedRadio = [...prevSelectedRadio];
+      newSelectedRadio[index] = value;
+      return newSelectedRadio;
+    });
+  };
+  
   const getProductField = async () => {
     try {
       props.onLoading(true);
@@ -128,9 +138,9 @@ function SuppilerPage3(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const isValid = validateForm();
-
+  
     if (isValid) {
       const mappingArray = [];
       selectedOptions.forEach((selectedOption, index) => {
@@ -138,22 +148,28 @@ function SuppilerPage3(props) {
         keys.forEach((key) => {
           const option = selectedOption[key];
           if (option) {
+            let additionalValue = "";
+            if (
+              key.startsWith("Image") &&
+              option.value !== "do_nothing" &&
+              selectedRadio[index]
+            ) {
+              additionalValue = selectedRadio[index];
+            } else if (option.textbox) {
+              additionalValue =
+                selectedOption[key] && selectedOption[key].additionalValue
+                  ? selectedOption[key].additionalValue
+                  : "";
+            }
             const mappingObject = {
               supplierId: localStorage.getItem("supplierId"),
               supplierName: localStorage.getItem("supplierName"),
               standardField: key,
               standardValue: "",
               supplierField: option.value,
-              additionalValue:
-                option.textbox &&
-                selectedOptions[index] &&
-                selectedOptions[index][key] &&
-                selectedOptions[index][key].additionalValue
-                  ? selectedOptions[index][key].additionalValue
-                  : "",
+              additionalValue: additionalValue,
             };
             mappingArray.push(mappingObject);
-            console.log("mapping", mappingArray);
           }
         });
       });
@@ -177,6 +193,7 @@ function SuppilerPage3(props) {
       }
     }
   };
+  
 
   const handleOnClick = async (e) => {
     e.preventDefault();
@@ -284,27 +301,28 @@ function SuppilerPage3(props) {
   const getMappingData = () => {
     const supplierId = localStorage.getItem("supplierId");
     axios
-      .get(
-        `${API_PATH.GET_SUPPLIER_FILE_MAPPING}=${supplierId}`
-      )
+      .get(`${API_PATH.GET_SUPPLIER_FILE_MAPPING}=${supplierId}`)
       .then((response) => {
         const supplierData = response.data.data;
         console.log("mappingdata", supplierData);
         setFormData(supplierData);
-  
+
         const options = {};
         supplierData.forEach((field) => {
           const { standardField, supplierField } = field;
-          options[standardField] = { label: supplierField, value: supplierField };
+          options[standardField] = {
+            label: supplierField,
+            value: supplierField,
+          };
         });
-  
+
         setSelectedOptions([options]);
       })
       .catch((error) => {
         console.log("error", error);
       });
   };
-  
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -352,7 +370,6 @@ function SuppilerPage3(props) {
           ))}
 
           <table>
-       
             <thead>
               <tr>
                 <th>Product Field</th>
@@ -360,7 +377,7 @@ function SuppilerPage3(props) {
                 <th>Additional Info</th>
               </tr>
             </thead>
-   
+
             {props.loading ? (
               <tbody>
                 <tr>
@@ -387,9 +404,70 @@ function SuppilerPage3(props) {
                           selectedOptions[index] && selectedOptions[index][key]
                             ? selectedOptions[index][key]
                             : null;
-
                         let additionalInfo = null;
-                        if (key === "Dimension_Units") {
+                        if (
+                          key.startsWith("Image") &&
+                          selectedOption &&
+                          !selectedOption.textbox &&
+                          selectedOption.value !== "do_nothing"
+                        ) {
+                          additionalInfo = (
+                            <>
+                              <div className="radio-container">
+                                <input
+                                  type="radio"
+                                 name={`image-${index}-${key}`}
+                                 value="Only Folder Name"
+                                  onChange={(e) =>
+                                    handleRadioChange(index, e.target.value)
+                                  }
+                                />{" "}
+                                <label htmlFor={`image-${index}-${key}`} className="image-label">
+                                    Only Folder Name
+                                </label>
+                                <br/>
+                                <input
+                                  type="radio"
+                                name={`image-${index}-${key}`}
+                                value="Folder name with Image"
+                                  onChange={(e) =>
+                                    handleRadioChange(index, e.target.value)
+                                  }
+                                />{" "}
+                                <label htmlFor={`image-${index}-${key}`} className="image-label">
+                                 Folder name with Image
+                                </label>
+                                <br/>
+                                <input
+                                type="radio"
+                                name={`image-${index}-${key}`}
+                                value=" Single Image"
+                                onChange={(e) =>
+                                  handleRadioChange(index, e.target.value)
+                                }
+                              />{" "}
+                              <label htmlFor={`image-${index}-${key}`} className="image-label">
+                              Single Image
+                             </label>
+                              </div>
+                            </>
+                          );
+                        } else if (selectedOption && selectedOption.textbox) {
+                          additionalInfo = (
+                            <input
+                              type="text"
+                              placeholder="Enter a value"
+                              className="additional-textbox rounded"
+                              onChange={(e) =>
+                                handleAdditionalValueChange(
+                                  index,
+                                  key,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          );
+                        } else if (key === "Dimension_Units") {
                           additionalInfo = (
                             <div className="select-container">
                               <Select
@@ -465,7 +543,7 @@ function SuppilerPage3(props) {
                                       )
                                     }
                                   />
-                              <small>Please use </small>
+                                  <small>Please use </small>
                                 </>
                               )}
                             </>

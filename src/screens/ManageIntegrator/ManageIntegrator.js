@@ -12,6 +12,7 @@ import IntegratorPage3 from "./IntegratorPage3";
 import IntegratorPage4 from "./IntegratorPage4";
 import IntegratorPage5 from "./IntegratorPage5";
 import IntegratorPage6 from "./IntegratorPage6";
+import Swal from "sweetalert2";
 
 export const FormContext = createContext();
 
@@ -20,24 +21,33 @@ function ManageIntegrator(props) {
   const [formData, setFormData] = useState();
   const [logoData, setLogoData] = useState();
   const [isIntegrator, setIsIntegrator] = useState("");
-
   const [page, setPage] = useState("1");
+  
   useEffect(
     () => () => {
       setFormData();
       setLogoData();
       setIsIntegrator("");
-      localStorage.removeItem("newlyAddedSuppiler");
     },
     []
   );
 
   const processCancel = () => {
-    setFormData();
-    setLogoData();
-    setIsIntegrator("");
-    localStorage.removeItem("newlyAddedSuppiler");
-    history.push("/suppiler");
+    Swal.fire({
+      title: "Are you sure, <br> you want to exit ? ",
+      icon: "warning",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        history.push("/integrator");
+        localStorage.removeItem("integratorId");
+        localStorage.removeItem("integratorName")
+      }
+    });
   };
 
   const nextPage = (page) => {

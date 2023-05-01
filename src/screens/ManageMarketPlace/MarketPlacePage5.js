@@ -124,6 +124,7 @@ function MarketPlacePage5(props) {
         setSubmitting(false);
       });
   };
+  
   const getProductData = () => {
     const integrationId = localStorage.getItem("marketPlaceId");
 

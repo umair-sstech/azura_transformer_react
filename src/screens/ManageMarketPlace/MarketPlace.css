@@ -54,9 +54,6 @@ button.accordion.btn:active {
 .card-body {
   padding: 0;
 }
-/* .accordion-toggle:focus {
-  box-shadow: none;
-} */
 .accordion .card .card-header {
   background-color: #f1f1f1;
 }
@@ -64,7 +61,7 @@ button.accordion.btn:active {
   margin-right: 5px;
   color: black;
 }
-/* market place page 2 */
+
 table tbody tr {
   padding: 0;
 }

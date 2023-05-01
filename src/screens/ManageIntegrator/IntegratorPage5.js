@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -6,11 +6,16 @@ import Select from "react-select";
 import { toast } from "react-toastify";
 import timeZoneData from "../../Data/timeZone";
 import { API_PATH } from "../ApiPath/Apipath";
+import { FormContext } from "./ManageIntegrator";
 
-function IntegratorPage5() {
+
+function IntegratorPage5(props) {
+  const { setPage } = props;
+  const { processCancel } = useContext(FormContext);
   const [formData, setFormData] = useState({
-    timeZone: "",
-    syncFrequency: "",
+    trackingSyncFrequency: "",
+    trackingTimeZone: "",
+    type: "tracking",
   });
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -41,63 +46,169 @@ function IntegratorPage5() {
   };
 
   const handleSyncFrequency = (selectedOption) => {
-    setFormData({ ...formData, syncFrequency: selectedOption.value });
-    setFormErrors({ ...formErrors, syncFrequency: "" });
+    setFormData({ ...formData, trackingSyncFrequency: selectedOption.value });
+    setFormErrors({ ...formErrors, trackingSyncFrequency: "" });
   };
 
   const handleTimeZoneChange = (selectedOption) => {
-    setFormData({ ...formData, timeZone: selectedOption });
+    setFormData({ ...formData, trackingTimeZone: selectedOption });
   };
-  return (
-    <form>
-    <div style={{ marginTop: "30px" }}>
-      <div className="row">
-        <div className="col-lg-12 col-md-12 col-12 button-class">
-          <div className="d-flex">
-            <button
-              className="btn btn-primary w-auto btn-lg mr-2"
-              type="submit"
-            >
-              Save & Next
-            </button>
-            <button
-              className="btn btn-primary w-auto btn-lg mr-2"
-              type="submit"
-            >
-              Save & Exit
-            </button>
 
-            <button
-              className="btn btn-secondary w-auto btn-lg"
-              type="button"
-            >
-              Exit
-            </button>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // set the submitting state to true
+    const integrationId = localStorage.getItem("integratorId");
+    const integrationName = localStorage.getItem("integratorName");
+
+    const { value, label } = formData.trackingTimeZone;
+    const timeZoneString = `${value}`;
+    const payload = {
+      ...formData,
+      trackingTimeZone: timeZoneString,
+      integrationId,
+      integrationName,
+    };
+    axios
+      .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
+      .then((response) => {
+        const { success, message, data } = response.data;
+        console.log("response", response);
+        if (success) {
+          toast.success(message);
+          setFormData({});
+          setPage(6);
+        } else {
+          toast.error(message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+         
+      });
+  };
+
+  const handleOnClick = (e) => {
+    e.preventDefault();
+        const integrationId = localStorage.getItem("integratorId");
+    const integrationName = localStorage.getItem("integratorName");
+
+    const { value, label } = formData.trackingTimeZone;
+    const timeZoneString = `${value}`;
+    const payload = {
+      ...formData,
+      trackingTimeZone: timeZoneString,
+      integrationId,
+      integrationName,
+    };
+    axios
+      .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
+      .then((response) => {
+        const { success, message, data } = response.data;
+        console.log("response", response);
+        if (success) {
+          toast.success(message);
+          setFormData({});
+          history.push("/market-integrator");
+          localStorage.removeItem("integratorId");
+          localStorage.removeItem("integratorName");
+        } else {
+          toast.error(message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        
+      });
+  };
+  
+  const getProductData = () => {
+    const integrationId = localStorage.getItem("integratorId");
+
+    axios
+      .get(
+        `http://localhost:8001/integration/getMarketplaceIntegratorSyncSetting?integrationId=${integrationId}`
+      )
+      .then((response) => {
+        const { success, message, data } = response.data;
+        console.log("response", data);
+        if (success) {
+          let trackingTimeZone = timeZoneData.find(
+            (tz) => tz.abbr == data.trackingTimeZone
+          );
+          setFormData({
+            trackingSyncFrequency: data.trackingSyncFrequency,
+            trackingTimeZone: {
+              value: trackingTimeZone.abbr,
+              label: trackingTimeZone.text,
+            },
+            type: "tracking",
+          });
+        } else {
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    getProductData();
+  }, []);
+  return (
+    <form onSubmit={handleSubmit}>
+      <div style={{ marginTop: "30px" }}>
+        <div className="row">
+          <div className="col-lg-12 col-md-12 col-12 button-class">
+            <div className="d-flex">
+              <button
+                className="btn btn-primary w-auto btn-lg mr-2"
+                type="submit"
+              >
+                Save & Next
+              </button>
+              <button
+                className="btn btn-primary w-auto btn-lg mr-2"
+                type="submit"
+                onClick={handleOnClick}
+              >
+                Save & Exit
+              </button>
+
+              <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={processCancel}>
+                Exit
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="row">
-        <div className="col-12">
-          <div className="form-group">
-            <label>
-              Sync Frequency <span style={{ color: "red" }}>*</span>
-            </label>
-            <Select
+        <div className="row">
+          <div className="col-12">
+            <div className="form-group">
+              <label>
+                Sync Frequency <span style={{ color: "red" }}>*</span>
+              </label>
+              <Select
               placeholder="Select Frequency"
               options={syncFrequencyOptions}
               onChange={handleSyncFrequency}
+              value={syncFrequencyOptions.find(
+                (option) => option.value === formData.trackingSyncFrequency
+              )}
             />
             {formErrors.syncFrequency && (
               <span className="text-danger">{formErrors.syncFrequency}</span>
             )}
+            </div>
           </div>
-        </div>
-        <div className="col-12">
-          <div className="form-group">
-            <label>
-              TimeZone <span style={{ color: "red" }}>*</span>
-            </label>
-            <Select
+          <div className="col-12">
+            <div className="form-group">
+              <label>
+                TimeZone <span style={{ color: "red" }}>*</span>
+              </label>
+              <Select
               options={timeZoneData?.map((data) => {
                 return {
                   value: data.abbr,
@@ -105,18 +216,20 @@ function IntegratorPage5() {
                 };
               })}
               placeholder="Select TimeZone"
-              value={formData.timeZone}
+              value={
+                formData.trackingTimeZone ? formData.trackingTimeZone : ""
+              }
               onChange={handleTimeZoneChange}
             />
             {formErrors.timeZone && (
               <span className="text-danger">{formErrors.timeZone}</span>
             )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </form>
-  )
+    </form>
+  );
 }
 
-export default IntegratorPage5
+export default IntegratorPage5;

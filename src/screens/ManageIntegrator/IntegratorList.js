@@ -222,9 +222,16 @@ function IntegratorList(props) {
                                 title="Edit"
                                 className="fa fa-edit edit"
                                 onClick={() => {
-
+                                  localStorage.setItem(
+                                    "integratorId",
+                                    integrator.id
+                                  );
+                                  localStorage.setItem(
+                                    "integratorName",
+                                    integrator.name
+                                  );
                                   history.push(
-                                    `/manage-marketPlace`
+                                    `/manage-integrator`
                                   );
                                 }}
                               ></i>

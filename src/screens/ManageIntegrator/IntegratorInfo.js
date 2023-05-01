@@ -3,7 +3,7 @@ import { FormContext } from "./ManageIntegrator";
 import { validateIntegrationInfoForm } from "../Validations/Validation";
 import Swal from "sweetalert2";
 import { connect } from "react-redux";
-import { onLoading } from "../../actions"
+import { onLoading } from "../../actions";
 import { useHistory } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import Select from "react-select";
@@ -14,11 +14,13 @@ import axios from "axios";
 function IntegratorInfo(props) {
   const { setPage } = props;
   const {
-    isIntegrator, setIsIntegrator,
+    isIntegrator,
+    setIsIntegrator,
     formData,
     setFormData,
     processCancel,
   } = useContext(FormContext);
+  
   const options = [
     { value: "Integrator", label: "Integrator" },
     { value: "Supplier", label: "Supplier", isDisabled: true },
@@ -28,14 +30,13 @@ function IntegratorInfo(props) {
     { value: "TMS", label: "TMS", isDisabled: true },
     { value: "WMS", label: "WMS", isDisabled: true },
   ];
- 
+
   const [initFormData, setInitFormData] = useState({
     prefixName: "",
     name: "",
     logo: "",
     type: "",
   });
-
   const [prefixName, setPrefixName] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const [selectedOption, setSelectedOption] = useState(options[0]);
@@ -47,6 +48,7 @@ function IntegratorInfo(props) {
     }
   }, [props]);
 
+  useEffect(()=>{getDataById()},[])
   const handleChange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
@@ -88,6 +90,7 @@ function IntegratorInfo(props) {
     const errors = validateIntegrationInfoForm(formData);
     setFormErrors(errors);
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -141,7 +144,7 @@ function IntegratorInfo(props) {
               if (integratorName) {
                 localStorage.setItem("integratorName", integratorName);
               }
-              setIsIntegrator(true)
+              setIsIntegrator(true);
               setPage("2");
               toast.success(message);
             } else {
@@ -155,21 +158,24 @@ function IntegratorInfo(props) {
     }
   };
 
-  const handleCancel = () => {
-    Swal.fire({
-      title: "Are you sure, <br> you want to exit ? ",
-      icon: "warning",
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        history.push("/market-integrator");
-      }
-    });
+  const getDataById = () => {
+    const integratorId = localStorage.getItem("integratorId");
+    axios
+      .get(`${API_PATH.GET_INTEGRATION_INFO_BY_ID}=${integratorId}`)
+      .then((response) => {
+        const integratorId = response.data.data;
+        setSelectedOption({
+          value: integratorId.type,
+          label: integratorId.type,
+        });
+        setPrefixName(integratorId.prefixName);
+        setFormData(integratorId);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
   };
+
   return (
     <>
       <form onSubmit={handleSubmit} name="myForm" encType="multipart/form-data">
@@ -202,7 +208,7 @@ function IntegratorInfo(props) {
                 <button
                   className="btn btn-secondary w-auto btn-lg"
                   type="button"
-                  onClick={handleCancel}
+                  onClick={processCancel}
                 >
                   Exit
                 </button>
@@ -235,16 +241,10 @@ function IntegratorInfo(props) {
                   name="name"
                   placeholder="Enter Integrator Name"
                   onChange={handleNameChange}
-                  defaultValue={
-                    initFormData.name
-                      ? initFormData.name
-                      : ""
-                  }
+                  defaultValue={initFormData.name ? initFormData.name : ""}
                 />
                 {formErrors.name && (
-                  <span className="text-danger">
-                    {formErrors.name}
-                  </span>
+                  <span className="text-danger">{formErrors.name}</span>
                 )}
               </div>
             </div>
@@ -260,16 +260,10 @@ function IntegratorInfo(props) {
                   type="file"
                   name="logo"
                   onChange={handleLogoChange}
-                  defaultValue={
-                    initFormData.logo
-                      ? initFormData.logo
-                      : ""
-                  }
+                  defaultValue={initFormData.logo ? initFormData.logo : ""}
                 />
                 {formErrors.logo && (
-                  <span className="text-danger">
-                    {formErrors.logo}
-                  </span>
+                  <span className="text-danger">{formErrors.logo}</span>
                 )}
               </div>
             </div>
@@ -298,4 +292,3 @@ const mapStateToProps = ({ LoadingReducer }) => ({
   isLoading: LoadingReducer.isLoading,
 });
 export default connect(mapStateToProps, { onLoading })(IntegratorInfo);
-
