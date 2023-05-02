@@ -31,15 +31,26 @@ function SupplierSftpForm(props) {
     syncFrequency: "",
     timeZone: "",
   });
+
   useEffect(() => {
     const supplierId = localStorage.getItem("supplierId");
-  
+
     if (supplierId) {
       axios
         .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
         .then((response) => {
           const supplierData = response.data.data;
-          setFormData(supplierData);
+          let timeZone = timeZoneData.find((tz) => tz.abbr == supplierData.timeZone);
+       setFormData(supplierData)
+          setFormData({
+           
+            protocol: supplierData.protocol,
+            syncFrequency: supplierData.syncFrequency,
+            timeZone: {
+              value: timeZone.abbr,
+              label: timeZone.text,
+            },
+          });
         })
         .catch((error) => {
           console.log("error", error);
@@ -119,7 +130,6 @@ function SupplierSftpForm(props) {
           console.log("response", response);
           if (success) {
             toast.success(message);
-            setFormData({});
           } else {
             toast.error(message);
           }
@@ -215,8 +225,7 @@ function SupplierSftpForm(props) {
                   name="hostName"
                   placeholder="Enter Host Name"
                   onChange={handleInputChange}
-                  defaultValue={formData.hostName ? formData.hostName : ""}
-                />
+                  defaultValue={formData.hostName?formData.hostName:""}                />
                 {formErrors.hostName && (
                   <span className="text-danger">{formErrors.hostName}</span>
                 )}
@@ -233,9 +242,13 @@ function SupplierSftpForm(props) {
                   name="userName"
                   placeholder="Enter User Name"
                   onChange={handleInputChange}
-                  defaultValue={formData.userName ? formData.userName : ""}
+                  defaultValue={
+                    formData && formData.userName
+                      ? formData.userName
+                      : ""
+                  }
                 />
-                {formErrors.userName && (
+                {formErrors && formErrors.userName && (
                   <span className="text-danger">{formErrors.userName}</span>
                 )}
               </div>
@@ -251,7 +264,11 @@ function SupplierSftpForm(props) {
                   name="password"
                   placeholder="Enter Password"
                   onChange={handleInputChange}
-                  defaultValue={formData.password ? formData.password : ""}
+                  defaultValue={
+                    formData && formData.password
+                      ? formData.password
+                      : ""
+                  }
                 />
                 {formErrors.password && (
                   <span className="text-danger">{formErrors.password}</span>
@@ -269,7 +286,9 @@ function SupplierSftpForm(props) {
                   name="port"
                   placeholder="Enter Port"
                   onChange={handleInputChange}
-                  defaultValue={formData.port ? formData.port : ""}
+                  defaultValue={
+                    formData && formData.port ? formData.port : ""
+                  }
                 />
                 {formErrors.port && (
                   <span className="text-danger">{formErrors.port}</span>
@@ -307,7 +326,11 @@ function SupplierSftpForm(props) {
                   placeholder="Enter URL"
                   name="urlPath"
                   onChange={handleInputChange}
-                  defaultValue={formData.urlPath ? formData.urlPath : ""}
+                  defaultValue={
+                    formData && formData.urlPath
+                      ? formData.urlPath
+                      : ""
+                  }
                 />
                 {formErrors.urlPath && (
                   <span className="text-danger">{formErrors.urlPath}</span>
@@ -326,10 +349,10 @@ function SupplierSftpForm(props) {
                 <Select
                   placeholder="Select Frequency"
                   options={syncFrequencyOptions}
+                  value={syncFrequencyOptions.find(
+                    (option) => option.value === formData.syncFrequency
+                  )}
                   onChange={handleSyncFrequency}
-                  defaultValue={
-                    formData.syncFrequency ? formData.syncFrequency : ""
-                  }
                 />
                 {formErrors.syncFrequency && (
                   <span className="text-danger">
@@ -352,8 +375,10 @@ function SupplierSftpForm(props) {
                   })}
                   placeholder="Select TimeZone"
                   onChange={handleTimeZoneChange}
-                  defaultValue={formData.timeZone ? formData.timeZone : ""}
+                  value={formData.timeZone}
+                
                 />
+
                 {formErrors.timeZone && (
                   <span className="text-danger">{formErrors.timeZone}</span>
                 )}

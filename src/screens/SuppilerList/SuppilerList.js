@@ -12,7 +12,6 @@ import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { Form } from "react-bootstrap";
 import Select from "react-select";
-import apiRequest from "../ApiPath";
 import { API_PATH } from "../ApiPath/Apipath";
 
 function SuppilerList(props) {

@@ -4,14 +4,15 @@ import "./SupplierPage.css";
 import Swal from "sweetalert2";
 import { validateHttpForm } from "../Validations/Validation";
 import axios from "axios";
-import Select from "react-select";
+import Select, { defaultTheme } from "react-select";
 import { toast } from "react-toastify";
 import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageSuppiler";
 
 function SupplierHttpForm(props) {
-  const { processCancel,formData,setFormData } = useContext(FormContext);
-  const [initFormData, setInitFormData] = useState({
+  const { processCancel, } = useContext(FormContext);
+  
+  const [formData, setFormData ] = useState({
     urlPath: "",
     syncFrequency: "",
   });
@@ -19,15 +20,11 @@ function SupplierHttpForm(props) {
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
 
   const history = useHistory();
-  useEffect(() => {
-    if (formData) {
-      setInitFormData(formData);
-    }
-  }, [props]);
+ 
 
   useEffect(() => {
     getCronTimeData();
-    getSupplierDataById()
+    getSupplierDataById();
   }, []);
 
   const getCronTimeData = () => {
@@ -77,8 +74,6 @@ function SupplierHttpForm(props) {
           const { success, message, data } = response.data;
           if (success) {
             toast.success(message);
-            setFormData({});
-
           } else {
             toast.error(message);
           }
@@ -120,16 +115,22 @@ function SupplierHttpForm(props) {
 
   const getSupplierDataById = () => {
     const supplierId = localStorage.getItem("supplierId");
-    axios
-      .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
-      .then((response) => {
-        const supplierData = response.data.data;
-        console.log("data", supplierData);
-        setFormData(supplierData);
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
+
+    if (supplierId) {
+      axios
+        .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
+        .then((response) => {
+          const supplierData = response.data.data;
+          setFormData(supplierData)
+          setFormData({
+            protocol: supplierData.protocol,
+            syncFrequency: supplierData.syncFrequency,
+          });
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    }
   };
   return (
     <>
@@ -174,7 +175,9 @@ function SupplierHttpForm(props) {
                   name="urlPath"
                   placeholder="Enter URL"
                   onChange={handleInputChange}
-                  defaultValue={initFormData.urlPath?initFormData.urlPath:""}
+                  defaultValue={
+                    formData.urlPath ? formData.urlPath : ""
+                  }
                 />
                 {formErrors.urlPath && (
                   <span className="text-danger">{formErrors.urlPath}</span>
@@ -190,7 +193,9 @@ function SupplierHttpForm(props) {
                   placeholder="Select Frequency"
                   options={syncFrequencyOptions}
                   onChange={handleSyncFrequency}
-                  defaultInputValue={initFormData.syncFrequency || ""}
+                  value={syncFrequencyOptions.find(
+                    (option) => option.value === formData.syncFrequency
+                  )}
                 />
                 {formErrors.syncFrequency && (
                   <span className="text-danger">
