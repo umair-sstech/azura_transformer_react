@@ -30,7 +30,9 @@ function IntegratorInfo(props) {
     { value: "TMS", label: "TMS", isDisabled: true },
     { value: "WMS", label: "WMS", isDisabled: true },
   ];
-
+  const opt = [
+    { value: "Flaxpoint", label: "Flaxpoint" },
+  ];
   const [initFormData, setInitFormData] = useState({
     prefixName: "",
     name: "",
@@ -39,8 +41,12 @@ function IntegratorInfo(props) {
   });
   const [prefixName, setPrefixName] = useState("");
   const [formErrors, setFormErrors] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
+
   const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [selectedOpt, setSelectedOpt] = useState(opt[0]);
   const history = useHistory();
+
 
   useEffect(() => {
     if (formData) {
@@ -52,6 +58,20 @@ function IntegratorInfo(props) {
   const handleChange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
+
+  // const generatePrefixName = (name) => {
+  //   let prefix = "";
+  //   const words = name.split(" ");
+  //   for (let i = 0; i < words.length && i < 3; i++) {
+  //     prefix += words[i].charAt(0);
+  //   }
+  //   prefix = prefix.toUpperCase();
+  //   if (prefix.length < 3) {
+  //     const remainingChars = 3 - prefix.length;
+  //     prefix += name.substring(0, remainingChars).toUpperCase();
+  //   }
+  //   return prefix;
+  // };
 
   const generatePrefixName = (name) => {
     let prefix = "";
@@ -66,7 +86,24 @@ function IntegratorInfo(props) {
     }
     return prefix;
   };
-
+  
+  useEffect(() => {
+    const defaultName = opt[0].value;
+    const defaultPrefix = generatePrefixName(defaultName);
+    setPrefixName(defaultPrefix);
+  }, []);
+  
+  const handleSelectChange = (selectedOpt) => {
+    setSelectedOpt(selectedOpt);
+    const name = selectedOpt ? selectedOpt.value : "";
+    setFormErrors({});
+    const formData = new FormData(document.forms.myForm);
+    const errors = validateIntegrationInfoForm(formData);
+    setFormErrors(errors);
+    const prefixName = generatePrefixName(name);
+    setPrefixName(prefixName);
+    setIsFormValid(Object.keys(errors).length === 0);
+  };
   const handleNameChange = (e) => {
     const name = e.target.value;
     const prefix = generatePrefixName(name);
@@ -235,17 +272,23 @@ function IntegratorInfo(props) {
                 <label>
                   Integrator Name <span style={{ color: "red" }}>*</span>
                 </label>
-                <input
+               {/* <input
                   className="form-control"
                   type="text"
                   name="name"
                   placeholder="Enter Integrator Name"
                   onChange={handleNameChange}
                   defaultValue={initFormData.name ? initFormData.name : ""}
-                />
-                {formErrors.name && (
+               />   {formErrors.name && (
                   <span className="text-danger">{formErrors.name}</span>
-                )}
+                )}*/}
+              
+                <Select
+                value={selectedOpt}
+                  onChange={handleSelectChange}
+                  options={opt}
+                  name="name"
+                />
               </div>
             </div>
             <div className="col-6">

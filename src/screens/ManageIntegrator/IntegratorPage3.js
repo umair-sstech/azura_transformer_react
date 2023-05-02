@@ -79,7 +79,7 @@ function IntegratoePage3(props) {
         if (success) {
           toast.success(message);
           setFormData({});
-          setPage(4);
+          setPage(3);
         } else {
           toast.error(message);
         }

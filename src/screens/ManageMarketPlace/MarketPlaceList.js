@@ -91,12 +91,10 @@ function MarketPlaceList(props) {
           .then((res) => {
             toast.success(res.data.message);
 
-            // Find the index of the supplier object in the array
             const index = marketPlaceList.findIndex(
               (market_place) => market_place.id === supplierId
             );
 
-            // Update the status property of the supplier object
             setMarketPlaceList((prevState) => [
               ...prevState.slice(0, index),
               {

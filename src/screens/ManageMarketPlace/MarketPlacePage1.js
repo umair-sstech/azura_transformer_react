@@ -399,7 +399,6 @@ function MarketPlacePage1(props) {
                   type="file"
                   name="logo"
                   onChange={handleLogoChange}
-                  defaultValue={initFormData.logo ? initFormData.logo : ""}
                 />
                 {formErrors.logo && (
                   <span className="text-danger">{formErrors.logo}</span>

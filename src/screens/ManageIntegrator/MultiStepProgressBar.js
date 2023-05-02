@@ -4,7 +4,7 @@ import { ProgressBar, Step } from "react-step-progress-bar";
 
 const stepNames = [
   "Integrator Info",
-  "Category Mapping",
+  // "Category Mapping",
   "Product Sync settings",
   "Order sync settings",
   "Tracking settings",
@@ -22,21 +22,38 @@ const styles = {
 
 const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
   var stepPercentage = 0;
+  // if (page == "1") {
+  //   stepPercentage = 10;
+  // } else if (page == "2") {
+  //   stepPercentage = 25;
+  // } else if (page == "3") {
+  //   stepPercentage = 48;
+  // } else if (page == "4") {
+  //   stepPercentage = 65;
+  // } else if (page == "5") {
+  //   stepPercentage = 82;
+  // } else if (page == "6") {
+  //   stepPercentage = 100;
+  // } else {
+  //   stepPercentage = 0;
+  // }
+
   if (page == "1") {
-    stepPercentage = 10;
+    stepPercentage = 20;
   } else if (page == "2") {
-    stepPercentage = 25;
+    stepPercentage = 40;
   } else if (page == "3") {
-    stepPercentage = 48;
+    stepPercentage = 60;
   } else if (page == "4") {
-    stepPercentage = 65;
+    stepPercentage = 80;
   } else if (page == "5") {
-    stepPercentage = 82;
-  } else if (page == "6") {
     stepPercentage = 100;
+  
   } else {
     stepPercentage = 0;
   }
+
+
 
   return (
     <div>
@@ -106,7 +123,7 @@ const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
               ></div>
             )}
           </Step>
-          <Step>
+      { /*   <Step>
             {({ accomplished, index }) => (
               <div
                 className={`indexedStep ${
@@ -115,7 +132,7 @@ const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
                 onClick={() => onPageNumberClick("6")}
               ></div>
             )}
-          </Step>
+              </Step>*/}
         </ProgressBar>
       </div>
       <hr className="hr" />

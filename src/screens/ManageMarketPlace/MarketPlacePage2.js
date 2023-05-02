@@ -4,24 +4,28 @@ import { connect } from "react-redux";
 import { onLoading } from "../../actions";
 import "./MarketPlace.css";
 import axios from "axios";
+import Select from "react-dropdown-select";
 
 function MarketPlacePage2(props) {
   const { setPage } = props;
   const [categoryFields, setCategoryFields] = useState(null);
-  console.log("categoryFields", categoryFields);
+  const [mysaleCategory, setMysaleCategory] = useState([]);
+console.log("mySaleCategory",mysaleCategory)
 
   const getCategoryData = () => {
     try {
       axios
         .get("http://localhost:8001/integration/getCategoryFields")
-        .then((response) =>
-          setCategoryFields(response.data.data.master_Category)
-        )
+        .then((response) => {
+          setCategoryFields(response.data.data.master_Category);
+          setMysaleCategory(response.data.data.mysale_Category);
+        })
         .catch((error) => console.log(error));
     } catch (error) {
       console.log(error);
     }
   };
+  
   useEffect(() => {
     getCategoryData();
   }, []);
@@ -59,7 +63,7 @@ function MarketPlacePage2(props) {
           ) : (
             ""
           )}
-          {categoryFields && (
+          {categoryFields &&
             <Accordion defaultActiveKey="0">
               {Object.keys(categoryFields).map((category, index) => (
                 <Card key={index}>
@@ -69,17 +73,18 @@ function MarketPlacePage2(props) {
                       eventKey={index.toString()}
                       className="accordion"
                     >
-                      <i class="fa fa-angle-down arrow"></i>
-                      <span class="categoryname">{category}</span>
+                      <i className="fa fa-angle-down arrow"></i>
+                      <span className="categoryname">{category}</span>
                     </Accordion.Toggle>
                   </Card.Header>
                   <Accordion.Collapse eventKey={index.toString()}>
                     <Card.Body>
                       {categoryFields[category].length ? (
-                        <table className="table table-bordered w-25 mt-0">
+                        <table className="table table-bordered w-50 mt-0">
                           <thead>
                             <tr>
-                              <th className="p-1">Category </th>
+                              <th >Category </th>
+                              <th >Category Data</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -88,6 +93,16 @@ function MarketPlacePage2(props) {
                                 <tr key={index}>
                                   <td className="p-1 font-weight-normal">
                                     {field.category_3}
+                                  </td>
+                                  <td>
+                                    <Select
+                                    className="p-1 font-weight-normal"
+                                      options={mysaleCategory.map((item) => ({
+                                        label: item.path,
+                                        value: item.path,
+                                      }))}
+                                     
+                                    />
                                   </td>
                                 </tr>
                               ) : null
@@ -102,7 +117,7 @@ function MarketPlacePage2(props) {
                 </Card>
               ))}
             </Accordion>
-          )}
+          }
         </div>
       </form>
     </>

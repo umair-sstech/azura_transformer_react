@@ -75,7 +75,7 @@ function IntegratorPage4(props) {
         if (success) {
           toast.success(message);
           setFormData({});
-          setPage(5);
+          setPage(4);
         } else {
           toast.error(message);
         }
