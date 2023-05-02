@@ -35,7 +35,7 @@ function SuppilerPage3(props) {
   const [productFields, setProductFields] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [formErrors, setFormErrors] = useState([]);
-  const [selectedRadio, setSelectedRadio] = useState([]);
+  const [selectedRadio, setSelectedRadio] = useState({});
 
   const history = useHistory();
 
@@ -45,19 +45,6 @@ function SuppilerPage3(props) {
     getSupplierDataById();
     getMappingData();
   }, []);
-
-  // const handleFieldChange = (index, key, selectedOption) => {
-  //   setSelectedOptions((prevSelectedOptions) => {
-  //     const newSelectedOptions = [...prevSelectedOptions];
-  //     if (!newSelectedOptions[index]) {
-  //       newSelectedOptions[index] = {};
-  //     }
-  //     if (selectedOption) {
-  //       newSelectedOptions[index][key] = selectedOption;
-  //     }
-  //     return newSelectedOptions;
-  //   });
-  // };
 
   const handleFieldChange = (index, key, selectedOption) => {
     setSelectedOptions((prevSelectedOptions) => {
@@ -114,14 +101,13 @@ function SuppilerPage3(props) {
     });
   };
 
-  const handleRadioChange = (index, value) => {
-    setSelectedRadio((prevSelectedRadio) => {
-      const newSelectedRadio = [...prevSelectedRadio];
-      newSelectedRadio[index] = value;
-      return newSelectedRadio;
-    });
+  const handleRadioChange = (index, key, value) => {
+    setSelectedRadio((prevSelectedRadio) => ({
+      ...prevSelectedRadio,
+      [`${index}-${key}`]: { value, showTextbox: value === "Only Folder Name" },
+    }));
   };
-  
+
   const getProductField = async () => {
     try {
       props.onLoading(true);
@@ -138,9 +124,9 @@ function SuppilerPage3(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const isValid = validateForm();
-  
+
     if (isValid) {
       const mappingArray = [];
       selectedOptions.forEach((selectedOption, index) => {
@@ -152,9 +138,9 @@ function SuppilerPage3(props) {
             if (
               key.startsWith("Image") &&
               option.value !== "do_nothing" &&
-              selectedRadio[index]
+               selectedRadio[`${index}-${key}`]
             ) {
-              additionalValue = selectedRadio[index];
+              additionalValue =  selectedRadio[`${index}-${key}`];
             } else if (option.textbox) {
               additionalValue =
                 selectedOption[key] && selectedOption[key].additionalValue
@@ -193,7 +179,6 @@ function SuppilerPage3(props) {
       }
     }
   };
-  
 
   const handleOnClick = async (e) => {
     e.preventDefault();
@@ -404,6 +389,16 @@ function SuppilerPage3(props) {
                           selectedOptions[index] && selectedOptions[index][key]
                             ? selectedOptions[index][key]
                             : null;
+                            const radioValue =
+                            selectedRadio[`${index}-${key}`] &&
+                            selectedRadio[`${index}-${key}`].value
+                              ? selectedRadio[`${index}-${key}`].value
+                              : null;
+                          const showTextbox =
+                            selectedRadio[`${index}-${key}`] &&
+                            selectedRadio[`${index}-${key}`].showTextbox
+                              ? selectedRadio[`${index}-${key}`].showTextbox
+                              : false;
                         let additionalInfo = null;
                         if (
                           key.startsWith("Image") &&
@@ -416,43 +411,65 @@ function SuppilerPage3(props) {
                               <div className="radio-container">
                                 <input
                                   type="radio"
-                                 name={`image-${index}-${key}`}
-                                 value="Only Folder Name"
+                                  name={`image-${index}-${key}`}
+                                  value="Only Folder Name"
                                   onChange={(e) =>
-                                    handleRadioChange(index, e.target.value)
+                                    handleRadioChange(index, key, e.target.value)
                                   }
+                                  checked={radioValue === "Only Folder Name"}
                                 />{" "}
-                                <label htmlFor={`image-${index}-${key}`} className="image-label">
-                                    Only Folder Name
+                                <label
+                                  htmlFor={`image-${index}-${key}`}
+                                  className="image-label"
+                                >
+                                  Only Folder Name
                                 </label>
-                                <br/>
+                                <br />
                                 <input
                                   type="radio"
-                                name={`image-${index}-${key}`}
-                                value="Folder name with Image"
+                                  name={`image-${index}-${key}`}
+                                  value="Folder name with Image"
                                   onChange={(e) =>
-                                    handleRadioChange(index, e.target.value)
+                                    handleRadioChange(index, key, e.target.value)
                                   }
+                                  checked={radioValue === "Folder name with Image"}
                                 />{" "}
-                                <label htmlFor={`image-${index}-${key}`} className="image-label">
-                                 Folder name with Image
+                                <label
+                                  htmlFor={`image-${index}-${key}`}
+                                  className="image-label"
+                                >
+                                  Folder name with Image
                                 </label>
-                                <br/>
+                                <br />
                                 <input
-                                type="radio"
-                                name={`image-${index}-${key}`}
-                                value=" Single Image"
-                                onChange={(e) =>
-                                  handleRadioChange(index, e.target.value)
-                                }
-                              />{" "}
-                              <label htmlFor={`image-${index}-${key}`} className="image-label">
-                              Single Image
-                             </label>
+                                  type="radio"
+                                  name={`image-${index}-${key}`}
+                                  value=" Single Image"
+                                  onChange={(e) =>
+                                    handleRadioChange(index, key, e.target.value)
+                                  }
+                                  checked={radioValue === " Single Image"}
+                                />{" "}
+                                <label
+                                  htmlFor={`image-${index}-${key}`}
+                                  className="image-label"
+                                >
+                                  Single Image
+                                </label>
                               </div>
+                              {showTextbox && (
+                                <input
+                                  type="text"
+                                  placeholder="Enter a value"
+                                  className="additional-textbox rounded"
+                                  onChange={(e) =>
+                                    handleAdditionalValueChange(index, key, e.target.value)
+                                  }
+                                />
+                              )}
                             </>
                           );
-                        } else if (selectedOption && selectedOption.textbox) {
+                        }else if (selectedOption && selectedOption.textbox) {
                           additionalInfo = (
                             <input
                               type="text"

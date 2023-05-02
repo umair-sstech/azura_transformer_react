@@ -19,7 +19,6 @@ function IntegratorPage4(props) {
   });
 
   const [formErrors, setFormErrors] = useState({});
-  const [isFormValid, setIsFormValid] = useState(false);
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
 
   const history = useHistory();

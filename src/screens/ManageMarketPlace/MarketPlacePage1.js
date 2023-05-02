@@ -33,8 +33,7 @@ function MarketPlacePage1(props) {
   ];
 
   const opt = [
-    { value: "MarketPlace", label: "MarketPlace" },
-    { value: "FlaxPoint", label: "FlaxPoint" },
+    { value: "Mysale", label: "Mysale" },
   ];
   const [initFormData, setInitFormData] = useState({
     prefixName: "",
@@ -47,7 +46,7 @@ function MarketPlacePage1(props) {
   const [isFormValid, setIsFormValid] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const [isSubmitting, setSubmitting] = useState(false);
-  const [selectedOpt, setSelectedOpt] = useState(null);
+  const [selectedOpt, setSelectedOpt] = useState(opt[0]);
 
   useEffect(() => {
     if (formData) {
@@ -73,6 +72,22 @@ function MarketPlacePage1(props) {
   //   return prefix;
   // };
 
+  // const generatePrefixName = (name) => {
+  //   let prefix = "";
+  //   const words = name.split(" ");
+  //   for (let i = 0; i < words.length && i < 3; i++) {
+  //     prefix += words[i].charAt(0);
+  //   }
+  //   prefix = prefix.toUpperCase();
+  //   if (prefix.length < 3) {
+  //     const remainingChars = 3 - prefix.length;
+  //     prefix += name.substring(0, remainingChars).toUpperCase();
+  //   }
+  //   return prefix;
+  // };
+  const handleChange = (selectedOption) => {
+    setSelectedOption(selectedOption);
+  };
   const generatePrefixName = (name) => {
     let prefix = "";
     const words = name.split(" ");
@@ -86,17 +101,26 @@ function MarketPlacePage1(props) {
     }
     return prefix;
   };
+  
+  useEffect(() => {
+    const defaultName = opt[0].value;
+    const defaultPrefix = generatePrefixName(defaultName);
+    setPrefixName(defaultPrefix);
+  }, []);
+  
   const handleSelectChange = (selectedOpt) => {
     setSelectedOpt(selectedOpt);
     const name = selectedOpt ? selectedOpt.value : "";
-    setFormErrors({}); 
+    setFormErrors({});
     const formData = new FormData(document.forms.myForm);
     const errors = validateIntegrationInfoForm(formData);
     setFormErrors(errors);
-    setPrefixName(generatePrefixName(name)); 
+    const prefixName = generatePrefixName(name);
+    setPrefixName(prefixName);
     setIsFormValid(Object.keys(errors).length === 0);
   };
-  
+ 
+
   const handleNameChange = (e) => {
     const name = e.target.value;
     const prefix = generatePrefixName(name);
@@ -331,7 +355,7 @@ function MarketPlacePage1(props) {
                 <Select
                   defaultValue={selectedOption}
                   value={selectedOption}
-                  onChange={handleSelectChange}
+                  onChange={handleChange}
                   options={options}
                   isDisabled={false}
                   name="type"
@@ -350,17 +374,17 @@ function MarketPlacePage1(props) {
                   placeholder="Enter Market Place Name"
                   onChange={handleNameChange}
                   defaultValue={initFormData.name ? initFormData.name : ""}
+                   {formErrors.name && (
+                  <span className="text-danger">{formErrors.name}</span>
+                )}
   />*/}
                 <Select
-                value={options.find((opt) => opt.value === initFormData.name)}
+                value={selectedOpt}
                   onChange={handleSelectChange}
                   options={opt}
                   name="name"
-                  placeholder="Enter Market Place Name"
                 />
-                {formErrors.name && (
-                  <span className="text-danger">{formErrors.name}</span>
-                )}
+               
               </div>
             </div>
             <div className="col-6">
