@@ -10,7 +10,8 @@ function MarketPlacePage2(props) {
   const { setPage } = props;
   const [categoryFields, setCategoryFields] = useState(null);
   const [mysaleCategory, setMysaleCategory] = useState([]);
-console.log("mySaleCategory",mysaleCategory)
+  const [categoryMapping, setCategoryMapping] = useState({})
+  console.log("mapping",categoryMapping)
 
   const getCategoryData = () => {
     try {
@@ -30,9 +31,39 @@ console.log("mySaleCategory",mysaleCategory)
     getCategoryData();
   }, []);
 
+  const handleCategoryMapping = (category, mysaleCategory) => {
+    setCategoryMapping((prev) => ({
+      ...prev,
+      [category]: mysaleCategory,
+    }));
+  };
+  const handleSubmit = () => {
+    const mappingArray = Object.entries(categoryMapping).map(
+      ([category, mysaleCategory]) => ({
+        integrationId: 2,
+        integrationName: "Mysale",
+        azuraMainCategoryName: category,
+        azuraCategoryId: categoryFields[category][0].category_1_id,
+        mysaleCategoryId: mysaleCategory,
+      })
+    );
+  
+    axios
+      .post(
+        "http://localhost:8001/integration/createOrUpdateAzuraMysaleCategoryMapping",
+        mappingArray
+      )
+      .then((response) => {
+        console.log("response",response)
+      })
+      .catch((error) => {
+        // handle error
+      });
+  }; 
+
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
@@ -101,7 +132,7 @@ console.log("mySaleCategory",mysaleCategory)
                                         label: item.path,
                                         value: item.path,
                                       }))}
-                                     
+                                      onChange={(selected) => handleCategoryMapping(category, selected.value)}
                                     />
                                   </td>
                                 </tr>

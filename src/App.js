@@ -302,7 +302,7 @@ class App extends React.Component {
                   />
                 </>
               ) : null}
-              {this.props.user?.data.role == "SUPER_ADMIN" ? (
+             
                 <>
                   <Route exact path={`/supplier`} component={SupplierList} />
                   <Route
@@ -310,23 +310,9 @@ class App extends React.Component {
                     path={`/manage-suppiler`}
                     component={ManageSuppiler}
                   />
-                  <Route
-                    exact
-                    path={`/file-upload`}
-                    component={SuppilerPage2}
-                  />
-                  <Route
-                    exact
-                    path={`/data-mapping`}
-                    component={SuppilerPage3}
-                  />
-                  <Route
-                  exact
-                  path={`/barcode`}
-                  component={SupplierPage6}
-                />
+                 
                 </>
-              ) : null}
+              
               {this.props.user?.data.role == "SUPER_ADMIN" ? (
                 <>
                   <Route

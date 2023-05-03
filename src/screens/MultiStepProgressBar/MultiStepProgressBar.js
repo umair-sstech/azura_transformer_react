@@ -1,7 +1,6 @@
 // import React from "react";
 // import "../MultiStepProgressBar/MultiStepProgressBar.css";
 // import { ProgressBar, Step } from "react-step-progress-bar";
-// import { useEffect } from "react";
 
 // const stepNames = [
 //   "Suppiler  Info",
@@ -33,7 +32,7 @@
 
 //   return (
 //     <div>
-//       <p className="supplier-onboarding">Supplier onBoarding</p>
+//       <p className="supplier-onboarding">Supplier On Boarding</p>
 //       <p className="stepNamesContainer ">
 //         {stepNames.map((name, index) => (
 //           <div

@@ -224,15 +224,7 @@ function IntegratorInfo(props) {
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                 >
-                  {props.isLoading ? (
-                    <>
-                      <Spinner animation="border" size="sm" /> Please wait...
-                    </>
-                  ) : isIntegrator ? (
-                    "Update"
-                  ) : (
-                    "Save & Next"
-                  )}
+                Save & Next
                 </button>
 
                 <button

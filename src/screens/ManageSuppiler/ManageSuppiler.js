@@ -172,9 +172,9 @@ function ManageSuppiler(props) {
                           />
                         ),
                         5: (
-                          <SuppilerPage5
-                            onButtonClick={nextPage}
-                            setPage={setPage}
+                         <SuppilerPage5
+                          onButtonClick={nextPage}
+                          setPage={setPage}
                           />
                         ),
                         6: (

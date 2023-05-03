@@ -10,9 +10,9 @@ import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageSuppiler";
 
 function SupplierHttpForm(props) {
-  const { processCancel, } = useContext(FormContext);
-  
-  const [formData, setFormData ] = useState({
+  const { processCancel } = useContext(FormContext);
+
+  const [formData, setFormData] = useState({
     urlPath: "",
     syncFrequency: "",
   });
@@ -20,7 +20,6 @@ function SupplierHttpForm(props) {
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
 
   const history = useHistory();
- 
 
   useEffect(() => {
     getCronTimeData();
@@ -36,7 +35,6 @@ function SupplierHttpForm(props) {
             label: item.name,
             value: item.value,
           }));
-          console.log("item", options);
           setSyncFrequencyOptions(options);
         })
         .catch((error) => console.log(error));
@@ -49,7 +47,6 @@ function SupplierHttpForm(props) {
     setFormData({ ...formData, syncFrequency: selectedOption.value });
     setFormErrors({ ...formErrors, syncFrequency: "" });
   };
-
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -121,11 +118,8 @@ function SupplierHttpForm(props) {
         .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
         .then((response) => {
           const supplierData = response.data.data;
-          setFormData(supplierData)
-          setFormData({
-            protocol: supplierData.protocol,
-            syncFrequency: supplierData.syncFrequency,
-          });
+          console.log("supplierData",supplierData.urlPath)
+          setFormData(supplierData);
         })
         .catch((error) => {
           console.log("error", error);
@@ -176,7 +170,7 @@ function SupplierHttpForm(props) {
                   placeholder="Enter URL"
                   onChange={handleInputChange}
                   defaultValue={
-                    formData.urlPath ? formData.urlPath : ""
+                    formData && formData.urlPath ? formData.urlPath : ""
                   }
                 />
                 {formErrors.urlPath && (

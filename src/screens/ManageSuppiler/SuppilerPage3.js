@@ -7,7 +7,6 @@ import "./SupplierPage.css";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Spinner } from "react-bootstrap";
 import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
 
@@ -36,6 +35,7 @@ function SuppilerPage3(props) {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [formErrors, setFormErrors] = useState([]);
   const [selectedRadio, setSelectedRadio] = useState({});
+  const [additionalTextValue, setAdditionalTextValue] = useState("");
 
   const history = useHistory();
 
@@ -100,15 +100,16 @@ function SuppilerPage3(props) {
       return newSelectedOptions;
     });
   };
-
   const handleRadioChange = (index, key, value) => {
     setSelectedRadio((prevSelectedRadio) => ({
       ...prevSelectedRadio,
       [`${index}-${key}`]: {
         value,
-        showTextbox: value === "Is it folder name?",
+        showTextbox: value === "folder_only",
       },
     }));
+    // reset additional text value when radio value changes
+    setAdditionalTextValue("");
   };
 
   const getProductField = async () => {
@@ -139,6 +140,7 @@ function SuppilerPage3(props) {
           if (option) {
             let additionalValue = "";
             let imageType = "";
+            let imageList = "";
             if (
               key.startsWith("Image") &&
               option.value !== "do_nothing" &&
@@ -147,6 +149,9 @@ function SuppilerPage3(props) {
               additionalValue =
                 selectedRadio[`${index}-${key}`].additionalValue || "";
               imageType = selectedRadio[`${index}-${key}`].value || "";
+              if (selectedRadio[`${index}-${key}`].showTextbox) {
+                imageList = additionalTextValue;
+              }
             } else if (option.textbox) {
               additionalValue =
                 selectedOption[key] && selectedOption[key].additionalValue
@@ -160,7 +165,8 @@ function SuppilerPage3(props) {
               standardValue: "",
               supplierField: option.value,
               additionalValue: additionalValue,
-              imageType: imageType, // add imageType to the mappingObject
+              imageType: imageType,
+              imageList: imageList,
             };
             mappingArray.push(mappingObject);
           }
@@ -276,6 +282,7 @@ function SuppilerPage3(props) {
 
         const csvJSON = supplierData.csvJSON || [];
         const newOptions = [
+          ...options,
           ...csvJSON.map((option) => ({
             value: option,
             label: option,
@@ -295,7 +302,6 @@ function SuppilerPage3(props) {
       .get(`${API_PATH.GET_SUPPLIER_FILE_MAPPING}=${supplierId}`)
       .then((response) => {
         const supplierData = response.data.data;
-        console.log("mappingdata", supplierData);
         setFormData(supplierData);
 
         const options = {};
@@ -313,6 +319,17 @@ function SuppilerPage3(props) {
         console.log("error", error);
       });
   };
+  const getOptionStyles = (option) => {
+    return {
+      option: (styles) => {
+        return {
+          ...styles,
+          background: option.color,
+        };
+      },
+    };
+  };
+  
 
   return (
     <>
@@ -324,7 +341,7 @@ function SuppilerPage3(props) {
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
-                {props.isLoading ? (
+               {/* {props.isLoading ? (
                   <>
                     <Spinner animation="border" size="sm" /> Please wait...
                   </>
@@ -332,7 +349,8 @@ function SuppilerPage3(props) {
                   "Update"
                 ) : (
                   "Save & Next"
-                )}
+                )}*/}
+                Save & Next
               </button>
 
               <button
@@ -418,7 +436,7 @@ function SuppilerPage3(props) {
                                 <input
                                   type="radio"
                                   name={`image-${index}-${key}`}
-                                  value="Is it folder name?"
+                                  value="folder_only"
                                   onChange={(e) =>
                                     handleRadioChange(
                                       index,
@@ -426,7 +444,7 @@ function SuppilerPage3(props) {
                                       e.target.value
                                     )
                                   }
-                                  checked={radioValue === "Is it folder name?"}
+                                  checked={radioValue === "folder_only"}
                                 />{" "}
                                 <label
                                   htmlFor={`image-${index}-${key}`}
@@ -438,7 +456,7 @@ function SuppilerPage3(props) {
                                 <input
                                   type="radio"
                                   name={`image-${index}-${key}`}
-                                  value="Folder name with Image"
+                                  value="folder_images"
                                   onChange={(e) =>
                                     handleRadioChange(
                                       index,
@@ -446,9 +464,7 @@ function SuppilerPage3(props) {
                                       e.target.value
                                     )
                                   }
-                                  checked={
-                                    radioValue === "Folder name with Image"
-                                  }
+                                  checked={radioValue === "folder_images"}
                                 />{" "}
                                 <label
                                   htmlFor={`image-${index}-${key}`}
@@ -460,7 +476,7 @@ function SuppilerPage3(props) {
                                 <input
                                   type="radio"
                                   name={`image-${index}-${key}`}
-                                  value=" Single Image"
+                                  value="single_image"
                                   onChange={(e) =>
                                     handleRadioChange(
                                       index,
@@ -468,7 +484,7 @@ function SuppilerPage3(props) {
                                       e.target.value
                                     )
                                   }
-                                  checked={radioValue === " Single Image"}
+                                  checked={radioValue === "single_image"}
                                 />{" "}
                                 <label
                                   htmlFor={`image-${index}-${key}`}
@@ -477,19 +493,22 @@ function SuppilerPage3(props) {
                                   Single Image
                                 </label>
                               </div>
+
                               {showTextbox && (
-                                <input
-                                  type="text"
-                                  placeholder="Enter a value"
-                                  className="additional-textbox rounded"
-                                  onChange={(e) =>
-                                    handleAdditionalValueChange(
-                                      index,
-                                      key,
-                                      e.target.value
-                                    )
-                                  }
-                                />
+                                <>
+                                  <input
+                                    type="text"
+                                    placeholder="Enter a value"
+                                    className="additional-textbox rounded"
+                                    onChange={(e) =>
+                                      setAdditionalTextValue(e.target.value)
+                                    }
+                                  />
+                                  <small>
+                                    Please enter the image/photo column
+                                    name(same as csv name)
+                                  </small>
+                                </>
                               )}
                             </>
                           );
@@ -620,6 +639,21 @@ function SuppilerPage3(props) {
                               </div>
                             </td>
                             <td>{additionalInfo}</td>
+                            {/* <td>
+                          {showTextbox && (
+                            <>
+                            
+                            <input
+                              type="text"
+                              placeholder="Enter a value"
+                              className="additional-textbox rounded"
+                              onChange={(e) => setAdditionalTextValue(e.target.value)}
+                            />
+                            <small>Please enter the image/photo column name(same as csv name)</small>
+                            
+                            </>
+                          )}
+                          </td>*/}
                           </tr>
                         );
                       })}

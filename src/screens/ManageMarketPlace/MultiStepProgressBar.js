@@ -40,7 +40,7 @@ const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
 
   return (
     <div>
-    <p className="market-onboarding">Market Place onBoarding</p>
+    <p className="market-onboarding">Marketplace On Boarding</p>
       <p className="stepNamesContainer ">
         {stepNames.map((name, index) => (
           <div
