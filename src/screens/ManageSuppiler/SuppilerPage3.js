@@ -9,6 +9,7 @@ import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
+import { Spinner } from "react-bootstrap";
 
 function SuppilerPage3(props) {
   const { setPage } = props;
@@ -36,6 +37,8 @@ function SuppilerPage3(props) {
   const [formErrors, setFormErrors] = useState([]);
   const [selectedRadio, setSelectedRadio] = useState({});
   const [additionalTextValue, setAdditionalTextValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
 
   const history = useHistory();
 
@@ -172,7 +175,8 @@ function SuppilerPage3(props) {
           }
         });
       });
-      props.onLoading(true);
+      setIsLoading(true);
+
       try {
         const response = await axios.post(
           `${API_PATH.DATA_FILE_MAPPING}`,
@@ -188,7 +192,8 @@ function SuppilerPage3(props) {
       } catch (error) {
         console.error(error);
       } finally {
-        props.onLoading(false);
+        setIsLoading(false);
+
       }
     }
   };
@@ -219,7 +224,7 @@ function SuppilerPage3(props) {
         }
       });
     });
-    props.onLoading(true);
+    setIsLoadingExit(true);
     try {
       const response = await axios.post(
         `${API_PATH.DATA_FILE_MAPPING}`,
@@ -237,7 +242,7 @@ function SuppilerPage3(props) {
     } catch (error) {
       console.error(error);
     } finally {
-      props.onLoading(false);
+      setIsLoadingExit(false);
     }
   };
 
@@ -319,16 +324,6 @@ function SuppilerPage3(props) {
         console.log("error", error);
       });
   };
-  const getOptionStyles = (option) => {
-    return {
-      option: (styles) => {
-        return {
-          ...styles,
-          background: option.color,
-        };
-      },
-    };
-  };
   
 
   return (
@@ -341,16 +336,13 @@ function SuppilerPage3(props) {
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
-               {/* {props.isLoading ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : isSuppilerAdded ? (
-                  "Update"
-                ) : (
-                  "Save & Next"
-                )}*/}
-                Save & Next
+              {isLoading ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Next"
+              )}
               </button>
 
               <button
@@ -358,7 +350,13 @@ function SuppilerPage3(props) {
                 type="submit"
                 onClick={(e) => handleOnClick(e)}
               >
-                Save & Exit
+              {isLoadingExit ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Exit"
+              )}
               </button>
 
               <button

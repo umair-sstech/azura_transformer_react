@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import timeZoneData from "../../Data/timeZone";
 import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageIntegrator";
+import { Spinner } from "react-bootstrap";
+import { validateMarketPlaceOrderSync } from "../Validations/Validation";
 
 function IntegratorPage4(props) {
   const { setPage } = props;
@@ -20,6 +22,8 @@ function IntegratorPage4(props) {
 
   const [formErrors, setFormErrors] = useState({});
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
 
   const history = useHistory();
 
@@ -47,14 +51,22 @@ function IntegratorPage4(props) {
 
   const handleSyncFrequency = (selectedOption) => {
     setFormData({ ...formData, orderSyncFrequency: selectedOption.value });
+    setFormErrors({ ...formErrors, orderSyncFrequency: "" });
+
   };
 
   const handleTimeZoneChange = (selectedOption) => {
     setFormData({ ...formData, orderTimeZone: selectedOption });
+    setFormErrors({ ...formErrors, orderTimeZone: "" });
+    
   };
   
   const handleSubmit = (e) => {
     e.preventDefault();
+    const errors = validateMarketPlaceOrderSync(formData);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
     const integrationId = localStorage.getItem("integratorId");
     const integrationName = localStorage.getItem("integratorName");
 
@@ -68,6 +80,7 @@ function IntegratorPage4(props) {
       integrationId,
       integrationName,
     };
+    setIsLoading(true)
     axios
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
@@ -82,12 +95,17 @@ function IntegratorPage4(props) {
       })
       .catch((error) => {
         console.error(error);
+        setIsLoading(false)
       });
   };
-
+  }
   const handleOnClick = (e) => {
     e.preventDefault();
-    const integrationId = localStorage.getItem("marketPlaceId");
+    const errors = validateMarketPlaceOrderSync(formData);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
+    const integrationId = localStorage.getItem("integratorId");
     const integrationName = localStorage.getItem("integratorName");
 
     const { value, label } = formData.orderTimeZone;
@@ -100,6 +118,7 @@ function IntegratorPage4(props) {
       integrationId,
       integrationName,
     };
+    setIsLoadingExit(true)
     axios
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
@@ -107,7 +126,7 @@ function IntegratorPage4(props) {
         if (success) {
           toast.success(message);
           setFormData({});
-          history.push("/market-integrator");
+          history.push("/integrator");
           localStorage.removeItem("integratorId");
           localStorage.removeItem("integratorName");
         } else {
@@ -116,9 +135,10 @@ function IntegratorPage4(props) {
       })
       .catch((error) => {
         console.error(error);
+        setIsLoadingExit(false)
       });
   };
-
+  }
   const getProductData = () => {
     const integrationId = localStorage.getItem("integratorId");
 
@@ -162,14 +182,26 @@ function IntegratorPage4(props) {
               className="btn btn-primary w-auto btn-lg mr-2"
               type="submit"
             >
-              Save & Next
+            {isLoading ? (
+              <>
+                <Spinner animation="border" size="sm" /> Please wait...
+              </>
+            ) : (
+              "Save & Next"
+            )}
             </button>
             <button
               className="btn btn-primary w-auto btn-lg mr-2"
-              type="submit"
+              type="button"
               onClick={handleOnClick}
             >
-              Save & Exit
+            {isLoadingExit ? (
+              <>
+                <Spinner animation="border" size="sm" /> Please wait...
+              </>
+            ) : (
+              "Save & Next"
+            )}
             </button>
 
             <button
@@ -219,8 +251,8 @@ function IntegratorPage4(props) {
                 value={formData.orderTimeZone ? formData.orderTimeZone : ""}
                 onChange={handleTimeZoneChange}
               />
-              {formErrors.timeZone && (
-                <span className="text-danger">{formErrors.timeZone}</span>
+              {formErrors.orderTimeZone && (
+                <span className="text-danger">{formErrors.orderTimeZone}</span>
               )}
           </div>
         </div>

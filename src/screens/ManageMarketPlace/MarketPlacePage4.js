@@ -6,6 +6,8 @@ import timeZoneData from "../../Data/timeZone";
 import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageMarketPlace";
 import { useHistory } from "react-router-dom";
+import { validateMarketPlaceOrderSync } from "../Validations/Validation";
+import { Spinner } from "react-bootstrap";
 
 function MarketPlacePage4(props) {
   const { setPage } = props;
@@ -18,6 +20,8 @@ function MarketPlacePage4(props) {
   });
   const [formErrors, setFormErrors] = useState({});
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -44,14 +48,20 @@ function MarketPlacePage4(props) {
 
   const handleSyncFrequency = (selectedOption) => {
     setFormData({ ...formData, orderSyncFrequency: selectedOption.value });
+    setFormErrors({ ...formErrors, orderSyncFrequency: "" });
   };
 
   const handleTimeZoneChange = (selectedOption) => {
     setFormData({ ...formData, orderTimeZone: selectedOption });
+    setFormErrors({ ...formErrors, orderTimeZone: "" });
   };
   
   const handleSubmit = (e) => {
     e.preventDefault();
+    const errors = validateMarketPlaceOrderSync(formData);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
     const integrationId = localStorage.getItem("marketPlaceId");
     const integrationName = localStorage.getItem("marketPlaceName");
 
@@ -65,6 +75,7 @@ function MarketPlacePage4(props) {
       integrationId,
       integrationName,
     };
+    setIsLoading(true)
     axios
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
@@ -79,11 +90,16 @@ function MarketPlacePage4(props) {
       })
       .catch((error) => {
         console.error(error);
+        setIsLoading(false)
       });
   };
-
+  }
   const handleOnClick = (e) => {
     e.preventDefault();
+    const errors = validateMarketPlaceOrderSync(formData);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
     const integrationId = localStorage.getItem("marketPlaceId");
     const integrationName = localStorage.getItem("marketPlaceName");
 
@@ -97,6 +113,7 @@ function MarketPlacePage4(props) {
       integrationId,
       integrationName,
     };
+    setIsLoadingExit(true)
     axios
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
@@ -113,8 +130,10 @@ function MarketPlacePage4(props) {
       })
       .catch((error) => {
         console.error(error);
+        setIsLoadingExit(false)
       });
   };
+}
 
   const getProductData = () => {
     const integrationId = localStorage.getItem("marketPlaceId");
@@ -147,6 +166,7 @@ function MarketPlacePage4(props) {
   useEffect(() => {
     getProductData();
   }, []);
+
   return (
     <form onSubmit={handleSubmit}>
       <div style={{ marginTop: "30px" }}>
@@ -157,14 +177,26 @@ function MarketPlacePage4(props) {
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
-                Save & Next
+              {isLoading ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Next"
+              )}
               </button>
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
-                type="submit"
+                type="button"
                 onClick={handleOnClick}
               >
-                Save & Exit
+              {isLoadingExit ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Exit"
+              )}
               </button>
 
               <button
@@ -191,8 +223,8 @@ function MarketPlacePage4(props) {
                   (option) => option.value === formData.orderSyncFrequency
                 )}
               />
-              {formErrors.syncFrequency && (
-                <span className="text-danger">{formErrors.syncFrequency}</span>
+              {formErrors.orderSyncFrequency && (
+                <span className="text-danger">{formErrors.orderSyncFrequency}</span>
               )}
             </div>
           </div>
@@ -212,8 +244,8 @@ function MarketPlacePage4(props) {
                 value={formData.orderTimeZone ? formData.orderTimeZone : ""}
                 onChange={handleTimeZoneChange}
               />
-              {formErrors.timeZone && (
-                <span className="text-danger">{formErrors.timeZone}</span>
+              {formErrors.orderTimeZone && (
+                <span className="text-danger">{formErrors.orderTimeZone}</span>
               )}
             </div>
           </div>

@@ -29,6 +29,8 @@ function SupplierPage2(props) {
     supplier_id: "",
   });
   const [fileError, setFileError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -51,7 +53,7 @@ function SupplierPage2(props) {
       const formData = new FormData(form);
       const supplierId = localStorage.getItem("supplierId");
       formData.set("supplier_id", supplierId);
-      props.onLoading(true);
+      setIsLoading(true)
       try {
         const response = await axios.post(`${API_PATH.ADD_CSV_DATA}`, formData);
         const { success, message } = response.data;
@@ -62,14 +64,14 @@ function SupplierPage2(props) {
             // csvPath, csvName, csvJSON
           });
           toast.success(message);
-          props.onLoading(false);
+          setIsLoading(false)
           setPage("3");
         } else {
           toast.error(message);
         }
       } catch (error) {
         console.error(error);
-        props.onLoading(false);
+        setIsLoading(false)
       }
     }
   };
@@ -82,26 +84,27 @@ function SupplierPage2(props) {
       const form = e.target.closest("form");
       const formData = new FormData(form);
       formData.append("supplier_id", initFormData.id);
+      setIsLoadingExit(true)
       try {
         const response = await axios.post(`${API_PATH.ADD_CSV_DATA}`, formData);
-        const { success, message } = response.data;
+        const { success, message,data } = response.data;
         if (success) {
-          // const { csvPath, csvName, csvJSON } = response.data.data;
           setFormData({
             ...formData,
-            // csvPath, csvName, csvJSON
           });
-          // toast.success("data.....");
+          toast.success(message);
+          setIsLoadingExit(false)
           history.push("/supplier");
           localStorage.removeItem("supplierId");
           localStorage.removeItem("supplierName");
-      
+        
           
         } else {
           toast.error(message);
         }
       } catch (error) {
         console.error(error);
+        setIsLoadingExit(false)
       }
     }
   };
@@ -133,15 +136,26 @@ function SupplierPage2(props) {
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                 >
-                 
-                  Save & Next
+                {isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Next"
+                )}
                 </button>
                 <button
                   className="btn btn-primary w-auto btn-lg mr-2"
-                  type="submit"
+                  type="button"
                   onClick={handleOnClick}
                 >
-                  Save & Exit
+                {isLoadingExit ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Exit"
+                )}
                 </button>
                 <button
                   className="btn btn-secondary w-auto btn-lg"

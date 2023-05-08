@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import Swal from "sweetalert2";
 import axios from "axios";
 import Select from "react-select";
 import { toast } from "react-toastify";
 import timeZoneData from "../../Data/timeZone";
 import { API_PATH } from "../ApiPath/Apipath";
+import { Spinner } from "react-bootstrap";
 import { FormContext } from "./ManageIntegrator";
+import { validateMarketPlaceProductSync } from "../Validations/Validation";
+
 
 function IntegratoePage3(props) {
   const {setPage}=props
@@ -21,8 +23,9 @@ function IntegratoePage3(props) {
     type: "product",
   });
   const [formErrors, setFormErrors] = useState({});
-  const [isFormValid, setIsFormValid] = useState(false);
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
 
   const history = useHistory();
 
@@ -58,6 +61,10 @@ function IntegratoePage3(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const errors = validateMarketPlaceProductSync(formData);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
     const integrationId = localStorage.getItem("integratorId");
     const integrationName = localStorage.getItem("integratorName");
 
@@ -71,6 +78,7 @@ function IntegratoePage3(props) {
       integrationId,
       integrationName,
     };
+    setIsLoading(true)
     axios
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
@@ -86,11 +94,17 @@ function IntegratoePage3(props) {
       })
       .catch((error) => {
         console.error(error);
+        setIsLoading(false)
       });
   };
+}
   
   const handleOnClick = (e) => {
     e.preventDefault();
+    const errors = validateMarketPlaceProductSync(formData);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
     const integrationId = localStorage.getItem("integratorId");
     const integrationName = localStorage.getItem("integratorName");
 
@@ -104,6 +118,7 @@ function IntegratoePage3(props) {
       integrationId,
       integrationName,
     };
+    setIsLoadingExit(true)
     axios
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
@@ -121,8 +136,10 @@ function IntegratoePage3(props) {
       })
       .catch((error) => {
         console.error(error);
+        setIsLoadingExit(false)
       });
   };
+}
 
   const getProductData = () => {
     const integrationId = localStorage.getItem("integratorId");
@@ -157,6 +174,7 @@ function IntegratoePage3(props) {
   useEffect(() => {
     getProductData();
   }, []);
+
   return (
     <form onSubmit={handleSubmit}>
       <div style={{ marginTop: "30px" }}>
@@ -167,14 +185,26 @@ function IntegratoePage3(props) {
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
-                Save & Next
+               {isLoading ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Next"
+              )}
               </button>
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
-                type="submit"
+                type="button"
                 onClick={handleOnClick}
               >
-                Save & Exit
+              {isLoadingExit ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Exit"
+              )}
               </button>
 
               <button
@@ -224,8 +254,8 @@ function IntegratoePage3(props) {
                 value={formData.productTimeZone ? formData.productTimeZone : ""}
                 onChange={handleTimeZoneChange}
               />
-              {formErrors.timeZone && (
-                <span className="text-danger">{formErrors.timeZone}</span>
+              {formErrors.productTimeZone && (
+                <span className="text-danger">{formErrors.productTimeZone}</span>
               )}
             </div>
           </div>

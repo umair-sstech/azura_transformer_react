@@ -73,3 +73,35 @@ export const validateMarketPlaceInfoForm = (formData) => {
 
   return errors;
 };
+export const validateMarketPlaceProductSync=(formData)=>{
+  const errors={};
+  if (!formData.productSyncFrequency) {
+    errors.productSyncFrequency = "Please Select Sync Frequency";
+  }
+  if (!formData.productTimeZone) {
+    errors.productTimeZone = "Please Select TimeZone";
+  }
+  return errors;
+};
+
+export const validateMarketPlaceOrderSync=(formData)=>{
+  const errors={};
+  if (!formData.orderSyncFrequency) {
+    errors.orderSyncFrequency = "Please Select Sync Frequency";
+  }
+  if (!formData.orderTimeZone) {
+    errors.orderTimeZone = "Please Select TimeZone";
+  }
+  return errors;
+}
+
+export const validateMarketPlaceTrackingSync=(formData)=>{
+  const errors={};
+  if (!formData.trackingSyncFrequency) {
+    errors.trackingSyncFrequency = "Please Select Sync Frequency";
+  }
+  if (!formData.trackingTimeZone) {
+    errors.trackingTimeZone = "Please Select TimeZone";
+  }
+  return errors;
+}

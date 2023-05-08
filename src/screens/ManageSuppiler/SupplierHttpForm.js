@@ -8,6 +8,7 @@ import Select, { defaultTheme } from "react-select";
 import { toast } from "react-toastify";
 import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageSuppiler";
+import { Spinner } from "react-bootstrap";
 
 function SupplierHttpForm(props) {
   const { processCancel } = useContext(FormContext);
@@ -18,6 +19,8 @@ function SupplierHttpForm(props) {
   });
   const [formErrors, setFormErrors] = useState({});
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
 
   const history = useHistory();
 
@@ -65,6 +68,7 @@ function SupplierHttpForm(props) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
       const payload = { ...formData, supplierId, supplierName };
+      setIsLoading(true)
       axios
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
@@ -77,6 +81,7 @@ function SupplierHttpForm(props) {
         })
         .catch((error) => {
           console.error(error);
+          setIsLoading(false)
         });
     }
   };
@@ -91,6 +96,7 @@ function SupplierHttpForm(props) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
       const payload = { ...formData, supplierId, supplierName };
+      setIsLoadingExit(true)
       axios
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
@@ -106,6 +112,7 @@ function SupplierHttpForm(props) {
         })
         .catch((error) => {
           console.error(error);
+          setIsLoadingExit(false)
         });
     }
   };
@@ -137,14 +144,26 @@ function SupplierHttpForm(props) {
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                 >
-                  Save & Next
+                {isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Next"
+                )}
                 </button>
                 <button
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                   onClick={handleOnClick}
                 >
-                  Save & Exit
+                {isLoadingExit ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Exit"
+                )}
                 </button>
 
                 <button

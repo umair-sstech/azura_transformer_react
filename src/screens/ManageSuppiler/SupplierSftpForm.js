@@ -60,6 +60,8 @@ function SupplierSftpForm(props) {
   const [formErrors, setFormErrors] = useState({});
   const history = useHistory();
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
 
   useEffect(() => {
     getCronTimeData();
@@ -123,6 +125,7 @@ function SupplierSftpForm(props) {
         supplierId,
         supplierName,
       };
+      setIsLoading(true)
       axios
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
@@ -136,6 +139,7 @@ function SupplierSftpForm(props) {
         })
         .catch((error) => {
           console.error(error);
+          setIsLoading(false)
         });
     }
   };
@@ -159,6 +163,7 @@ function SupplierSftpForm(props) {
         supplierId,
         supplierName,
       };
+      setIsLoadingExit(true)
       axios
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
@@ -174,6 +179,7 @@ function SupplierSftpForm(props) {
         })
         .catch((error) => {
           console.error(error);
+          setIsLoadingExit(false)
         });
     }
   };
@@ -194,14 +200,26 @@ function SupplierSftpForm(props) {
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                 >
-                  Save & Next
+                {isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Next"
+                )}
                 </button>
                 <button
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                   onClick={handleOnClick}
                 >
-                  Save & Exit
+                {isLoadingExit ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Next"
+                )}
                 </button>
                 <button
                   className="btn btn-secondary w-auto btn-lg"

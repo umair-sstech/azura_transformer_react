@@ -32,9 +32,7 @@ function MarketPlacePage1(props) {
     { value: "Integrator", label: "Integrator", isDisabled: true },
   ];
 
-  const opt = [
-    { value: "Mysale", label: "Mysale" },
-  ];
+  const opt = [{ value: "Mysale", label: "Mysale" }];
   const [initFormData, setInitFormData] = useState({
     prefixName: "",
     name: "",
@@ -47,6 +45,8 @@ function MarketPlacePage1(props) {
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const [isSubmitting, setSubmitting] = useState(false);
   const [selectedOpt, setSelectedOpt] = useState(opt[0]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
 
   useEffect(() => {
     if (formData) {
@@ -101,13 +101,13 @@ function MarketPlacePage1(props) {
     }
     return prefix;
   };
-  
+
   useEffect(() => {
     const defaultName = opt[0].value;
     const defaultPrefix = generatePrefixName(defaultName);
     setPrefixName(defaultPrefix);
   }, []);
-  
+
   const handleSelectChange = (selectedOpt) => {
     setSelectedOpt(selectedOpt);
     const name = selectedOpt ? selectedOpt.value : "";
@@ -119,7 +119,6 @@ function MarketPlacePage1(props) {
     setPrefixName(prefixName);
     setIsFormValid(Object.keys(errors).length === 0);
   };
- 
 
   const handleNameChange = (e) => {
     const name = e.target.value;
@@ -154,16 +153,13 @@ function MarketPlacePage1(props) {
 
     const errors = validateIntegrationInfoForm(formData);
     setFormErrors(errors);
-    setSubmitting(true);
+
     if (Object.keys(errors).length === 0) {
       const prefixName = generatePrefixName(formData.get("name"));
       setPrefixName(prefixName);
       formData.set("prefixName", prefixName);
-
-      props.onLoading(true);
-
+      setIsLoading(true);
       const marketPlaceId = localStorage.getItem("marketPlaceId");
-      console.log("marketPlaceId", marketPlaceId);
 
       if (marketPlaceId) {
         formData.set("supplierId", marketPlaceId);
@@ -185,13 +181,12 @@ function MarketPlacePage1(props) {
           })
           .catch((error) => {
             console.log("error", error);
-            setSubmitting(false);
+            setIsLoading(false);
           });
       } else {
         axios
           .post(`${API_PATH.CREATE_INTEGRATION_INFO}`, formData)
           .then((response) => {
-            console.log("response", response);
             const { success, message, data } = response.data;
             if (success) {
               const marketPlaceId = data.id;
@@ -208,11 +203,11 @@ function MarketPlacePage1(props) {
             } else {
               toast.error(message);
             }
-            setSubmitting(false);
+            setIsLoading(false);
           })
           .catch((error) => {
             console.log("error", error);
-            setSubmitting(false);
+            setIsLoading(false);
           });
       }
     }
@@ -246,14 +241,13 @@ function MarketPlacePage1(props) {
 
     const errors = validateIntegrationInfoForm(formData);
     setFormErrors(errors);
-    setSubmitting(true);
+
     if (Object.keys(errors).length === 0) {
       const prefixName = generatePrefixName(formData.get("name"));
       setPrefixName(prefixName);
       formData.set("prefixName", prefixName);
 
-      props.onLoading(true);
-
+      setIsLoadingExit(true);
       const marketPlaceId = localStorage.getItem("marketPlaceId");
       console.log("marketPlaceId", marketPlaceId);
 
@@ -276,11 +270,11 @@ function MarketPlacePage1(props) {
             } else {
               toast.error(message);
             }
-            props.onLoading(false);
+            setIsLoadingExit(false);
           })
           .catch((error) => {
             console.log("error", error);
-            setSubmitting(false);
+            setIsLoadingExit(false);
           });
       } else {
         axios
@@ -327,7 +321,13 @@ function MarketPlacePage1(props) {
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                 >
-                  Save & Next
+                  {isLoading ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Please wait...
+                    </>
+                  ) : (
+                    "Save & Next"
+                  )}
                 </button>
 
                 <button
@@ -335,7 +335,13 @@ function MarketPlacePage1(props) {
                   type="submit"
                   onClick={handleOnClick}
                 >
-                  Save & Exit
+                  {isLoadingExit ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Please wait...
+                    </>
+                  ) : (
+                    "Save & Exit"
+                  )}
                 </button>
                 <button
                   className="btn btn-secondary w-auto btn-lg"
@@ -379,12 +385,11 @@ function MarketPlacePage1(props) {
                 )}
   />*/}
                 <Select
-                value={selectedOpt}
+                  value={selectedOpt}
                   onChange={handleSelectChange}
                   options={opt}
                   name="name"
                 />
-               
               </div>
             </div>
             <div className="col-6">

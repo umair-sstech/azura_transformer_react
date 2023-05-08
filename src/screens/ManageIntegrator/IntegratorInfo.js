@@ -20,7 +20,7 @@ function IntegratorInfo(props) {
     setFormData,
     processCancel,
   } = useContext(FormContext);
-  
+
   const options = [
     { value: "Integrator", label: "Integrator" },
     { value: "Supplier", label: "Supplier", isDisabled: true },
@@ -30,9 +30,7 @@ function IntegratorInfo(props) {
     { value: "TMS", label: "TMS", isDisabled: true },
     { value: "WMS", label: "WMS", isDisabled: true },
   ];
-  const opt = [
-    { value: "Flaxpoint", label: "Flaxpoint" },
-  ];
+  const opt = [{ value: "Flaxpoint", label: "Flaxpoint" }];
   const [initFormData, setInitFormData] = useState({
     prefixName: "",
     name: "",
@@ -42,11 +40,11 @@ function IntegratorInfo(props) {
   const [prefixName, setPrefixName] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
-
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const [selectedOpt, setSelectedOpt] = useState(opt[0]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
   const history = useHistory();
-
 
   useEffect(() => {
     if (formData) {
@@ -54,7 +52,9 @@ function IntegratorInfo(props) {
     }
   }, [props]);
 
-  useEffect(()=>{getDataById()},[])
+  useEffect(() => {
+    getDataById();
+  }, []);
   const handleChange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
@@ -86,13 +86,13 @@ function IntegratorInfo(props) {
     }
     return prefix;
   };
-  
+
   useEffect(() => {
     const defaultName = opt[0].value;
     const defaultPrefix = generatePrefixName(defaultName);
     setPrefixName(defaultPrefix);
   }, []);
-  
+
   const handleSelectChange = (selectedOpt) => {
     setSelectedOpt(selectedOpt);
     const name = selectedOpt ? selectedOpt.value : "";
@@ -140,7 +140,7 @@ function IntegratorInfo(props) {
       setPrefixName(prefixName);
       formData.set("prefixName", prefixName);
 
-      props.onLoading(true);
+      setIsLoading(true);
 
       const integratorId = localStorage.getItem("integratorId");
       console.log("integratorId", integratorId);
@@ -161,16 +161,16 @@ function IntegratorInfo(props) {
             } else {
               toast.error(message);
             }
-            props.onLoading(false);
+            setIsLoading(false);
           })
           .catch((error) => {
             console.log("error", error);
+            setIsLoading(false);
           });
       } else {
         axios
           .post(`${API_PATH.CREATE_INTEGRATION_INFO}`, formData)
           .then((response) => {
-            console.log("response", response);
             const { success, message, data } = response.data;
             if (success) {
               const integratorId = data.id;
@@ -184,6 +184,79 @@ function IntegratorInfo(props) {
               setIsIntegrator(true);
               setPage("2");
               toast.success(message);
+            } else {
+              toast.error(message);
+            }
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
+    }
+  };
+
+  const handleOnClick = (e) => {
+    e.preventDefault();
+    const form = e.currentTarget.closest("form");
+    if (!form) {
+      return;
+    }
+    const formData = new FormData(form);
+    const errors = validateIntegrationInfoForm(formData);
+    setFormErrors(errors);
+    if (Object.keys(errors).length === 0) {
+      const prefixName = generatePrefixName(formData.get("name"));
+      setPrefixName(prefixName);
+      formData.set("prefixName", prefixName);
+
+      setIsLoadingExit(true);
+
+      const integratorId = localStorage.getItem("integratorId");
+      console.log("integratorId", integratorId);
+
+      if (integratorId) {
+        formData.set("supplierId", integratorId);
+        axios
+          .post(
+            `${process.env.REACT_APP_API_URL_SUPPLIER}/integration/updateIntegrationInfo`,
+            formData
+          )
+          .then((response) => {
+            const { success, message, data } = response.data;
+            if (success) {
+              setIsIntegrator(true);
+              toast.success(message);
+              history.push("/integrator");
+              localStorage.removeItem("integratorId");
+              localStorage.removeItem("integratorName");
+            } else {
+              toast.error(message);
+            }
+            setIsLoadingExit(false);
+          })
+          .catch((error) => {
+            console.log("error", error);
+            setIsLoadingExit(false);
+          });
+      } else {
+        axios
+          .post(`${API_PATH.CREATE_INTEGRATION_INFO}`, formData)
+          .then((response) => {
+            const { success, message, data } = response.data;
+            if (success) {
+              const integratorId = data.id;
+              if (integratorId) {
+                localStorage.setItem("integratorId", integratorId);
+              }
+              const integratorName = data.name;
+              if (integratorName) {
+                localStorage.setItem("integratorName", integratorName);
+              }
+              setIsIntegrator(true);
+              toast.success(message);
+              history.push("/integrator");
+              localStorage.removeItem("integratorId");
+              localStorage.removeItem("integratorName");
             } else {
               toast.error(message);
             }
@@ -224,14 +297,27 @@ function IntegratorInfo(props) {
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                 >
-                Save & Next
+                  {isLoading ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Please wait...
+                    </>
+                  ) : (
+                    "Save & Next"
+                  )}
                 </button>
 
                 <button
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
+                  onClick={handleOnClick}
                 >
-                  Save & Exit
+                  {isLoadingExit ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Please wait...
+                    </>
+                  ) : (
+                    "Save & Exit"
+                  )}
                 </button>
 
                 <button
@@ -264,7 +350,7 @@ function IntegratorInfo(props) {
                 <label>
                   Integrator Name <span style={{ color: "red" }}>*</span>
                 </label>
-               {/* <input
+                {/* <input
                   className="form-control"
                   type="text"
                   name="name"
@@ -274,9 +360,9 @@ function IntegratorInfo(props) {
                />   {formErrors.name && (
                   <span className="text-danger">{formErrors.name}</span>
                 )}*/}
-              
+
                 <Select
-                value={selectedOpt}
+                  value={selectedOpt}
                   onChange={handleSelectChange}
                   options={opt}
                   name="name"

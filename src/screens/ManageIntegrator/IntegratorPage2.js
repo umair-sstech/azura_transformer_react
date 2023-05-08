@@ -13,6 +13,7 @@ function IntegratorPage2(props) {
     processCancel,
   } = useContext(FormContext);
   const [categoryFields, setCategoryFields] = useState(null);
+  
 
   const getCategoryData = () => {
     try {

@@ -7,6 +7,9 @@ import { toast } from "react-toastify";
 import timeZoneData from "../../Data/timeZone";
 import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageIntegrator";
+import { Spinner } from "react-bootstrap";
+import { validateMarketPlaceTrackingSync } from "../Validations/Validation";
+
 
 
 function IntegratorPage5(props) {
@@ -18,8 +21,9 @@ function IntegratorPage5(props) {
     type: "tracking",
   });
   const [formErrors, setFormErrors] = useState({});
-  const [isFormValid, setIsFormValid] = useState(false);
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
 
   const history = useHistory();
 
@@ -52,11 +56,15 @@ function IntegratorPage5(props) {
 
   const handleTimeZoneChange = (selectedOption) => {
     setFormData({ ...formData, trackingTimeZone: selectedOption });
+    setFormErrors({ ...formErrors, trackingTimeZone: "" });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // set the submitting state to true
+    const errors = validateMarketPlaceTrackingSync(formData);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
     const integrationId = localStorage.getItem("integratorId");
     const integrationName = localStorage.getItem("integratorName");
 
@@ -68,6 +76,7 @@ function IntegratorPage5(props) {
       integrationId,
       integrationName,
     };
+    setIsLoading(true)
     axios
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
@@ -85,12 +94,16 @@ function IntegratorPage5(props) {
         console.error(error);
       })
       .finally(() => {
-         
+         setIsLoading(false)
       });
   };
-
+  }
   const handleOnClick = (e) => {
     e.preventDefault();
+    const errors = validateMarketPlaceTrackingSync(formData);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
         const integrationId = localStorage.getItem("integratorId");
     const integrationName = localStorage.getItem("integratorName");
 
@@ -102,6 +115,7 @@ function IntegratorPage5(props) {
       integrationId,
       integrationName,
     };
+    setIsLoadingExit(true)
     axios
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
@@ -110,7 +124,7 @@ function IntegratorPage5(props) {
         if (success) {
           toast.success(message);
           setFormData({});
-          history.push("/market-integrator");
+          history.push("/integrator");
           localStorage.removeItem("integratorId");
           localStorage.removeItem("integratorName");
         } else {
@@ -121,10 +135,10 @@ function IntegratorPage5(props) {
         console.error(error);
       })
       .finally(() => {
-        
+        setIsLoadingExit(false)
       });
   };
-  
+}
   const getProductData = () => {
     const integrationId = localStorage.getItem("integratorId");
 
@@ -168,14 +182,26 @@ function IntegratorPage5(props) {
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
-                Save & Next
+              {isLoading ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Next"
+              )}
               </button>
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
                 onClick={handleOnClick}
               >
-                Save & Exit
+              {isLoadingExit ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Exit"
+              )}
               </button>
 
               <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={processCancel}>
@@ -198,8 +224,8 @@ function IntegratorPage5(props) {
                 (option) => option.value === formData.trackingSyncFrequency
               )}
             />
-            {formErrors.syncFrequency && (
-              <span className="text-danger">{formErrors.syncFrequency}</span>
+            {formErrors.trackingSyncFrequency && (
+              <span className="text-danger">{formErrors.trackingSyncFrequency}</span>
             )}
             </div>
           </div>
@@ -221,8 +247,8 @@ function IntegratorPage5(props) {
               }
               onChange={handleTimeZoneChange}
             />
-            {formErrors.timeZone && (
-              <span className="text-danger">{formErrors.timeZone}</span>
+            {formErrors.trackingTimeZone && (
+              <span className="text-danger">{formErrors.trackingTimeZone}</span>
             )}
             </div>
           </div>

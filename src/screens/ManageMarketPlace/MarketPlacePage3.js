@@ -6,6 +6,8 @@ import timeZoneData from "../../Data/timeZone";
 import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageMarketPlace";
 import { useHistory } from "react-router-dom";
+import { validateMarketPlaceProductSync } from "../Validations/Validation";
+import { Spinner } from "react-bootstrap";
 
 function MarketPlacePage3(props) {
   const { setPage } = props;
@@ -20,6 +22,8 @@ function MarketPlacePage3(props) {
   });
   const [formErrors, setFormErrors] = useState({});
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
 
   useEffect(() => {
     getCronTimeData();
@@ -49,10 +53,16 @@ function MarketPlacePage3(props) {
 
   const handleTimeZoneChange = (selectedOption) => {
     setFormData({ ...formData, productTimeZone: selectedOption });
+    setFormErrors({ ...formErrors, productTimeZone: "" });
+
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const errors = validateMarketPlaceProductSync(formData);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
     const integrationId = localStorage.getItem("marketPlaceId");
     const integrationName = localStorage.getItem("marketPlaceName");
 
@@ -66,11 +76,11 @@ function MarketPlacePage3(props) {
       integrationId,
       integrationName,
     };
+    setIsLoading(true)
     axios
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
         const { success, message, data } = response.data;
-        console.log("response", response);
         if (success) {
           toast.success(message);
           setFormData({});
@@ -81,11 +91,15 @@ function MarketPlacePage3(props) {
       })
       .catch((error) => {
         console.error(error);
-      });
+      }).finally(()=>setIsLoading(false))
   };
+  }
 
   const handleOnClick = (e) => {
     e.preventDefault();
+    const errors = validateMarketPlaceProductSync(formData);
+    setFormErrors(errors);
+    if (Object.keys(errors).length === 0) {
     const integrationId = localStorage.getItem("marketPlaceId");
     const integrationName = localStorage.getItem("marketPlaceName");
 
@@ -99,11 +113,11 @@ function MarketPlacePage3(props) {
       integrationId,
       integrationName,
     };
+    setIsLoadingExit(true)
     axios
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
         const { success, message, data } = response.data;
-        console.log("response", response);
         if (success) {
           toast.success(message);
           setFormData({});
@@ -116,8 +130,9 @@ function MarketPlacePage3(props) {
       })
       .catch((error) => {
         console.error(error);
-      });
+      }).finally(() => setIsLoadingExit(false));
   };
+  }
 
   const getProductData = () => {
     const integrationId = localStorage.getItem("marketPlaceId");
@@ -163,14 +178,26 @@ function MarketPlacePage3(props) {
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
-                Save & Next
+              {isLoading ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Next"
+              )}
               </button>
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
                 onClick={handleOnClick}
               >
-                Save & Exit
+              {isLoadingExit ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Exit"
+              )}
               </button>
 
               <button
@@ -220,8 +247,8 @@ function MarketPlacePage3(props) {
                 value={formData.productTimeZone ? formData.productTimeZone : ""}
                 onChange={handleTimeZoneChange}
               />
-              {formErrors.timeZone && (
-                <span className="text-danger">{formErrors.timeZone}</span>
+              {formErrors.productTimeZone && (
+                <span className="text-danger">{formErrors.productTimeZone}</span>
               )}
             </div>
           </div>

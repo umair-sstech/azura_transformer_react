@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Accordion, Card, Button } from "react-bootstrap";
+import { Accordion, Card, Button, Spinner } from "react-bootstrap";
 import { connect } from "react-redux";
 import { onLoading } from "../../actions";
 import "./MarketPlace.css";
 import axios from "axios";
 import Select from "react-dropdown-select";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
 
 function MarketPlacePage2(props) {
   const { setPage } = props;
   const [categoryFields, setCategoryFields] = useState(null);
   const [mysaleCategory, setMysaleCategory] = useState([]);
-  const [categoryMapping, setCategoryMapping] = useState({})
-  console.log("mapping",categoryMapping)
+  const [selectedMapping, setSelectedMapping] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
+
+  const history = useHistory();
 
   const getCategoryData = () => {
     try {
@@ -26,40 +31,88 @@ function MarketPlacePage2(props) {
       console.log(error);
     }
   };
-  
+
   useEffect(() => {
     getCategoryData();
   }, []);
 
-  const handleCategoryMapping = (category, mysaleCategory) => {
-    setCategoryMapping((prev) => ({
-      ...prev,
-      [category]: mysaleCategory,
-    }));
+  const handleMappingSelect = (category, selectedOption) => {
+    const { value } = selectedOption[0];
+    setSelectedMapping((prevSelected) => [
+      ...prevSelected,
+      {
+        azuraCategoryId: category.id,
+        mysaleCategoryId: value,
+        azuraMainCategoryName: category.category_1,
+      },
+    ]);
   };
-  const handleSubmit = () => {
-    const mappingArray = Object.entries(categoryMapping).map(
-      ([category, mysaleCategory]) => ({
-        integrationId: 2,
-        integrationName: "Mysale",
-        azuraMainCategoryName: category,
-        azuraCategoryId: categoryFields[category][0].category_1_id,
-        mysaleCategoryId: mysaleCategory,
-      })
-    );
-  
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const integrationId = localStorage.getItem("marketPlaceId");
+    const integrationName = localStorage.getItem("marketPlaceName");
+    const mappings = selectedMapping.map((mapping) => ({
+      integrationId,
+      integrationName,
+      azuraMainCategoryName: mapping.azuraMainCategoryName,
+      azuraCategoryId: mapping.azuraCategoryId,
+      mysaleCategoryId: mapping.mysaleCategoryId,
+    }));
+
     axios
       .post(
         "http://localhost:8001/integration/createOrUpdateAzuraMysaleCategoryMapping",
-        mappingArray
+        mappings
       )
+
       .then((response) => {
-        console.log("response",response)
+        const { success, message, data } = response.data;
+        if (success) {
+          toast.success(message);
+          setPage(3);
+        } else {
+          toast.error(message);
+        }
       })
-      .catch((error) => {
-        // handle error
-      });
-  }; 
+      .catch((error) => console.log(error))
+      .finally(() => setIsLoading(false));
+  };
+
+  const handleOnClick = (e) => {
+    e.preventDefault();
+
+    const integrationId = localStorage.getItem("marketPlaceId");
+    const integrationName = localStorage.getItem("marketPlaceName");
+    const mappings = selectedMapping.map((mapping) => ({
+      integrationId,
+      integrationName,
+      azuraMainCategoryName: mapping.azuraMainCategoryName,
+      azuraCategoryId: mapping.azuraCategoryId,
+      mysaleCategoryId: mapping.mysaleCategoryId,
+    }));
+    setIsLoadingExit(true);
+    axios
+      .post(
+        "http://localhost:8001/integration/createOrUpdateAzuraMysaleCategoryMapping",
+        mappings
+      )
+
+      .then((response) => {
+        const { success, message, data } = response.data;
+        if (success) {
+          toast.success(message);
+          history.push("/market-place");
+          localStorage.removeItem("marketPlaceId");
+          localStorage.removeItem("marketPlaceName");
+        } else {
+          toast.error(message);
+        }
+      })
+      .catch((error) => console.log(error))
+      .finally(() => setIsLoadingExit(false));
+  };
 
   return (
     <>
@@ -71,13 +124,26 @@ function MarketPlacePage2(props) {
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
-                Save & Next
+                {isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Next"
+                )}
               </button>
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
+                onClick={handleOnClick}
               >
-                Save & Exit
+              {isLoadingExit ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Exit"
+              )}
               </button>
 
               <button className="btn btn-secondary w-auto btn-lg" type="button">
@@ -94,7 +160,7 @@ function MarketPlacePage2(props) {
           ) : (
             ""
           )}
-          {categoryFields &&
+          {categoryFields && (
             <Accordion defaultActiveKey="0">
               {Object.keys(categoryFields).map((category, index) => (
                 <Card key={index}>
@@ -111,28 +177,33 @@ function MarketPlacePage2(props) {
                   <Accordion.Collapse eventKey={index.toString()}>
                     <Card.Body>
                       {categoryFields[category].length ? (
-                        <table className="table table-bordered w-50 mt-0">
+                        <table className="table table-bordered w-75 mt-0">
                           <thead>
                             <tr>
-                              <th >Category </th>
-                              <th >Category Data</th>
+                              <th>Category </th>
+                              <th>Category Data</th>
                             </tr>
                           </thead>
                           <tbody>
                             {categoryFields[category].map((field, index) =>
-                              field.category_3 ? (
+                              field.category_tree ? (
                                 <tr key={index}>
                                   <td className="p-1 font-weight-normal">
-                                    {field.category_3}
+                                    {field.category_tree}
                                   </td>
                                   <td>
                                     <Select
-                                    className="p-1 font-weight-normal"
+                                      className="p-1 font-weight-normal"
                                       options={mysaleCategory.map((item) => ({
                                         label: item.path,
-                                        value: item.path,
+                                        value: item.id,
                                       }))}
-                                      onChange={(selected) => handleCategoryMapping(category, selected.value)}
+                                      onChange={(selectedOption) =>
+                                        handleMappingSelect(
+                                          field,
+                                          selectedOption
+                                        )
+                                      }
                                     />
                                   </td>
                                 </tr>
@@ -148,7 +219,7 @@ function MarketPlacePage2(props) {
                 </Card>
               ))}
             </Accordion>
-          }
+          )}
         </div>
       </form>
     </>

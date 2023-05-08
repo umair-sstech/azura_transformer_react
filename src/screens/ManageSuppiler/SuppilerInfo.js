@@ -43,6 +43,8 @@ function SuppilerInfo(props) {
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
 
   useEffect(() => {
     if (formData) {
@@ -114,7 +116,7 @@ function SuppilerInfo(props) {
       setPrefixName(prefixName);
       formData.set("prefixName", prefixName);
 
-      props.onLoading(true);
+      setIsLoading(true);
 
       const supplierId = localStorage.getItem("supplierId");
        
@@ -131,11 +133,11 @@ function SuppilerInfo(props) {
             } else {
               toast.error(message);
             }
-            props.onLoading(false);
+            setIsLoading(false);
           })
           .catch((error) => {
             console.log("error", error);
-            props.onLoading(false);
+            setIsLoading(false);
           });
       } else {
         axios
@@ -158,11 +160,11 @@ function SuppilerInfo(props) {
             } else {
               toast.error(message);
             }
-            props.onLoading(false);
+            setIsLoading(false);
           })
           .catch((error) => {
             console.log("error", error);
-            props.onLoading(false);
+            setIsLoading(false);
           });
       }
     }
@@ -178,7 +180,7 @@ function SuppilerInfo(props) {
     const formData = new FormData(form);
     const errors = validateIntegrationInfoForm(formData);
     setFormErrors(errors);
-
+    setIsLoadingExit(true);
     const supplierId = localStorage.getItem("supplierId");
        
     if (supplierId) {
@@ -195,11 +197,11 @@ function SuppilerInfo(props) {
           } else {
             toast.error(message);
           }
-          props.onLoading(false);
+         setIsLoadingExit(false)
         })
         .catch((error) => {
           console.log("error", error);
-          props.onLoading(false);
+         setIsLoadingExit(false)
         });
     } else {
       axios
@@ -222,11 +224,11 @@ function SuppilerInfo(props) {
           } else {
             toast.error(message);
           }
-          props.onLoading(false);
+         setIsLoadingExit(false)
         })
         .catch((error) => {
           console.log("error", error);
-          props.onLoading(false);
+         setIsLoadingExit(false)
         });
     }
   
@@ -261,15 +263,13 @@ function SuppilerInfo(props) {
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                 >
-                  {props.isLoading ? (
-                    <>
-                      <Spinner animation="border" size="sm" /> Please wait...
-                    </>
-                  ) : isSuppilerAdded ? (
-                    "Update"
-                  ) : (
-                    "Save & Next"
-                  )}
+                {isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Next"
+                )}
                 </button>
 
                 <button
@@ -277,7 +277,13 @@ function SuppilerInfo(props) {
                   type="submit"
                   onClick={handleOnClick}
                 >
-                  Save & Exit
+                {isLoadingExit ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Exit"
+                )}
                 </button>
                 <button
                   className="btn btn-secondary w-auto btn-lg"

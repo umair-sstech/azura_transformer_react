@@ -8,21 +8,21 @@ import { FormContext } from "./ManageSuppiler";
 
 import { toast } from "react-toastify";
 import { API_PATH } from "../ApiPath/Apipath";
+import { Spinner } from "react-bootstrap";
 
 function SupplierPage7(props) {
-
-  const {
-    processCancel,setFormData
-  } = useContext(FormContext);
+  const { processCancel, setFormData } = useContext(FormContext);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
+
   const history = useHistory();
   const options = [
     { value: "two_tire", label: "Two Tier" },
     { value: "three_tire", label: "Three Tier" },
   ];
-useEffect(()=>{
-  getData()
-},[])
+  useEffect(() => {
+    getData();
+  }, []);
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleSelectChange = (selectedOption) => {
@@ -42,7 +42,7 @@ useEffect(()=>{
         supplierId: localStorage.getItem("supplierId"),
         productTier: selectedOption.value,
       };
-
+      setIsLoadingExit(true);
       axios
         .post(
           `${process.env.REACT_APP_API_URL_SUPPLIER}/integration/productTierSetup`,
@@ -84,6 +84,7 @@ useEffect(()=>{
         });
     }
   };
+
   const getData = () => {
     const supplierId = localStorage.getItem("supplierId");
   
@@ -101,10 +102,10 @@ useEffect(()=>{
         })
         .catch((error) => {
           console.log("error", error);
-        });
+        })
+        .finally(() => setIsLoadingExit(false));
     }
   };
-  
 
   return (
     <>
@@ -117,16 +118,22 @@ useEffect(()=>{
                 type="submit"
                 onClick={handleSubmit}
               >
-                Save & Exit
+              {isLoadingExit ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Exit"
+              )}
               </button>
 
               <button
-              className="btn btn-secondary w-auto btn-lg"
-              type="button"
-              onClick={processCancel}
-            >
-              Exit
-            </button>
+                className="btn btn-secondary w-auto btn-lg"
+                type="button"
+                onClick={processCancel}
+              >
+                Exit
+              </button>
             </div>
           </div>
         </div>

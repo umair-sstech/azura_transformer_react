@@ -6,17 +6,13 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageSuppiler";
+import { Spinner } from "react-bootstrap";
 
 function SuppilerPage4(props) {
   const { setPage } = props;
   const { processCancel, setFormData } = useContext(FormContext);
   const history = useHistory();
-  const imageSize = [
-    "762x1100",
-    "1200x1600",
-    "1000x1000",
-    "1600x2000",
-  ];
+  const imageSize = ["762x1100", "1200x1600", "1000x1000", "1600x2000"];
   useEffect(() => {
     getSupplierDataById();
   }, []);
@@ -24,6 +20,8 @@ function SuppilerPage4(props) {
   const [formErrors, setFormErrors] = useState({});
   const [prefix, setPrefix] = useState("");
   const [suffix, setSuffix] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
 
   const handleParentCheckboxChange = (e) => {
     const childCheckboxes = document.querySelectorAll(
@@ -91,7 +89,7 @@ function SuppilerPage4(props) {
       setFormErrors(errors);
       return;
     }
-
+    setIsLoading(true);
     axios
       .post(`${API_PATH.IMAGE_RESIZE}`, {
         supplierId: localStorage.getItem("supplierId"),
@@ -112,7 +110,8 @@ function SuppilerPage4(props) {
           toast.error(message);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
   };
 
   const handleOnClick = async (e) => {
@@ -126,7 +125,7 @@ function SuppilerPage4(props) {
       setFormErrors(errors);
       return;
     }
-
+    setIsLoadingExit(true);
     axios
       .post(`${API_PATH.IMAGE_RESIZE}`, {
         supplierId: localStorage.getItem("supplierId"),
@@ -146,7 +145,10 @@ function SuppilerPage4(props) {
           toast.error(message);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoadingExit(false);
+      });
   };
 
   const getSupplierDataById = () => {
@@ -178,7 +180,13 @@ function SuppilerPage4(props) {
                 // onClick={() => setPage("5")}
                 onClick={(e) => handleSubmit(e)}
               >
-                Save & Next
+                {isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Next"
+                )}
               </button>
 
               <button
@@ -186,7 +194,13 @@ function SuppilerPage4(props) {
                 type="submit"
                 onClick={(e) => handleOnClick(e)}
               >
-                Save & Exit
+                {isLoadingExit ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Exit"
+                )}
               </button>
               <button
                 className="btn btn-secondary w-auto btn-lg"

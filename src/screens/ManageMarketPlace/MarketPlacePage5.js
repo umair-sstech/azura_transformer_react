@@ -7,7 +7,7 @@ import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageMarketPlace";
 import { Spinner } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-
+import { validateMarketPlaceTrackingSync } from "../Validations/Validation";
 function MarketPlacePage5(props) {
   const { setPage } = props;
   const { processCancel } = useContext(FormContext);
@@ -19,7 +19,8 @@ function MarketPlacePage5(props) {
   });
   const [formErrors, setFormErrors] = useState({});
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
-  const [isSubmitting, setSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -51,11 +52,16 @@ function MarketPlacePage5(props) {
 
   const handleTimeZoneChange = (selectedOption) => {
     setFormData({ ...formData, trackingTimeZone: selectedOption });
+    setFormErrors({ ...formErrors, trackingTimeZone: "" });
+
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitting(true); // set the submitting state to true
+    const errors = validateMarketPlaceTrackingSync(formData);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
     const integrationId = localStorage.getItem("marketPlaceId");
     const integrationName = localStorage.getItem("marketPlaceName");
 
@@ -67,11 +73,11 @@ function MarketPlacePage5(props) {
       integrationId,
       integrationName,
     };
+    setIsLoading(true)
     axios
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
         const { success, message, data } = response.data;
-        console.log("response", response);
         if (success) {
           toast.success(message);
           setFormData({});
@@ -84,13 +90,17 @@ function MarketPlacePage5(props) {
         console.error(error);
       })
       .finally(() => {
-        setSubmitting(false); // set the submitting state to false after the request is complete
+        setIsLoading(false)
       });
   };
+}
 
   const handleOnClick = (e) => {
     e.preventDefault();
-    setSubmitting(true);
+    const errors = validateMarketPlaceTrackingSync(formData);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
     const integrationId = localStorage.getItem("marketPlaceId");
     const integrationName = localStorage.getItem("marketPlaceName");
 
@@ -102,6 +112,7 @@ function MarketPlacePage5(props) {
       integrationId,
       integrationName,
     };
+    setIsLoadingExit(true)
     axios
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
@@ -121,10 +132,10 @@ function MarketPlacePage5(props) {
         console.error(error);
       })
       .finally(() => {
-        setSubmitting(false);
+       setIsLoadingExit(false)
       });
   };
-  
+}
   const getProductData = () => {
     const integrationId = localStorage.getItem("marketPlaceId");
 
@@ -168,19 +179,26 @@ function MarketPlacePage5(props) {
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
-                {/*{isSubmitting ? (
-                <Spinner animation="border" size="sm" />
+              {isLoading ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
               ) : (
-                ""
-              )}*/}
-                Save & Next
+                "Save & Next"
+              )}
               </button>
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
-                type="submit"
+                type="button"
                 onClick={handleOnClick}
               >
-                Save & Exit
+              {isLoadingExit ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Next"
+              )}
               </button>
 
               <button
@@ -207,8 +225,8 @@ function MarketPlacePage5(props) {
                   (option) => option.value === formData.trackingSyncFrequency
                 )}
               />
-              {formErrors.syncFrequency && (
-                <span className="text-danger">{formErrors.syncFrequency}</span>
+              {formErrors.trackingSyncFrequency && (
+                <span className="text-danger">{formErrors.trackingSyncFrequency}</span>
               )}
             </div>
           </div>
@@ -230,8 +248,8 @@ function MarketPlacePage5(props) {
                 }
                 onChange={handleTimeZoneChange}
               />
-              {formErrors.timeZone && (
-                <span className="text-danger">{formErrors.timeZone}</span>
+              {formErrors.trackingTimeZone && (
+                <span className="text-danger">{formErrors.trackingTimeZone}</span>
               )}
             </div>
           </div>
