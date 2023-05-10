@@ -13,18 +13,36 @@ function MarketPlacePage2(props) {
   const [categoryFields, setCategoryFields] = useState(null);
   const [mysaleCategory, setMysaleCategory] = useState([]);
   const [selectedMapping, setSelectedMapping] = useState([]);
+  console.log("selected", selectedMapping);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
 
   const history = useHistory();
+
+  const createOptions = (obj) =>
+    Object.entries(obj).map(([key, value]) => ({
+      value,
+      label: key,
+    }));
 
   const getCategoryData = () => {
     try {
       axios
         .get("http://localhost:8001/integration/getCategoryFields")
         .then((response) => {
-          setCategoryFields(response.data.data.master_Category);
-          setMysaleCategory(response.data.data.mysale_Category);
+          const categories = Object.keys(
+            response.data.data.master_Category
+          ).map((category) => ({
+            category,
+            categoryData: Object.entries(
+              response.data.data.master_Category[category]
+            ).map(([key, value]) => ({
+              value,
+              label: key,
+            })),
+          }));
+          setCategoryFields(categories);
+          setMysaleCategory(createOptions(response.data.data.mysale_Category));
         })
         .catch((error) => console.log(error));
     } catch (error) {
@@ -36,48 +54,51 @@ function MarketPlacePage2(props) {
     getCategoryData();
   }, []);
 
-  const handleMappingSelect = (category, selectedOption) => {
-    const { value } = selectedOption[0];
+  const handleMappingSelect = (category, selectedOption, categoryData) => {
+    const selectedCategoryId = selectedOption.value;
+    console.log("mysaleca", selectedCategoryId);
+    const categoryFieldId = categoryData?.value;
     setSelectedMapping((prevSelected) => [
       ...prevSelected,
       {
-        azuraCategoryId: category.id,
-        mysaleCategoryId: value,
-        azuraMainCategoryName: category.category_1,
+        azuraMainCategoryName:category,
+        azuraCategoryId: categoryFieldId,
+        mysaleCategoryId: selectedCategoryId,
       },
     ]);
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(e);
     setIsLoading(true);
     const integrationId = localStorage.getItem("marketPlaceId");
     const integrationName = localStorage.getItem("marketPlaceName");
-    const mappings = selectedMapping.map((mapping) => ({
-      integrationId,
-      integrationName,
+
+    const mappingData = selectedMapping.map((mapping) => ({
+      integrationId: integrationId,
+      integrationName: integrationName,
       azuraMainCategoryName: mapping.azuraMainCategoryName,
       azuraCategoryId: mapping.azuraCategoryId,
       mysaleCategoryId: mapping.mysaleCategoryId,
     }));
 
+    console.log("mapping data", mappingData);
     axios
       .post(
         "http://localhost:8001/integration/createOrUpdateAzuraMysaleCategoryMapping",
-        mappings
+        mappingData
       )
-
       .then((response) => {
         const { success, message, data } = response.data;
         if (success) {
           toast.success(message);
           setPage(3);
-        } else {
-          toast.error(message);
         }
       })
-      .catch((error) => console.log(error))
-      .finally(() => setIsLoading(false));
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+      });
   };
 
   const handleOnClick = (e) => {
@@ -137,13 +158,13 @@ function MarketPlacePage2(props) {
                 type="submit"
                 onClick={handleOnClick}
               >
-              {isLoadingExit ? (
-                <>
-                  <Spinner animation="border" size="sm" /> Please wait...
-                </>
-              ) : (
-                "Save & Exit"
-              )}
+                {isLoadingExit ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Exit"
+                )}
               </button>
 
               <button className="btn btn-secondary w-auto btn-lg" type="button">
@@ -162,7 +183,7 @@ function MarketPlacePage2(props) {
           )}
           {categoryFields && (
             <Accordion defaultActiveKey="0">
-              {Object.keys(categoryFields).map((category, index) => (
+              {categoryFields.map((categoryObj, index) => (
                 <Card key={index}>
                   <Card.Header>
                     <Accordion.Toggle
@@ -171,44 +192,41 @@ function MarketPlacePage2(props) {
                       className="accordion"
                     >
                       <i className="fa fa-angle-down arrow"></i>
-                      <span className="categoryname">{category}</span>
+                      <span className="categoryname">
+                        {categoryObj.category}
+                      </span>
                     </Accordion.Toggle>
                   </Card.Header>
                   <Accordion.Collapse eventKey={index.toString()}>
                     <Card.Body>
-                      {categoryFields[category].length ? (
+                      {categoryObj.categoryData.length ? (
                         <table className="table table-bordered w-75 mt-0">
                           <thead>
                             <tr>
-                              <th>Category </th>
+                              <th>Category</th>
                               <th>Category Data</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {categoryFields[category].map((field, index) =>
-                              field.category_tree ? (
-                                <tr key={index}>
-                                  <td className="p-1 font-weight-normal">
-                                    {field.category_tree}
-                                  </td>
-                                  <td>
-                                    <Select
-                                      className="p-1 font-weight-normal"
-                                      options={mysaleCategory.map((item) => ({
-                                        label: item.path,
-                                        value: item.id,
-                                      }))}
-                                      onChange={(selectedOption) =>
-                                        handleMappingSelect(
-                                          field,
-                                          selectedOption
-                                        )
-                                      }
-                                    />
-                                  </td>
-                                </tr>
-                              ) : null
-                            )}
+                            {categoryObj.categoryData.map((field, index) => (
+                              <tr key={index}>
+                                <td className="p-1 font-weight-normal">
+                                  {field.label}
+                                </td>
+                                <td>
+                                  <Select
+                                    options={mysaleCategory}
+                                    onChange={(selectedOption) =>
+                                      handleMappingSelect(
+                                        categoryObj.category,
+                                        selectedOption[0],
+                                        field
+                                      )
+                                    }
+                                  />
+                                </td>
+                              </tr>
+                            ))}
                           </tbody>
                         </table>
                       ) : (

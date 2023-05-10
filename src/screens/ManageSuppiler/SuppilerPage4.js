@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./SupplierPage.css";
-import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";

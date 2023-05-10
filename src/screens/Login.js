@@ -38,7 +38,14 @@ class Login extends React.Component {
     event.preventDefault();
     this.props.onLoginSubmit(this.state)
       .then(res => {
+        console.log("response",res.data.user)
+        localStorage.setItem('_id',res.data.user._id)
         localStorage.setItem('token', res.data.token);
+        localStorage.setItem('name',res.data.user.name)
+        localStorage.setItem('email',res.data.user.email)
+        localStorage.setItem('company',res.data.user.company)
+        localStorage.setItem('retailer',res.data.user.retailer)
+        localStorage.setItem('role',res.data.user.role)
         this.props.onLoading(false)
         this.props.onLoggedin(true)
         this.props.getUser(res.data.token)
@@ -49,6 +56,13 @@ class Login extends React.Component {
         console.log(e);
         toast.error(e.response.data.message || "Something went wrong")
         localStorage.removeItem('token')
+        localStorage.removeItem('_id')
+        localStorage.removeItem('token');
+        localStorage.removeItem('name')
+        localStorage.removeItem('email')
+        localStorage.removeItem('company')
+        localStorage.removeItem('retailer')
+        localStorage.removeItem('role')
         this.props.onLoading(false)
         this.props.onLoggedin(false)
       })

@@ -80,14 +80,12 @@ import UpdateProfile from "./screens/UpdateProfile/UpdateProfile";
 import RetailerProfile from "./screens/RetailerProfile/RetailerProfile";
 import SupplierList from "./screens/SuppilerList/SuppilerList";
 import ManageSuppiler from "./screens/ManageSuppiler/ManageSuppiler";
-import SuppilerPage3 from "./screens/ManageSuppiler/SuppilerPage3";
-import SuppilerPage2 from "./screens/ManageSuppiler/SuppilerPage2";
 import IntegrationType from "./screens/Integrations/IntegrationType";
 import ManageMarketPlace from "./screens/ManageMarketPlace/ManageMarketPlace";
 import MarketPlaceList from "./screens/ManageMarketPlace/MarketPlaceList";
 import IntegratorList from "./screens/ManageIntegrator/IntegratorList";
 import ManageIntegrator from "./screens/ManageIntegrator/ManageIntegrator";
-import SupplierPage6 from "./screens/ManageSuppiler/SupplierPage6";
+import ManageRetailerSetting from "./screens/ManageRetailer/ManageRetailerSetting";
 window.__DEV__ = true;
 
 class App extends React.Component {
@@ -266,11 +264,19 @@ class App extends React.Component {
                   <Route exact path={`/retailer`} component={RetailerList} />
                   {this.props.user?.permissions.update_retailer ||
                   this.props.user?.permissions.add_retailer ? (
+                    <>
                     <Route
-                      exact
-                      path={`/manage-retailer`}
-                      component={ManageRetailer}
-                    />
+                    exact
+                    path={`/manage-retailer`}
+                    component={ManageRetailer}
+                  />
+                  <Route
+                  exact
+                  path={`/setting-retailer`}
+                  component={ManageRetailerSetting}
+                />
+                    </>
+                   
                   ) : null}
                 </>
               ) : null}
@@ -302,7 +308,7 @@ class App extends React.Component {
                   />
                 </>
               ) : null}
-             
+              {this.props.user?.data.role == "SUPER_ADMIN" ? (
                 <>
                   <Route exact path={`/supplier`} component={SupplierList} />
                   <Route
@@ -310,8 +316,8 @@ class App extends React.Component {
                     path={`/manage-suppiler`}
                     component={ManageSuppiler}
                   />
-                 
                 </>
+                ) : null}
               
               {this.props.user?.data.role == "SUPER_ADMIN" ? (
                 <>

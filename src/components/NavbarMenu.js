@@ -35,11 +35,19 @@ const LogOut = ({ propData }) => {
   const logoutHandler = () => {
     propData.onSystemLoading(true);
     const token = localStorage.getItem("token");
+
     const userId = propData.user.data._id;
     propData
       .onLogOut(token, userId)
       .then((res) => {
         localStorage.removeItem("token");
+        localStorage.removeItem('_id')
+        localStorage.removeItem('token');
+        localStorage.removeItem('name')
+        localStorage.removeItem('email')
+        localStorage.removeItem('company')
+        localStorage.removeItem('retailer')
+        localStorage.removeItem('role')
         propData.onLoggedin(false);
         history.push("/login");
         propData.onSystemLoading(false);

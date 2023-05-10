@@ -169,7 +169,7 @@ function IntegratorList(props) {
                         <th>Integrator Name</th>
                     
                         <th>Prefix Name</th>
-                        <th>Last Update</th>
+                        <th>Last Update(UTC)</th>
                         {props.user.permissions.update_company ? (
                           <>
                             <th>Status</th>
