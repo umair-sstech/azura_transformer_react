@@ -77,9 +77,9 @@ const ManageCompany = (props) =>
                         <PageHeader
                             HeaderText={isCompanyAdded ? "Company Update" : "Company Add"}
                             Breadcrumb={[
-                                { name: "Manage", navigate: "" },
-                                { name: "Company List", navigate: "" },
-                                { name: isCompanyAdded ? "Company Update" : "Company Add", navigate: "" },
+                                { name: "Manage", navigate: "#" },
+                                { name: "Company List", navigate: "/company" },
+                                { name: isCompanyAdded ? "Company Update" : "Company Add", navigate: "#" },
                             ]}
                         />
                         <div className='tab-component'>

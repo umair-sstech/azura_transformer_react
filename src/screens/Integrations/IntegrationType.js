@@ -44,8 +44,8 @@ function IntegrationType(props) {
             <PageHeader
               HeaderText={"Integration List"}
               Breadcrumb={[
-                { name: "Manage", navigate: "" },
-                { name: "Integrations List", navigate: "" },
+                { name: "Integration", navigate: "#" },
+                { name: "Integrations List", navigate: "#" },
               ]}
               className="page-header"
             />

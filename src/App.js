@@ -86,6 +86,8 @@ import MarketPlaceList from "./screens/ManageMarketPlace/MarketPlaceList";
 import IntegratorList from "./screens/ManageIntegrator/IntegratorList";
 import ManageIntegrator from "./screens/ManageIntegrator/ManageIntegrator";
 import ManageRetailerSetting from "./screens/ManageRetailer/ManageRetailerSetting";
+import ProductsList from "./screens/products/ProductsList";
+import FileUpload from "./screens/products/FileUpload";
 window.__DEV__ = true;
 
 class App extends React.Component {
@@ -337,6 +339,14 @@ class App extends React.Component {
                 <>
                   <Route exact path={`/integrator`} component={IntegratorList} />
                   <Route exact path={`/manage-integrator`} component={ManageIntegrator} />
+
+                </>
+              ) : null}
+
+              {this.props.user?.data.role === "SUPER_ADMIN" ? (
+                <>
+                  <Route exact path={`/products`} component={ProductsList} />
+                  <Route exact path={`/file-upload`} component={FileUpload} />
 
                 </>
               ) : null}

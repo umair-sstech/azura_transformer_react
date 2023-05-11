@@ -102,8 +102,8 @@ const UserList = (props) => {
                     <PageHeader
                         HeaderText="User List"
                         Breadcrumb={[
-                            { name: "Manage", navigate: "" },
-                            { name: "User List", navigate: "" },
+                            { name: "Manage", navigate: "#" },
+                            { name: "User List", navigate: "#" },
                         ]}
                     />
                     <div className='tab-component'>
@@ -129,7 +129,7 @@ const UserList = (props) => {
                                     {props.loading ? <div className='loader-wrapper' >
                                         <i className="fa fa-refresh fa-spin"></i>
                                     </div> : null}
-                                    <table className="table">
+                                    <table className="table w-100 table-responsive-sm">
                                         <thead>
                                             <tr>
                                                 <th>User Code</th>

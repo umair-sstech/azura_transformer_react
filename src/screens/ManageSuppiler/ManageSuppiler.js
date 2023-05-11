@@ -110,11 +110,11 @@ function ManageSuppiler(props) {
             <PageHeader
               HeaderText={isSuppilerAdded ? "Suppiler Update" : "suppiler Add"}
               Breadcrumb={[
-                { name: "Manage", navigate: "" },
-                { name: "Suppiler List", navigate: "" },
+                { name: "Integration", navigate: "#" },
+                { name: "Suppiler List", navigate: "/supplier" },
                 {
                   name: isSuppilerAdded ? "Suppiler Update" : "Suppiler Add",
-                  navigate: "",
+                  navigate: "#",
                 },
               ]}
               className="page-header"

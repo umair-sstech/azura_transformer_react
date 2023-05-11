@@ -105,11 +105,11 @@ function ManageMarketPlace(props) {
           <PageHeader 
           HeaderText={isMarketPlaceAdded ? "Market Place Update" : "Market Place Add"}
           Breadcrumb={[
-            { name: "Manage", navigate: "" },
-            { name: "Market Place List", navigate: "" },
+            { name: "Integration", navigate: "#" },
+            { name: "Market Place List", navigate: "/market-place" },
             {
               name: isMarketPlaceAdded ? "Market Place Update" : "Market Place Add",
-              navigate: "",
+              navigate: "#",
             },
           ]}
           className="page-header"

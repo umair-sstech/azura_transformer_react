@@ -7,7 +7,6 @@ import axios from "axios";
 import { FormContext } from "./ManageIntegrator";
 
 function IntegratorPage2(props) {
-  const { setPage } = props;
   const {
    
     processCancel,
@@ -55,10 +54,10 @@ function IntegratorPage2(props) {
             </div>
           </div>
         </div>
-        <div class="row mt-4 ml-3">
+        <div className="row mt-4 ml-3">
           {!categoryFields ? (
-            <div class="loader-wrapper w-100" style={{ marginTop: "14%" }}>
-              <i class="fa fa-refresh fa-spin"></i>
+            <div className="loader-wrapper w-100" style={{ marginTop: "14%" }}>
+              <i className="fa fa-refresh fa-spin"></i>
             </div>
           ) : (
             ""
@@ -73,8 +72,8 @@ function IntegratorPage2(props) {
                       eventKey={index.toString()}
                       className="accordion"
                     >
-                      <i class="fa fa-angle-down arrow"></i>
-                      <span class="categoryname">{category}</span>
+                      <i className="fa fa-angle-down arrow"></i>
+                      <span className="categoryname">{category}</span>
                     </Accordion.Toggle>
                   </Card.Header>
                   <Accordion.Collapse eventKey={index.toString()}>

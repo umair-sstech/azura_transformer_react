@@ -162,9 +162,9 @@ const ManageUser = (props) => {
           <PageHeader
             HeaderText={"User Add"}
             Breadcrumb={[
-              { name: "Manage", navigate: "" },
-              { name: "User List", navigate: "" },
-              { name: "User Add", navigate: "" },
+              { name: "Manage", navigate: "#" },
+              { name: "User List", navigate: "/user" },
+              { name: "User Add", navigate: "#" },
             ]}
           />
           <div className="tab-component">

@@ -2,25 +2,24 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import Pagination from "react-responsive-pagination";
 import axios from "axios";
-import "../SuppilerList/SuppilerList.css";
 import { onLoading } from "../../actions";
 import { connect } from "react-redux";
 import PageHeader from "../../components/PageHeader";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { Form } from "react-bootstrap";
 import Select from "react-select";
+import { Form, FormControl, InputGroup } from "react-bootstrap";
 import { API_PATH } from "../ApiPath/Apipath";
+import './ProductsList.css'
 
-function SuppilerList(props) {
-  const [supplierList, setSupplierList] = useState([]);
+function ProductsList(props) {
+  const [marketPlaceList, setMarketPlaceList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(5);
   const [status, setStatus] = useState("active");
-  const [type, setType] = useState("Supplier");
+  const [type, setType] = useState("MarketPlace");
 
   const history = useHistory();
 
@@ -47,28 +46,28 @@ function SuppilerList(props) {
   };
 
   useEffect(() => {
-    const fetchSupplierInfo = async () => {
+    const fetchMarketPlaceInfo = async () => {
       const response = await getSupplierInfo(currentPage, dataLimit);
       if (response) {
         let totalPage = Math.ceil(response.totlaRecord / response.limit);
         setTotalPages(totalPage);
         if (status === "deactive") {
-          setSupplierList(
-            response.data.filter((supplier) => supplier.status === 0)
+          setMarketPlaceList(
+            response.data.filter((market_place) => market_place.status === 0)
           );
         } else if (status === "all") {
-          setSupplierList(response.data);
+          setMarketPlaceList(response.data);
         } else {
-          setSupplierList(
-            response.data.filter((supplier) => supplier.status === 1)
+          setMarketPlaceList(
+            response.data.filter((market_place) => market_place.status === 1)
           );
         }
         setType(type);
 
-        props.onLoading(false); // set loading to false after data is fetched
+        props.onLoading(false);
       }
     };
-    fetchSupplierInfo();
+    fetchMarketPlaceInfo();
   }, [currentPage, dataLimit, status]);
 
   const activateDeactivate = (event, supplierId) => {
@@ -91,13 +90,11 @@ function SuppilerList(props) {
           .then((res) => {
             toast.success(res.data.message);
 
-            // Find the index of the supplier object in the array
-            const index = supplierList.findIndex(
-              (supplier) => supplier.id === supplierId
+            const index = marketPlaceList.findIndex(
+              (market_place) => market_place.id === supplierId
             );
 
-            // Update the status property of the supplier object
-            setSupplierList((prevState) => [
+            setMarketPlaceList((prevState) => [
               ...prevState.slice(0, index),
               {
                 ...prevState[index],
@@ -122,7 +119,6 @@ function SuppilerList(props) {
     { label: "Deactivate", value: "deactive" },
     { label: "All", value: "all" },
   ];
-
   return (
     <div
       style={{ flex: 1 }}
@@ -133,17 +129,16 @@ function SuppilerList(props) {
       <div>
         <div className="container-fluid">
           <PageHeader
-            HeaderText="Suppiler List"
+            HeaderText="Products List"
             Breadcrumb={[
-              { name: "Integration", navigate: "#" },
-              { name: "Suppiler List", navigate: "#" },
+              { name: "Products", navigate: "#" },
+              { name: "Products List", navigate: "#" },
             ]}
-            style={{ position: "sticky", top: 0, zIndex: 999 }}
           />
           <div className="tab-component">
             <div className="card">
               <div className="body">
-                <div className="d-flex justify-content-between align-items-center mb-3">
+                <div className="mb-3 top__header">
                   <div style={{ minWidth: "110px" }}>
                     <Select
                       options={filterList}
@@ -151,12 +146,12 @@ function SuppilerList(props) {
                         setStatus(data.value);
                         setCurrentPage(1); 
                       }}
-                      defaultValue={filterList[0]}
+                      defaultValue={filterList[0]} 
                     />
                   </div>
-                  <Link className="link-btn" to={`/manage-suppiler`}>
-                    Add Supplier
-                  </Link>
+                  <InputGroup className="searchbar">
+                    <FormControl type="search" className="me-2" placeholder="Search Products by SKU number, Parent SKU number, Name, Category or supplier..." />
+                  </InputGroup>
                 </div>
 
                 <div className="data-table">
@@ -165,44 +160,51 @@ function SuppilerList(props) {
                       <i className="fa fa-refresh fa-spin"></i>
                     </div>
                   ) : null}
-                  <table className="table w-100 table-responsive-sm">
-
+                  <table className="table w-100 table-responsive-md">
                     <thead>
                       <tr>
-                      <th>Logo</th>
+                      <th>Id</th>
                         <th>Supplier Name</th>
                         
-                        <th>Prefix Name</th>
-                        <th>Last Update(UTC)</th>
-                       
+                        <th>Product Name</th>
+                        <th>Product SKU</th>
+                        <th>Parent SKU</th>
+                        <th>Category</th>
+                        <th>Brand</th>
+                        {props.user.permissions.update_company ? (
                           <>
                             <th>Status</th>
                             <th>Action</th>
                           </>
-                        
+                        ) : null}
                       </tr>
                     </thead>
                     <tbody>
-                      {supplierList?.map((supplier) => (
-                        <tr key={supplier.id}>
+                      {marketPlaceList.map((market_place) => (
+                        <tr key={market_place.id}>
                         <td>
-                        {supplier.logo ? (
+                        {market_place.logo ? (
                           <img
-                            src={supplier.logo}
-                            alt={supplier.name}
+                            src={market_place.logo}
+                            alt={market_place.name}
                             className="list-logo"
                           />
                         ) : (
                           <div className="list-logo placeholder">N/A</div>
                         )}
                       </td>
-                          <td>{supplier.name}</td>
+                          <td>{market_place.name}</td>
 
+                          <td>{market_place.name}</td>
+
+                          <td>{market_place.name}</td>
+
+                          <td>{market_place.name}</td>
                         
-                          <td>{supplier.prefixName}</td>
+                          <td>{market_place.prefixName}</td>
                           <td>
-                            {supplier.updatedAt
-                              ? moment(supplier.updated_on).format(
+                            {market_place.updatedAt
+                              ? moment(market_place.updated_on).format(
                                   "MM/DD/YYYY hh:mm a"
                                 )
                               : "N/A"}
@@ -212,10 +214,10 @@ function SuppilerList(props) {
                             <td>
                               <Form.Check
                                 type="switch"
-                                id={`${supplier.id}`}
-                                checked={supplier.status}
+                                id={`${market_place.id}`}
+                                checked={market_place.status}
                                 onChange={(e) =>
-                                  activateDeactivate(e, supplier.id)
+                                  activateDeactivate(e, market_place.id)
                                 }
                               />
                             </td>
@@ -227,15 +229,15 @@ function SuppilerList(props) {
                                 className="fa fa-edit edit"
                                 onClick={() => {
                                   localStorage.setItem(
-                                    "supplierId",
-                                    supplier.id
+                                    "marketPlaceId",
+                                    market_place.id
                                   );
                                   localStorage.setItem(
-                                    "supplierName",
-                                    supplier.name
+                                    "marketPlaceName",
+                                    market_place.name
                                   );
 
-                                  history.push(`/manage-suppiler`);
+                                  history.push(`/manage-marketPlace`);
                                 }}
                               ></i>
                             </td>
@@ -278,4 +280,4 @@ const mapStateToProps = ({ LoadingReducer, loginReducer }) => ({
   loading: LoadingReducer.isLoading,
   user: loginReducer.user,
 });
-export default connect(mapStateToProps, { onLoading })(SuppilerList);
+export default connect(mapStateToProps, { onLoading })(ProductsList);

@@ -8,7 +8,6 @@ import { FormContext } from './UpdateProfile';
 const UpdateSocialInfo = (props) =>
 {
     const { isCompanyAdded,
-        processCancel,
         setFormData,
         formData, setLogoData, logoData, setIsCompanyAdded } = useContext(FormContext)
 

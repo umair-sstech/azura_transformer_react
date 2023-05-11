@@ -1,0 +1,22 @@
+.top__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media only screen and (max-width: 600px) {
+    .top__header {
+        display: block;
+    }
+    .top__header .supplier__dropdown,
+    .top__header .file__select{
+        margin-top: 20px;
+    }
+}
+
+@media only screen and (min-width: 601px) and (max-width: 750px) {
+    .top__header .supplier__dropdown,
+    .top__header .file__select{
+        margin-left: 20px;
+    }
+}

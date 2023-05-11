@@ -77,9 +77,9 @@ const ManageRetailer = (props) =>
                     <PageHeader
                         HeaderText={isRetailerAdded ? "Retailer Edit" : "Retailer Add"}
                         Breadcrumb={[
-                            { name: "Manage", navigate: "" },
-                            { name: "Retailer List", navigate: "" },
-                            { name: isRetailerAdded ? "Retailer Edit" : "Retailer Add", navigate: "" },
+                            { name: "Manage", navigate: "#" },
+                            { name: "Retailer List", navigate: "/retailer" },
+                            { name: isRetailerAdded ? "Retailer Edit" : "Retailer Add", navigate: "#" },
                         ]}
                     />
                     <div className='tab-component'>

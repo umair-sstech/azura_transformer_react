@@ -8,7 +8,6 @@ class Chat extends React.Component {
     window.scrollTo(0, 0);
   }
   render() {
-    const { isInbox } = this.props;
     return (
       <div style={{ flex: 1 }}>
         <div>

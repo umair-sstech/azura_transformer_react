@@ -133,8 +133,8 @@ function IntegratorList(props) {
           <PageHeader
             HeaderText="Integrator List"
             Breadcrumb={[
-              { name: "Manage", navigate: "" },
-              { name: "Integrator List", navigate: "" },
+              { name: "Integration", navigate: "#" },
+              { name: "Integrator List", navigate: "#" },
             ]}
           />
           <div className="tab-component">
@@ -162,7 +162,7 @@ function IntegratorList(props) {
                       <i className="fa fa-refresh fa-spin"></i>
                     </div>
                   ) : null}
-                  <table className="table">
+                  <table className="table w-100 table-responsive-sm">
                     <thead>
                       <tr>
                       <th>Logo</th>

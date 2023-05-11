@@ -8,7 +8,6 @@ import avatar4 from "../../assets/images/xs/avatar4.jpg";
 
 class TwitterFeedCard extends React.Component {
   render() {
-    const { referralsDropDown } = this.props;
     return (
       <div className="card">
         <div className="header">

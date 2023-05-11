@@ -7,7 +7,6 @@ import { onLoading } from "../../actions";
 import { useHistory } from "react-router-dom";
 import "./SupplierPage.css";
 import Select from "react-select";
-import Swal from "sweetalert2";
 import { validateIntegrationInfoForm } from "../Validations/Validation";
 import { Spinner } from "react-bootstrap";
 import { API_PATH } from "../ApiPath/Apipath";
@@ -16,7 +15,6 @@ function SuppilerInfo(props) {
   const { setPage } = props;
   const {
     setIsSuppilerAdded,
-    isSuppilerAdded,
     formData,
     setFormData,
     processCancel,

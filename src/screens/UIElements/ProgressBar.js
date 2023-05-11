@@ -9,7 +9,6 @@ class UIProgressBar extends React.Component {
     window.scrollTo(0, 0);
   }
   render() {
-    const { modalData, modalCard } = this.props;
     return (
       <div
         style={{ flex: 1 }}

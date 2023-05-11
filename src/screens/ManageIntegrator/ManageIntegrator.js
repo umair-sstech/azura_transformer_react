@@ -100,13 +100,13 @@ function ManageIntegrator(props) {
                 isIntegrator ? "Integrator Update" : "Integrator Add"
               }
               Breadcrumb={[
-                { name: "Manage", navigate: "" },
-                { name: "Integrator List", navigate: "" },
+                { name: "Integration", navigate: "#" },
+                { name: "Integrator List", navigate: "/integrator" },
                 {
                   name: isIntegrator
                     ? "Integrator Update"
                     : "Integrator Add",
-                  navigate: "",
+                  navigate: "#",
                 },
               ]}
               className="page-header"

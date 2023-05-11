@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import PageHeader from "../../components/PageHeader";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { Button, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import "./retailerList.css";
@@ -108,8 +108,8 @@ const RetailerList = (props) => {
           <PageHeader
             HeaderText="Retailer List"
             Breadcrumb={[
-              { name: "Manage", navigate: "" },
-              { name: "Retailer List", navigate: "" },
+              { name: "Manage", navigate: "#" },
+              { name: "Retailer List", navigate: "#" },
             ]}
           />
           <div className="tab-component">
@@ -141,7 +141,7 @@ const RetailerList = (props) => {
                       <i className="fa fa-refresh fa-spin"></i>
                     </div>
                   ) : null}
-                  <table className="table">
+                  <table className="table w-100 table-responsive-md">
                     <thead>
                       <tr>
                         <th>Retailer Code</th>
