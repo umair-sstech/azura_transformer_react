@@ -1,21 +1,21 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import "./SupplierPage.css";
-import Swal from "sweetalert2";
 import { validateHttpForm } from "../Validations/Validation";
 import axios from "axios";
-import Select, { defaultTheme } from "react-select";
+import Select from "react-select";
 import { toast } from "react-toastify";
 import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageSuppiler";
 import { Spinner } from "react-bootstrap";
 
-function SupplierHttpForm(props) {
+function SupplierHttpForm({ onSubmit, settingType }) {
   const { processCancel } = useContext(FormContext);
 
   const [formData, setFormData] = useState({
     urlPath: "",
     syncFrequency: "",
+    settingType: "",
   });
   const [formErrors, setFormErrors] = useState({});
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
@@ -67,21 +67,33 @@ function SupplierHttpForm(props) {
     if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
-      const payload = { ...formData, supplierId, supplierName };
-      setIsLoading(true)
+      const payload = {
+        ...formData,
+        settingType,
+        supplierId,
+        supplierName,
+        password: "",
+        hostName: "",
+        userName: "",
+        port: "",
+        protocol: "",
+        timeZone: "",
+      };
+      setIsLoading(true);
       axios
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
           const { success, message, data } = response.data;
           if (success) {
             toast.success(message);
+            onSubmit();
           } else {
             toast.error(message);
           }
         })
         .catch((error) => {
           console.error(error);
-          setIsLoading(false)
+          setIsLoading(false);
         });
     }
   };
@@ -95,8 +107,8 @@ function SupplierHttpForm(props) {
     if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
-      const payload = { ...formData, supplierId, supplierName };
-      setIsLoadingExit(true)
+      const payload = { ...formData, settingType, supplierId, supplierName };
+      setIsLoadingExit(true);
       axios
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
@@ -112,7 +124,7 @@ function SupplierHttpForm(props) {
         })
         .catch((error) => {
           console.error(error);
-          setIsLoadingExit(false)
+          setIsLoadingExit(false);
         });
     }
   };
@@ -125,7 +137,6 @@ function SupplierHttpForm(props) {
         .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
         .then((response) => {
           const supplierData = response.data.data;
-          console.log("supplierData",supplierData.urlPath)
           setFormData(supplierData);
         })
         .catch((error) => {
@@ -144,26 +155,26 @@ function SupplierHttpForm(props) {
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                 >
-                {isLoading ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : (
-                  "Save & Next"
-                )}
+                  {isLoading ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Please wait...
+                    </>
+                  ) : (
+                    "Save & Next"
+                  )}
                 </button>
                 <button
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                   onClick={handleOnClick}
                 >
-                {isLoadingExit ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : (
-                  "Save & Exit"
-                )}
+                  {isLoadingExit ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Please wait...
+                    </>
+                  ) : (
+                    "Save & Exit"
+                  )}
                 </button>
 
                 <button

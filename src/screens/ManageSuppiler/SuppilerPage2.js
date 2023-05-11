@@ -58,10 +58,8 @@ function SupplierPage2(props) {
         const response = await axios.post(`${API_PATH.ADD_CSV_DATA}`, formData);
         const { success, message } = response.data;
         if (success) {
-          // const { csvPath, csvName, csvJSON } = response.data.data;
           setFormData({
             ...formData,
-            // csvPath, csvName, csvJSON
           });
           toast.success(message);
           setIsLoading(false)
@@ -108,6 +106,7 @@ function SupplierPage2(props) {
       }
     }
   };
+  
   const getSupplierDataById = () => {
     const supplierId = localStorage.getItem("supplierId");
     axios

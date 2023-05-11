@@ -39,6 +39,7 @@ function SuppilerPage3(props) {
   const [additionalTextValue, setAdditionalTextValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
+  const [mappingData, setMappingData] = useState([]);
 
   const history = useHistory();
 
@@ -55,6 +56,7 @@ function SuppilerPage3(props) {
       if (!newSelectedOptions[index]) {
         newSelectedOptions[index] = {};
       }
+   
       if (selectedOption) {
         newSelectedOptions[index][key] = selectedOption;
 
@@ -103,6 +105,7 @@ function SuppilerPage3(props) {
       return newSelectedOptions;
     });
   };
+
   const handleRadioChange = (index, key, value) => {
     setSelectedRadio((prevSelectedRadio) => ({
       ...prevSelectedRadio,
@@ -111,7 +114,6 @@ function SuppilerPage3(props) {
         showTextbox: value === "folder_only",
       },
     }));
-    // reset additional text value when radio value changes
     setAdditionalTextValue("");
   };
 
@@ -193,7 +195,6 @@ function SuppilerPage3(props) {
         console.error(error);
       } finally {
         setIsLoading(false);
-
       }
     }
   };
@@ -311,20 +312,22 @@ function SuppilerPage3(props) {
 
         const options = {};
         supplierData.forEach((field) => {
-          const { standardField, supplierField } = field;
+          const { standardField, supplierField, imageType } = field;
           options[standardField] = {
             label: supplierField,
             value: supplierField,
+            imageType: imageType, 
           };
         });
 
         setSelectedOptions([options]);
+
+        setMappingData(supplierData); 
       })
       .catch((error) => {
         console.log("error", error);
       });
   };
-  
 
   return (
     <>
@@ -336,13 +339,13 @@ function SuppilerPage3(props) {
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
-              {isLoading ? (
-                <>
-                  <Spinner animation="border" size="sm" /> Please wait...
-                </>
-              ) : (
-                "Save & Next"
-              )}
+                {isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Next"
+                )}
               </button>
 
               <button
@@ -350,13 +353,13 @@ function SuppilerPage3(props) {
                 type="submit"
                 onClick={(e) => handleOnClick(e)}
               >
-              {isLoadingExit ? (
-                <>
-                  <Spinner animation="border" size="sm" /> Please wait...
-                </>
-              ) : (
-                "Save & Exit"
-              )}
+                {isLoadingExit ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Exit"
+                )}
               </button>
 
               <button
@@ -411,11 +414,15 @@ function SuppilerPage3(props) {
                           selectedOptions[index] && selectedOptions[index][key]
                             ? selectedOptions[index][key]
                             : null;
+                        const mapping =
+                          mappingData.find(
+                            (item) => item.standardField === key
+                          ) || {};
                         const radioValue =
                           selectedRadio[`${index}-${key}`] &&
                           selectedRadio[`${index}-${key}`].value
                             ? selectedRadio[`${index}-${key}`].value
-                            : null;
+                            : mapping.imageType || null; 
                         const showTextbox =
                           selectedRadio[`${index}-${key}`] &&
                           selectedRadio[`${index}-${key}`].showTextbox
@@ -442,7 +449,7 @@ function SuppilerPage3(props) {
                                       e.target.value
                                     )
                                   }
-                                  checked={radioValue === "folder_only"}
+                                  checked={radioValue === "folder_only"} 
                                 />{" "}
                                 <label
                                   htmlFor={`image-${index}-${key}`}
@@ -462,7 +469,7 @@ function SuppilerPage3(props) {
                                       e.target.value
                                     )
                                   }
-                                  checked={radioValue === "folder_images"}
+                                  checked={radioValue === "folder_images"} 
                                 />{" "}
                                 <label
                                   htmlFor={`image-${index}-${key}`}
@@ -482,7 +489,7 @@ function SuppilerPage3(props) {
                                       e.target.value
                                     )
                                   }
-                                  checked={radioValue === "single_image"}
+                                  checked={radioValue === "single_image"} 
                                 />{" "}
                                 <label
                                   htmlFor={`image-${index}-${key}`}

@@ -598,6 +598,8 @@ class NavbarMenu extends React.Component {
                         onClick={() => {
                           localStorage.removeItem("supplierId");
                           localStorage.removeItem("supplierName");
+                          localStorage.removeItem("selectedOption")
+
                         }}
                       >
                         <Link to="supplier">Supplier</Link>

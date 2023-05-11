@@ -65,7 +65,7 @@ function SuppilerList(props) {
         }
         setType(type);
 
-        props.onLoading(false); // set loading to false after data is fetched
+        props.onLoading(false); 
       }
     };
     fetchSupplierInfo();
@@ -91,12 +91,10 @@ function SuppilerList(props) {
           .then((res) => {
             toast.success(res.data.message);
 
-            // Find the index of the supplier object in the array
             const index = supplierList.findIndex(
               (supplier) => supplier.id === supplierId
             );
 
-            // Update the status property of the supplier object
             setSupplierList((prevState) => [
               ...prevState.slice(0, index),
               {
@@ -122,7 +120,14 @@ function SuppilerList(props) {
     { label: "Deactivate", value: "deactive" },
     { label: "All", value: "all" },
   ];
-
+  function setSelectedOption(supplier) {
+    const selectedOption = JSON.parse(localStorage.getItem('selectedOption'));
+    if (selectedOption) {
+      supplier.setPage(5);
+      supplier.setSelectedValue(selectedOption);
+    }
+  }
+  
   return (
     <div
       style={{ flex: 1 }}
@@ -234,7 +239,6 @@ function SuppilerList(props) {
                                     "supplierName",
                                     supplier.name
                                   );
-
                                   history.push(`/manage-suppiler`);
                                 }}
                               ></i>

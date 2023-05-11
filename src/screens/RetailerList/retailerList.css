@@ -19,12 +19,3 @@
     color: #fff;
     display: flex;
 }
-.data-table table {
-    width: 100%;
-  }
-  .data-table table td:nth-child(1) {
-    width: 12%;
-  }
-  .data-table table td:nth-child(2) {
-    width: 11%;
-  }

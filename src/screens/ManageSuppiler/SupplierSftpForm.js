@@ -12,15 +12,13 @@ import { Spinner } from "react-bootstrap";
 import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
 
-function SupplierSftpForm(props) {
-  const { setPage } = props;
-
+function SupplierSftpForm({ onSubmit,settingType }) {
   const { processCancel } = useContext(FormContext);
 
   const [formData, setFormData] = useState({
     supplierId: "",
     supplierName: "",
-    settingType: "",
+    settingType: settingType,
     password: "",
     hostName: "",
     userName: "",
@@ -41,9 +39,9 @@ function SupplierSftpForm(props) {
         .then((response) => {
           const supplierData = response.data.data;
           let timeZone = timeZoneData.find((tz) => tz.abbr == supplierData.timeZone);
-       setFormData(supplierData)
+          
           setFormData({
-           
+            ...supplierData,
             protocol: supplierData.protocol,
             syncFrequency: supplierData.syncFrequency,
             timeZone: {
@@ -76,7 +74,6 @@ function SupplierSftpForm(props) {
             label: item.name,
             value: item.value,
           }));
-          console.log("item", options);
           setSyncFrequencyOptions(options);
         })
         .catch((error) => console.log(error));
@@ -117,10 +114,12 @@ function SupplierSftpForm(props) {
 
       const { value, label } = formData.timeZone;
 
-      const timeZoneString = `${value} (${label})`;
+      const timeZoneString = `${value}`;
 
+    
       const payload = {
         ...formData,
+        settingType,
         timeZone: timeZoneString,
         supplierId,
         supplierName,
@@ -133,6 +132,7 @@ function SupplierSftpForm(props) {
           console.log("response", response);
           if (success) {
             toast.success(message);
+            onSubmit();
           } else {
             toast.error(message);
           }
@@ -155,11 +155,12 @@ function SupplierSftpForm(props) {
 
       const { value, label } = formData.timeZone;
 
-      const timeZoneString = `${value} (${label})`;
+      const timeZoneString = `${value}`;
 
       const payload = {
         ...formData,
         timeZone: timeZoneString,
+        settingType,
         supplierId,
         supplierName,
       };
@@ -393,7 +394,7 @@ function SupplierSftpForm(props) {
                   })}
                   placeholder="Select TimeZone"
                   onChange={handleTimeZoneChange}
-                  value={formData.timeZone}
+                  value={formData.timeZone?formData.timeZone:""}
                 
                 />
 

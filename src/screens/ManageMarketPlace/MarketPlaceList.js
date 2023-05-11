@@ -184,7 +184,6 @@ function MarketPlaceList(props) {
                         {market_place.logo ? (
                           <img
                             src={market_place.logo}
-                            alt={market_place.name}
                             className="list-logo"
                           />
                         ) : (

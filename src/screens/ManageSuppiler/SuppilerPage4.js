@@ -176,7 +176,6 @@ function SuppilerPage4(props) {
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
-                // onClick={() => setPage("5")}
                 onClick={(e) => handleSubmit(e)}
               >
                 {isLoading ? (

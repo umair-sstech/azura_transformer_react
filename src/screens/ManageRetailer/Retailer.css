@@ -1,9 +1,24 @@
-table {
+.table-class table {
     border-collapse: collapse;
-    width: 45vw !important;
+    width: auto;
     margin: 20px 0;
     border: 1px solid #ccc;
   }
+  .table-class table td:nth-child(1) {
+    width: 17%;
+  }
+  .table-class table td:nth-child(2) {
+    width: 16%;
+  }
+  
+  .table-class table td:nth-child(3) {
+    width: 17%;
+  }
+  
+  .table-class table td:nth-child(4) {
+    width: 25%;
+  }
+  
   
   td {
     border: 1px solid #ccc;
@@ -17,3 +32,23 @@ table {
     background-color: #eee;
     padding: 10px;
   }
+
+.table.product-table.table{
+  border-collapse: collapse;
+  margin: 20px 60px;
+  border: 1px solid #ccc;
+}
+.table.product-table.table td:nth-child(1) {
+  width: 8%;
+}
+.table.product-table.table td:nth-child(2) {
+  width: 8%;
+}
+
+.table.product-table.table td:nth-child(3) {
+  width: 17%;
+}
+
+.table.product-table.table td:nth-child(4) {
+  width: 20%;
+}

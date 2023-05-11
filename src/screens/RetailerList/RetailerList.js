@@ -55,9 +55,9 @@ const RetailerList = (props) => {
     history.push("/manage-retailer");
   };
 
-  const filterChangeHandler = (value) => {
-    console.log(value);
-  };
+  const retailerSetting=(id)=>{
+    localStorage.setItem("newlyAddedRetailer", id)
+  }
 
   const activateDeactivate = (event, id) => {
     const status = event.target.checked;
@@ -214,9 +214,10 @@ const RetailerList = (props) => {
                                   history.push(`/manage-suppiler`);
                                 }}
                             ></i>*/}
-                            <Link className="link-btn  px-2 py-1" to={`/setting-retailer`}>
-                      Add Setting
-                    </Link>
+                            <Link className="link-btn  px-2 py-1" to={'/setting-retailer'} onClick={() => retailerSetting(data._id)}>
+                            Add Setting
+                          </Link>
+                          
                             </td>
                           </tr>
                         );
