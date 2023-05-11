@@ -626,6 +626,38 @@ class NavbarMenu extends React.Component {
                     ) : null}
                   </ul>
                 </li>
+
+                <li className="" id="productDropDown">
+                  <a
+                    href="#!"
+                    className="has-arrow"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      this.activeMenutabContainer("productDropDown");
+                    }}
+                  >
+                    <i className="icon-plus"></i> <span>Products</span>
+                  </a>
+                  <ul className="collapse">
+                    {this.props.user?.data.role === "SUPER_ADMIN" ? (
+                      <li className={activeKey === "dashboard" ? "active" : ""}>
+                        <Link to="products">Products list</Link>
+                      </li>
+                    ) : null}
+                    {this.props.user?.data.role === "SUPER_ADMIN" ? (
+                      <li
+                        className={activeKey === "dashboard" ? "active" : ""}
+                        onClick={() => {
+                          localStorage.removeItem("supplierId");
+                          localStorage.removeItem("supplierName");
+                        }}
+                      >
+                        <Link to="file-upload">File upload</Link>
+                      </li>
+                    ) : null}
+                  </ul>
+                </li>      
+
                 <li className="" id="reportDropDown">
                   <a
                     href="#!"

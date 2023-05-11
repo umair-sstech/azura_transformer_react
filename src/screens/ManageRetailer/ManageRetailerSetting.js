@@ -120,8 +120,8 @@ function ManageRetailerSetting(props) {
               isRetailerAdded ? "Retailer Edit" : "Add Retailer Setting"
             }
             Breadcrumb={[
-              { name: "Manage", navigate: "" },
-              { name: "Retailer Setting", navigate: "" },
+              { name: "Manage", navigate: "#" },
+              { name: "Retailer Setting", navigate: "#" },
             ]}
           />
           <div className="tab-component">

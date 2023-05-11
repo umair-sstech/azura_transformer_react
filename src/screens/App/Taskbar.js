@@ -104,7 +104,6 @@ class AppTaskbar extends React.Component {
   }
 
   render() {
-    const { isInbox } = this.props;
     const renderItem = ({ item }) => {
       return (
         <li className="dd-item" data-id="1">
@@ -181,7 +180,7 @@ class AppTaskbar extends React.Component {
                       <h2>Planned</h2>
                       <ul className="header-dropdown">
                         <li>
-                          <a data-toggle="modal" data-target="#addcontact">
+                          <a data-toggle="modal" data-target="#addcontact" href="/dashboard">
                             <i className="icon-plus"></i>
                           </a>
                         </li>
@@ -294,7 +293,7 @@ class AppTaskbar extends React.Component {
                       <h2>In progress</h2>
                       <ul className="header-dropdown">
                         <li>
-                          <a data-toggle="modal" data-target="#addcontact">
+                          <a data-toggle="modal" data-target="#addcontact" href="/dashboard">
                             <i className="icon-plus"></i>
                           </a>
                         </li>
@@ -407,7 +406,7 @@ class AppTaskbar extends React.Component {
                       <h2>Completed Task</h2>
                       <ul className="header-dropdown">
                         <li>
-                          <a data-toggle="modal" data-target="#addcontact">
+                          <a data-toggle="modal" data-target="#addcontact" href="/dashboard">
                             <i className="icon-plus"></i>
                           </a>
                         </li>

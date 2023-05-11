@@ -132,8 +132,8 @@ function MarketPlaceList(props) {
           <PageHeader
             HeaderText="Market Place List"
             Breadcrumb={[
-              { name: "Manage", navigate: "" },
-              { name: "Market Place List", navigate: "" },
+              { name: "Integration", navigate: "#" },
+              { name: "Market Place List", navigate: "#" },
             ]}
           />
           <div className="tab-component">
@@ -161,7 +161,7 @@ function MarketPlaceList(props) {
                       <i className="fa fa-refresh fa-spin"></i>
                     </div>
                   ) : null}
-                  <table className="table">
+                  <table className="table w-100 table-responsive-sm">
                     <thead>
                       <tr>
                       <th>Logo</th>

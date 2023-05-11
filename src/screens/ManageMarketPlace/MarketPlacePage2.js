@@ -173,10 +173,10 @@ function MarketPlacePage2(props) {
             </div>
           </div>
         </div>
-        <div class="row mt-4 ml-3">
+        <div className="row mt-4 ml-3">
           {!categoryFields ? (
-            <div class="loader-wrapper w-100" style={{ marginTop: "14%" }}>
-              <i class="fa fa-refresh fa-spin"></i>
+            <div className="loader-wrapper w-100" style={{ marginTop: "14%" }}>
+              <i className="fa fa-refresh fa-spin"></i>
             </div>
           ) : (
             ""
