@@ -303,7 +303,6 @@ const ManageUser = (props) => {
                               onBlur={(e) => handleBlur(e)}
                               onChange={(data) => {
                                 if (data) {
-                                  console.log(data);
                                   let event = {
                                     target: { name: "country", value: data },
                                   };

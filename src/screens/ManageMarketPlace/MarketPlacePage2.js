@@ -13,9 +13,10 @@ function MarketPlacePage2(props) {
   const [categoryFields, setCategoryFields] = useState(null);
   const [mysaleCategory, setMysaleCategory] = useState([]);
   const [selectedMapping, setSelectedMapping] = useState([]);
-  console.log("selected", selectedMapping);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
+  const [formError, setFormError] = useState(false);
+
 
   const history = useHistory();
 
@@ -56,23 +57,29 @@ function MarketPlacePage2(props) {
 
   const handleMappingSelect = (category, selectedOption, categoryData) => {
     const selectedCategoryId = selectedOption.value;
-    console.log("mysaleca", selectedCategoryId);
     const categoryFieldId = categoryData?.value;
     setSelectedMapping((prevSelected) => [
       ...prevSelected,
       {
-        azuraMainCategoryName:category,
+        azuraMainCategoryName: category,
         azuraCategoryId: categoryFieldId,
         mysaleCategoryId: selectedCategoryId,
       },
     ]);
+    setFormError(true);
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault(e);
     setIsLoading(true);
     const integrationId = localStorage.getItem("marketPlaceId");
     const integrationName = localStorage.getItem("marketPlaceName");
+
+    if (!formError) {
+      setFormError("Please Select at least one mapping")
+      return;
+    }
 
     const mappingData = selectedMapping.map((mapping) => ({
       integrationId: integrationId,
@@ -82,7 +89,6 @@ function MarketPlacePage2(props) {
       mysaleCategoryId: mapping.mysaleCategoryId,
     }));
 
-    console.log("mapping data", mappingData);
     axios
       .post(
         "http://localhost:8001/integration/createOrUpdateAzuraMysaleCategoryMapping",
@@ -174,6 +180,8 @@ function MarketPlacePage2(props) {
           </div>
         </div>
         <div className="row mt-4 ml-3">
+        {formError && <p style={{ color: "red" }}>{formError}</p>}
+       
           {!categoryFields ? (
             <div className="loader-wrapper w-100" style={{ marginTop: "14%" }}>
               <i className="fa fa-refresh fa-spin"></i>
@@ -192,6 +200,7 @@ function MarketPlacePage2(props) {
                       className="accordion"
                     >
                       <i className="fa fa-angle-down arrow"></i>
+                     
                       <span className="categoryname">
                         {categoryObj.category}
                       </span>

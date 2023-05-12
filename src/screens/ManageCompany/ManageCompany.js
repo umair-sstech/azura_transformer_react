@@ -35,7 +35,6 @@ const ManageCompany = (props) =>
                     const data = res.data.companyData
                     setFormData(data)
                     props.onUpdateFormLoading(false)
-                    console.log(data.created_on);
                     setCreatedDate(data.created_on)
                 })
                 .catch(e => {

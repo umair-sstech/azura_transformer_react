@@ -101,12 +101,14 @@ function SuppilerInfo(props) {
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-
+   
     const errors = validateIntegrationInfoForm(formData);
+    
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
@@ -141,7 +143,6 @@ function SuppilerInfo(props) {
         axios
           .post(`${API_PATH.CREATE_INTEGRATION_INFO}`, formData)
           .then((response) => {
-            console.log("response", response);
             const { success, message, data } = response.data;
             if (success) {
               const supplierId = data.id;
@@ -205,7 +206,6 @@ function SuppilerInfo(props) {
       axios
         .post(`${API_PATH.CREATE_INTEGRATION_INFO}`, formData)
         .then((response) => {
-          console.log("response", response);
           const { success, message, data } = response.data;
           if (success) {
             const supplierId = data.id;

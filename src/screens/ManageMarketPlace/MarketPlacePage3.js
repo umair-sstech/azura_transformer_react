@@ -143,7 +143,6 @@ function MarketPlacePage3(props) {
       )
       .then((response) => {
         const { success, message, data } = response.data;
-        console.log("response", data);
         if (success) {
           let productTimeZone = timeZoneData.find(
             (tz) => tz.abbr == data.productTimeZone

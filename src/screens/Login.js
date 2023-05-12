@@ -38,7 +38,6 @@ class Login extends React.Component {
     event.preventDefault();
     this.props.onLoginSubmit(this.state)
       .then(res => {
-        console.log("response",res.data.user)
         localStorage.setItem('_id',res.data.user._id)
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('name',res.data.user.name)

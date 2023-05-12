@@ -206,6 +206,10 @@ function SupplierHttpForm({ onSubmit, settingType }) {
                 {formErrors.urlPath && (
                   <span className="text-danger">{formErrors.urlPath}</span>
                 )}
+                <small className="form-text text-muted csv-text">
+                  Please Enter Full Name With File. &nbsp;&nbsp;&nbsp; Ex:
+                  /var/www/html/abc.csv
+                </small>
               </div>
             </div>
             <div className="col-12">

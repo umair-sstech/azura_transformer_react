@@ -452,7 +452,7 @@ class NavbarMenu extends React.Component {
               />
               <Dropdown>
                 <span style={{ display: "flex", marginTop: "10px" }}>
-                  Welcome
+                   {localStorage.getItem("name")}
                 </span>
                 {/*<Dropdown.Toggle
                   variant="none"
