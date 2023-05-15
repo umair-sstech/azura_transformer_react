@@ -28,15 +28,12 @@ function SuppilerList(props) {
     props.onLoading(true);
 
     try {
-      const response = await axios.post(
-        `${API_PATH.GET_LIST}`,
-        {
-          page: currentPage,
-          limit: dataLimit,
-          type: type,
-          status: status !== "all" ? (status === "active" ? 1 : 0) : null,
-        }
-      );
+      const response = await axios.post(`${API_PATH.GET_LIST}`, {
+        page: currentPage,
+        limit: dataLimit,
+        type: type,
+        status: status !== "all" ? (status === "active" ? 1 : 0) : null,
+      });
 
       return response.data;
     } catch (error) {
@@ -65,7 +62,7 @@ function SuppilerList(props) {
         }
         setType(type);
 
-        props.onLoading(false); 
+        props.onLoading(false);
       }
     };
     fetchSupplierInfo();
@@ -120,14 +117,7 @@ function SuppilerList(props) {
     { label: "Deactivate", value: "deactive" },
     { label: "All", value: "all" },
   ];
-  function setSelectedOption(supplier) {
-    const selectedOption = JSON.parse(localStorage.getItem('selectedOption'));
-    if (selectedOption) {
-      supplier.setPage(5);
-      supplier.setSelectedValue(selectedOption);
-    }
-  }
-  
+
   return (
     <div
       style={{ flex: 1 }}
@@ -154,7 +144,7 @@ function SuppilerList(props) {
                       options={filterList}
                       onChange={(data) => {
                         setStatus(data.value);
-                        setCurrentPage(1); 
+                        setCurrentPage(1);
                       }}
                       defaultValue={filterList[0]}
                     />
@@ -171,39 +161,32 @@ function SuppilerList(props) {
                     </div>
                   ) : null}
                   <table className="table w-100 table-responsive-sm">
-
                     <thead>
                       <tr>
-                      <th>Logo</th>
+                        <th>Logo</th>
                         <th>Supplier Name</th>
-                        
+
                         <th>Prefix Name</th>
                         <th>Last Update(UTC)</th>
-                       
-                          <>
-                            <th>Status</th>
-                            <th>Action</th>
-                          </>
-                        
+
+                        <>
+                          <th>Status</th>
+                          <th>Action</th>
+                        </>
                       </tr>
                     </thead>
                     <tbody>
                       {supplierList?.map((supplier) => (
                         <tr key={supplier.id}>
-                        <td>
-                        {supplier.logo ? (
-                          <img
-                            src={supplier.logo}
-                            alt={supplier.name}
-                            className="list-logo"
-                          />
-                        ) : (
-                          <div className="list-logo placeholder">N/A</div>
-                        )}
-                      </td>
+                          <td>
+                            {supplier.logo ? (
+                              <img src={supplier.logo} className="list-logo" />
+                            ) : (
+                              <div className="list-logo placeholder">N/A</div>
+                            )}
+                          </td>
                           <td>{supplier.name}</td>
 
-                        
                           <td>{supplier.prefixName}</td>
                           <td>
                             {supplier.updatedAt
@@ -239,6 +222,7 @@ function SuppilerList(props) {
                                     "supplierName",
                                     supplier.name
                                   );
+
                                   history.push(`/manage-suppiler`);
                                 }}
                               ></i>

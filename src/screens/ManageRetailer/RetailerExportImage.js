@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import "./Retailer.css";
+import { connect } from "react-redux";
+import { onLoading } from "../../actions";
 import axios from "axios";
 
 function RetailerExportImage(props) {
@@ -76,6 +78,22 @@ function RetailerExportImage(props) {
                   <th>Image Suffix Name</th>
                 </tr>
               </thead>
+              {props.loading ? (
+                <tbody>
+                  <tr>
+                    <td
+                      colSpan="3"
+                      className="loader-wrapper"
+                      style={{ padding: "2.3rem", width: "80%" }}
+                    >
+                      <i
+                        className="fa fa-refresh fa-spin"
+                        style={{ padding: "2rem" }}
+                      ></i>
+                    </td>
+                  </tr>
+                </tbody>
+              ) : (
               <tbody className="image-size-list">
                 {supplierImageList.map((image, index) => (
                   <>
@@ -89,6 +107,7 @@ function RetailerExportImage(props) {
                   </>
                 ))}
               </tbody>
+                )}
             </table>
           </div>
         </div>
@@ -97,4 +116,7 @@ function RetailerExportImage(props) {
   );
 }
 
-export default RetailerExportImage;
+const mapStateToProps = ({ LoadingReducer }) => ({
+  loading: LoadingReducer.isLoading,
+});
+export default connect(mapStateToProps, { onLoading })(RetailerExportImage);

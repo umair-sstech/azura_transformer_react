@@ -143,7 +143,6 @@ function IntegratorInfo(props) {
       setIsLoading(true);
 
       const integratorId = localStorage.getItem("integratorId");
-      console.log("integratorId", integratorId);
 
       if (integratorId) {
         formData.set("supplierId", integratorId);
@@ -212,7 +211,6 @@ function IntegratorInfo(props) {
       setIsLoadingExit(true);
 
       const integratorId = localStorage.getItem("integratorId");
-      console.log("integratorId", integratorId);
 
       if (integratorId) {
         formData.set("supplierId", integratorId);

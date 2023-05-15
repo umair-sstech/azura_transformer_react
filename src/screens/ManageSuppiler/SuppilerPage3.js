@@ -65,9 +65,7 @@ function SuppilerPage3(props) {
           (option) => option.value === selectedValue
         );
         const option = options[selectedOptionIndex];
-        console.log("option", option);
         const count = option?.count || 0;
-        console.log("count", count);
         let color = "gray";
 
         if (count === 0) {

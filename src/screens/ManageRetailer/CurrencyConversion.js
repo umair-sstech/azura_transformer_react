@@ -9,7 +9,6 @@ function CurrencyConversion(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [currencyList,setCurrencyList] = useState([]);
-  console.log("currency",currencyList)
 
   useEffect(() => {
     getSupplierData()

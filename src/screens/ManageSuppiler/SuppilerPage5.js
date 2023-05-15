@@ -3,9 +3,8 @@ import Select from "react-select";
 import "./SupplierPage.css";
 import SupplierSftpForm from "./SupplierSftpForm";
 import SupplierHttpForm from "./SupplierHttpForm";
-
 function SupplierPage5(props) {
-  const { setPage } = props
+  const { setPage } = props;
 
   const options = [
     { value: "SFTP", label: "SFTP" },
@@ -28,6 +27,7 @@ function SupplierPage5(props) {
       width: "100%",
     }),
   };
+
   const [selectedValue, setSelectedValue] = useState(null);
 
   const handleSelectChange = (selectedOption) => {

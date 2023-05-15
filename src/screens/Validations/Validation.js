@@ -15,6 +15,7 @@ export const validateIntegrationInfoForm = (formData) => {
     }
   }
 
+
   return errors;
 };
 

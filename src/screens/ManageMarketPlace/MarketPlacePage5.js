@@ -36,7 +36,6 @@ function MarketPlacePage5(props) {
             label: item.name,
             value: item.value,
           }));
-          console.log("item", options);
           setSyncFrequencyOptions(options);
         })
         .catch((error) => console.log(error));
@@ -117,7 +116,6 @@ function MarketPlacePage5(props) {
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
         const { success, message, data } = response.data;
-        console.log("response", response);
         if (success) {
           toast.success(message);
           setFormData({});
@@ -145,7 +143,6 @@ function MarketPlacePage5(props) {
       )
       .then((response) => {
         const { success, message, data } = response.data;
-        console.log("response", data);
         if (success) {
           let trackingTimeZone = timeZoneData.find(
             (tz) => tz.abbr == data.trackingTimeZone

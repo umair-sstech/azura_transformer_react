@@ -249,7 +249,6 @@ function MarketPlacePage1(props) {
 
       setIsLoadingExit(true);
       const marketPlaceId = localStorage.getItem("marketPlaceId");
-      console.log("marketPlaceId", marketPlaceId);
 
       if (marketPlaceId) {
         formData.set("supplierId", marketPlaceId);
@@ -280,7 +279,6 @@ function MarketPlacePage1(props) {
         axios
           .post(`${API_PATH.CREATE_INTEGRATION_INFO}`, formData)
           .then((response) => {
-            console.log("response", response);
             const { success, message, data } = response.data;
             if (success) {
               const marketPlaceId = data.id;

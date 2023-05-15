@@ -40,7 +40,6 @@ function IntegratorPage4(props) {
             label: item.name,
             value: item.value,
           }));
-          console.log("item", options);
           setSyncFrequencyOptions(options);
         })
         .catch((error) => console.log(error));
