@@ -214,7 +214,7 @@ const RetailerList = (props) => {
                                   history.push(`/manage-suppiler`);
                                 }}
                             ></i>*/}
-                            <Link className="link-btn  px-2 py-1" to={'/setting-retailer'} onClick={() => retailerSetting(data._id)}>
+                            <Link className="link-btn  px-2 py-1" to={'/setting-retailer-list'} onClick={() => retailerSetting(data._id)}>
                             Add Setting
                           </Link>
                           

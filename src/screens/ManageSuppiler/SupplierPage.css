@@ -18,6 +18,9 @@ small.form-text.text-muted.csv-text {
   font-size: 12px;
 }
 /* supplierpage3 */
+.radio-label{
+  font-weight: 500;
+}
 table {
   border-collapse: collapse;
   width: 80%;

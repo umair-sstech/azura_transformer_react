@@ -88,6 +88,7 @@ import ManageIntegrator from "./screens/ManageIntegrator/ManageIntegrator";
 import ManageRetailerSetting from "./screens/ManageRetailer/ManageRetailerSetting";
 import ProductsList from "./screens/products/ProductsList";
 import FileUpload from "./screens/products/FileUpload";
+import RetailerSettingList from "./screens/ManageRetailer/RetailerSettingList";
 window.__DEV__ = true;
 
 class App extends React.Component {
@@ -272,6 +273,7 @@ class App extends React.Component {
                     path={`/manage-retailer`}
                     component={ManageRetailer}
                   />
+                  <Route exact path={`/setting-retailer-list`} component={RetailerSettingList}/>
                   <Route
                   exact
                   path={`/setting-retailer`}

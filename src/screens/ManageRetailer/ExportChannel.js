@@ -81,16 +81,14 @@ function ExportChannel() {
         </div>
         <div className="row">
           <div className="col-12">
-            <label>Type of Accounts</label>
+            <label>Type of Integration</label>
             <Select
               options={channel}
-              isMulti
               // closeMenuOnSelect={false}
               onChange={handleSelectChange}
               value={selectedOptions}
               placeholder="Select accounts"
             />
-          
           </div>
         </div>
       </form>

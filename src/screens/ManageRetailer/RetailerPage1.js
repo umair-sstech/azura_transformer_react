@@ -9,38 +9,94 @@ function RetailerPage1(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [supplierList, setSupplierList] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  const handleSelectChange = (selectedOptions) => {
+    setSelectedOptions(selectedOptions);
+  };
 
   useEffect(() => {
-    getSupplierData()
+    getSupplierData();
   }, []);
 
-  const getSupplierData=()=>{
+  const getSupplierData = () => {
     try {
       axios
-      .get("http://localhost:2703/retailer/getSupplierList")
-      .then((response) => {
-        const{success,message,data}=response.data
-        if (success) {
-          const options = Object.keys(response.data.data).map((supplierName) => ({
-            value: supplierName,
-            label: supplierName,
-          }));
-          setSupplierList(options);
-        } else {
-          toast.error(message)
-        }
-      })
-      .catch((error) => {
-        console.error("Failed to retrieve supplier list:", error);
-      });
-      
+        .get("http://localhost:2703/retailer/getSupplierList")
+        .then((response) => {
+          const { success, message, data } = response.data;
+          if (success) {
+            const options = Object.keys(data).map((supplierName) => ({
+              value: data[supplierName],
+              label: supplierName,
+            }));
+            setSupplierList(options);
+          } else {
+            toast.error(message);
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to retrieve supplier list:", error);
+        });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+  
+    const userId = localStorage.getItem("_id");
+    const userName = localStorage.getItem("name");
+    const retailerId = localStorage.getItem("newlyAddedRetailer");
+    const selectedSupplierIds = selectedOptions.map((option) => option.value);
+    const selectedSupplierNames = selectedOptions.map((option) => option.label);
+
+  
+    const data = {
+      id:"",
+      userId,
+      userName,
+      retailerId,
+      companyId: null,
+      supplierId: selectedSupplierIds.join(","),
+    };
+    console.log("data",data)
+  
+    try {
+      const response = await axios.post(
+        "http://localhost:2703/retailer/createOrUpdateRetailerIntegration",
+        data
+      );
+  
+      const { success, message } = response.data;
+  
+      if (success) {
+        localStorage.setItem(
+          "supplierSettingId",
+          selectedSupplierIds.join(",")
+        );
+        localStorage.setItem(
+          "selectedSupplierName",
+          JSON.stringify(selectedSupplierNames)
+        )
+        toast.success(message);
+        setPage(2);
+      } else {
+        toast.error(message);
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("An error occurred while submitting the form.");
+    }
+  
+    setIsLoading(false);
+  };
+  
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
@@ -78,7 +134,13 @@ function RetailerPage1(props) {
         <div className="row">
           <div className="col-6">
             <label>Select your Supplier(s)</label>
-            <Select options={supplierList} placeholder="Select Supplier" />
+            <Select
+            options={supplierList}
+            isMulti
+            onChange={handleSelectChange}
+            value={selectedOptions}
+            placeholder="Select Supplier"
+          />
           </div>
         </div>
       </form>

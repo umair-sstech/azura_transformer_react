@@ -9,7 +9,7 @@ import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
-import { Spinner } from "react-bootstrap";
+import { Spinner, Accordion, Card, Button } from "react-bootstrap";
 
 function SuppilerPage3(props) {
   const { setPage } = props;
@@ -30,6 +30,22 @@ function SuppilerPage3(props) {
       label: "Use AI",
       textbox: true,
     },
+    {
+      value: "extract",
+      label: "Extract",
+      textbox: true,
+    },
+  ]);
+
+  const [productRadio, setProductRadio] = useState([
+    {
+      value: "single_row",
+      label: "  Single row ( Parent Child In Same Row) ",
+    },
+    {
+      value: "multiple_row",
+      label: "Different rows ( Parent Child In Different Row) ",
+    },
   ]);
 
   const [productFields, setProductFields] = useState([]);
@@ -40,6 +56,8 @@ function SuppilerPage3(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [mappingData, setMappingData] = useState([]);
+  const [additionalDropdownOpen, setAdditionalDropdownOpen] = useState([]);
+  const [csvOption, setCsvOption] = useState([]);
 
   const history = useHistory();
 
@@ -48,6 +66,7 @@ function SuppilerPage3(props) {
     getProductField();
     getSupplierDataById();
     getMappingData();
+    getcsvData();
   }, []);
 
   const handleFieldChange = (index, key, selectedOption) => {
@@ -56,7 +75,28 @@ function SuppilerPage3(props) {
       if (!newSelectedOptions[index]) {
         newSelectedOptions[index] = {};
       }
-   
+      if (selectedOption && selectedOption.value === "extract") {
+        setAdditionalDropdownOpen((prevAdditionalDropdownOpen) => {
+          const newAdditionalDropdownOpen = Array.isArray(
+            prevAdditionalDropdownOpen
+          )
+            ? [...prevAdditionalDropdownOpen]
+            : [];
+          newAdditionalDropdownOpen[index] = true;
+          return newAdditionalDropdownOpen;
+        });
+      } else {
+        setAdditionalDropdownOpen((prevAdditionalDropdownOpen) => {
+          const newAdditionalDropdownOpen = Array.isArray(
+            prevAdditionalDropdownOpen
+          )
+            ? [...prevAdditionalDropdownOpen]
+            : [];
+          newAdditionalDropdownOpen[index] = false;
+          return newAdditionalDropdownOpen;
+        });
+      }
+
       if (selectedOption) {
         newSelectedOptions[index][key] = selectedOption;
 
@@ -314,19 +354,41 @@ function SuppilerPage3(props) {
           options[standardField] = {
             label: supplierField,
             value: supplierField,
-            imageType: imageType, 
+            imageType: imageType,
           };
         });
 
         setSelectedOptions([options]);
 
-        setMappingData(supplierData); 
+        setMappingData(supplierData);
       })
       .catch((error) => {
         console.log("error", error);
       });
   };
 
+  const getcsvData = () => {
+    const supplierId = localStorage.getItem("supplierId");
+    axios
+      .get(`${API_PATH.GET_INTEGRATION_INFO_BY_ID}=${supplierId}`)
+      .then((response) => {
+        const supplierData = response.data.data;
+        setFormData(supplierData);
+
+        const csvJSON = supplierData.csvJSON || [];
+        const newOptions = [
+          ...csvJSON.map((option) => ({
+            value: option,
+            label: option,
+          })),
+        ];
+
+        setCsvOption(newOptions);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -376,13 +438,43 @@ function SuppilerPage3(props) {
               <span className="text-danger"> {error}</span>
             </div>
           ))}
-
+          <div className="row">
+            <div className="col-12">
+              <label>
+                In what format does this supplier provide the product data?
+              </label>
+            </div>
+            <div className="col-12 mt-2">
+              {productRadio.map((radio) => (
+                <label key={radio.value} className="radio-label mr-3">
+                  <input
+                    type="radio"
+                    name="Preference"
+                    value={radio.value}
+                    checked={selectedRadio === radio.value}
+                    onChange={() => setSelectedRadio(radio.value)}
+                  />
+                  {radio.label}
+                </label>
+              ))}
+            </div>
+          </div>
+          <div className="row mt-2">
+            <div className="col-6">
+              {selectedRadio === "multiple_row" ? (
+                <div>
+                  <Select options={csvOption} />
+                </div>
+              ) : null}
+            </div>
+          </div>
           <table>
             <thead>
               <tr>
                 <th>Product Field</th>
                 <th>Value</th>
                 <th>Additional Info</th>
+                <th>Product</th>
               </tr>
             </thead>
 
@@ -420,7 +512,7 @@ function SuppilerPage3(props) {
                           selectedRadio[`${index}-${key}`] &&
                           selectedRadio[`${index}-${key}`].value
                             ? selectedRadio[`${index}-${key}`].value
-                            : mapping.imageType || null; 
+                            : mapping.imageType || null;
                         const showTextbox =
                           selectedRadio[`${index}-${key}`] &&
                           selectedRadio[`${index}-${key}`].showTextbox
@@ -447,7 +539,7 @@ function SuppilerPage3(props) {
                                       e.target.value
                                     )
                                   }
-                                  checked={radioValue === "folder_only"} 
+                                  checked={radioValue === "folder_only"}
                                 />{" "}
                                 <label
                                   htmlFor={`image-${index}-${key}`}
@@ -467,7 +559,7 @@ function SuppilerPage3(props) {
                                       e.target.value
                                     )
                                   }
-                                  checked={radioValue === "folder_images"} 
+                                  checked={radioValue === "folder_images"}
                                 />{" "}
                                 <label
                                   htmlFor={`image-${index}-${key}`}
@@ -487,7 +579,7 @@ function SuppilerPage3(props) {
                                       e.target.value
                                     )
                                   }
-                                  checked={radioValue === "single_image"} 
+                                  checked={radioValue === "single_image"}
                                 />{" "}
                                 <label
                                   htmlFor={`image-${index}-${key}`}
@@ -642,21 +734,33 @@ function SuppilerPage3(props) {
                               </div>
                             </td>
                             <td>{additionalInfo}</td>
-                            {/* <td>
-                          {showTextbox && (
-                            <>
-                            
-                            <input
-                              type="text"
-                              placeholder="Enter a value"
-                              className="additional-textbox rounded"
-                              onChange={(e) => setAdditionalTextValue(e.target.value)}
-                            />
-                            <small>Please enter the image/photo column name(same as csv name)</small>
-                            
-                            </>
-                          )}
-                          </td>*/}
+                            <td>
+                              {additionalDropdownOpen[index] && (
+                                <div className="select-container">
+                                  <Select
+                                    options={options}
+                                    value={selectedOption}
+                                    onChange={(selectedOption) =>
+                                      handleFieldChange(
+                                        index,
+                                        key,
+                                        selectedOption
+                                      )
+                                    }
+                                    isSearchable={true}
+                                    className="select"
+                                    styles={{
+                                      option: (styles, { data }) => {
+                                        return {
+                                          ...styles,
+                                          background: data.color,
+                                        };
+                                      },
+                                    }}
+                                  />
+                                </div>
+                              )}
+                            </td>
                           </tr>
                         );
                       })}
@@ -666,6 +770,26 @@ function SuppilerPage3(props) {
               </tbody>
             )}
           </table>
+          <div>
+          <Accordion defaultActiveKey="0">
+            <Card>
+              <Card.Header>
+                <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                  <div className="row">
+                    {" "}
+                    <div className="col-6">Custom Field</div>
+                    <div className="col-6">Custom Field Value</div>
+                  </div>
+                </Accordion.Toggle>
+              
+              </Card.Header>
+              <Accordion.Collapse eventKey="0">
+                <Card.Body><input placeholder="Enter value here"/></Card.Body>
+              </Accordion.Collapse>
+              <button>+ Add Fields</button>
+            </Card>
+          </Accordion>
+          </div>
         </div>
       </form>
     </>

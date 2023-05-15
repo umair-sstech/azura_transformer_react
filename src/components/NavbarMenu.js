@@ -41,13 +41,13 @@ const LogOut = ({ propData }) => {
       .onLogOut(token, userId)
       .then((res) => {
         localStorage.removeItem("token");
-        localStorage.removeItem('_id')
-        localStorage.removeItem('token');
-        localStorage.removeItem('name')
-        localStorage.removeItem('email')
-        localStorage.removeItem('company')
-        localStorage.removeItem('retailer')
-        localStorage.removeItem('role')
+        localStorage.removeItem("_id");
+        localStorage.removeItem("token");
+        localStorage.removeItem("name");
+        localStorage.removeItem("email");
+        localStorage.removeItem("company");
+        localStorage.removeItem("retailer");
+        localStorage.removeItem("role");
         propData.onLoggedin(false);
         history.push("/login");
         propData.onSystemLoading(false);
@@ -452,7 +452,7 @@ class NavbarMenu extends React.Component {
               />
               <Dropdown>
                 <span style={{ display: "flex", marginTop: "10px" }}>
-                   {localStorage.getItem("name")}
+                  {localStorage.getItem("name")}
                 </span>
                 {/*<Dropdown.Toggle
                   variant="none"
@@ -566,7 +566,14 @@ class NavbarMenu extends React.Component {
                         <li
                           className={activeKey === "dashboard" ? "active" : ""}
                         >
-                          <Link to="retailer">Retailer</Link>
+                          <Link
+                            to="retailer"
+                            onClick={() => {
+                              localStorage.removeItem("supplierSettingId");
+                            }}
+                          >
+                            Retailer
+                          </Link>
                         </li>
                       ) : null}
                       <li className={activeKey === "dashboard" ? "active" : ""}>
@@ -598,8 +605,7 @@ class NavbarMenu extends React.Component {
                         onClick={() => {
                           localStorage.removeItem("supplierId");
                           localStorage.removeItem("supplierName");
-                          localStorage.removeItem("selectedOption")
-
+                          localStorage.removeItem("selectedOption");
                         }}
                       >
                         <Link to="supplier">Supplier</Link>
@@ -617,10 +623,13 @@ class NavbarMenu extends React.Component {
                       </li>
                     ) : null}
                     {this.props.user?.data.role == "SUPER_ADMIN" ? (
-                      <li className={activeKey === "dashboard" ? "active" : ""} onClick={() => {
-                        localStorage.removeItem("integratorId");
-                        localStorage.removeItem("integratorName");
-                      }}>
+                      <li
+                        className={activeKey === "dashboard" ? "active" : ""}
+                        onClick={() => {
+                          localStorage.removeItem("integratorId");
+                          localStorage.removeItem("integratorName");
+                        }}
+                      >
                         <Link to="integrator">Integrator</Link>
                       </li>
                     ) : null}
@@ -656,7 +665,7 @@ class NavbarMenu extends React.Component {
                       </li>
                     ) : null}
                   </ul>
-                </li>      
+                </li>
 
                 <li className="" id="reportDropDown">
                   <a
