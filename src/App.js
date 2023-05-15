@@ -89,6 +89,7 @@ import ManageRetailerSetting from "./screens/ManageRetailer/ManageRetailerSettin
 import ProductsList from "./screens/products/ProductsList";
 import FileUpload from "./screens/products/FileUpload";
 import RetailerSettingList from "./screens/ManageRetailer/RetailerSettingList";
+import ManageProduct from "./screens/ManageProduct/ManageProduct";
 window.__DEV__ = true;
 
 class App extends React.Component {
@@ -348,6 +349,7 @@ class App extends React.Component {
               {this.props.user?.data.role === "SUPER_ADMIN" ? (
                 <>
                   <Route exact path={`/products`} component={ProductsList} />
+                  <Route exact path={`/product-details`} component={ManageProduct}/>
                   <Route exact path={`/file-upload`} component={FileUpload} />
 
                 </>
