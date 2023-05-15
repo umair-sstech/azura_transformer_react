@@ -225,13 +225,13 @@ class NavbarMenu extends React.Component {
             </div>
 
             <div className="navbar-brand">
-              <a href="dashboard">
+              <Link to="/dashboard">
                 <img
                   src="azura-logo.png"
                   alt="Azura Logo"
                   className="img-responsive logo website-logo"
                 />
-              </a>
+              </Link>
             </div>
 
             <div className="navbar-right">

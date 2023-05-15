@@ -237,7 +237,7 @@ function ProductsList(props) {
                                     market_place.name
                                   );
 
-                                  history.push(`/manage-marketPlace`);
+                                  history.push(`/product-details`);
                                 }}
                               ></i>
                             </td>
