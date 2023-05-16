@@ -154,7 +154,7 @@ const CompanySocialInfo = (props) => {
                             </div>
                             <div className='col-sm-6'>
                                 <div className="form-group">
-                                    <label>Gooogle Pluse URL (optional)</label>
+                                    <label>Google Plus URL (optional)</label>
                                     <input
                                         className="form-control"
                                         type="text"
@@ -162,7 +162,7 @@ const CompanySocialInfo = (props) => {
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         value={values.googlePluse_url}
-                                        placeholder="Enter Gooogle Pluse URL"
+                                        placeholder="Enter Google Plus URL"
                                     />
                                     {errors.googlePluse_url && touched.googlePluse_url ? (
                                         <span className="error" style={{ color: "red" }}>

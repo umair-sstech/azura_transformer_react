@@ -137,7 +137,11 @@ function SupplierHttpForm({ onSubmit, settingType }) {
         .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
         .then((response) => {
           const supplierData = response.data.data;
-          setFormData(supplierData);
+          setFormData({
+            ...supplierData,
+            syncFrequency: supplierData.syncFrequency,
+          });
+        
         })
         .catch((error) => {
           console.log("error", error);

@@ -5,10 +5,10 @@ import { ProgressBar, Step } from "react-step-progress-bar";
 const stepNames = [
   "Integrator Info",
   // "Category Mapping",
-  "Product Sync settings",
-  "Order sync settings",
-  "Tracking settings",
-  "Extra settings",
+  "Product Sync Settings",
+  "Order Sync Settings",
+  "Tracking Settings",
+  "Extra Settings",
 ];
 
 const styles = {

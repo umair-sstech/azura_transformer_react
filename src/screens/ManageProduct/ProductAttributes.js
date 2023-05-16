@@ -31,7 +31,7 @@ const ProductAttributes = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Attributes (Attributes Length)
+                Attributes ({attribute.length})
                 <span className="ml-4">view all attribues</span>
               </Accordion.Toggle>
             </Card.Header>

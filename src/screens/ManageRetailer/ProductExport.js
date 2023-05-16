@@ -88,7 +88,7 @@ function ProductExport() {
                     onChange={handleCheckboxChange}
                   />
                 </th>
-                <th>id</th>
+                <th>Id</th>
                 <th>Supplier Name</th>
                 <th>Category</th>
                 <th>Product Count</th>

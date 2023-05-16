@@ -344,7 +344,7 @@ const CompanyInfo = (props) =>
                             </div>
 
                             <div className="form-group">
-                                <label>Custome Domain Name (optional)</label>
+                                <label>Custom Domain Name (optional)</label>
 
                                 <input
                                     className="form-control"
@@ -353,7 +353,7 @@ const CompanyInfo = (props) =>
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.custom_domain_name}
-                                    placeholder="Enter Custome Domain Name"
+                                    placeholder="Enter Custom Domain Name"
                                 />
                                 {errors.custom_domain_name && touched.custom_domain_name ? (
                                     <span className="error" style={{ color: "red" }}>

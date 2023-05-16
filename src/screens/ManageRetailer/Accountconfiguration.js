@@ -80,7 +80,7 @@ function Accountconfiguration() {
             <div className="col-6">
               <div className="form-group">
                 <label>
-                  AutoRization Token <span style={{ color: "red" }}>*</span>
+                  Authorization Token <span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   className="form-control"

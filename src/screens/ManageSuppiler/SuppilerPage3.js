@@ -18,11 +18,11 @@ function SuppilerPage3(props) {
   const [options, setOptions] = useState([
     {
       value: "do_nothing",
-      label: "Do nothing",
+      label: "Do Nothing",
     },
     {
       value: "hardcode_value",
-      label: "Hardcode value",
+      label: "Hardcode Value",
       textbox: true,
     },
     {
@@ -40,11 +40,11 @@ function SuppilerPage3(props) {
   const [productRadio, setProductRadio] = useState([
     {
       value: "single_row",
-      label: "  Single row ( Parent Child In Same Row) ",
+      label: "  Single Row ( Parent Child In Same Row) ",
     },
     {
       value: "multiple_row",
-      label: "Different rows ( Parent Child In Different Row) ",
+      label: "Different Rows ( Parent Child In Different Row) ",
     },
   ]);
 

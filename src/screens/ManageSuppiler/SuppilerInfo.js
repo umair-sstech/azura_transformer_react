@@ -311,13 +311,13 @@ function SuppilerInfo(props) {
             <div className="col-6">
               <div className="form-group">
                 <label>
-                  Suppiler Name <span style={{ color: "red" }}>*</span>
+                  Supplier Name <span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   className="form-control"
                   type="text"
                   name="name"
-                  placeholder="Enter Suppiler Name"
+                  placeholder="Enter Supplier Name"
                   onChange={handleNameChange}
                   defaultValue={initFormData.name ? initFormData.name : ""}
                 />
