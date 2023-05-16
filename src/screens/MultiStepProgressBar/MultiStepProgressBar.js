@@ -99,9 +99,9 @@ import "../MultiStepProgressBar/MultiStepProgressBar.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
 
 const stepNames = [
-  "Suppiler  Info",
-  "Data file Upload",
-  "Data file Mapping",
+  "Suppiler Info",
+  "Data File Upload",
+  "Data File Mapping",
   "Image Resize",
   "Data Import Settings",
   "Barcodelookup.com",

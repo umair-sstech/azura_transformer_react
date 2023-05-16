@@ -137,7 +137,7 @@ const UserList = (props) => {
                                                 <th>Company</th>
                                                 <th>Retailer</th>
                                                 <th>Last Login DT/TM (UTC )</th>
-                                                <th>status</th>
+                                                <th>Status</th>
                                                 {props.user.permissions.update_user ?
                                                     <>
                                                         <th>Activate / Deactivate</th>

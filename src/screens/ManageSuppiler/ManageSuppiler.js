@@ -108,12 +108,12 @@ function ManageSuppiler(props) {
         <div>
           <div className="container-fluid">
             <PageHeader
-              HeaderText={isSuppilerAdded ? "Suppiler Update" : "Suppiler Add"}
+              HeaderText={isSuppilerAdded ? "Supplier Update" : "Supplier Add"}
               Breadcrumb={[
                 { name: "Integration", navigate: "#" },
-                { name: "Suppiler List", navigate: "/supplier" },
+                { name: "Supplier List", navigate: "/supplier" },
                 {
-                  name: isSuppilerAdded ? "Suppiler Update" : "Suppiler Add",
+                  name: isSuppilerAdded ? "Supplier Update" : "Supplier Add",
                   navigate: "#",
                 },
               ]}

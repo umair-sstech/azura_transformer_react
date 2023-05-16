@@ -42,7 +42,9 @@
         padding: 15px 0;
         position: relative;
         
-        @include max-screen($break-medium){
+        @include max-screen($break-1024){
+			position: absolute;
+			left: 40px;
             padding: 15px 10px;
 		}
 		@include max-screen($break-small - 1px){

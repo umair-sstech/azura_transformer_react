@@ -79,7 +79,7 @@ function SupplierPage6(props) {
           </div>
         </div>
 
-        <div className="row">
+        <div className="row mt-3 mt-md-0">
           <div className="col-12">
             <div className="form-group">
               <div className="form-check">
@@ -120,7 +120,7 @@ function SupplierPage6(props) {
             </div>
             <div className="row">
               <div className="col-12">
-                <table className="table">
+                <table className="table w-100 table-responsive-sm">
                   <thead>
                     <tr>
                       <th>Column 1</th>

@@ -318,7 +318,7 @@ class App extends React.Component {
                   <Route exact path={`/supplier`} component={SupplierList} />
                   <Route
                     exact
-                    path={`/manage-suppiler`}
+                    path={`/manage-supplier`}
                     component={ManageSuppiler}
                   />
                 </>

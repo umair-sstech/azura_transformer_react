@@ -211,7 +211,7 @@ const RetailerList = (props) => {
                                 aria-hidden="true"
                                 onClick={() => {
                                   localStorage.setItem("")
-                                  history.push(`/manage-suppiler`);
+                                  history.push(`/manage-supplier`);
                                 }}
                             ></i>*/}
                             <Link className="link-btn  px-2 py-1" to={'/setting-retailer-list'} onClick={() => retailerSetting(data._id)}>

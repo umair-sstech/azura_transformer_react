@@ -210,12 +210,12 @@ function SuppilerPage4(props) {
             </div>
           </div>
         </div>
-        <div className="d-flex flex-wrap">
-          <div className="table-responsive w-50 pr-3">
+        <div className="supplier4__container">
+          <div>
             {formErrors.checkbox && (
               <span className="text-danger">{formErrors.checkbox}</span>
             )}
-            <table className="table w-50">
+            <table className="table w-100">
               <thead>
                 <tr>
                   <th>
@@ -252,7 +252,7 @@ function SuppilerPage4(props) {
               </tbody>
             </table>
           </div>
-          <div className="w-25 mt-3 input-p4">
+          <div className="mt-3 input-p4">
             <div className="form-group mb-3">
               <label htmlFor="prefix">Prefix:</label>
               <input

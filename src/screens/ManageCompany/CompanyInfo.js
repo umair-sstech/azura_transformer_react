@@ -131,7 +131,7 @@ const CompanyInfo = (props) =>
                     <form onSubmit={handleSubmit}>
                         <div >
                             <div className='row'>
-                                <div className='col-6'>
+                                <div className='col-sm-6'>
                                     <div className="form-group">
                                         <label>Company Name <span style={{ color: "red" }}>*</span></label>
                                         <input
@@ -150,7 +150,7 @@ const CompanyInfo = (props) =>
                                         ) : null}
                                     </div>
                                 </div>
-                                <div className='col-6'>
+                                <div className='col-sm-6'>
                                     <div className="form-group">
                                         <label>Company Description (optional)</label>
                                         <input
@@ -173,7 +173,7 @@ const CompanyInfo = (props) =>
                             </div>
 
                             <div className='row'>
-                                <div className='col-6'>
+                                <div className='col-sm-6'>
                                     <div className="form-group">
                                         <label>Building Name <span style={{ color: "red" }}>*</span></label>
                                         <input
@@ -192,7 +192,7 @@ const CompanyInfo = (props) =>
                                         ) : null}
                                     </div>
                                 </div>
-                                <div className='col-6'>
+                                <div className='col-sm-6'>
                                     <div className="form-group">
                                         <label>Street Address <span style={{ color: "red" }}>*</span></label>
                                         <input
@@ -233,7 +233,7 @@ const CompanyInfo = (props) =>
                             </div>
 
                             <div className='row'>
-                                <div className='col-4'>
+                                <div className='col-sm-4'>
                                     <div className="form-group">
                                         <label>City / State <span style={{ color: "red" }}>*</span></label>
                                         <input
@@ -252,7 +252,7 @@ const CompanyInfo = (props) =>
                                         ) : null}
                                     </div>
                                 </div>
-                                <div className='col-4'>
+                                <div className='col-sm-4'>
                                     <div className="form-group">
                                         <label>
                                             Country <span style={{ color: "red" }}>*</span>
@@ -284,7 +284,7 @@ const CompanyInfo = (props) =>
                                         ) : null}
                                     </div>
                                 </div>
-                                <div className='col-4'>
+                                <div className='col-sm-4'>
                                     <div className="form-group">
                                         <label>Pincode (optional)</label>
 
@@ -344,7 +344,7 @@ const CompanyInfo = (props) =>
                             </div>
 
                             <div className="form-group">
-                                <label>Custome Domain Name (optional)</label>
+                                <label>Custom Domain Name (optional)</label>
 
                                 <input
                                     className="form-control"
@@ -353,7 +353,7 @@ const CompanyInfo = (props) =>
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.custom_domain_name}
-                                    placeholder="Enter Custome Domain Name"
+                                    placeholder="Enter Custom Domain Name"
                                 />
                                 {errors.custom_domain_name && touched.custom_domain_name ? (
                                     <span className="error" style={{ color: "red" }}>
@@ -364,7 +364,7 @@ const CompanyInfo = (props) =>
 
 
                             <div className='row'>
-                                <div className='col-6'>
+                                <div className='col-sm-6'>
                                     <div className="form-group">
                                         <label>Site URL (optional)</label>
 
@@ -384,7 +384,7 @@ const CompanyInfo = (props) =>
                                         ) : null}
                                     </div>
                                 </div>
-                                <div className='col-6'>
+                                <div className='col-sm-6'>
                                     <div className="form-group">
                                         <label>Cost Center Name (optional)</label>
 

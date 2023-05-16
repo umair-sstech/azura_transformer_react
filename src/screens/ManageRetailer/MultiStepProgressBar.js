@@ -4,12 +4,12 @@ import "../ManageRetailer/MultiStpepProgressBar.css"
 
 const stepNames = [
   "Select Supplier",
-  "Product to export",
-  "Currency conversion",
-  "Export Image sizes",
+  "Product To Export",
+  "Currency Conversion",
+  "Export Image Sizes",
   "Price Calculation",
   "Product Export Channel",
-  "Account configuration"
+  "Account Configuration"
 ];
 
 const styles = {

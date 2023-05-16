@@ -138,14 +138,14 @@ function SupplierPage7(props) {
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-4">
+        <div className="row mt-3 mt-sm-0">
+          <div className="col-sm-6">
             <div className="form-group">
               <label>
                 Product Tier type <span style={{ color: "red" }}>*</span>
               </label>
               <Select
-                placeholder="Select Product Tier type"
+                placeholder="Select Product Tier Type"
                 name="productTier"
                 value={selectedOption}
                 options={options}

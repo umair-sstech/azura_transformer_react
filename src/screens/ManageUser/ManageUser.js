@@ -318,7 +318,7 @@ const ManageUser = (props) => {
                           </div>
                         </div>
                         <div className="row">
-                          <div className="col-6">
+                          <div className="col-sm-6">
                             <div className="form-group">
                               <label>
                                 Email Address{" "}
@@ -343,7 +343,7 @@ const ManageUser = (props) => {
                               ) : null}
                             </div>
                           </div>
-                          <div className="col-6">
+                          <div className="col-sm-6">
                             <div className="form-group">
                               <label>
                                 Password {updateUserId? null : <span style={{ color: "red" }}>*</span>} 

@@ -166,8 +166,8 @@ function SupplierPage2(props) {
               </div>
             </div>
           </div>
-          <div className="row">
-            <div className="col-6">
+          <div className="row mt-3 mt-sm-0">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label>
                   Upload File <span style={{ color: "red" }}>*</span>

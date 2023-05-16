@@ -139,7 +139,7 @@ function ProductsList(props) {
             <div className="card">
               <div className="body">
                 <div className="mb-3 top__header">
-                  <div style={{ minWidth: "110px" }}>
+                  <div style={{ minWidth: "130px" }}>
                     <Select
                       options={filterList}
                       onChange={(data) => {
@@ -150,7 +150,7 @@ function ProductsList(props) {
                     />
                   </div>
                   <InputGroup className="searchbar">
-                    <FormControl type="search" className="me-2" placeholder="Search Products by SKU number, Parent SKU number, Name, Category or supplier..." />
+                    <FormControl type="search" className="me-2" placeholder="Search Products by SKU Number, Parent SKU Number, Name, Category or Supplier..." />
                   </InputGroup>
                 </div>
 

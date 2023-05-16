@@ -189,7 +189,7 @@ function FileUpload(props) {
                       <i className="fa fa-refresh fa-spin"></i>
                     </div>
                   ) : null}
-                  <table className="table w-100 table-responsive-md">
+                  <table className="table w-100 table-responsive-lg">
                     <thead>
                       <tr>
                       <th>Id</th>

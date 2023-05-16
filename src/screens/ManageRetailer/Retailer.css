@@ -52,3 +52,13 @@
 .table.product-table.table td:nth-child(4) {
   width: 20%;
 }
+
+.tab-component {
+  width: 100%;
+}
+
+@media screen and (max-width: 360px) {
+  .btn-lg {
+    padding: 5px !important;
+  }
+}

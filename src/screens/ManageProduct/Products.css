@@ -20,13 +20,10 @@
 }
 .accordian__main{
     background-color: white;
+    border: 1px solid lightgray;
 }
 .card-header .btn {
     border: 1px solid #49c5b6;
-}
-
-.accordian__main {
-    border: 1px solid lightgray;
 }
 .accordian__main hr {
     margin-top: -10px;
@@ -36,6 +33,7 @@
 }
 
 .product__parent .product__info {
+    align-items: center;
     width: -webkit-fill-available;
 }
 .product__parent .qty {

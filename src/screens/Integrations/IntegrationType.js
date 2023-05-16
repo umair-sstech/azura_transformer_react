@@ -59,24 +59,16 @@ function IntegrationType(props) {
                   ) : null}
   
                   <div
-                    style={{
-                      marginRight: "32px",
-                      display: "flex",
-                      alignItems: "center",
-                      width: "400px",
-                    }}
+                    className="select__container"
                   >
-                    <label htmlFor="combo-box-demo" style={{ width: "36%" }}>
+                    <label htmlFor="combo-box-demo">
                       Type of Integrations
                     </label>
                     <Select
                       value={selectedOption}
                       onChange={handleChange}
                       options={options}
-                      styles={{
-                        menu: (provided) => ({ ...provided, width: 200 }),
-                        control: (provided) => ({ ...provided, width: 200 }),
-                      }}
+                      className="select-option"
                     />
                   </div>
                 </div>

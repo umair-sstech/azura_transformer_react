@@ -352,8 +352,8 @@ function MarketPlacePage1(props) {
             </div>
           </div>
 
-          <div className="row">
-            <div className="col-6">
+          <div className="row mt-3 mt-lg-0">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label htmlFor="combo-box-demo">Type of Integrations</label>
                 <Select
@@ -366,7 +366,7 @@ function MarketPlacePage1(props) {
                 />
               </div>
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label>
                   Market Place Name <span style={{ color: "red" }}>*</span>
@@ -390,7 +390,7 @@ function MarketPlacePage1(props) {
                 />
               </div>
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label>
                   {" "}
@@ -409,7 +409,7 @@ function MarketPlacePage1(props) {
               </div>
             </div>
 
-            <div className="col-6">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label>Prefix Name</label>
                 <input

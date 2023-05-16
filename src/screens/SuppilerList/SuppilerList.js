@@ -128,10 +128,10 @@ function SuppilerList(props) {
       <div>
         <div className="container-fluid">
           <PageHeader
-            HeaderText="Suppiler List"
+            HeaderText="Supplier List"
             Breadcrumb={[
               { name: "Integration", navigate: "#" },
-              { name: "Suppiler List", navigate: "#" },
+              { name: "Supplier List", navigate: "#" },
             ]}
             style={{ position: "sticky", top: 0, zIndex: 999 }}
           />
@@ -149,7 +149,7 @@ function SuppilerList(props) {
                       defaultValue={filterList[0]}
                     />
                   </div>
-                  <Link className="link-btn" to={`/manage-suppiler`}>
+                  <Link className="link-btn" to={`/manage-supplier`}>
                     Add Supplier
                   </Link>
                 </div>
@@ -223,7 +223,7 @@ function SuppilerList(props) {
                                     supplier.name
                                   );
 
-                                  history.push(`/manage-suppiler`);
+                                  history.push(`/manage-supplier`);
                                 }}
                               ></i>
                             </td>

@@ -18,11 +18,11 @@ function SuppilerPage3(props) {
   const [options, setOptions] = useState([
     {
       value: "do_nothing",
-      label: "Do nothing",
+      label: "Do Nothing",
     },
     {
       value: "hardcode_value",
-      label: "Hardcode value",
+      label: "Hardcode Value",
       textbox: true,
     },
     {
@@ -40,11 +40,11 @@ function SuppilerPage3(props) {
   const [productRadio, setProductRadio] = useState([
     {
       value: "single_row",
-      label: "Single row ( Parent Child In Same Row) ",
+      label: "  Single Row ( Parent Child In Same Row) ",
     },
     {
       value: "multiple_row",
-      label: "Different rows ( Parent Child In Different Row) ",
+      label: "Different Rows ( Parent Child In Different Row) ",
     },
   ]);
 
@@ -475,7 +475,7 @@ function SuppilerPage3(props) {
               <span className="text-danger"> {error}</span>
             </div>
           ))}
-          <div className="row">
+          <div className="row mt-3 mt-lg-0">
             <div className="col-12">
               <label>
                 In what format does this supplier provide the product data?
@@ -511,7 +511,7 @@ function SuppilerPage3(props) {
               ) : null}
             </div>
           </div>
-          <table>
+          <table className="table w-100 table-responsive-md">
             <thead>
               <tr>
                 <th>Product Field</th>

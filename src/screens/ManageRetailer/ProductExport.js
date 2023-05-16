@@ -79,7 +79,7 @@ function ProductExport() {
           </div>
         </div>
         <div className='row'>
-          <table className='product-table table w-100'>
+          <table className='product-table table w-100 table-responsive-sm'>
             <thead>
               <tr>
                 <th>
@@ -88,7 +88,7 @@ function ProductExport() {
                     onChange={handleCheckboxChange}
                   />
                 </th>
-                <th>id</th>
+                <th>Id</th>
                 <th>Supplier Name</th>
                 <th>Category</th>
                 <th>Product Count</th>

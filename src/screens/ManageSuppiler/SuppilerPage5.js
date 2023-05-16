@@ -11,23 +11,6 @@ function SupplierPage5(props) {
     { value: "HTTP", label: "HTTP" },
   ];
 
-  const customStyles = {
-    control: (provided) => ({
-      ...provided,
-      width: 200,
-      margin: "8px 16px",
-    }),
-    menu: (provided) => ({
-      ...provided,
-      width: 200,
-      margin: "8px 16px",
-    }),
-    input: (provided) => ({
-      ...provided,
-      width: "100%",
-    }),
-  };
-
   const [selectedValue, setSelectedValue] = useState(null);
 
   const handleSelectChange = (selectedOption) => {
@@ -46,13 +29,12 @@ function SupplierPage5(props) {
   return (
     <>
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <div style={{ marginRight: "32px", width: "200px" }}>
+        <div style={{ marginRight: "32px" }} className="select__container">
           <label htmlFor="combo-box-demo" style={{ marginBottom: "8px" }}>
             Type
           </label>
           <Select
             options={options}
-            styles={customStyles}
             onChange={handleSelectChange}
             className="select-option"
             value={selectedValue}
