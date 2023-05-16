@@ -156,7 +156,7 @@ const RetailerInfo = (props) =>
                     <form onSubmit={handleSubmit}>
                         <div >
                             <div className='row'>
-                                <div className='col-6'>
+                                <div className='col-sm-6'>
                                     <div className="form-group">
                                         <label>Name <span style={{ color: "red" }}>*</span></label>
                                         <input
@@ -175,7 +175,7 @@ const RetailerInfo = (props) =>
                                         ) : null}
                                     </div>
                                 </div>
-                                <div className='col-6'>
+                                <div className='col-sm-6'>
                                     <div className="form-group">
                                         <label>Company Description (optional)</label>
                                         <input
@@ -198,7 +198,7 @@ const RetailerInfo = (props) =>
                             </div>
 
                             <div className='row'>
-                                <div className='col-6'>
+                                <div className='col-sm-6'>
                                     <div className="form-group">
                                         <label>Building Name <span style={{ color: "red" }}>*</span></label>
                                         <input
@@ -217,7 +217,7 @@ const RetailerInfo = (props) =>
                                         ) : null}
                                     </div>
                                 </div>
-                                <div className='col-6'>
+                                <div className='col-sm-6'>
                                     <div className="form-group">
                                         <label>Street Address <span style={{ color: "red" }}>*</span></label>
                                         <input
@@ -258,7 +258,7 @@ const RetailerInfo = (props) =>
                             </div>
 
                             <div className='row'>
-                                <div className='col-4'>
+                                <div className='col-sm-4'>
                                     <div className="form-group">
                                         <label>City / State <span style={{ color: "red" }}>*</span></label>
                                         <input
@@ -277,7 +277,7 @@ const RetailerInfo = (props) =>
                                         ) : null}
                                     </div>
                                 </div>
-                                <div className='col-4'>
+                                <div className='col-sm-4'>
                                     <div className="form-group">
                                         <label>
                                             Country <span style={{ color: "red" }}>*</span>
@@ -309,7 +309,7 @@ const RetailerInfo = (props) =>
                                         ) : null}
                                     </div>
                                 </div>
-                                <div className='col-4'>
+                                <div className='col-sm-4'>
                                     <div className="form-group">
                                         <label>Pincode (optional)</label>
                                         <input
@@ -416,7 +416,7 @@ const RetailerInfo = (props) =>
 
 
                             <div className='row'>
-                                <div className='col-6'>
+                                <div className='col-sm-6'>
                                     <div className="form-group">
                                         <label>Site URL(optional)</label>
 
@@ -436,7 +436,7 @@ const RetailerInfo = (props) =>
                                         ) : null}
                                     </div>
                                 </div>
-                                <div className='col-6'>
+                                <div className='col-sm-6'>
                                     <div className="form-group">
                                         <label>Cost Center Name(optional)</label>
 

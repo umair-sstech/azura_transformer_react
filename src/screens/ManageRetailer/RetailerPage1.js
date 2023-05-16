@@ -131,8 +131,8 @@ function RetailerPage1(props) {
             </div>
           </div>
         </div>
-        <div className="row">
-          <div className="col-6">
+        <div className="row mt-3 mt-sm-0">
+          <div className="col-sm-6">
             <label>Select your Supplier(s)</label>
             <Select
             options={supplierList}

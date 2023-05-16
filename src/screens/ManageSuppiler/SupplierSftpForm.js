@@ -232,7 +232,7 @@ function SupplierSftpForm({ onSubmit,settingType }) {
               </div>
             </div>
           </div>
-          <div className="row">
+          <div className="row mt-3 mt-sm-0">
             <div className="col-12">
               <div className="form-group">
                 <label>
@@ -250,7 +250,7 @@ function SupplierSftpForm({ onSubmit,settingType }) {
                 )}
               </div>
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label>
                   User Name <span style={{ color: "red" }}>*</span>
@@ -272,7 +272,7 @@ function SupplierSftpForm({ onSubmit,settingType }) {
                 )}
               </div>
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label>
                   Password <span style={{ color: "red" }}>*</span>
@@ -294,7 +294,7 @@ function SupplierSftpForm({ onSubmit,settingType }) {
                 )}
               </div>
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label>
                   Port <span style={{ color: "red" }}>*</span>
@@ -314,7 +314,7 @@ function SupplierSftpForm({ onSubmit,settingType }) {
                 )}
               </div>
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label>
                   Protocol <span style={{ color: "red" }}>*</span>

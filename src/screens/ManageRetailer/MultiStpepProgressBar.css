@@ -91,11 +91,16 @@
   }
   .stepNamesContainer {
     display: flex;
+    flex-wrap: wrap;
     /* margin-bottom: 10px */
-    margin-bottom: 19px;
-    margin-left: 0%;
-    justify-content: space-between;
+    /* margin-bottom: 19px; */
+    /* margin-left: 0%; */
+    /* justify-content: space-between; */
     margin-right: -5%
+  }
+
+  .stepNamesContainer > * {
+    flex: 1;
   }
   
   .stepName {
@@ -124,10 +129,6 @@
     .stepName{
       font-size: 12px;
   
-    }
-    .stepNamesContainer {
-      margin-right: -10%;
-      margin-left: -2%;
     }
     .RSPBprogressBar {
       width: 99%;

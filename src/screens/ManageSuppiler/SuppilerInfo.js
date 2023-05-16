@@ -294,8 +294,8 @@ function SuppilerInfo(props) {
             </div>
           </div>
 
-          <div className="row">
-            <div className="col-6">
+          <div className="row mt-3 mt-lg-0">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label htmlFor="combo-box-demo">Type of Integrations</label>
                 <Select
@@ -308,7 +308,7 @@ function SuppilerInfo(props) {
                 />
               </div>
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label>
                   Supplier Name <span style={{ color: "red" }}>*</span>
@@ -326,7 +326,7 @@ function SuppilerInfo(props) {
                 )}
               </div>
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label>
                   {" "}
@@ -349,7 +349,7 @@ function SuppilerInfo(props) {
               </div>
             </div>
 
-            <div className="col-6">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label>Prefix Name</label>
                 <input

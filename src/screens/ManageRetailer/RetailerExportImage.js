@@ -69,7 +69,7 @@ function RetailerExportImage(props) {
         </div>
         <div className="row">
           <div className="col-12 table-class">
-            <table className="table w-100 ">
+            <table className="table w-100 table-responsive-sm">
               <thead>
                 <tr>
                   <th>Supplier Name</th>

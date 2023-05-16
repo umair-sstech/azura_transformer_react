@@ -44,14 +44,14 @@ function Accountconfiguration() {
             </div>
           </div>
         </div>
-        <div className="col-row">
+        <div className="col-row mt-3 mt-sm-0">
             <div className="col-6"></div>
             <label style={{ color: "#49c5b6" }}>
               Selected Account: 
             </label>
           </div>
           <div className="row">
-            <div className="col-6">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label>
                   Channel/Store <span style={{ color: "red" }}>*</span>
@@ -64,7 +64,7 @@ function Accountconfiguration() {
                 />
               </div>
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label>
                   API Endpoint <span style={{ color: "red" }}>*</span>
@@ -77,7 +77,7 @@ function Accountconfiguration() {
                 />
               </div>
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <div className="form-group">
                 <label>
                   Authorization Token <span style={{ color: "red" }}>*</span>

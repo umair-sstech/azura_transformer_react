@@ -91,11 +91,16 @@
 }
 .stepNamesContainer {
   display: flex;
+  flex-wrap: wrap;
   /* margin-bottom: 10px */
-  margin-bottom: 19px;
-  margin-left: 0%;
-  justify-content: start;
+  /* margin-bottom: 19px;
+  margin-left: 0%; */
+  /* justify-content: start; */
   margin-right: -5%;
+}
+
+.stepNamesContainer > * {
+  flex: 1;
 }
 
 .stepName {
@@ -122,10 +127,6 @@ p.supplier-onboarding {
 @media screen and (max-width: 1024px) {
   .stepName {
     font-size: 12px;
-  }
-  .stepNamesContainer {
-    margin-right: -8%;
-    margin-left: -2%;
   }
   .RSPBprogressBar {
     width: 99%;

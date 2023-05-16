@@ -75,8 +75,8 @@ function CurrencyConversion(props) {
             </div>
           </div>
         </div>
-        <div className="row">
-          <div className="col-4">
+        <div className="row mt-3 mt-sm-0">
+          <div className="col-sm-6">
             <label>Select Currency</label>
             <Select options={currencyList}  placeholder="Select Currency" />
           </div>

@@ -79,7 +79,7 @@ function ExportChannel() {
             </div>
           </div>
         </div>
-        <div className="row">
+        <div className="row mt-3 mt-sm-0">
           <div className="col-12">
             <label>Type of Integration</label>
             <Select
