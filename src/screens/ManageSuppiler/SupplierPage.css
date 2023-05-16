@@ -18,8 +18,13 @@ small.form-text.text-muted.csv-text {
   font-size: 12px;
 }
 /* supplierpage3 */
-.radio-label{
+.radio-label {
   font-weight: 500;
+}
+.accordion-class {
+  position: relative;
+  right: 17px;
+  width: 84%;
 }
 table {
   border-collapse: collapse;
@@ -49,7 +54,7 @@ th {
   background-color: #eee;
   padding: 10px;
 }
-.image-label{
+.image-label {
   font-size: 13px;
   font-weight: 400;
 }
@@ -77,8 +82,8 @@ th {
   padding: 5px;
   border: 1px solid #ccc;
   position: relative;
-    width: 90%;
-    left: 13px;
+  width: 90%;
+  left: 13px;
 }
 
 .blue-label .Select-value-label {

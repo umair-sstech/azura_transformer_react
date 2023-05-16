@@ -9,7 +9,7 @@ import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
-import { Spinner, Accordion, Card, Button } from "react-bootstrap";
+import { Spinner, Accordion, Card, Button, Row, Col } from "react-bootstrap";
 
 function SuppilerPage3(props) {
   const { setPage } = props;
@@ -40,7 +40,7 @@ function SuppilerPage3(props) {
   const [productRadio, setProductRadio] = useState([
     {
       value: "single_row",
-      label: "  Single row ( Parent Child In Same Row) ",
+      label: "Single row ( Parent Child In Same Row) ",
     },
     {
       value: "multiple_row",
@@ -56,8 +56,20 @@ function SuppilerPage3(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [mappingData, setMappingData] = useState([]);
-  const [additionalDropdownOpen, setAdditionalDropdownOpen] = useState([]);
   const [csvOption, setCsvOption] = useState([]);
+  const [customFields, setCustomFields] = useState([{ name: "", value: "" }]);
+  const [selectedPreference, setSelectedPreference] = useState(null);
+  const [selectedRadioPreference, setSlectedRadioPreference] = useState({});
+  const [supplierExtractOption, setSupplierExtractOption] = useState([]);
+
+  const handleProductExtractChange = (index, key, selectedOption) => {
+    const updatedSupplierExtractOption = [...supplierExtractOption];
+    updatedSupplierExtractOption[index] = {
+      ...updatedSupplierExtractOption[index],
+      [key]: selectedOption.value,
+    };
+    setSupplierExtractOption(updatedSupplierExtractOption);
+  };
 
   const history = useHistory();
 
@@ -66,7 +78,6 @@ function SuppilerPage3(props) {
     getProductField();
     getSupplierDataById();
     getMappingData();
-    getcsvData();
   }, []);
 
   const handleFieldChange = (index, key, selectedOption) => {
@@ -75,32 +86,11 @@ function SuppilerPage3(props) {
       if (!newSelectedOptions[index]) {
         newSelectedOptions[index] = {};
       }
-      if (selectedOption && selectedOption.value === "extract") {
-        setAdditionalDropdownOpen((prevAdditionalDropdownOpen) => {
-          const newAdditionalDropdownOpen = Array.isArray(
-            prevAdditionalDropdownOpen
-          )
-            ? [...prevAdditionalDropdownOpen]
-            : [];
-          newAdditionalDropdownOpen[index] = true;
-          return newAdditionalDropdownOpen;
-        });
-      } else {
-        setAdditionalDropdownOpen((prevAdditionalDropdownOpen) => {
-          const newAdditionalDropdownOpen = Array.isArray(
-            prevAdditionalDropdownOpen
-          )
-            ? [...prevAdditionalDropdownOpen]
-            : [];
-          newAdditionalDropdownOpen[index] = false;
-          return newAdditionalDropdownOpen;
-        });
-      }
-
       if (selectedOption) {
         newSelectedOptions[index][key] = selectedOption;
 
         const selectedValue = selectedOption.value;
+        console.log("selectedvalue", selectedValue);
         const selectedOptionIndex = options.findIndex(
           (option) => option.value === selectedValue
         );
@@ -144,6 +134,7 @@ function SuppilerPage3(props) {
     });
   };
 
+
   const handleRadioChange = (index, key, value) => {
     setSelectedRadio((prevSelectedRadio) => ({
       ...prevSelectedRadio,
@@ -153,6 +144,10 @@ function SuppilerPage3(props) {
       },
     }));
     setAdditionalTextValue("");
+  };
+
+  const handleProductRadioChange = (value) => {
+    setSlectedRadioPreference(value);
   };
 
   const getProductField = async () => {
@@ -180,6 +175,7 @@ function SuppilerPage3(props) {
         const keys = Object.keys(selectedOption);
         keys.forEach((key) => {
           const option = selectedOption[key];
+          console.log("option.value", option.value);
           if (option) {
             let additionalValue = "";
             let imageType = "";
@@ -201,6 +197,10 @@ function SuppilerPage3(props) {
                   ? selectedOption[key].additionalValue
                   : "";
             }
+            let supplierExtract = "";
+        if (option.value === "extract") {
+          supplierExtract = supplierExtractOption[index]?.[key] || "";
+        }
             const mappingObject = {
               supplierId: localStorage.getItem("supplierId"),
               supplierName: localStorage.getItem("supplierName"),
@@ -210,19 +210,50 @@ function SuppilerPage3(props) {
               additionalValue: additionalValue,
               imageType: imageType,
               imageList: imageList,
+              supplierExtract: supplierExtract
             };
+            console.log("suppliermaimmapping", mappingObject);
             mappingArray.push(mappingObject);
           }
         });
       });
-      setIsLoading(true);
+      customFields.forEach((customField) => {
+        const mappingObject = {
+          supplierId: localStorage.getItem("supplierId"),
+          supplierName: localStorage.getItem("supplierName"),
+          standardField: "",
+          standardValue: "",
+          supplierField: "",
+          additionalValue: "",
+          customFieldName: customField.name,
+          customValue: customField.value,
+          isCustomField: true,
+        };
 
+        mappingArray.push(mappingObject);
+      });
+
+      productRadio.forEach((product) => {
+        const mappingObject = {
+          supplierId: localStorage.getItem("supplierId"),
+          supplierName: localStorage.getItem("supplierName"),
+          standardField: "Preference",
+          standardValue: "",
+          supplierField: selectedPreference ? selectedPreference.value : "",
+          additionalValue: selectedRadioPreference,
+        };
+        console.log("productradio", mappingObject);
+        mappingArray.push(mappingObject);
+      });
+
+      setIsLoading(true);
       try {
         const response = await axios.post(
           `${API_PATH.DATA_FILE_MAPPING}`,
           mappingArray
         );
         const { success, message, data } = response.data;
+        console.log("response", response.data);
         if (success) {
           toast.success(message);
           setPage("4");
@@ -332,8 +363,16 @@ function SuppilerPage3(props) {
             label: option,
           })),
         ];
+        const csvJSON1 = supplierData.csvJSON || [];
+        const newOptions1 = [
+          ...csvJSON1.map((option) => ({
+            value: option,
+            label: option,
+          })),
+        ];
 
         setOptions(newOptions);
+        setCsvOption(newOptions1);
       })
       .catch((error) => {
         console.log("error", error);
@@ -346,10 +385,13 @@ function SuppilerPage3(props) {
       .get(`${API_PATH.GET_SUPPLIER_FILE_MAPPING}=${supplierId}`)
       .then((response) => {
         const supplierData = response.data.data;
-        setFormData(supplierData);
+        setFormData(supplierData.supplier_product_field);
+
+        const supplierMapping = supplierData.supplier_product_field;
+        const supplierCustomFields = supplierData.supplier_custom_field;
 
         const options = {};
-        supplierData.forEach((field) => {
+        supplierMapping.forEach((field) => {
           const { standardField, supplierField, imageType } = field;
           options[standardField] = {
             label: supplierField,
@@ -360,35 +402,30 @@ function SuppilerPage3(props) {
 
         setSelectedOptions([options]);
 
-        setMappingData(supplierData);
+        setMappingData(supplierMapping);
+        // setCustomFields(supplierCustomFields);
       })
       .catch((error) => {
         console.log("error", error);
       });
   };
 
-  const getcsvData = () => {
-    const supplierId = localStorage.getItem("supplierId");
-    axios
-      .get(`${API_PATH.GET_INTEGRATION_INFO_BY_ID}=${supplierId}`)
-      .then((response) => {
-        const supplierData = response.data.data;
-        setFormData(supplierData);
-
-        const csvJSON = supplierData.csvJSON || [];
-        const newOptions = [
-          ...csvJSON.map((option) => ({
-            value: option,
-            label: option,
-          })),
-        ];
-
-        setCsvOption(newOptions);
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
+  const addCustomField = () => {
+    setCustomFields([...customFields, { name: "", value: "" }]);
   };
+
+  const removeCustomField = (index) => {
+    const updatedFields = [...customFields];
+    updatedFields.splice(index, 1);
+    setCustomFields(updatedFields);
+  };
+
+  const handleInputChange = (index, field, value) => {
+    const updatedFields = [...customFields];
+    updatedFields[index][field] = value;
+    setCustomFields(updatedFields);
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -450,9 +487,9 @@ function SuppilerPage3(props) {
                   <input
                     type="radio"
                     name="Preference"
-                    value={radio.value}
-                    checked={selectedRadio === radio.value}
-                    onChange={() => setSelectedRadio(radio.value)}
+                    value={radio.value ? radio.value : ""}
+                    checked={selectedRadioPreference === radio.value}
+                    onChange={() => handleProductRadioChange(radio.value)}
                   />
                   {radio.label}
                 </label>
@@ -461,9 +498,15 @@ function SuppilerPage3(props) {
           </div>
           <div className="row mt-2">
             <div className="col-6">
-              {selectedRadio === "multiple_row" ? (
+              {selectedRadioPreference === "multiple_row" ? (
                 <div>
-                  <Select options={csvOption} />
+                  <Select
+                    options={csvOption}
+                    value={selectedPreference}
+                    onChange={(selectedOption) =>
+                      setSelectedPreference(selectedOption)
+                    }
+                  />
                 </div>
               ) : null}
             </div>
@@ -474,7 +517,7 @@ function SuppilerPage3(props) {
                 <th>Product Field</th>
                 <th>Value</th>
                 <th>Additional Info</th>
-                <th>Product</th>
+                <th>Extract Value</th>
               </tr>
             </thead>
 
@@ -698,7 +741,10 @@ function SuppilerPage3(props) {
                                       )
                                     }
                                   />
-                                  <small>Please use </small>
+                                  <small>
+                                    e.g. Please generate the value from
+                                    parent_title{" "}
+                                  </small>
                                 </>
                               )}
                             </>
@@ -735,31 +781,14 @@ function SuppilerPage3(props) {
                             </td>
                             <td>{additionalInfo}</td>
                             <td>
-                              {additionalDropdownOpen[index] && (
+                              {selectedOption &&
+                              selectedOption.value === "extract" ? (
                                 <div className="select-container">
-                                  <Select
-                                    options={options}
-                                    value={selectedOption}
-                                    onChange={(selectedOption) =>
-                                      handleFieldChange(
-                                        index,
-                                        key,
-                                        selectedOption
-                                      )
-                                    }
-                                    isSearchable={true}
-                                    className="select"
-                                    styles={{
-                                      option: (styles, { data }) => {
-                                        return {
-                                          ...styles,
-                                          background: data.color,
-                                        };
-                                      },
-                                    }}
-                                  />
+                                  <Select options={csvOption} onChange={(selectedOption)=>handleProductExtractChange( index,
+                                    key,
+                                    selectedOption)}/>
                                 </div>
-                              )}
+                              ) : null}
                             </td>
                           </tr>
                         );
@@ -770,25 +799,95 @@ function SuppilerPage3(props) {
               </tbody>
             )}
           </table>
-          <div>
-          <Accordion defaultActiveKey="0">
-            <Card>
-              <Card.Header>
-                <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                  <div className="row">
-                    {" "}
-                    <div className="col-6">Custom Field</div>
-                    <div className="col-6">Custom Field Value</div>
-                  </div>
-                </Accordion.Toggle>
-              
-              </Card.Header>
-              <Accordion.Collapse eventKey="0">
-                <Card.Body><input placeholder="Enter value here"/></Card.Body>
-              </Accordion.Collapse>
-              <button>+ Add Fields</button>
-            </Card>
-          </Accordion>
+          <div className="accordion-class">
+            <Row className="mr-1">
+              <Col>
+                <Accordion
+                  defaultActiveKey="7"
+                  className="accordian__main ml-3"
+                >
+                  <Card>
+                    <Card.Header>
+                      <Accordion.Toggle
+                        as="button"
+                        className="btn btn-link collapsed border border-primary text-decoration-none"
+                        eventKey="0"
+                      >
+                        <i className="fa fa-angle-down arrow"></i>
+
+                        <span> Custom Fields</span>
+                      </Accordion.Toggle>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey="0" className="card-body">
+                      <Card.Body>
+                        <div className="d-flex justify-content-around">
+                          <p>
+                            <span>Custom Field Name</span>
+                          </p>
+                          <p>
+                            <span>Custom Field Value</span>
+                          </p>
+                        </div>
+                        <hr />
+                        {customFields &&
+                          customFields.map((field, index) => (
+                            <div
+                              key={index}
+                              className="d-flex justify-content-around align-items-center"
+                            >
+                              <i
+                                className="fa fa-solid fa-trash fa-lg ml-2 pe-auto"
+                                style={{ color: "red" }}
+                                onClick={() => removeCustomField(index)}
+                              ></i>
+                              <input
+                                type="text"
+                                placeholder="Enter Custom Field"
+                                name="customFieldName"
+                                className="form-control ml-3"
+                                style={{ flex: "1 1 0" }}
+                                defaultValue={field.customFieldName?field.customFieldName:""}
+                                onChange={(e) =>
+                                  handleInputChange(
+                                    index,
+                                    "name",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                              <span className="ml-3"> = </span>
+                              <input
+                                type="text"
+                                placeholder="Enter Custom Value"
+                                name="customValue"
+                                className="form-control ml-3"
+                                style={{ flex: "2 1 0" }}
+                                defaultValue={field.customValue?field.customValue:""}
+                                onChange={(e) =>
+                                  handleInputChange(
+                                    index,
+                                    "value",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+                          ))}
+                        <Row></Row>
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                  <hr />
+                  <Button
+                    className="btn ml-3 mt-2 mb-2"
+                    variant="outline-primary"
+                    onClick={addCustomField}
+                  >
+                    <i className="fa fa-plus mr-2"></i>Add Custom Field
+                  </Button>
+                </Accordion>
+              </Col>
+            </Row>
           </div>
         </div>
       </form>
