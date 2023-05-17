@@ -37,11 +37,11 @@ function CustomFields(props) {
   return (
     <>
     <div className="accordion-class">
-    <Row className="mr-1">
+    <Row>
       <Col>
         <Accordion
           defaultActiveKey="7"
-          className="accordian__main ml-3"
+          className="accordian__main"
         >
           <Card>
             <Card.Header>

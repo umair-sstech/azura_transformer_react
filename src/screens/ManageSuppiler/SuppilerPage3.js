@@ -814,25 +814,7 @@ function SuppilerPage3(props) {
               </tbody>
             )}
           </table>
-<<<<<<< HEAD
           <CustomFields customFieldsData={customFieldsData} setCustomFieldsData={setCustomFieldsData} />
-=======
-          <div className="accordion-class">
-            <Row>
-              <Col>
-                <Accordion
-                  defaultActiveKey="7"
-                  className="accordian__main"
-                >
-                  <Card>
-                    <Card.Header>
-                      <Accordion.Toggle
-                        as="button"
-                        className="btn btn-link collapsed border border-primary text-decoration-none"
-                        eventKey="0"
-                      >
-                        <i className="fa fa-angle-down arrow"></i>
->>>>>>> 880b73482a91bd3c7531ab902ee4db44a445544f
 
         </div>
       </form>
