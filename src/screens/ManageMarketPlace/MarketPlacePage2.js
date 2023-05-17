@@ -179,7 +179,7 @@ function MarketPlacePage2(props) {
             </div>
           </div>
         </div>
-        <div className="row mt-4 ml-3">
+        <div className="row mt-4 ml-lg-3 mr-lg-3">
         {formError && <p style={{ color: "red" }}>{formError}</p>}
        
           {!categoryFields ? (
@@ -209,7 +209,7 @@ function MarketPlacePage2(props) {
                   <Accordion.Collapse eventKey={index.toString()}>
                     <Card.Body>
                       {categoryObj.categoryData.length ? (
-                        <table className="table table-bordered w-75 mt-0">
+                        <table className="table-bordered table-responsive mt-0">
                           <thead>
                             <tr>
                               <th>Category</th>
@@ -222,7 +222,7 @@ function MarketPlacePage2(props) {
                                 <td className="p-1 font-weight-normal">
                                   {field.label}
                                 </td>
-                                <td>
+                                <td className="p-2 form-group">
                                   <Select
                                     options={mysaleCategory}
                                     onChange={(selectedOption) =>
@@ -232,6 +232,7 @@ function MarketPlacePage2(props) {
                                         field
                                       )
                                     }
+                                    className="form-control"
                                   />
                                 </td>
                               </tr>

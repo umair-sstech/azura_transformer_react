@@ -4,11 +4,11 @@
   justify-content: end;
 }
 
-.hr {
+/* .hr {
   position: relative;
-  width: 79.5vw;
+  width: 100%;
   right: 19px;
-}
+} */
 
 /* supplierpage2 */
 
@@ -22,9 +22,7 @@ small.form-text.text-muted.csv-text {
   font-weight: 500;
 }
 .accordion-class {
-  position: relative;
-  right: 17px;
-  width: 84%;
+  width: 100%;
 }
 table {
   
@@ -140,12 +138,12 @@ th {
   left: 27%;
 } */
 
-@media screen and (max-width: 1024px) {
+/* @media screen and (max-width: 1024px) {
   .hr {
     width: 97vw;
     right: 20px;
   }
-}
+} */
 
 @media screen and (max-width: 575px) {
   .supplier4__container {

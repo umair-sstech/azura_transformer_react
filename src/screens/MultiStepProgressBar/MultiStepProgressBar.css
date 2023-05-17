@@ -119,11 +119,10 @@ p.supplier-onboarding {
   font-weight: 600;
   color: #49c5b6;
 }
-.hr {
+/* .hr {
   position: relative;
-  width: 79.5vw;
-  right: 19px;
-}
+  width: 100%;
+} */
 @media screen and (max-width: 1024px) {
   .stepName {
     font-size: 12px;

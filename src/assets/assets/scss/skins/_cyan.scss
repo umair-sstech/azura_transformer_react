@@ -36,6 +36,8 @@ $cyan-600: #00acc1 !default;
     #wrapper {
         margin-left: 250px;
         width: calc(100% - 250px);
+        // margin-left: 80px;
+        // width: calc(100% - 80px);
         margin-top: 70px;
 
         @media screen and (max-width:1200px) {
