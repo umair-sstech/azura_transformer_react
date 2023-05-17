@@ -10,10 +10,11 @@ import { toast } from "react-toastify";
 import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
 import { Spinner, Accordion, Card, Button, Row, Col } from "react-bootstrap";
+import CustomFields from "./CustomFields";
 
 function SuppilerPage3(props) {
   const { setPage } = props;
-  const { isSuppilerAdded, formData, setFormData } = useContext(FormContext);
+  const {setFormData } = useContext(FormContext);
 
   const [options, setOptions] = useState([
     {
@@ -29,6 +30,8 @@ function SuppilerPage3(props) {
       value: "use_AI",
       label: "Use AI",
       textbox: true,
+      message: "e.g. Please generate the {value} from {Parent_Title}",
+      message1: "{Please use the mentioned tag for data generation}",
     },
     {
       value: "extract",
@@ -40,7 +43,7 @@ function SuppilerPage3(props) {
   const [productRadio, setProductRadio] = useState([
     {
       value: "single_row",
-      label: "  Single Row ( Parent Child In Same Row) ",
+      label: "Single Row ( Parent Child In Same Row) ",
     },
     {
       value: "multiple_row",
@@ -57,19 +60,13 @@ function SuppilerPage3(props) {
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [mappingData, setMappingData] = useState([]);
   const [csvOption, setCsvOption] = useState([]);
-  const [customFields, setCustomFields] = useState([{ name: "", value: "" }]);
   const [selectedPreference, setSelectedPreference] = useState(null);
-  const [selectedRadioPreference, setSlectedRadioPreference] = useState({});
+  const [selectedRadioPreference, setSlectedRadioPreference] = useState(null);
   const [supplierExtractOption, setSupplierExtractOption] = useState([]);
+  const [customFieldsData, setCustomFieldsData] = useState([]);
+  
 
-  const handleProductExtractChange = (index, key, selectedOption) => {
-    const updatedSupplierExtractOption = [...supplierExtractOption];
-    updatedSupplierExtractOption[index] = {
-      ...updatedSupplierExtractOption[index],
-      [key]: selectedOption.value,
-    };
-    setSupplierExtractOption(updatedSupplierExtractOption);
-  };
+
 
   const history = useHistory();
 
@@ -88,6 +85,13 @@ function SuppilerPage3(props) {
       }
       if (selectedOption) {
         newSelectedOptions[index][key] = selectedOption;
+        if (
+          selectedOption &&
+          selectedOption.textbox &&
+          !newSelectedOptions[index][key].additionalValue
+        ) {
+          newSelectedOptions[index][key].additionalValue = "";
+        }
 
         const selectedValue = selectedOption.value;
         console.log("selectedvalue", selectedValue);
@@ -130,10 +134,10 @@ function SuppilerPage3(props) {
         ...newSelectedOptions[index][key],
         additionalValue,
       };
+
       return newSelectedOptions;
     });
   };
-
 
   const handleRadioChange = (index, key, value) => {
     setSelectedRadio((prevSelectedRadio) => ({
@@ -146,6 +150,15 @@ function SuppilerPage3(props) {
     setAdditionalTextValue("");
   };
 
+  const handleProductExtractChange = (index, key, selectedOption) => {
+    const updatedSupplierExtractOption = [...supplierExtractOption];
+    updatedSupplierExtractOption[index] = {
+      ...updatedSupplierExtractOption[index], 
+      [key]: selectedOption.value,
+    };
+    setSupplierExtractOption(updatedSupplierExtractOption);
+  };
+  
   const handleProductRadioChange = (value) => {
     setSlectedRadioPreference(value);
   };
@@ -198,9 +211,9 @@ function SuppilerPage3(props) {
                   : "";
             }
             let supplierExtract = "";
-        if (option.value === "extract") {
-          supplierExtract = supplierExtractOption[index]?.[key] || "";
-        }
+            if (option.value === "extract") {
+              supplierExtract = supplierExtractOption[index]?.[key] || "";
+            }
             const mappingObject = {
               supplierId: localStorage.getItem("supplierId"),
               supplierName: localStorage.getItem("supplierName"),
@@ -210,39 +223,37 @@ function SuppilerPage3(props) {
               additionalValue: additionalValue,
               imageType: imageType,
               imageList: imageList,
-              supplierExtract: supplierExtract
+              supplierExtract: supplierExtract,
             };
-            console.log("suppliermaimmapping", mappingObject);
             mappingArray.push(mappingObject);
           }
         });
       });
-      customFields.forEach((customField) => {
+
+      customFieldsData.forEach((customField) => {
         const mappingObject = {
           supplierId: localStorage.getItem("supplierId"),
           supplierName: localStorage.getItem("supplierName"),
-          standardField: "",
-          standardValue: "",
-          supplierField: "",
-          additionalValue: "",
-          customFieldName: customField.name,
-          customValue: customField.value,
-          isCustomField: true,
+          customFieldName: customField.customFieldName, 
+          customValue: customField.customValue,
+          isCustomField:true
         };
-
+        console.log("customField",mappingObject)
         mappingArray.push(mappingObject);
       });
-
+      
       productRadio.forEach((product) => {
+        const additionalValue = selectedRadioPreference || "";
+        const additionalValueString =
+          typeof additionalValue === "object" ? "" : additionalValue;
         const mappingObject = {
           supplierId: localStorage.getItem("supplierId"),
           supplierName: localStorage.getItem("supplierName"),
           standardField: "Preference",
           standardValue: "",
           supplierField: selectedPreference ? selectedPreference.value : "",
-          additionalValue: selectedRadioPreference,
+          additionalValue: additionalValueString,
         };
-        console.log("productradio", mappingObject);
         mappingArray.push(mappingObject);
       });
 
@@ -386,10 +397,13 @@ function SuppilerPage3(props) {
       .then((response) => {
         const supplierData = response.data.data;
         setFormData(supplierData.supplier_product_field);
-
+  
         const supplierMapping = supplierData.supplier_product_field;
+  
         const supplierCustomFields = supplierData.supplier_custom_field;
-
+        const additionalValue = supplierMapping[0].additionalValue; 
+        setSlectedRadioPreference(additionalValue);
+  
         const options = {};
         supplierMapping.forEach((field) => {
           const { standardField, supplierField, imageType } = field;
@@ -399,32 +413,16 @@ function SuppilerPage3(props) {
             imageType: imageType,
           };
         });
-
         setSelectedOptions([options]);
-
         setMappingData(supplierMapping);
-        // setCustomFields(supplierCustomFields);
+        setCustomFieldsData(supplierCustomFields);
+
       })
       .catch((error) => {
         console.log("error", error);
       });
   };
 
-  const addCustomField = () => {
-    setCustomFields([...customFields, { name: "", value: "" }]);
-  };
-
-  const removeCustomField = (index) => {
-    const updatedFields = [...customFields];
-    updatedFields.splice(index, 1);
-    setCustomFields(updatedFields);
-  };
-
-  const handleInputChange = (index, field, value) => {
-    const updatedFields = [...customFields];
-    updatedFields[index][field] = value;
-    setCustomFields(updatedFields);
-  };
 
   return (
     <>
@@ -498,7 +496,7 @@ function SuppilerPage3(props) {
           </div>
           <div className="row mt-2">
             <div className="col-6">
-              {selectedRadioPreference === "multiple_row" ? (
+              {selectedRadioPreference === "multiple_row"  ? (
                 <div>
                   <Select
                     options={csvOption}
@@ -511,7 +509,7 @@ function SuppilerPage3(props) {
               ) : null}
             </div>
           </div>
-          <table className="table w-100 table-responsive-md">
+          <table className="w-100 table-responsive-md">
             <thead>
               <tr>
                 <th>Product Field</th>
@@ -650,21 +648,6 @@ function SuppilerPage3(props) {
                               )}
                             </>
                           );
-                        } else if (selectedOption && selectedOption.textbox) {
-                          additionalInfo = (
-                            <input
-                              type="text"
-                              placeholder="Enter a value"
-                              className="additional-textbox rounded"
-                              onChange={(e) =>
-                                handleAdditionalValueChange(
-                                  index,
-                                  key,
-                                  e.target.value
-                                )
-                              }
-                            />
-                          );
                         } else if (key === "Dimension_Units") {
                           additionalInfo = (
                             <div className="select-container">
@@ -728,25 +711,26 @@ function SuppilerPage3(props) {
                           additionalInfo = (
                             <>
                               {selectedOption && selectedOption.textbox && (
-                                <>
-                                  <input
-                                    type="text"
-                                    placeholder="Enter a value"
-                                    className="additional-textbox rounded"
-                                    onChange={(e) =>
-                                      handleAdditionalValueChange(
-                                        index,
-                                        key,
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                  <small>
-                                    e.g. Please generate the value from
-                                    parent_title{" "}
-                                  </small>
-                                </>
+                                <input
+                                  type="text"
+                                  placeholder="Enter a value"
+                                  className="additional-textbox rounded"
+                                  onChange={(e) =>
+                                    handleAdditionalValueChange(
+                                      index,
+                                      key,
+                                      e.target.value
+                                    )
+                                  }
+                                />
                               )}
+                              <br />
+                              {selectedOption &&
+                                selectedOption.value === "use_AI" && (
+                                  <p className="ml-3 text-success">
+                                    {selectedOption.message}
+                                  </p>
+                                )}
                             </>
                           );
                         }
@@ -784,11 +768,42 @@ function SuppilerPage3(props) {
                               {selectedOption &&
                               selectedOption.value === "extract" ? (
                                 <div className="select-container">
-                                  <Select options={csvOption} onChange={(selectedOption)=>handleProductExtractChange( index,
-                                    key,
-                                    selectedOption)}/>
+                                  <Select
+                                    options={csvOption}
+                                    onChange={(selectedOption) =>
+                                      handleProductExtractChange(
+                                        index,
+                                        key,
+                                        selectedOption
+                                      )
+                                    }
+                                    isSearchable={true}
+                                    className="select"
+                                    styles={{
+                                      option: (styles) => {
+                                        return {
+                                          ...styles
+                                        };
+                                      },
+                                    }}
+                                  />
                                 </div>
                               ) : null}
+                              {selectedOption &&
+                                selectedOption.value === "use_AI" && (
+                                  <p className="text-success">
+                                    Please use the mentioned tag for data
+                                    generation
+                                    <br />
+                                    {`{Parent_Title}`}
+                                    <br />
+                                    {`{Variant_Title}`}
+                                    <br />
+                                    {`{Plain_Description}`}
+                                    <br />
+                                    {`{Category_1}`}
+                                  </p>
+                                )}
                             </td>
                           </tr>
                         );
@@ -799,96 +814,8 @@ function SuppilerPage3(props) {
               </tbody>
             )}
           </table>
-          <div className="accordion-class">
-            <Row className="mr-1">
-              <Col>
-                <Accordion
-                  defaultActiveKey="7"
-                  className="accordian__main ml-3"
-                >
-                  <Card>
-                    <Card.Header>
-                      <Accordion.Toggle
-                        as="button"
-                        className="btn btn-link collapsed border border-primary text-decoration-none"
-                        eventKey="0"
-                      >
-                        <i className="fa fa-angle-down arrow"></i>
+          <CustomFields customFieldsData={customFieldsData} setCustomFieldsData={setCustomFieldsData} />
 
-                        <span> Custom Fields</span>
-                      </Accordion.Toggle>
-                    </Card.Header>
-                    <Accordion.Collapse eventKey="0" className="card-body">
-                      <Card.Body>
-                        <div className="d-flex justify-content-around">
-                          <p>
-                            <span>Custom Field Name</span>
-                          </p>
-                          <p>
-                            <span>Custom Field Value</span>
-                          </p>
-                        </div>
-                        <hr />
-                        {customFields &&
-                          customFields.map((field, index) => (
-                            <div
-                              key={index}
-                              className="d-flex justify-content-around align-items-center"
-                            >
-                              <i
-                                className="fa fa-solid fa-trash fa-lg ml-2 pe-auto"
-                                style={{ color: "red" }}
-                                onClick={() => removeCustomField(index)}
-                              ></i>
-                              <input
-                                type="text"
-                                placeholder="Enter Custom Field"
-                                name="customFieldName"
-                                className="form-control ml-3"
-                                style={{ flex: "1 1 0" }}
-                                defaultValue={field.customFieldName?field.customFieldName:""}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "name",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              <span className="ml-3"> = </span>
-                              <input
-                                type="text"
-                                placeholder="Enter Custom Value"
-                                name="customValue"
-                                className="form-control ml-3"
-                                style={{ flex: "2 1 0" }}
-                                defaultValue={field.customValue?field.customValue:""}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "value",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </div>
-                          ))}
-                        <Row></Row>
-                      </Card.Body>
-                    </Accordion.Collapse>
-                  </Card>
-                  <hr />
-                  <Button
-                    className="btn ml-3 mt-2 mb-2"
-                    variant="outline-primary"
-                    onClick={addCustomField}
-                  >
-                    <i className="fa fa-plus mr-2"></i>Add Custom Field
-                  </Button>
-                </Accordion>
-              </Col>
-            </Row>
-          </div>
         </div>
       </form>
     </>
