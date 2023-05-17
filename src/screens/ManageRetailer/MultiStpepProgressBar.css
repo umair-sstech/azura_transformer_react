@@ -112,11 +112,11 @@
     margin-top: 19px;
   }
   
-  .hr {
+  /* .hr {
     position: relative;
-    width: 79.5vw;
+    width: 100%;
     right: 19px;
-  }
+  } */
 
   p.market-onboarding{
     display: flex;

@@ -51,6 +51,77 @@
 	}
 }
 
+//Sidebar Hover Functionality
+// #left-sidebar {
+// 	@include transition(all .5s ease-in-out);
+// 	width: $sidebar-width;
+// 	height: calc(100vh - 67px);
+// 	float: left;
+// 	display: flex;
+// 	margin-top: 67px;
+// 	position: fixed;
+// 	left: 5px;	
+// 	background-color: $grey-50;
+// 	z-index: 1111;
+// }
+
+
+// #left-sidebar span, .user-account {
+// 	display: none;
+// }
+
+// #left-sidebar .collapse li a {
+// 	display: none;
+// }
+
+// #left-sidebar:hover {
+// 	@include transition(all .5s ease-in-out);
+// 	width: 200px;
+// 	background-color: $grey-50;
+// 	overflow-y: scroll;
+//     scrollbar-width: none;
+//     -ms-overflow-style: none;
+
+//     &::-webkit-scrollbar {
+//         width: 5px;
+//     }
+	
+// 	@include max-screen($break-large) {
+// 		@include box-shadow(0 5px 10px 0px rgba(0,0,0,.2));
+// 		left: -$sidebar-width;
+//     }
+    
+//     .nav-tabs{
+// 		.nav-link.active{
+//             background-color: transparent;
+//             border-color: #dee2e6 #dee2e6 #f4f7f6;
+// 		}
+// 	}
+
+// 	span, .user-account, .collapse li a {
+// 		display: flex;
+// 	}
+// }
+
+// .layout-fullwidth #wrapper {
+// 	#left-sidebar:hover {
+// 		left: -$sidebar-width;
+
+// 		&.ps {
+// 			overflow: visible !important;
+// 		}
+// 	}
+// 	#main-content {
+// 		width: 100%;
+// 	}
+// }
+
+// .offcanvas-active {
+// 	#left-sidebar:hover {
+// 		left: 5px;
+// 	}
+// }
+
 .user-account {
 	margin: 20px;
 	@extend .align-left;
