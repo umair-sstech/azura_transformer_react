@@ -511,7 +511,7 @@ function SuppilerPage3(props) {
               ) : null}
             </div>
           </div>
-          <table className="table w-100 table-responsive-md">
+          <table className="w-100 table-responsive-md">
             <thead>
               <tr>
                 <th>Product Field</th>
@@ -527,7 +527,7 @@ function SuppilerPage3(props) {
                   <td
                     colSpan="3"
                     className="loader-wrapper"
-                    style={{ padding: "2.3rem", width: "80%" }}
+                    style={{ padding: "2.3rem", width: "100%" }}
                   >
                     <i
                       className="fa fa-refresh fa-spin"
