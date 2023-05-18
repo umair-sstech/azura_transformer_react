@@ -94,10 +94,12 @@ function SupplierSftpForm({ onSubmit,settingType }) {
     setFormData({ ...formData, protocol: selectedOption.value });
     setFormErrors({ ...formErrors, protocol: "" });
   };
+
   const handleSyncFrequency = (selectedOption) => {
     setFormData({ ...formData, syncFrequency: selectedOption.value });
     setFormErrors({ ...formErrors, syncFrequency: "" });
   };
+  
   const handleTimeZoneChange = (selectedOption) => {
     setFormData({ ...formData, timeZone: selectedOption });
     setFormErrors({ ...formErrors, timeZone: "" });

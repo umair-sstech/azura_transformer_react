@@ -1,9 +1,10 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageSuppiler";
+import { Spinner } from "react-bootstrap";
 
 function SupplierPage6(props) {
   const { setPage } = props;
@@ -11,24 +12,46 @@ function SupplierPage6(props) {
 
   const [formData, setFormData] = useState();
   const [isChecked, setIsChecked] = useState(false);
-  const history = useHistory();
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [dataFileMapping, setDataFileMapping] = useState([]);
+  const [formError,setFormError]=useState({})
+  console.log("formerror",formError)
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
+
+
+  useEffect(() => {
+    getDatafileMapping();
+    getBarcodeData(); 
+  }, []);
+
+  const handleOptionChange = (optionValue) => {
+    if (selectedOptions.includes(optionValue)) {
+      setSelectedOptions(
+        selectedOptions.filter((value) => value !== optionValue)
+      );
+    } else {
+      setSelectedOptions([...selectedOptions, optionValue]);
+    }
+  };
 
   const handleCheckChange = (e) => {
     setIsChecked(e.target.checked);
   };
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const { barcodeName } = formData;
-    const supplierId = localStorage.getItem("supplierId");
+  
+    const  supplierId  = localStorage.getItem("supplierId");
     const isBarcodeRequired = isChecked;
+    const barcodeName = selectedOptions.join(","); 
 
+    // if (barcodeName.length === 0) {
+    //  setFormError("Please select at least one value from the table.");
+    //   return;
+    // }
+
+    setIsLoading(true);
     axios
       .post(`${API_PATH.BARCODE}`, {
         barcodeName,
@@ -46,28 +69,118 @@ function SupplierPage6(props) {
       })
       .catch((error) => {
         console.error(error);
+        setIsLoading(false);
+
+      });
+  };
+  
+  const options = [
+    {
+      label: "ASIN",
+      value: "ASIN",
+    },
+    { label: "ISBN", value: "ISBN" },
+    { label: "UPC", value: "UPC" },
+    {
+      label: "EAN",
+      value: "EAN",
+    },
+  ];
+
+  const getDatafileMapping = () => {
+    const supplierId = localStorage.getItem("supplierId");
+    axios
+      .get(`${API_PATH.GET_SUPPLIER_FILE_MAPPING}=${supplierId}`)
+      .then((response) => {
+        const supplierData = response.data.data;
+        setFormData(supplierData.supplier_product_field);
+
+        const supplierMapping = supplierData.supplier_product_field;
+
+        const filteredOptions = supplierMapping
+          .filter((field) => ["ISBN", "UPC", "EAN", "ASIN"].includes(field.standardField))
+          .map((field) => ({
+            label: field.supplierField,
+            value: field.standardField,
+          }));
+        setDataFileMapping(filteredOptions);
+      })
+      .catch((error) => {
+        console.log("error", error);
       });
   };
 
+  const getBarcodeData = () => {
+    const supplierId = localStorage.getItem("supplierId");
+  
+    if (supplierId) {
+      axios
+        .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
+        .then((response) => {
+          const supplierData = response.data.data;
+          setFormData(supplierData);
+          console.log("object,", supplierData);
+  
+          const barcodeName = supplierData.barcodeName || "";
+          const preselectedOptions = barcodeName.split(",");
+          setSelectedOptions(preselectedOptions);
+  
+          const isBarcodeRequired = supplierData.isBarcodeRequired || 0;
+          console.log("isbarcodeRequired",isBarcodeRequired)
+          setIsChecked(isBarcodeRequired);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    }
+  };
+  
   return (
     <>
       <form onSubmit={handleSubmit}>
+      <div className="row mt-3 mt-md-0">
+      <div className="col-12">
+        <div className="form-group">
+          <div className="form-check">
+            <input
+              type="checkbox"
+              className="form-check-input"
+              checked={isChecked}
+              onChange={handleCheckChange}
+            />
+            <label className="form-check-label" htmlFor="exampleCheck1">
+              Would you like to search data in barcodelookup.com?
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+    {isChecked && (
+      <>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
-              <button
-                className="btn btn-primary w-auto btn-lg mr-2"
-                type="submit"
-              >
-                Save & Next
+              <button className="btn btn-primary w-auto btn-lg mr-2" type="submit">
+                {isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Next"
+                )}
               </button>
-
-              <button
-                className="btn btn-primary w-auto btn-lg mr-2"
-                type="submit"
-              >
-                Save & Exit
+              <button className="btn btn-primary w-auto btn-lg mr-2" type="submit">
+                {isLoadingExit ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Exit"
+                )}
               </button>
+    
               <button
                 className="btn btn-secondary w-auto btn-lg"
                 type="button"
@@ -78,73 +191,62 @@ function SupplierPage6(props) {
             </div>
           </div>
         </div>
-
-        <div className="row mt-3 mt-md-0">
-          <div className="col-12">
-            <div className="form-group">
-              <div className="form-check">
-                <input
-                  type="checkbox"
-                  className="form-check-input"
-                  checked={isChecked}
-                  onChange={handleCheckChange}
-                />
-                <label className="form-check-label" htmlFor="exampleCheck1">
-                  Would you like to search data in barcodelookup.com?
-                </label>
-              </div>
+        {formError && (
+          <div className="row mt-3">
+            <div className="col-12">
+              <div className="alert alert-danger">{formError}</div>
             </div>
           </div>
-        </div>
-
-        {isChecked && (
-          <>
-            <div className="row mt-3">
-              <div className="col-12">
-                <div className="form-group">
-                  <label>
-                    Barcode Name <span style={{ color: "red" }}></span>
-                  </label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    name="barcodeName"
-                    placeholder="Enter Barcode Name"
-                    onChange={handleInputChange}
-                  />
-                  {/*  {formErrors.urlPath && (
-                  <span className="text-danger">{formErrors.urlPath}</span>
-              )}*/}
-                </div>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-12">
-                <table className="table w-100 table-responsive-sm">
-                  <thead>
-                    <tr>
-                      <th>Column 1</th>
-                      <th>Column 2</th>
-                      <th>Column 3</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Row 1, Column 1</td>
-                      <td>Row 1, Column 2</td>
-                      <td>Row 1, Column 3</td>
-                    </tr>
-                    <tr>
-                      <td>Row 2, Column 1</td>
-                      <td>Row 2, Column 2</td>
-                      <td>Row 2, Column 3</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </>
         )}
+    
+        <div className="row">
+          <div className="col-12">
+            <table className="w-50 barcode-table table-responsive-sm">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Product Field</th>
+                  <th>Mapping Field</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dataFileMapping.length > 0 ? (
+                  dataFileMapping.map((option) => (
+                    <tr key={option.value}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedOptions.includes(option.value)}
+                          onChange={() => handleOptionChange(option.value)}
+                        />
+                      </td>
+                      <td>{option.value}</td>
+                      <td>{option.label}</td>
+                    </tr>
+                  ))
+                ) : (
+                  options.map((option) => (
+                    <tr key={option.value}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedOptions.includes(option.value)}
+                          onChange={() => handleOptionChange(option.value)}
+                        />
+                      </td>
+                      <td>{option.label}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </>
+    )}
+    
+    
+        
       </form>
     </>
   );

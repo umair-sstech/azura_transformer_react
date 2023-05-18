@@ -54,7 +54,7 @@ th {
 }
 .image-label {
   font-size: 13px;
-  font-weight: 400;
+  font-weight: bold;
 }
 .select-container {
   display: flex;
@@ -144,6 +144,11 @@ th {
     right: 20px;
   }
 } */
+
+/* Supplier page 6 */
+.barcode-table td:nth-child(1) {
+  width: 8%;
+}
 
 @media screen and (max-width: 575px) {
   .supplier4__container {

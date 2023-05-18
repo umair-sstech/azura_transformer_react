@@ -1,16 +1,40 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import {  Accordion, Card, Button, Row, Col } from "react-bootstrap";
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
 function CustomFields(props) {
-    const { customFieldsData, setCustomFieldsData } = props;
+  const { customFieldsData, setCustomFieldsData } = props;
 
   const addCustomField = () => {
     setCustomFieldsData([...customFieldsData, { customFieldName: "", customValue: "" }]);
   }
 
-  const removeCustomField = () => {
+  const deleteCustomField = (customFieldId) => {
+    const supplierId=localStorage.getItem("supplierId")
+    const requestBody = {
+      supplierId: supplierId,
+      customFieldId: customFieldId
+    };
+    axios
+      .post("http://localhost:8001/Integration/deleteCustomField", requestBody)
+      .then(response => {
+        const {success,message,data}=response.data
+        if(success){
+
+          toast.success(message);
+        }else{
+          toast.error(message)
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        toast.error("Failed to delete data");
+      });
+  };
+
+  const removeCustomField = (customFieldId) => {
     Swal.fire({
       title: "Are you sure, <br> you want to delete ? ",
       icon: "warning",
@@ -21,7 +45,8 @@ function CustomFields(props) {
       cancelButtonColor: "#d33",
     }).then((result) => {
         if (result.isConfirmed) {
-            toast.success("delete data successfully");
+          deleteCustomField(customFieldId);
+          setCustomFieldsData(customFieldsData.filter(field => field.id !== customFieldId));
             
           }
     });
@@ -33,50 +58,52 @@ function CustomFields(props) {
     setCustomFieldsData(updatedFields);
   };
   
-
   return (
     <>
     <div className="accordion-class">
     <Row>
       <Col>
         <Accordion
-          defaultActiveKey="7"
-          className="accordian__main"
+        defaultActiveKey="0" className="accordian__main"
         >
           <Card>
             <Card.Header>
               <Accordion.Toggle
                 as="button"
-                className="btn btn-link collapsed border border-primary text-decoration-none"
+                className="btn btn-link collapsed border border-success text-decoration-none"
                 eventKey="0"
               >
                 <i className="fa fa-angle-down arrow"></i>
 
-                <span> Custom Fields</span>
+                <label className='text-success'> Custom Fields</label>
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">
               <Card.Body>
                 <div className="d-flex justify-content-around">
-                  <p>
-                    <span>Custom Field Name</span>
-                  </p>
-                  <p>
-                    <span>Custom Field Value</span>
-                  </p>
+                  
+                    <label className='text-dark'>Custom Field Name</label> 
+                    <label  className='text-dark'>Custom Field Value</label>
+                  
                 </div>
                 <hr />
                 {customFieldsData &&
                   customFieldsData.map((field, index) => (
+                    
                     <div
                       key={index}
-                      className="d-flex justify-content-around align-items-center"
+                      className="d-flex justify-content-around align-items-center mt-3"
                     >
                       <i
                         className="fa fa-solid fa-trash fa-lg ml-2 pe-auto"
-                        style={{ color: "red" }}
-                        onClick={() => removeCustomField()}
+                         role="button"
+                        aria-hidden="true"
+                        style={{ color: "red",cursor: "pointer" }}
+                        onClick={() => removeCustomField(field.id
+                          )}
+                      
                       ></i>
+                      {console.log("object",field)}
                       <input
                         type="text"
                         placeholder="Enter Custom Field"
@@ -122,7 +149,7 @@ function CustomFields(props) {
           <hr />
           <Button
             className="btn ml-3 mt-2 mb-2"
-            variant="outline-primary"
+            variant="outline-success"
             onClick={addCustomField}
           >
             <i className="fa fa-plus mr-2"></i>Add Custom Field

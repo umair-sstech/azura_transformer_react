@@ -1,20 +1,29 @@
 export const validateIntegrationInfoForm = (formData) => {
   let errors = {};
 
-  if (!formData.get("name")) {
+  const name = formData.get("name");
+  if (!name) {
     errors.name = "Name is required";
+  } else if (name.trim().length === 0) {
+    errors.name = "Name cannot be whitespace only";
+  } else if (name.length > 15) {
+    errors.name = "Name must be less than or equal to 15 characters";
+  } else if (!/^[a-zA-Z\s]+$/.test(name)) {
+    errors.name = "Name can only contain alphabetic characters";
   }
-
+  
 
   const logo = formData.get("logo");
   if (logo) {
-    if (!logo.type.startsWith("image/")) {
-      errors.logo = "Please select an image file";
-    } else if (logo.size > 50 * 1024) {
-      errors.logo = "Image file size must be less than 50kb";
+    if (logo.size > 10 * 1024 * 1024) {
+      errors.logo = "Image file size must be less than 10MB";
+    } else if (!/\.(jpg|jpeg|png)$/i.test(logo.name)) {
+      errors.logo = "Please select a logo file with a .jpg, .jpeg, or .png extension";
     }
+  } else {
+    errors.logo = "Please select a logo";
   }
-
+  
 
   return errors;
 };
@@ -24,30 +33,37 @@ export const validateSftpForm = (formData) => {
   if (!formData.hostName) {
     errors.hostName = "Host Name is required";
   }
+
   if (!formData.userName) {
     errors.userName = "User Name is required";
-  }
+  } 
+
   if (!formData.password) {
     errors.password = "Password is required";
   }
+
   if (!formData.port) {
     errors.port = "Port is required";
   }
+
   if (!formData.protocol) {
     errors.protocol = "Protocol is required";
   }
+
   if (!formData.urlPath) {
     errors.urlPath = "URL is required";
-  }
+  } 
+
   if (!formData.syncFrequency) {
     errors.syncFrequency = "Please Select Sync Frequency";
   }
+
   if (!formData.timeZone) {
     errors.timeZone = "Please Select TimeZone";
   }
+
   return errors;
 };
-
 export const validateHttpForm = (formData) => {
   const errors = {};
 
@@ -74,6 +90,7 @@ export const validateMarketPlaceInfoForm = (formData) => {
 
   return errors;
 };
+
 export const validateMarketPlaceProductSync=(formData)=>{
   const errors={};
   if (!formData.productSyncFrequency) {
