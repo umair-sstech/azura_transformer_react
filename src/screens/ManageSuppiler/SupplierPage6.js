@@ -191,14 +191,7 @@ function SupplierPage6(props) {
             </div>
           </div>
         </div>
-        {formError && (
-          <div className="row mt-3">
-            <div className="col-12">
-              <div className="alert alert-danger">{formError}</div>
-            </div>
-          </div>
-        )}
-    
+   
         <div className="row">
           <div className="col-12">
             <table className="w-50 barcode-table table-responsive-sm">
