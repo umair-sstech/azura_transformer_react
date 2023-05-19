@@ -12,23 +12,40 @@ import { Spinner } from "react-bootstrap";
 import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
 
-function SupplierSftpForm({ onSubmit,settingType }) {
-  const { processCancel } = useContext(FormContext);
+function SupplierSftpForm(props) {
+  const {onSubmit, settingType} = props;
+  const { processCancel, formData, setFormData } = useContext(FormContext);
 
-  const [formData, setFormData] = useState({
+  const [initFormData, setInitFormData] = useState({
     supplierId: "",
     supplierName: "",
     settingType: settingType,
     password: "",
     hostName: "",
     userName: "",
-    password: "",
     port: "",
     protocol: "",
     urlPath: "",
     syncFrequency: "",
     timeZone: "",
   });
+
+  const [formErrors, setFormErrors] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
+  const history = useHistory();
+  const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
+
+  useEffect(() => {
+    if (formData) {
+      setInitFormData(formData);
+    }
+  }, [props]);
+
+  useEffect(() => {
+    setIsFormValid(Object.keys(formErrors).length === 0);
+  }, [formErrors]);
 
   useEffect(() => {
     const supplierId = localStorage.getItem("supplierId");
@@ -55,11 +72,6 @@ function SupplierSftpForm({ onSubmit,settingType }) {
         });
     }
   }, []);
-  const [formErrors, setFormErrors] = useState({});
-  const history = useHistory();
-  const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingExit, setIsLoadingExit] = useState(false);
 
   useEffect(() => {
     getCronTimeData();
@@ -82,31 +94,48 @@ function SupplierSftpForm({ onSubmit,settingType }) {
     }
   };
 
+  const handleChange = (key, value) => {
+    const formData = new FormData(document.forms.sftpForm);
+    formData.set(key, value);
+    const errors = validateSftpForm(formData);
+    setFormErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
+  };
+
   const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-    setFormErrors({ ...formErrors, [e.target.name]: "" });
+    const {name, value , type} = e.target;
+    const trimmedValue = type === "text" ? value.trim() : value;
+
+    setInitFormData(prevState => ({
+    ...prevState,
+      [name]: trimmedValue,
+    }));
+    handleChange(name, value);
   };
 
   const handleProtocolChange = (selectedOption) => {
-    setFormData({ ...formData, protocol: selectedOption.value });
-    setFormErrors({ ...formErrors, protocol: "" });
+    const protocol = selectedOption.value;
+    setInitFormData({ ...initFormData, protocol });
+    handleChange("protocol", protocol)
+    // setFormErrors({ ...formErrors, protocol: "" });
   };
 
   const handleSyncFrequency = (selectedOption) => {
-    setFormData({ ...formData, syncFrequency: selectedOption.value });
-    setFormErrors({ ...formErrors, syncFrequency: "" });
+    const syncFrequency = selectedOption.value;
+    setInitFormData({ ...initFormData, syncFrequency });
+    // handleChange("syncFrequency", syncFrequency);
+    setFormErrors({...formErrors, syncFrequency: ""})
   };
-  
   const handleTimeZoneChange = (selectedOption) => {
-    setFormData({ ...formData, timeZone: selectedOption });
-    setFormErrors({ ...formErrors, timeZone: "" });
+    const timeZone = selectedOption;
+    setInitFormData({...initFormData, timeZone });
+    handleChange("timeZone", timeZone);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
     const errors = validateSftpForm(formData);
     setFormErrors(errors);
 
@@ -114,23 +143,20 @@ function SupplierSftpForm({ onSubmit,settingType }) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
 
-      const { value, label } = formData.timeZone;
-
-      const timeZoneString = `${value}`;
-
-    
       const payload = {
-        ...formData,
+        ...initFormData,
         settingType,
-        timeZone: timeZoneString,
+        timeZone: initFormData?.timeZone?.value,
         supplierId,
         supplierName,
       };
+
+      formData.set("sftpData", payload)
       setIsLoading(true)
       axios
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
-          const { success, message, data } = response.data;
+          const { success, message } = response.data;
           console.log("response", response);
           if (success) {
             toast.success(message);
@@ -148,6 +174,12 @@ function SupplierSftpForm({ onSubmit,settingType }) {
 
   const handleOnClick = (e) => {
     e.preventDefault();
+    const form = e.currentTarget.closest("form");
+    if (!form) {
+      return;
+    }
+
+    const formData = new FormData(form)
     const errors = validateSftpForm(formData);
     setFormErrors(errors);
 
@@ -155,13 +187,9 @@ function SupplierSftpForm({ onSubmit,settingType }) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
 
-      const { value, label } = formData.timeZone;
-
-      const timeZoneString = `${value}`;
-
       const payload = {
-        ...formData,
-        timeZone: timeZoneString,
+        ...initFormData,
+        timeZone: initFormData.timeZone?.value,
         settingType,
         supplierId,
         supplierName,
@@ -170,7 +198,7 @@ function SupplierSftpForm({ onSubmit,settingType }) {
       axios
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
-          const { success, message, data } = response.data;
+          const { success, message } = response.data;
           if (success) {
             history.push("/supplier");
             toast.success(message);
@@ -194,7 +222,7 @@ function SupplierSftpForm({ onSubmit,settingType }) {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} name="sftpForm">
         <div style={{ marginTop: "35px" }}>
           <div className="row">
             <div className="col-lg-12 col-md-12 col-12 button-class">
@@ -246,7 +274,7 @@ function SupplierSftpForm({ onSubmit,settingType }) {
                   name="hostName"
                   placeholder="Enter Host Name"
                   onChange={handleInputChange}
-                  defaultValue={formData.hostName?formData.hostName:""}                />
+                  defaultValue={initFormData && initFormData.hostName?initFormData.hostName:""}                />
                 {formErrors.hostName && (
                   <span className="text-danger">{formErrors.hostName}</span>
                 )}
@@ -264,8 +292,8 @@ function SupplierSftpForm({ onSubmit,settingType }) {
                   placeholder="Enter User Name"
                   onChange={handleInputChange}
                   defaultValue={
-                    formData && formData.userName
-                      ? formData.userName
+                    initFormData && initFormData.userName
+                      ? initFormData.userName
                       : ""
                   }
                 />
@@ -286,8 +314,8 @@ function SupplierSftpForm({ onSubmit,settingType }) {
                   placeholder="Enter Password"
                   onChange={handleInputChange}
                   defaultValue={
-                    formData && formData.password
-                      ? formData.password
+                    initFormData && initFormData.password
+                      ? initFormData.password
                       : ""
                   }
                 />
@@ -303,12 +331,12 @@ function SupplierSftpForm({ onSubmit,settingType }) {
                 </label>
                 <input
                   className="form-control"
-                  type="text"
+                  type="number"
                   name="port"
                   placeholder="Enter Port"
                   onChange={handleInputChange}
                   defaultValue={
-                    formData && formData.port ? formData.port : ""
+                    initFormData && initFormData.port ? initFormData.port : ""
                   }
                 />
                 {formErrors.port && (
@@ -327,7 +355,7 @@ function SupplierSftpForm({ onSubmit,settingType }) {
                   options={option}
                   onChange={handleProtocolChange}
                   value={option.find(
-                    (option) => option.value === formData.protocol
+                    (option) => option.value === initFormData.protocol
                   )}
                 />
                 {formErrors.protocol && (
@@ -348,8 +376,8 @@ function SupplierSftpForm({ onSubmit,settingType }) {
                   name="urlPath"
                   onChange={handleInputChange}
                   defaultValue={
-                    formData && formData.urlPath
-                      ? formData.urlPath
+                    initFormData && initFormData.urlPath
+                      ? initFormData.urlPath
                       : ""
                   }
                 />
@@ -369,11 +397,12 @@ function SupplierSftpForm({ onSubmit,settingType }) {
                 </label>
                 <Select
                   placeholder="Select Frequency"
+                  name="syncFrequency"
                   options={syncFrequencyOptions}
-                  value={syncFrequencyOptions.find(
-                    (option) => option.value === formData.syncFrequency
-                  )}
                   onChange={handleSyncFrequency}
+                  value={syncFrequencyOptions.find(
+                    (option) => option.value === initFormData.syncFrequency
+                  )}
                 />
                 {formErrors.syncFrequency && (
                   <span className="text-danger">
@@ -395,8 +424,9 @@ function SupplierSftpForm({ onSubmit,settingType }) {
                     };
                   })}
                   placeholder="Select TimeZone"
+                  name="timeZone"
                   onChange={handleTimeZoneChange}
-                  value={formData.timeZone?formData.timeZone:""}
+                  value={initFormData.timeZone?initFormData.timeZone:""}
                 
                 />
 
