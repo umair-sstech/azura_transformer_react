@@ -91,7 +91,6 @@ function SuppilerPage3(props) {
         }
 
         const selectedValue = selectedOption.value;
-        console.log("selectedvalue", selectedValue);
         const selectedOptionIndex = options.findIndex(
           (option) => option.value === selectedValue
         );
@@ -261,7 +260,6 @@ function SuppilerPage3(props) {
           supplierField: selectedPreference ? selectedPreference.value : "",
           additionalValue: additionalValueString,
         };
-        console.log("productRadio", mappingObject);
 
         mappingArray.push(mappingObject);
       });
@@ -273,7 +271,6 @@ function SuppilerPage3(props) {
           mappingArray
         );
         const { success, message, data } = response.data;
-        console.log("response", response.data);
         if (success) {
           toast.success(message);
           setPage("4");
@@ -290,49 +287,114 @@ function SuppilerPage3(props) {
 
   const handleOnClick = async (e) => {
     e.preventDefault();
-    const mappingArray = [];
-    selectedOptions.forEach((selectedOption, index) => {
-      const keys = Object.keys(selectedOption);
-      keys.forEach((key) => {
-        const option = selectedOption[key];
-        if (option) {
-          const mappingObject = {
-            supplierId: localStorage.getItem("supplierId"),
-            supplierName: localStorage.getItem("supplierName"),
-            standardField: key,
-            standardValue: "",
-            supplierField: option.value,
-            additionalValue:
-              option.textbox &&
-              selectedOptions[index] &&
-              selectedOptions[index][key] &&
-              selectedOptions[index][key].additionalValue
-                ? selectedOptions[index][key].additionalValue
-                : "",
-          };
-          mappingArray.push(mappingObject);
-        }
+    const isValid = validateForm();
+
+    if (isValid) {
+      const mappingArray = [];
+      selectedOptions.forEach((selectedOption, index) => {
+        const keys = Object.keys(selectedOption);
+        keys.forEach((key) => {
+
+          const option = selectedOption[key];
+          if (option) {
+            let additionalValue = "";
+            let imageType = "";
+            let imageList = "";
+
+            const mapping = mappingData.find((item) => item.standardField === key) || {};
+            const radioValue =
+              selectedRadio[`${index}-${key}`] &&
+              selectedRadio[`${index}-${key}`].value
+                ? selectedRadio[`${index}-${key}`].value
+                : mapping.imageType || null;
+            const isRadioUnchanged =
+              mapping.imageType && mapping.imageType === radioValue;
+
+              if (
+                key.startsWith("Image") &&
+                option.value !== "do_nothing" &&
+                !isRadioUnchanged &&
+                selectedRadio[`${index}-${key}`]
+              ) {
+                additionalValue =
+                  selectedRadio[`${index}-${key}`].additionalValue || "";
+                imageType = radioValue || "";
+                if (selectedRadio[`${index}-${key}`].showTextbox) {
+                  imageList = additionalTextValue;
+                }
+              } else if (option.textbox) {
+              additionalValue =
+                selectedOption[key] && selectedOption[key].additionalValue
+                  ? selectedOption[key].additionalValue
+                  : "";
+            }
+            let supplierExtract = "";
+            if (option.value === "extract") {
+              supplierExtract = supplierExtractOption[index]?.[key] || "";
+            }
+            const mappingObject = {
+              supplierId: localStorage.getItem("supplierId"),
+              supplierName: localStorage.getItem("supplierName"),
+              standardField: key,
+              standardValue: "",
+              supplierField: option.value,
+              additionalValue: additionalValue,
+              imageType: imageType,
+              imageList: imageList,
+              supplierExtract: supplierExtract,
+            };
+            mappingArray.push(mappingObject);
+          }
+        });
       });
-    });
-    setIsLoadingExit(true);
-    try {
-      const response = await axios.post(
-        `${API_PATH.DATA_FILE_MAPPING}`,
-        mappingArray
-      );
-      const { success, message, data } = response.data;
-      if (success) {
-        toast.success(message);
-        localStorage.removeItem("supplierId");
-        localStorage.removeItem("supplierName");
-        history.push("/supplier");
-      } else {
-        toast.error(message);
+
+      customFieldsData.forEach((customField) => {
+        const mappingObject = {
+          supplierId: localStorage.getItem("supplierId"),
+          supplierName: localStorage.getItem("supplierName"),
+          customFieldName: customField.customFieldName,
+          customValue: customField.customValue,
+          isCustomField: true,
+        };
+        mappingArray.push(mappingObject);
+      });
+
+      productRadio.forEach((product) => {
+        const additionalValue = selectedRadioPreference || "";
+        const additionalValueString =
+          typeof additionalValue === "object" ? "" : additionalValue;
+        const mappingObject = {
+          supplierId: localStorage.getItem("supplierId"),
+          supplierName: localStorage.getItem("supplierName"),
+          standardField: "Preference",
+          standardValue: "",
+          supplierField: selectedPreference ? selectedPreference.value : "",
+          additionalValue: additionalValueString,
+        };
+
+        mappingArray.push(mappingObject);
+      });
+
+      setIsLoading(true);
+      try {
+        const response = await axios.post(
+          `${API_PATH.DATA_FILE_MAPPING}`,
+          mappingArray
+        );
+        const { success, message, data } = response.data;
+        if (success) {
+          toast.success(message);
+          localStorage.removeItem("supplierId");
+          localStorage.removeItem("supplierName");
+          history.push("/supplier");
+        } else {
+          toast.error(message);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoadingExit(false);
     }
   };
 
@@ -398,7 +460,7 @@ function SuppilerPage3(props) {
         console.log("error", error);
       });
   };
-
+  
   const getMappingData = () => {
     const supplierId = localStorage.getItem("supplierId");
     axios
@@ -438,7 +500,6 @@ function SuppilerPage3(props) {
             value: radioValue,
           };
         });
-        console.log("selectedRadio",selectedRadioState)
         setSelectedRadio(selectedRadioState);
       })
       .catch((error) => {

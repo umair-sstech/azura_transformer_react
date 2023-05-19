@@ -36,9 +36,12 @@ function ProductExport() {
   };
 
   const handleCheckboxChange = (e) => {
-    // TODO: Implement checkbox logic
+    const checkboxes = document.querySelectorAll('.product-table tbody input[type="checkbox"]');
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = e.target.checked;
+    });
   };
-
+  
   return (
     <>
       <form>
@@ -79,7 +82,7 @@ function ProductExport() {
           </div>
         </div>
         <div className='row'>
-          <table className='product-table table w-100 table-responsive-sm'>
+          <table className='product-table  w-100 table-responsive-sm'>
             <thead>
               <tr>
                 <th>
@@ -95,14 +98,13 @@ function ProductExport() {
               </tr>
             </thead>
             <tbody>
-              {/* Render table rows based on data */}
               {data && data.supplier_product.map((product) => (
                 <tr key={product.supplierId}>
-                  <td>
+                  <td style={{width: "5%"}}>
                     <input type="checkbox" />
                   </td>
-                  <td>{product.supplierId}</td>
-                  <td>{data.supplier_list[product.supplierId]}</td>
+                  <td style={{width: "6%"}}>{product.supplierId}</td>
+                  <td style={{width: "30%"}}>{data.supplier_list[product.supplierId]}</td>
                   <td>{product.Azura_Category_Tree}</td>
                   <td>{product.product_count}</td>
                 </tr>

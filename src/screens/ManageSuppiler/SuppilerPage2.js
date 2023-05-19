@@ -27,6 +27,7 @@ function SupplierPage2(props) {
   const [initFormData, setInitFormData] = useState({
     csvfile: "",
     supplier_id: "",
+    update: false,
   });
   const [fileError, setFileError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -42,10 +43,11 @@ function SupplierPage2(props) {
   const handleFileInputChange = () => {
     setFileError("");
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const fileInput = document.querySelector('input[type="file"]');
+
     if (fileInput.files.length === 0) {
       setFileError("Please select a file to upload.");
     } else {
@@ -53,7 +55,7 @@ function SupplierPage2(props) {
       const formData = new FormData(form);
       const supplierId = localStorage.getItem("supplierId");
       formData.set("supplier_id", supplierId);
-      setIsLoading(true)
+      setIsLoading(true);
       try {
         const response = await axios.post(`${API_PATH.ADD_CSV_DATA}`, formData);
         const { success, message } = response.data;
@@ -62,14 +64,14 @@ function SupplierPage2(props) {
             ...formData,
           });
           toast.success(message);
-          setIsLoading(false)
+          setIsLoading(false);
           setPage("3");
         } else {
           toast.error(message);
         }
       } catch (error) {
         console.error(error);
-        setIsLoading(false)
+        setIsLoading(false);
       }
     }
   };
@@ -82,31 +84,29 @@ function SupplierPage2(props) {
       const form = e.target.closest("form");
       const formData = new FormData(form);
       formData.append("supplier_id", initFormData.id);
-      setIsLoadingExit(true)
+      setIsLoadingExit(true);
       try {
         const response = await axios.post(`${API_PATH.ADD_CSV_DATA}`, formData);
-        const { success, message,data } = response.data;
+        const { success, message, data } = response.data;
         if (success) {
           setFormData({
             ...formData,
           });
           toast.success(message);
-          setIsLoadingExit(false)
+          setIsLoadingExit(false);
           history.push("/supplier");
           localStorage.removeItem("supplierId");
           localStorage.removeItem("supplierName");
-        
-          
         } else {
           toast.error(message);
         }
       } catch (error) {
         console.error(error);
-        setIsLoadingExit(false)
+        setIsLoadingExit(false);
       }
     }
   };
-  
+
   const getSupplierDataById = () => {
     const supplierId = localStorage.getItem("supplierId");
     axios
@@ -135,26 +135,26 @@ function SupplierPage2(props) {
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                 >
-                {isLoading ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : (
-                  "Save & Next"
-                )}
+                  {isLoading ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Please wait...
+                    </>
+                  ) : (
+                    "Save & Next"
+                  )}
                 </button>
                 <button
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="button"
                   onClick={handleOnClick}
                 >
-                {isLoadingExit ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : (
-                  "Save & Exit"
-                )}
+                  {isLoadingExit ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Please wait...
+                    </>
+                  ) : (
+                    "Save & Exit"
+                  )}
                 </button>
                 <button
                   className="btn btn-secondary w-auto btn-lg"

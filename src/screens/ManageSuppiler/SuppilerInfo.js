@@ -37,6 +37,7 @@ function SuppilerInfo(props) {
     logo: "",
     type: "",
   });
+
   const [prefixName, setPrefixName] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -100,15 +101,16 @@ function SuppilerInfo(props) {
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   };
-
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-   
+  
     const errors = validateIntegrationInfoForm(formData);
-    
+    if (initFormData.logo) {
+      delete errors.logo;
+    }
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
@@ -182,6 +184,7 @@ function SuppilerInfo(props) {
     setIsLoadingExit(true);
     const supplierId = localStorage.getItem("supplierId");
        
+
     if (supplierId) {
       formData.set("supplierId", supplierId);
       axios

@@ -10,15 +10,27 @@ function SupplierPage6(props) {
   const { setPage } = props;
   const { processCancel } = useContext(FormContext);
 
+  const options = [
+    {
+      label: "ASIN",
+      value: "ASIN",
+    },
+    { label: "ISBN", value: "ISBN" },
+    { label: "UPC", value: "UPC" },
+    {
+      label: "EAN",
+      value: "EAN",
+    },
+  ];
+
   const [formData, setFormData] = useState();
   const [isChecked, setIsChecked] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [dataFileMapping, setDataFileMapping] = useState([]);
   const [formError,setFormError]=useState({})
-  console.log("formerror",formError)
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
-
+  const history=useHistory()
 
   useEffect(() => {
     getDatafileMapping();
@@ -27,14 +39,13 @@ function SupplierPage6(props) {
 
   const handleOptionChange = (optionValue) => {
     if (selectedOptions.includes(optionValue)) {
-      setSelectedOptions(
-        selectedOptions.filter((value) => value !== optionValue)
-      );
+      setSelectedOptions(selectedOptions.filter((value) => value !== optionValue));
     } else {
       setSelectedOptions([...selectedOptions, optionValue]);
     }
+    setFormError({});
   };
-
+  
   const handleCheckChange = (e) => {
     setIsChecked(e.target.checked);
   };
@@ -46,11 +57,10 @@ function SupplierPage6(props) {
     const isBarcodeRequired = isChecked;
     const barcodeName = selectedOptions.join(","); 
 
-    // if (barcodeName.length === 0) {
-    //  setFormError("Please select at least one value from the table.");
-    //   return;
-    // }
-
+    if (selectedOptions.length === 0) {
+      setFormError({ message: "Please select at least one option." });
+      return;
+    }
     setIsLoading(true);
     axios
       .post(`${API_PATH.BARCODE}`, {
@@ -74,19 +84,42 @@ function SupplierPage6(props) {
       });
   };
   
-  const options = [
-    {
-      label: "ASIN",
-      value: "ASIN",
-    },
-    { label: "ISBN", value: "ISBN" },
-    { label: "UPC", value: "UPC" },
-    {
-      label: "EAN",
-      value: "EAN",
-    },
-  ];
+  const handleOnClick=(e)=>{
+    e.preventDefault();
+  
+    const  supplierId  = localStorage.getItem("supplierId");
+    const isBarcodeRequired = isChecked;
+    const barcodeName = selectedOptions.join(","); 
 
+    if (selectedOptions.length === 0) {
+      setFormError({ message: "Please select at least one option." });
+      return;
+    }
+    setIsLoadingExit(true);
+    axios
+      .post(`${API_PATH.BARCODE}`, {
+        barcodeName,
+        supplierId,
+        isBarcodeRequired,
+      })
+      .then((response) => {
+        const { success, message, data } = response.data;
+        if (success) {
+          toast.success(message);
+          localStorage.removeItem("supplierId");
+          localStorage.removeItem("supplierName");
+          history.push("/supplier");
+        } else {
+          toast.error(message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setIsLoadingExit(false);
+
+      });
+  }
+ 
   const getDatafileMapping = () => {
     const supplierId = localStorage.getItem("supplierId");
     axios
@@ -125,7 +158,7 @@ function SupplierPage6(props) {
           const preselectedOptions = barcodeName.split(",");
           setSelectedOptions(preselectedOptions);
   
-          const isBarcodeRequired = supplierData.isBarcodeRequired || 0;
+          const isBarcodeRequired = supplierData.isBarcodeRequired || false;
           console.log("isbarcodeRequired",isBarcodeRequired)
           setIsChecked(isBarcodeRequired);
         })
@@ -171,7 +204,7 @@ function SupplierPage6(props) {
                   "Save & Next"
                 )}
               </button>
-              <button className="btn btn-primary w-auto btn-lg mr-2" type="submit">
+              <button className="btn btn-primary w-auto btn-lg mr-2" type="submit" onClick={handleOnClick}>
                 {isLoadingExit ? (
                   <>
                     <Spinner animation="border" size="sm" /> Please wait...
@@ -194,6 +227,7 @@ function SupplierPage6(props) {
    
         <div className="row">
           <div className="col-12">
+          {formError && <span className="text-danger">{formError.message}</span>}
             <table className="w-50 barcode-table table-responsive-sm">
               <thead>
                 <tr>

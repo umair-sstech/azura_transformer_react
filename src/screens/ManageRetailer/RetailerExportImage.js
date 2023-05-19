@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spinner } from "react-bootstrap";
+import { Accordion, Button, Card, Col, Row, Spinner } from "react-bootstrap";
 import "./Retailer.css";
 import { connect } from "react-redux";
 import { onLoading } from "../../actions";
@@ -10,25 +10,38 @@ function RetailerExportImage(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [supplierImageList, setSupplierImageList] = useState([]);
+  const [selectedSupplier, setSelectedSupplier] = useState("");
+  console.log("selectdesupplier",selectedSupplier)
+  console.log("supplierImageList", supplierImageList);
 
   useEffect(() => {
-    const getSupplierImageList = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.post(
-          "http://localhost:2703/retailer/getSupplierImageList",
-          { supplierId: "1,2" }
-        );
-        setSupplierImageList(response.data.data["UP Feed"]);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
-    };
-
-    getSupplierImageList();
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const supplierIds = localStorage.getItem("supplierSettingId");
+      console.log("supplierId", supplierIds); // Fetching supplierIds from localStorage
+      const response = await axios.post(
+        "http://localhost:2703/retailer/getSupplierImageList",
+        { supplierId: supplierIds }
+      );
+      const { success, data } = response.data;
+      if (success) {
+        setSupplierImageList(data);
+      } else {
+        console.error("Failed to fetch supplier image data");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const handleAccordionToggle = (supplierName) => {
+    setSelectedSupplier(supplierName);
+  };
 
   return (
     <>
@@ -68,49 +81,47 @@ function RetailerExportImage(props) {
           </div>
         </div>
         <div className="row">
-          <div className="col-12 table-class">
-            <table className="table w-100 table-responsive-sm">
-              <thead>
-                <tr>
-                  <th>Supplier Name</th>
-                  <th>Image Size</th>
-                  <th>Image Prefix Name</th>
-                  <th>Image Suffix Name</th>
-                </tr>
-              </thead>
-              {props.loading ? (
-                <tbody>
-                  <tr>
-                    <td
-                      colSpan="3"
-                      className="loader-wrapper"
-                      style={{ padding: "2.3rem", width: "80%" }}
-                    >
-                      <i
-                        className="fa fa-refresh fa-spin"
-                        style={{ padding: "2rem" }}
-                      ></i>
-                    </td>
-                  </tr>
-                </tbody>
-              ) : (
-              <tbody className="image-size-list">
-                {supplierImageList.map((image, index) => (
-                  <>
-                    <tr key={`${index}-1`}>
-                      <td>{image.name}</td>
-                      {/* <td>{image.imageResize.split(',').map((size, i) => <div key={`${index}-1-${i}`}>{size}</div>)}</td>*/}
-                      <td>{image.imageResize}</td>
-                      <td>{image.imagePrefix}</td>
-                      <td>{image.imageSuffix}</td>
-                    </tr>
-                  </>
-                ))}
-              </tbody>
-                )}
-            </table>
-          </div>
-        </div>
+        <div className="col-6">
+        <Accordion defaultActiveKey="0" className="accordian__main">
+          {Object.entries(supplierImageList).map(([supplierName, supplierData], index) => (
+            <Card key={index}>
+              <Card.Header>
+                <Accordion.Toggle
+                  as="button"
+                  className="btn btn-link collapsed border  text-decoration-none"
+                  eventKey={index.toString()}
+                >
+                  <i className="fa fa-angle-down arrow"></i>
+                  <label className=''>{supplierName}</label>
+                </Accordion.Toggle>
+              </Card.Header>
+              <Accordion.Collapse eventKey={index.toString()} className="card-body">
+                <Card.Body>
+                  <div className="d-flex justify-content-around">
+                    <table className="table w-100 table-responsive-sm">
+                      <thead>
+                        <tr>
+                          <th>Image Size</th>
+                        </tr>
+                      </thead>
+                      <tbody className="image-size-list">
+                      {supplierData.map((item) => (
+                        <tr key={item.id}>
+                          <td>{item.imageResize.split(',').map((size, index) => (
+                            <div key={index}>{size}</div>
+                          ))}</td>
+                        </tr>
+                      ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          ))}
+        </Accordion>
+      </div>
+      </div>
       </form>
     </>
   );
