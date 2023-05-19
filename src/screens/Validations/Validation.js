@@ -130,9 +130,9 @@ export const validateSftpForm = (formData) => {
   if (!timeZone) {
     errors.timeZone = "Please Select TimeZone";
   }
+
   return errors;
 };
-
 export const validateHttpForm = (formData) => {
   const errors = {};
   const urlPath = formData.get("urlPath")

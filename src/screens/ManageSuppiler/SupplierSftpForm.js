@@ -126,7 +126,6 @@ function SupplierSftpForm(props) {
     // handleChange("syncFrequency", syncFrequency);
     setFormErrors({...formErrors, syncFrequency: ""})
   };
-
   const handleTimeZoneChange = (selectedOption) => {
     const timeZone = selectedOption;
     setInitFormData({...initFormData, timeZone });

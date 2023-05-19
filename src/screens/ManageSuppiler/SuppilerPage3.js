@@ -9,11 +9,12 @@ import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
-import { Spinner, Accordion, Card, Button, Row, Col } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
+import CustomFields from "./CustomFields";
 
 function SuppilerPage3(props) {
   const { setPage } = props;
-  const { isSuppilerAdded, formData, setFormData } = useContext(FormContext);
+  const { setFormData } = useContext(FormContext);
 
   const [options, setOptions] = useState([
     {
@@ -29,6 +30,8 @@ function SuppilerPage3(props) {
       value: "use_AI",
       label: "Use AI",
       textbox: true,
+      message: "e.g. Please generate the {value} from {Parent_Title}",
+      message1: "{Please use the mentioned tag for data generation}",
     },
     {
       value: "extract",
@@ -40,11 +43,11 @@ function SuppilerPage3(props) {
   const [productRadio, setProductRadio] = useState([
     {
       value: "single_row",
-      label: "  Single Row ( Parent Child In Same Row) ",
+      label: " Single Row ( Parent Child In Same Row)",
     },
     {
       value: "multiple_row",
-      label: "Different Rows ( Parent Child In Different Row) ",
+      label: " Different Rows ( Parent Child In Different Row)",
     },
   ]);
 
@@ -57,19 +60,10 @@ function SuppilerPage3(props) {
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [mappingData, setMappingData] = useState([]);
   const [csvOption, setCsvOption] = useState([]);
-  const [customFields, setCustomFields] = useState([{ name: "", value: "" }]);
   const [selectedPreference, setSelectedPreference] = useState(null);
-  const [selectedRadioPreference, setSlectedRadioPreference] = useState({});
+  const [selectedRadioPreference, setSlectedRadioPreference] = useState(null);
   const [supplierExtractOption, setSupplierExtractOption] = useState([]);
-
-  const handleProductExtractChange = (index, key, selectedOption) => {
-    const updatedSupplierExtractOption = [...supplierExtractOption];
-    updatedSupplierExtractOption[index] = {
-      ...updatedSupplierExtractOption[index],
-      [key]: selectedOption.value,
-    };
-    setSupplierExtractOption(updatedSupplierExtractOption);
-  };
+  const [customFieldsData, setCustomFieldsData] = useState([]);
 
   const history = useHistory();
 
@@ -88,6 +82,13 @@ function SuppilerPage3(props) {
       }
       if (selectedOption) {
         newSelectedOptions[index][key] = selectedOption;
+        if (
+          selectedOption &&
+          selectedOption.textbox &&
+          !newSelectedOptions[index][key].additionalValue
+        ) {
+          newSelectedOptions[index][key].additionalValue = "";
+        }
 
         const selectedValue = selectedOption.value;
         console.log("selectedvalue", selectedValue);
@@ -130,10 +131,10 @@ function SuppilerPage3(props) {
         ...newSelectedOptions[index][key],
         additionalValue,
       };
+
       return newSelectedOptions;
     });
   };
-
 
   const handleRadioChange = (index, key, value) => {
     setSelectedRadio((prevSelectedRadio) => ({
@@ -144,6 +145,15 @@ function SuppilerPage3(props) {
       },
     }));
     setAdditionalTextValue("");
+  };
+
+  const handleProductExtractChange = (index, key, selectedOption) => {
+    const updatedSupplierExtractOption = [...supplierExtractOption];
+    updatedSupplierExtractOption[index] = {
+      ...updatedSupplierExtractOption[index],
+      [key]: selectedOption.value,
+    };
+    setSupplierExtractOption(updatedSupplierExtractOption);
   };
 
   const handleProductRadioChange = (value) => {
@@ -174,33 +184,44 @@ function SuppilerPage3(props) {
       selectedOptions.forEach((selectedOption, index) => {
         const keys = Object.keys(selectedOption);
         keys.forEach((key) => {
+
           const option = selectedOption[key];
-          console.log("option.value", option.value);
           if (option) {
             let additionalValue = "";
             let imageType = "";
             let imageList = "";
-            if (
-              key.startsWith("Image") &&
-              option.value !== "do_nothing" &&
-              selectedRadio[`${index}-${key}`]
-            ) {
-              additionalValue =
-                selectedRadio[`${index}-${key}`].additionalValue || "";
-              imageType = selectedRadio[`${index}-${key}`].value || "";
-              if (selectedRadio[`${index}-${key}`].showTextbox) {
-                imageList = additionalTextValue;
-              }
-            } else if (option.textbox) {
+
+            const mapping = mappingData.find((item) => item.standardField === key) || {};
+            const radioValue =
+              selectedRadio[`${index}-${key}`] &&
+              selectedRadio[`${index}-${key}`].value
+                ? selectedRadio[`${index}-${key}`].value
+                : mapping.imageType || null;
+            const isRadioUnchanged =
+              mapping.imageType && mapping.imageType === radioValue;
+
+              if (
+                key.startsWith("Image") &&
+                option.value !== "do_nothing" &&
+                !isRadioUnchanged &&
+                selectedRadio[`${index}-${key}`]
+              ) {
+                additionalValue =
+                  selectedRadio[`${index}-${key}`].additionalValue || "";
+                imageType = radioValue || "";
+                if (selectedRadio[`${index}-${key}`].showTextbox) {
+                  imageList = additionalTextValue;
+                }
+              } else if (option.textbox) {
               additionalValue =
                 selectedOption[key] && selectedOption[key].additionalValue
                   ? selectedOption[key].additionalValue
                   : "";
             }
             let supplierExtract = "";
-        if (option.value === "extract") {
-          supplierExtract = supplierExtractOption[index]?.[key] || "";
-        }
+            if (option.value === "extract") {
+              supplierExtract = supplierExtractOption[index]?.[key] || "";
+            }
             const mappingObject = {
               supplierId: localStorage.getItem("supplierId"),
               supplierName: localStorage.getItem("supplierName"),
@@ -210,39 +231,38 @@ function SuppilerPage3(props) {
               additionalValue: additionalValue,
               imageType: imageType,
               imageList: imageList,
-              supplierExtract: supplierExtract
+              supplierExtract: supplierExtract,
             };
-            console.log("suppliermaimmapping", mappingObject);
             mappingArray.push(mappingObject);
           }
         });
       });
-      customFields.forEach((customField) => {
+
+      customFieldsData.forEach((customField) => {
         const mappingObject = {
           supplierId: localStorage.getItem("supplierId"),
           supplierName: localStorage.getItem("supplierName"),
-          standardField: "",
-          standardValue: "",
-          supplierField: "",
-          additionalValue: "",
-          customFieldName: customField.name,
-          customValue: customField.value,
+          customFieldName: customField.customFieldName,
+          customValue: customField.customValue,
           isCustomField: true,
         };
-
         mappingArray.push(mappingObject);
       });
 
       productRadio.forEach((product) => {
+        const additionalValue = selectedRadioPreference || "";
+        const additionalValueString =
+          typeof additionalValue === "object" ? "" : additionalValue;
         const mappingObject = {
           supplierId: localStorage.getItem("supplierId"),
           supplierName: localStorage.getItem("supplierName"),
           standardField: "Preference",
           standardValue: "",
           supplierField: selectedPreference ? selectedPreference.value : "",
-          additionalValue: selectedRadioPreference,
+          additionalValue: additionalValueString,
         };
-        console.log("productradio", mappingObject);
+        console.log("productRadio", mappingObject);
+
         mappingArray.push(mappingObject);
       });
 
@@ -388,7 +408,14 @@ function SuppilerPage3(props) {
         setFormData(supplierData.supplier_product_field);
 
         const supplierMapping = supplierData.supplier_product_field;
+
         const supplierCustomFields = supplierData.supplier_custom_field;
+
+        const additionalValue = supplierMapping.find(
+          (field) => field.standardField === "Preference"
+        )?.additionalValue;
+
+        setSlectedRadioPreference(additionalValue);
 
         const options = {};
         supplierMapping.forEach((field) => {
@@ -399,31 +426,24 @@ function SuppilerPage3(props) {
             imageType: imageType,
           };
         });
-
         setSelectedOptions([options]);
-
         setMappingData(supplierMapping);
-        // setCustomFields(supplierCustomFields);
+        setCustomFieldsData(supplierCustomFields);
+
+        const selectedRadioState = {};
+        supplierMapping.forEach((field, index) => {
+          const { standardField, imageType } = field;
+          const radioValue = imageType || null;
+          selectedRadioState[`${index}-${standardField}`] = {
+            value: radioValue,
+          };
+        });
+        console.log("selectedRadio",selectedRadioState)
+        setSelectedRadio(selectedRadioState);
       })
       .catch((error) => {
         console.log("error", error);
       });
-  };
-
-  const addCustomField = () => {
-    setCustomFields([...customFields, { name: "", value: "" }]);
-  };
-
-  const removeCustomField = (index) => {
-    const updatedFields = [...customFields];
-    updatedFields.splice(index, 1);
-    setCustomFields(updatedFields);
-  };
-
-  const handleInputChange = (index, field, value) => {
-    const updatedFields = [...customFields];
-    updatedFields[index][field] = value;
-    setCustomFields(updatedFields);
   };
 
   return (
@@ -470,6 +490,7 @@ function SuppilerPage3(props) {
           </div>
         </div>
         <div className="table-container" style={{ position: "relative" }}>
+     
           {formErrors.map((error, index) => (
             <div key={index} className="form-error">
               <span className="text-danger"> {error}</span>
@@ -478,12 +499,12 @@ function SuppilerPage3(props) {
           <div className="row mt-3 mt-lg-0">
             <div className="col-12">
               <label>
-                In what format does this supplier provide the product data?
+              What is the standard format used by the supplier for sharing the product data?
               </label>
             </div>
             <div className="col-12 mt-2">
               {productRadio.map((radio) => (
-                <label key={radio.value} className="radio-label mr-3">
+                <div key={radio.value} className="radio-label mr-3">
                   <input
                     type="radio"
                     name="Preference"
@@ -492,12 +513,15 @@ function SuppilerPage3(props) {
                     onChange={() => handleProductRadioChange(radio.value)}
                   />
                   {radio.label}
-                </label>
+                </div>
               ))}
             </div>
           </div>
+         
           <div className="row mt-2">
+
             <div className="col-6">
+            <label className="text-success"> Please select the field where the parent-child relation is specified.</label>
               {selectedRadioPreference === "multiple_row" ? (
                 <div>
                   <Select
@@ -511,6 +535,7 @@ function SuppilerPage3(props) {
               ) : null}
             </div>
           </div>
+          <label className="text-success">e.g. Product Type</label>
           <table className="w-100 table-responsive-md">
             <thead>
               <tr>
@@ -542,96 +567,95 @@ function SuppilerPage3(props) {
                   const keys = Object.keys(productField);
                   return (
                     <>
-                      {keys.map((key) => {
-                        const selectedOption =
-                          selectedOptions[index] && selectedOptions[index][key]
-                            ? selectedOptions[index][key]
-                            : null;
-                        const mapping =
-                          mappingData.find(
-                            (item) => item.standardField === key
-                          ) || {};
-                        const radioValue =
-                          selectedRadio[`${index}-${key}`] &&
-                          selectedRadio[`${index}-${key}`].value
-                            ? selectedRadio[`${index}-${key}`].value
-                            : mapping.imageType || null;
-                        const showTextbox =
-                          selectedRadio[`${index}-${key}`] &&
-                          selectedRadio[`${index}-${key}`].showTextbox
-                            ? selectedRadio[`${index}-${key}`].showTextbox
-                            : false;
-                        let additionalInfo = null;
-                        if (
-                          key.startsWith("Image") &&
-                          selectedOption &&
-                          !selectedOption.textbox &&
-                          selectedOption.value !== "do_nothing"
-                        ) {
-                          additionalInfo = (
-                            <>
-                              <div className="radio-container">
-                                <input
-                                  type="radio"
-                                  name={`image-${index}-${key}`}
-                                  value="folder_only"
-                                  onChange={(e) =>
-                                    handleRadioChange(
-                                      index,
-                                      key,
-                                      e.target.value
-                                    )
-                                  }
-                                  checked={radioValue === "folder_only"}
-                                />{" "}
-                                <label
-                                  htmlFor={`image-${index}-${key}`}
-                                  className="image-label"
-                                >
-                                  Is it folder name?
-                                </label>
-                                <br />
-                                <input
-                                  type="radio"
-                                  name={`image-${index}-${key}`}
-                                  value="folder_images"
-                                  onChange={(e) =>
-                                    handleRadioChange(
-                                      index,
-                                      key,
-                                      e.target.value
-                                    )
-                                  }
-                                  checked={radioValue === "folder_images"}
-                                />{" "}
-                                <label
-                                  htmlFor={`image-${index}-${key}`}
-                                  className="image-label"
-                                >
-                                  Folder name with Image
-                                </label>
-                                <br />
-                                <input
-                                  type="radio"
-                                  name={`image-${index}-${key}`}
-                                  value="single_image"
-                                  onChange={(e) =>
-                                    handleRadioChange(
-                                      index,
-                                      key,
-                                      e.target.value
-                                    )
-                                  }
-                                  checked={radioValue === "single_image"}
-                                />{" "}
-                                <label
-                                  htmlFor={`image-${index}-${key}`}
-                                  className="image-label"
-                                >
-                                  Single Image
-                                </label>
-                              </div>
-
+                    {keys.map((key) => {
+                      const selectedOption =
+                        selectedOptions[index] && selectedOptions[index][key]
+                          ? selectedOptions[index][key]
+                          : null;
+                      const mapping =
+                        mappingData.find(
+                          (item) => item.standardField === key
+                        ) || {};
+                      const radioValue =
+                        selectedRadio[`${index}-${key}`] &&
+                        selectedRadio[`${index}-${key}`].value
+                          ? selectedRadio[`${index}-${key}`].value
+                          : mapping.imageType || null;
+                      const showTextbox =
+                        selectedRadio[`${index}-${key}`] &&
+                        selectedRadio[`${index}-${key}`].showTextbox
+                          ? selectedRadio[`${index}-${key}`].showTextbox
+                          : false;
+                      let additionalInfo = null;
+                      if (
+                        key.startsWith("Image") &&
+                        selectedOption &&
+                        !selectedOption.textbox &&
+                        selectedOption.value !== "do_nothing"
+                      ) {
+                        additionalInfo = (
+                          <>
+                            <div className="radio-container">
+                              <input
+                                type="radio"
+                                name={`image-${index}-${key}`}
+                                value="folder_only"
+                                onChange={(e) =>
+                                  handleRadioChange(
+                                    index,
+                                    key,
+                                    e.target.value
+                                  )
+                                }
+                                checked={radioValue === "folder_only"}
+                              />{" "}
+                              <label
+                                htmlFor={`image-${index}-${key}`}
+                                className="image-label text-success"
+                              >
+                                Is it folder name?
+                              </label>
+                              <br />
+                              <input
+                                type="radio"
+                                name={`image-${index}-${key}`}
+                                value="folder_images"
+                                onChange={(e) =>
+                                  handleRadioChange(
+                                    index,
+                                    key,
+                                    e.target.value
+                                  )
+                                }
+                                checked={radioValue === "folder_images"}
+                              />{" "}
+                              <label
+                                htmlFor={`image-${index}-${key}`}
+                                className="image-label text-success"
+                              >
+                                Folder name with Image
+                              </label>
+                              <br />
+                              <input
+                                type="radio"
+                                name={`image-${index}-${key}`}
+                                value="single_image"
+                                onChange={(e) =>
+                                  handleRadioChange(
+                                    index,
+                                    key,
+                                    e.target.value
+                                  )
+                                }
+                                checked={radioValue === "single_image"}
+                              />{" "}
+                              <label
+                                htmlFor={`image-${index}-${key}`}
+                                className="image-label text-success"
+                              >
+                                Single Image
+                              </label>
+                            </div>
                               {showTextbox && (
                                 <>
                                   <input
@@ -649,21 +673,6 @@ function SuppilerPage3(props) {
                                 </>
                               )}
                             </>
-                          );
-                        } else if (selectedOption && selectedOption.textbox) {
-                          additionalInfo = (
-                            <input
-                              type="text"
-                              placeholder="Enter a value"
-                              className="additional-textbox rounded"
-                              onChange={(e) =>
-                                handleAdditionalValueChange(
-                                  index,
-                                  key,
-                                  e.target.value
-                                )
-                              }
-                            />
                           );
                         } else if (key === "Dimension_Units") {
                           additionalInfo = (
@@ -728,25 +737,34 @@ function SuppilerPage3(props) {
                           additionalInfo = (
                             <>
                               {selectedOption && selectedOption.textbox && (
-                                <>
-                                  <input
-                                    type="text"
-                                    placeholder="Enter a value"
-                                    className="additional-textbox rounded"
-                                    onChange={(e) =>
-                                      handleAdditionalValueChange(
-                                        index,
-                                        key,
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                  <small>
-                                    e.g. Please generate the value from
-                                    parent_title{" "}
-                                  </small>
-                                </>
+                                <input
+                                  type="text"
+                                  placeholder="Enter a value"
+                                  className="additional-textbox rounded"
+                                  onChange={(e) =>
+                                    handleAdditionalValueChange(
+                                      index,
+                                      key,
+                                      e.target.value
+                                    )
+                                  }
+                                />
                               )}
+                              <br />
+                              {selectedOption &&
+                                selectedOption.value === "use_AI" && (
+                                  <label className="ml-3 text-success">
+                                    {selectedOption.message}
+                                  </label>
+                                )}
+                                {selectedOption &&
+                                  selectedOption.value === "extract" && (
+                                    <label className="ml-3 text-success">
+                                    Note: Please enter the name of the extract string.<br/>
+                                    e.g. sleeves
+
+                                    </label>
+                                  )}
                             </>
                           );
                         }
@@ -783,12 +801,50 @@ function SuppilerPage3(props) {
                             <td>
                               {selectedOption &&
                               selectedOption.value === "extract" ? (
+                                <>
                                 <div className="select-container">
-                                  <Select options={csvOption} onChange={(selectedOption)=>handleProductExtractChange( index,
-                                    key,
-                                    selectedOption)}/>
+                                  <Select
+                                    options={csvOption}
+                                    onChange={(selectedOption) =>
+                                      handleProductExtractChange(
+                                        index,
+                                        key,
+                                        selectedOption
+                                      )
+                                    }
+                                    isSearchable={true}
+                                    className="select"
+                                    styles={{
+                                      option: (styles) => {
+                                        return {
+                                          ...styles,
+                                        };
+                                      },
+                                    }}
+                                  />
+                                  
                                 </div>
+                                <label className="ml-3 text-success">
+                                  Note: Please select the field from where you want to extract.
+
+                                  </label>
+                                  </>
                               ) : null}
+                              {selectedOption &&
+                                selectedOption.value === "use_AI" && (
+                                  <label className="text-success">
+                                    Please use the mentioned tag for data
+                                    generation
+                                    <br />
+                                    {`{Parent_Title}`}
+                                    <br />
+                                    {`{Variant_Title}`}
+                                    <br />
+                                    {`{Plain_Description}`}
+                                    <br />
+                                    {`{Category_1}`}
+                                  </label>
+                                )}
                             </td>
                           </tr>
                         );
@@ -799,97 +855,12 @@ function SuppilerPage3(props) {
               </tbody>
             )}
           </table>
-          <div className="accordion-class">
-            <Row>
-              <Col>
-                <Accordion
-                  defaultActiveKey="7"
-                  className="accordian__main"
-                >
-                  <Card>
-                    <Card.Header>
-                      <Accordion.Toggle
-                        as="button"
-                        className="btn btn-link collapsed border border-primary text-decoration-none"
-                        eventKey="0"
-                      >
-                        <i className="fa fa-angle-down arrow"></i>
-
-                        <span> Custom Fields</span>
-                      </Accordion.Toggle>
-                    </Card.Header>
-                    <Accordion.Collapse eventKey="0" className="card-body">
-                      <Card.Body>
-                        <div className="d-flex justify-content-around">
-                          <p>
-                            <span>Custom Field Name</span>
-                          </p>
-                          <p>
-                            <span>Custom Field Value</span>
-                          </p>
-                        </div>
-                        <hr />
-                        {customFields &&
-                          customFields.map((field, index) => (
-                            <div
-                              key={index}
-                              className="d-flex justify-content-around align-items-center"
-                            >
-                              <i
-                                className="fa fa-solid fa-trash fa-lg ml-2 pe-auto"
-                                style={{ color: "red" }}
-                                onClick={() => removeCustomField(index)}
-                              ></i>
-                              <input
-                                type="text"
-                                placeholder="Enter Custom Field"
-                                name="customFieldName"
-                                className="form-control ml-3"
-                                style={{ flex: "1 1 0" }}
-                                defaultValue={field.customFieldName?field.customFieldName:""}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "name",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              <span className="ml-3"> = </span>
-                              <input
-                                type="text"
-                                placeholder="Enter Custom Value"
-                                name="customValue"
-                                className="form-control ml-3"
-                                style={{ flex: "2 1 0" }}
-                                defaultValue={field.customValue?field.customValue:""}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "value",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </div>
-                          ))}
-                        <Row></Row>
-                      </Card.Body>
-                    </Accordion.Collapse>
-                  </Card>
-                  <hr />
-                  <Button
-                    className="btn ml-3 mt-2 mb-2"
-                    variant="outline-primary"
-                    onClick={addCustomField}
-                  >
-                    <i className="fa fa-plus mr-2"></i>Add Custom Field
-                  </Button>
-                </Accordion>
-              </Col>
-            </Row>
-          </div>
+          <CustomFields
+            customFieldsData={customFieldsData}
+            setCustomFieldsData={setCustomFieldsData}
+          />
         </div>
+        
       </form>
     </>
   );
