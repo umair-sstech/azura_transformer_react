@@ -9,15 +9,17 @@ import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageSuppiler";
 import { Spinner } from "react-bootstrap";
 
-function SupplierHttpForm({ onSubmit, settingType }) {
-  const { processCancel } = useContext(FormContext);
+function SupplierHttpForm(props) {
+  const {onSubmit, settingType} = props;
+  const { processCancel, formData, setFormData } = useContext(FormContext);
 
-  const [formData, setFormData] = useState({
+  const [initFormData, setInitFormData] = useState({
     urlPath: "",
     syncFrequency: "",
     settingType: "",
   });
   const [formErrors, setFormErrors] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
@@ -25,9 +27,20 @@ function SupplierHttpForm({ onSubmit, settingType }) {
   const history = useHistory();
 
   useEffect(() => {
+    if (formData) {
+      setInitFormData(formData);
+    }
+  }, [props]);
+
+  useEffect(() => {
     getCronTimeData();
     getSupplierDataById();
   }, []);
+
+
+  useEffect(() => {
+    setIsFormValid(Object.keys(formErrors).length === 0);
+  }, [formErrors]);
 
   const getCronTimeData = () => {
     try {
@@ -47,28 +60,42 @@ function SupplierHttpForm({ onSubmit, settingType }) {
   };
 
   const handleSyncFrequency = (selectedOption) => {
-    setFormData({ ...formData, syncFrequency: selectedOption.value });
-    setFormErrors({ ...formErrors, syncFrequency: "" });
+    const syncFrequency = selectedOption.value;
+    setInitFormData({ ...initFormData, syncFrequency: syncFrequency });
+    // setFormErrors({ ...formErrors, syncFrequency: "" });
+    const formData = new FormData(document.forms.httpForm);
+    formData.set("syncFrequency", syncFrequency)
+    const errors = validateHttpForm(formData);
+    setFormErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
   };
+
   const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-    setFormErrors({ ...formErrors, [e.target.name]: "" });
+    const urlPath = e.target.value.trim()
+    setInitFormData(prevState => ({
+      ...prevState,
+      urlPath
+    }))
+    const formData = new FormData(document.forms.httpForm);
+    formData.set("urlPath", urlPath)
+    const errors = validateHttpForm(formData);
+    setFormErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    const form = e.target;
+    const formData = new FormData(form);
     const errors = validateHttpForm(formData);
     setFormErrors(errors);
-
+    
     if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
+
       const payload = {
-        ...formData,
+        ...initFormData,
         settingType,
         supplierId,
         supplierName,
@@ -79,11 +106,12 @@ function SupplierHttpForm({ onSubmit, settingType }) {
         protocol: "",
         timeZone: "",
       };
+      formData.set("httpData", payload)
       setIsLoading(true);
       axios
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
-          const { success, message, data } = response.data;
+          const { success, message } = response.data;
           if (success) {
             toast.success(message);
             onSubmit();
@@ -100,19 +128,24 @@ function SupplierHttpForm({ onSubmit, settingType }) {
 
   const handleOnClick = (e) => {
     e.preventDefault();
+    const form = e.currentTarget.closest("form");
+    if (!form) {
+      return;
+    }
 
+    const formData = new FormData(form)
     const errors = validateHttpForm(formData);
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
-      const payload = { ...formData, settingType, supplierId, supplierName };
+      const payload = { ...initFormData, settingType, supplierId, supplierName };
       setIsLoadingExit(true);
       axios
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
-          const { success, message, data } = response.data;
+          const { success, message } = response.data;
           if (success) {
             history.push("/supplier");
             toast.success(message);
@@ -150,7 +183,7 @@ function SupplierHttpForm({ onSubmit, settingType }) {
   };
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} name="httpForm">
         <div style={{ marginTop: "30px" }}>
           <div className="row">
             <div className="col-lg-12 col-md-12 col-12 button-class">
@@ -204,7 +237,7 @@ function SupplierHttpForm({ onSubmit, settingType }) {
                   placeholder="Enter URL"
                   onChange={handleInputChange}
                   defaultValue={
-                    formData && formData.urlPath ? formData.urlPath : ""
+                    initFormData && initFormData.urlPath ? initFormData.urlPath : ""
                   }
                 />
                 {formErrors.urlPath && (
@@ -224,9 +257,10 @@ function SupplierHttpForm({ onSubmit, settingType }) {
                 <Select
                   placeholder="Select Frequency"
                   options={syncFrequencyOptions}
+                  name="syncFrequency"
                   onChange={handleSyncFrequency}
                   value={syncFrequencyOptions.find(
-                    (option) => option.value === formData.syncFrequency
+                    (option) => option.value === initFormData.syncFrequency
                   )}
                 />
                 {formErrors.syncFrequency && (

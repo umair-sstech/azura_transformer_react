@@ -1,48 +1,133 @@
 export const validateIntegrationInfoForm = (formData) => {
+
   let errors = {};
+  const name = formData.get("name");
+  if (!name) {
 
-  if (!formData.get("name")) {
     errors.name = "Name is required";
-  }
 
+  } else if (name.trim().length === 0) {
+
+    errors.name = "Name cannot be whitespace only";
+
+  } else if (name.length > 15) {
+
+    errors.name = "Name must be less than or equal to 15 characters";
+
+  } else if (!/^[a-zA-Z\s]+$/.test(name)) {
+
+    errors.name = "Name can only contain alphabetic characters";
+
+  }
 
   const logo = formData.get("logo");
-  if (logo) {
-    if (!logo.type.startsWith("image/")) {
-      errors.logo = "Please select an image file";
-    } else if (logo.size > 50 * 1024) {
-      errors.logo = "Image file size must be less than 50kb";
-    }
-  }
 
+  if (logo) {
+
+    if (logo.size > 10 * 1024 * 1024) {
+
+      errors.logo = "Image file size must be less than 10MB";
+
+    } else if (!/\.(jpg|jpeg|png)$/i.test(logo.name)) {
+
+      errors.logo = "Please select a logo file with a .jpg, .jpeg, or .png extension";
+
+    }
+
+  } else {
+
+    errors.logo = "Please select a logo";
+
+  }
 
   return errors;
 };
 
 export const validateSftpForm = (formData) => {
   const errors = {};
-  if (!formData.hostName) {
+
+  const hostName = formData.get("hostName")
+  const userName = formData.get("userName")
+  const password = formData.get("password")
+  const port = formData.get("port")
+  const protocol = formData.get("protocol")
+  const urlPath = formData.get("urlPath");
+  const syncFrequency = formData.get("syncFrequency")
+  const timeZone = formData.get("timeZone")
+  
+  if (!hostName) {
+
     errors.hostName = "Host Name is required";
+
+  } else if (hostName.trim().length === 0) {
+
+    errors.hostName = "Host Name cannot be whitespace only";
+
+  } else if (hostName.length > 40) {
+
+    errors.hostName = "Host Name must be less than or equal to 40 characters";
+
   }
-  if (!formData.userName) {
+
+  if (!userName) {
+
     errors.userName = "User Name is required";
+
+  } else if (userName.trim().length === 0) {
+
+    errors.userName = "User Name cannot be whitespace only";
+
+  } else if (userName.length > 40) {
+
+    errors.userName = "User Name must be less than or equal to 40 characters";
+
   }
-  if (!formData.password) {
+
+  if (!password) {
+
     errors.password = "Password is required";
+
+  } else if (password.trim().length === 0) {
+
+    errors.password = "Password cannot be whitespace only";
+
+  } else if (password.length < 8) {
+
+    errors.password = "Password must be atleast 8 characters long";
+
+  } else if(!/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(password)) {
+    
+    errors.password = "Password have at least one character uppercase, atleast one character lowercase, at least one digit and at least one special character."
+  
   }
-  if (!formData.port) {
+
+  if(!port) {
+    
     errors.port = "Port is required";
+  
+  } else if(!/^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))$/gi.test(port)) {
+
+    errors.port = "Port must be a number between 1 and 65535";
+
   }
-  if (!formData.protocol) {
+
+  if (!protocol) {
     errors.protocol = "Protocol is required";
   }
-  if (!formData.urlPath) {
+
+  if (!urlPath) {
     errors.urlPath = "URL is required";
+  } else if(urlPath.trim().length === 0) {
+    errors.urlPath = "URL cannot be whitespace only";
+  } else if(!/([a-zA-Z0-9\s_\\.\-\(\):])+\.[^.]+/i.test(urlPath)) {
+    errors.urlPath = "URL must be a valid URL";
   }
-  if (!formData.syncFrequency) {
+
+
+  if (!syncFrequency) {
     errors.syncFrequency = "Please Select Sync Frequency";
   }
-  if (!formData.timeZone) {
+  if (!timeZone) {
     errors.timeZone = "Please Select TimeZone";
   }
   return errors;
@@ -50,11 +135,19 @@ export const validateSftpForm = (formData) => {
 
 export const validateHttpForm = (formData) => {
   const errors = {};
+  const urlPath = formData.get("urlPath")
+  const syncFrequency = formData.get("syncFrequency")
 
-  if (!formData.urlPath) {
+  if (!urlPath) {
     errors.urlPath = "URL is required";
+  } else if(urlPath.trim().length === 0) {
+    errors.urlPath = "URL cannot be whitespace only";
+  } else if(!/([a-zA-Z0-9\s_\\.\-\(\):])+\.[^.]+/i.test(urlPath)) {
+    errors.urlPath = "URL must be a valid URL";
   }
-  if (!formData.syncFrequency) {
+
+
+  if (!syncFrequency) {
     errors.syncFrequency = "Please Select Sync Frequency";
   }
   return errors;
@@ -74,8 +167,8 @@ export const validateMarketPlaceInfoForm = (formData) => {
 
   return errors;
 };
-export const validateMarketPlaceProductSync=(formData)=>{
-  const errors={};
+export const validateMarketPlaceProductSync = (formData) => {
+  const errors = {};
   if (!formData.productSyncFrequency) {
     errors.productSyncFrequency = "Please Select Sync Frequency";
   }
@@ -85,8 +178,8 @@ export const validateMarketPlaceProductSync=(formData)=>{
   return errors;
 };
 
-export const validateMarketPlaceOrderSync=(formData)=>{
-  const errors={};
+export const validateMarketPlaceOrderSync = (formData) => {
+  const errors = {};
   if (!formData.orderSyncFrequency) {
     errors.orderSyncFrequency = "Please Select Sync Frequency";
   }
@@ -96,8 +189,8 @@ export const validateMarketPlaceOrderSync=(formData)=>{
   return errors;
 }
 
-export const validateMarketPlaceTrackingSync=(formData)=>{
-  const errors={};
+export const validateMarketPlaceTrackingSync = (formData) => {
+  const errors = {};
   if (!formData.trackingSyncFrequency) {
     errors.trackingSyncFrequency = "Please Select Sync Frequency";
   }
