@@ -159,7 +159,7 @@ function SupplierPage6(props) {
 
     {isChecked && (
       <>
-        <div className="row">
+        <div className="row fixed-btn-grp">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
               <button className="btn btn-primary w-auto btn-lg mr-2" type="submit">

@@ -449,7 +449,7 @@ function SuppilerPage3(props) {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <div className="row">
+        <div className="row fixed-btn-grp">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
               <button
@@ -489,7 +489,7 @@ function SuppilerPage3(props) {
             </div>
           </div>
         </div>
-        <div className="table-container" style={{ position: "relative" }}>
+        <div className="table-container card" style={{ position: "relative" }}>
      
           {formErrors.map((error, index) => (
             <div key={index} className="form-error">

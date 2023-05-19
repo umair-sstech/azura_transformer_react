@@ -184,8 +184,8 @@ function SupplierHttpForm(props) {
   return (
     <>
       <form onSubmit={handleSubmit} name="httpForm">
-        <div style={{ marginTop: "30px" }}>
-          <div className="row">
+        <div style={{ marginTop: "25px" }}>
+          <div className="row fixed-btn-grp">
             <div className="col-lg-12 col-md-12 col-12 button-class">
               <div className="d-flex">
                 <button

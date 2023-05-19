@@ -1,5 +1,5 @@
-import React from "react";
-import "../ManageMarketPlace/MultiStepProgressBar.css";
+import React, { useEffect, useState } from "react";
+import "./MultiStepProgressBar.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
 
 const stepNames = [
@@ -53,10 +53,26 @@ const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
     stepPercentage = 0;
   }
 
+  const [scrollBar, setScrollBar] = useState(false)
 
+  useEffect(() => {
+
+    const handleScroll = () => {
+
+      const scrollPosition = window.scrollY || document.documentElement.scrollTop
+
+      setScrollBar(scrollPosition > 50)
+    }
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    }
+  }, [])
 
   return (
-    <div>
+    <div className={scrollBar ? 'fixed__integrator card' : 'card'} style={scrollBar ? {height: "210px"} : {}}>
+      <div className="px-3">
     <p className="market-onboarding">Integrator On Boarding</p>
       <p className="stepNamesContainer ">
         {stepNames.map((name, index) => (
@@ -134,6 +150,7 @@ const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
             )}
               </Step>*/}
         </ProgressBar>
+      </div>
       </div>
       <hr className="hr" />
     </div>

@@ -144,7 +144,7 @@ function MarketPlacePage2(props) {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <div className="row">
+        <div className="row fixed-marketplace-btn-grp">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
               <button

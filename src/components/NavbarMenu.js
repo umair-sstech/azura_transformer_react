@@ -442,7 +442,7 @@ class NavbarMenu extends React.Component {
           </div>
         </nav>
 
-        <div id="left-sidebar" className="sidebar" style={{ zIndex: 9 }}>
+        <div id="left-sidebar" className="sidebar" style={{ zIndex: 999 }}>
           <div className="sidebar-scroll">
             <div className="user-account">
               <img

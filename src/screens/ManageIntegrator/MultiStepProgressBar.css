@@ -118,15 +118,52 @@
   font-size: 15px;
   font-weight: 600;
 }
+
+.fixed__integrator {
+  position: sticky !important;
+  top: 127px;
+  left: 5;
+  width: 100% !important; 
+  z-index: 99;
+  transition: all 0.5s ease-in-out !important;
+}
+
+.fixed-btn-integrator-grp {
+  position: sticky !important;
+  top: 280px;
+  left: 5;
+  width: 100% !important; 
+  z-index: 99;
+  transition: all 0.5s ease-in-out !important;
+}
+
 @media screen and (max-width: 1024px) {
   .stepName {
     font-size: 12px;
   }
-  .stepNamesContainer {
+  /* .stepNamesContainer {
     margin-right: -10%;
     margin-left: -2%;
-  }
+  } */
   .RSPBprogressBar {
     width: 99%;
+  }
+}
+
+@media screen and (max-width: 594px) {
+  .fixed__integrator {
+    height: 240px !important;
+  }
+  .fixed-btn-integrator-grp {
+    top: 300px;
+  }
+}
+
+@media screen and (max-width: 478px) {
+  .fixed__integrator {
+    height: 260px !important;
+  }
+  .fixed-btn-integrator-grp {
+    top: 335px;
   }
 }

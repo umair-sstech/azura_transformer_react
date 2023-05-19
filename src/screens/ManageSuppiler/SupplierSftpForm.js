@@ -223,8 +223,8 @@ function SupplierSftpForm(props) {
   return (
     <>
       <form onSubmit={handleSubmit} name="sftpForm">
-        <div style={{ marginTop: "35px" }}>
-          <div className="row">
+        <div style={{ marginTop: "25px" }}>
+          <div className="row fixed-btn-grp">
             <div className="col-lg-12 col-md-12 col-12 button-class">
               <div className="d-flex">
                 <button
@@ -249,7 +249,7 @@ function SupplierSftpForm(props) {
                     <Spinner animation="border" size="sm" /> Please wait...
                   </>
                 ) : (
-                  "Save & Next"
+                  "Save & Exit"
                 )}
                 </button>
                 <button

@@ -113,7 +113,7 @@ function ManageIntegrator(props) {
             />
             <div className="tab-component">
               <div className="card">
-                <div className="body">
+                <div>
                   {props.updateFormLoading ? (
                     <div className="loader-wrapper">
                       <i className="fa fa-refresh fa-spin"></i>
@@ -137,6 +137,7 @@ function ManageIntegrator(props) {
                       page={page}
                       onPageNumberClick={nextPageNumber}
                     />
+                    <div className="body px-3" style={{marginTop: "-50px"}}>
                     {
                       {
                         1: (
@@ -177,6 +178,7 @@ function ManageIntegrator(props) {
                         ),
                       }[page]
                     }
+                    </div>
                   </FormContext.Provider>
                 </div>
               </div>

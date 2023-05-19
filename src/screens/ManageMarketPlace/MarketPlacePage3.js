@@ -169,8 +169,8 @@ function MarketPlacePage3(props) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div style={{ marginTop: "30px" }}>
-        <div className="row">
+      <div style={{ marginTop: "20px" }}>
+        <div className="row fixed-marketplace-btn-grp">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
               <button

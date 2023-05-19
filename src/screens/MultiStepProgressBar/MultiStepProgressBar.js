@@ -94,8 +94,8 @@
 
 // export default MultiStepProgressBar;
 
-import React from "react";
-import "../MultiStepProgressBar/MultiStepProgressBar.css";
+import React, { useEffect, useState } from "react";
+import "./MultiStepProgressBar.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
 
 const stepNames = [
@@ -137,97 +137,110 @@ const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
     stepPercentage = 0;
   }
 
-  return (
-    <div>
-    <p className="supplier-onboarding">Supplier On Boarding</p>
-      <p className="stepNamesContainer ">
-        {stepNames.map((name, index) => (
-          <div
-            className="stepName"
-            style={page == index + 1 ? styles.Active : styles.Inactive}
-            key={index}
-            onClick={() => (page > index + 1 ? setPage(index + 1) : "")}
-          >
-            {name}
-          </div>
-        ))}
-      </p>
+  const [scrollBar, setScrollBar] = useState(false)
 
-      <div>
-        <ProgressBar percent={stepPercentage} disabled>
-          <Step>
-            {({ accomplished, index }) => (
-              <div
-                className={`indexedStep ${
-                  accomplished ? "accomplished" : null
-                }`}
-                onClick={() => onPageNumberClick("1")}
-              ></div>
-            )}
-          </Step>
-          <Step>
-            {({ accomplished, index }) => (
-              <div
-                className={`indexedStep ${
-                  accomplished ? "accomplished" : null
-                }`}
-                onClick={() => onPageNumberClick("2")}
-              ></div>
-            )}
-          </Step>
-          <Step>
-            {({ accomplished, index }) => (
-              <div
-                className={`indexedStep ${
-                  accomplished ? "accomplished" : null
-                }`}
-                onClick={() => onPageNumberClick("3")}
-              ></div>
-            )}
-          </Step>
-          <Step>
-            {({ accomplished, index }) => (
-              <div
-                className={`indexedStep ${
-                  accomplished ? "accomplished" : null
-                }`}
-                onClick={() => onPageNumberClick("4")}
-              ></div>
-            )}
-          </Step>
-          <Step>
-            {({ accomplished, index }) => (
-              <div
-                className={`indexedStep ${
-                  accomplished ? "accomplished" : null
-                }`}
-                onClick={() => onPageNumberClick("5")}
-              ></div>
-            )}
-          </Step>
-          <Step>
-            {({ accomplished, index }) => (
-              <div
-                className={`indexedStep ${
-                  accomplished ? "accomplished" : null
-                }`}
-                onClick={() => onPageNumberClick("6")}
-              ></div>
-            )}
-          </Step>
-          <Step>
-            {({ accomplished, index }) => (
-              <div
-                className={`indexedStep ${
-                  accomplished ? "accomplished" : null
-                }`}
-                onClick={() => onPageNumberClick("7")}
-              ></div>
-            )}
-          </Step>
-        </ProgressBar>
+  useEffect(() => {
+
+    const handleScroll = () => {
+
+      const scrollPosition = window.scrollY || document.documentElement.scrollTop
+
+      setScrollBar(scrollPosition > 50)
+    }
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    }
+  }, [])
+
+  return (
+    <div className={scrollBar ? 'fixed card' : 'card'} style={scrollBar ? {height: "210px"} : {}}>
+    {/* //  <div className="fixed card progressbar__card"> */}
+      <div className="px-3">
+        <p className="supplier-onboarding">Supplier On Boarding</p>
+        <p className="stepNamesContainer">
+          {stepNames.map((name, index) => (
+            <div
+              className="stepName"
+              style={page == index + 1 ? styles.Active : styles.Inactive}
+              key={index}
+              onClick={() => (page > index + 1 ? setPage(index + 1) : "")}
+            >
+              {name}
+            </div>
+          ))}
+        </p>
+
+        <div>
+          <ProgressBar percent={stepPercentage} disabled>
+            <Step>
+              {({ accomplished, index }) => (
+                <div
+                  className={`indexedStep ${accomplished ? "accomplished" : null
+                    }`}
+                  onClick={() => onPageNumberClick("1")}
+                ></div>
+              )}
+            </Step>
+            <Step>
+              {({ accomplished, index }) => (
+                <div
+                  className={`indexedStep ${accomplished ? "accomplished" : null
+                    }`}
+                  onClick={() => onPageNumberClick("2")}
+                ></div>
+              )}
+            </Step>
+            <Step>
+              {({ accomplished, index }) => (
+                <div
+                  className={`indexedStep ${accomplished ? "accomplished" : null
+                    }`}
+                  onClick={() => onPageNumberClick("3")}
+                ></div>
+              )}
+            </Step>
+            <Step>
+              {({ accomplished, index }) => (
+                <div
+                  className={`indexedStep ${accomplished ? "accomplished" : null
+                    }`}
+                  onClick={() => onPageNumberClick("4")}
+                ></div>
+              )}
+            </Step>
+            <Step>
+              {({ accomplished, index }) => (
+                <div
+                  className={`indexedStep ${accomplished ? "accomplished" : null
+                    }`}
+                  onClick={() => onPageNumberClick("5")}
+                ></div>
+              )}
+            </Step>
+            <Step>
+              {({ accomplished, index }) => (
+                <div
+                  className={`indexedStep ${accomplished ? "accomplished" : null
+                    }`}
+                  onClick={() => onPageNumberClick("6")}
+                ></div>
+              )}
+            </Step>
+            <Step>
+              {({ accomplished, index }) => (
+                <div
+                  className={`indexedStep ${accomplished ? "accomplished" : null
+                    }`}
+                  onClick={() => onPageNumberClick("7")}
+                ></div>
+              )}
+            </Step>
+          </ProgressBar>
+        </div>
+        <hr className="hr" />
       </div>
-      <hr className="hr" />
     </div>
   );
 };

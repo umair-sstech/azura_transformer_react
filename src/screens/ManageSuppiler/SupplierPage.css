@@ -72,6 +72,13 @@ th {
   z-index: 1; /* Optional z-index to control stacking order */
 }
 
+.block-header {
+  position: sticky;
+  z-index: 99;
+  top: 70px;
+  background-color: #f4f7f6;
+}
+
 .select {
   width: 100%;
 }
@@ -153,5 +160,12 @@ th {
 @media screen and (max-width: 575px) {
   .supplier4__container {
     display: block;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .block-header {
+    /* background-color: purple; */
+    top: 55px;
   }
 }
