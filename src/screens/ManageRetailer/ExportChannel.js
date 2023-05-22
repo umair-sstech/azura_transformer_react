@@ -5,8 +5,8 @@ import Select from "react-select";
 import { toast } from 'react-toastify';
 
 
-function ExportChannel() {
-
+function ExportChannel(props) {
+  const {setPage}=props
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [channel,setChannel]=useState([])
   const [isLoading, setIsLoading] = useState(false);
@@ -25,8 +25,8 @@ function ExportChannel() {
       .then((response) => {
         const{success,message,data}=response.data
         if (success) {
-          const options = Object.keys(response.data.data).map((channelName) => ({
-            value: channelName,
+          const options = Object.keys(data).map((channelName) => ({
+            value: data[channelName],
             label: channelName,
           }));
           setChannel(options);
@@ -42,9 +42,41 @@ function ExportChannel() {
       console.log(error)
     }
   }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+  const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+
+    const payload = {
+      id: retailerIntegrationId,
+      marketPlaceId: selectedOptions.value
+    };
+  console.log("payload",payload)
+    setIsLoading(true);
+  
+    axios.post("http://localhost:2703/retailer/createOrUpdateRetailerMarketplace", payload)
+      .then(response => {
+        const { success, message } = response.data;
+        if (success) {
+          toast.success(message);
+          setPage(7)
+        } else {
+          toast.error(message);
+        }
+      })
+      .catch(error => {
+        console.error("Failed to submit data:", error);
+        toast.error("Failed to submit data");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  
+  
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
@@ -83,12 +115,11 @@ function ExportChannel() {
           <div className="col-12">
             <label>Type of Integration</label>
             <Select
-              options={channel}
-              // closeMenuOnSelect={false}
-              onChange={handleSelectChange}
-              value={selectedOptions}
-              placeholder="Select accounts"
-            />
+            options={channel}
+            onChange={handleSelectChange}
+            value={selectedOptions}
+            placeholder="Select accounts"
+          />
           </div>
         </div>
       </form>

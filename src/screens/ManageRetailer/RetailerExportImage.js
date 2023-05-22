@@ -10,9 +10,7 @@ function RetailerExportImage(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [supplierImageList, setSupplierImageList] = useState([]);
-  const [selectedSupplier, setSelectedSupplier] = useState("");
-  console.log("selectdesupplier",selectedSupplier)
-  console.log("supplierImageList", supplierImageList);
+
 
   useEffect(() => {
     fetchData();
@@ -39,13 +37,57 @@ function RetailerExportImage(props) {
       setIsLoading(false);
     }
   };
-  const handleAccordionToggle = (supplierName) => {
-    setSelectedSupplier(supplierName);
-  };
 
+  const submitData = async (e) => {
+    e.preventDefault()
+    try {
+      setIsLoadingExit(true);
+      const requestData = [];
+      const retailerIntegrationId= localStorage.getItem("retailerIntegrationId");
+
+  
+      // Iterate over the supplier image list to gather the selected image sizes
+      Object.entries(supplierImageList).forEach(([supplierName, supplierData]) => {
+        supplierData.forEach((item) => {
+          const selectedSizes = item.imageResize
+            .split(",")
+            .filter((size, index) => {
+              const checkbox = document.getElementById(`checkbox-${item.id}-${index}`);
+              return checkbox.checked;
+            })
+            .join(",");
+  
+          if (selectedSizes) {
+            requestData.push({
+              id: retailerIntegrationId,
+              supplierId: item.id,
+              supplierImageSize: selectedSizes
+            });
+          }
+        });
+      });
+  
+      console.log("payload",requestData)
+      const response = await axios.post(
+        "http://localhost:2703/retailer/createOrUpdateRetailerImage",
+        requestData
+      );
+      const { success } = response.data;
+      if (success) {
+        console.log("Data submitted successfully");
+      } else {
+        console.error("Failed to submit data");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setIsLoadingExit(false);
+    }
+  };
+  
   return (
     <>
-      <form>
+      <form onSubmit={submitData}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
@@ -98,27 +140,28 @@ function RetailerExportImage(props) {
               <Accordion.Collapse eventKey={index.toString()} className="card-body">
                 <Card.Body>
                   <div className="d-flex justify-content-around">
-                    <table className="table w-100 table-responsive-sm table-bordered">
-                      <thead>
-                        <tr>
-                          <th className="p-1">Image Size</th>
-                        </tr>
-                      </thead>
-                      <tbody className="image-size-list">
-                      {supplierData.map((item) => (
-                        <tr key={item.id}>
+                  <table className="table w-100 table-responsive-sm table-bordered">
+                  <thead>
+                    <tr>
+                      <th className="p-1">Image Size</th>
+                    </tr>
+                  </thead>
+                  <tbody className="image-size-list">
+                    {supplierData.map((item) => (
+                      <tr key={item.id}>
                         <td>
                           {item.imageResize.split(",").map((size, index) => (
                             <div key={index} className="checkbox-size">
-                              <input type="checkbox" />
+                              <input type="checkbox" id={`checkbox-${item.id}-${index}`} />
                               {size}
                             </div>
                           ))}
                         </td>
                       </tr>
-                      ))}
-                      </tbody>
-                    </table>
+                    ))}
+                  </tbody>
+                </table>
+                
                   </div>
                 </Card.Body>
               </Accordion.Collapse>
