@@ -2,17 +2,22 @@ import React, { useState, useEffect } from 'react';
 import "../ManageRetailer/Retailer.css"
 import { Spinner } from 'react-bootstrap';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
-function ProductExport() {
+function ProductExport(props) {
+  const {setPage}=props
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+   console.log("SelectProdiucts",selectedProducts)
+
 
   useEffect(() => {
-    fetchData();
+    getCategoryData();
   }, []);
 
-  const fetchData = async () => {
+  const getCategoryData = async () => {
     const supplierIds = localStorage.getItem("supplierSettingId");
     if (supplierIds) {
       try {
@@ -22,6 +27,7 @@ function ProductExport() {
           { supplierId: supplierIds }
         );
         const { success, data } = response.data;
+        console.log("response data",data)
         if (success) {
           setData(data);
         } else {
@@ -35,16 +41,49 @@ function ProductExport() {
     }
   };
 
-  const handleCheckboxChange = (e) => {
-    const checkboxes = document.querySelectorAll('.product-table tbody input[type="checkbox"]');
-    checkboxes.forEach((checkbox) => {
-      checkbox.checked = e.target.checked;
-    });
+  const handleCheckboxChange = (e,product) => {
+    console.log("product",product)
+
+    if (e.target.checked) {
+      setSelectedProducts([...selectedProducts, product]);
+    } else {
+      setSelectedProducts(selectedProducts.filter((selectedProduct) => selectedProduct.id !== product.id));
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+   
+    const supplierId=localStorage.getItem("retailerIntegrationId")
+      const requestData = selectedProducts.map((product) => ({
+        id: product.id,
+        supplierId: supplierId,
+        categoryId: product.category_id.join(','),
+        productCount: product.product_count.join(',')
+      }));
+  console.log("requestedData",requestData)
+      axios
+        .post("http://localhost:2703/retailer/createOrUpdateRetailerCategory", requestData)
+        .then((response) => {
+          const { success, message } = response.data;
+          if (success) {
+            toast.success(message);
+            setPage(3)
+          } else {
+            toast.error(message);
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to submit data:", error);
+          toast.error("Failed to submit data. Please try again.");
+        });
+   
   };
   
+
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
@@ -88,7 +127,7 @@ function ProductExport() {
                 <th>
                   <input
                     type='checkbox'
-                    onChange={handleCheckboxChange}
+                    onChange={(e,product) => handleCheckboxChange(e, product)}
                   />
                 </th>
                 <th>Id</th>
@@ -104,7 +143,7 @@ function ProductExport() {
                     <input type="checkbox" />
                   </td>
                   <td style={{width: "6%"}}>{product.supplierId}</td>
-                  <td style={{width: "30%"}}>{data.supplier_list[product.supplierId]}</td>
+                  <td style={{width: "30%"}}>{data.supplier_list}</td>
                   <td>{product.Azura_Category_Tree}</td>
                   <td>{product.product_count}</td>
                 </tr>

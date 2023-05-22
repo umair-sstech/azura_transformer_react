@@ -57,6 +57,14 @@
   width: 100%;
 }
 
+.checkbox-size {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-size input[type="checkbox"] {
+  margin-right: 9px; 
+}
 @media screen and (max-width: 360px) {
   .btn-lg {
     padding: 5px !important;

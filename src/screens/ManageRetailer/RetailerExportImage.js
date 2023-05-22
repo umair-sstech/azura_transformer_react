@@ -98,19 +98,24 @@ function RetailerExportImage(props) {
               <Accordion.Collapse eventKey={index.toString()} className="card-body">
                 <Card.Body>
                   <div className="d-flex justify-content-around">
-                    <table className="table w-100 table-responsive-sm">
+                    <table className="table w-100 table-responsive-sm table-bordered">
                       <thead>
                         <tr>
-                          <th>Image Size</th>
+                          <th className="p-1">Image Size</th>
                         </tr>
                       </thead>
                       <tbody className="image-size-list">
                       {supplierData.map((item) => (
                         <tr key={item.id}>
-                          <td>{item.imageResize.split(',').map((size, index) => (
-                            <div key={index}>{size}</div>
-                          ))}</td>
-                        </tr>
+                        <td>
+                          {item.imageResize.split(",").map((size, index) => (
+                            <div key={index} className="checkbox-size">
+                              <input type="checkbox" />
+                              {size}
+                            </div>
+                          ))}
+                        </td>
+                      </tr>
                       ))}
                       </tbody>
                     </table>

@@ -42,37 +42,38 @@ function RetailerPage1(props) {
       console.log(error);
     }
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-  
+
     const userId = localStorage.getItem("_id");
     const userName = localStorage.getItem("name");
     const retailerId = localStorage.getItem("newlyAddedRetailer");
     const selectedSupplierIds = selectedOptions.map((option) => option.value);
     const selectedSupplierNames = selectedOptions.map((option) => option.label);
 
-  
-    const data = {
-      id:"",
+    const payload = {
+      id: "",
       userId,
       userName,
       retailerId,
       companyId: null,
       supplierId: selectedSupplierIds.join(","),
     };
-    console.log("data",data)
-  
+
     try {
       const response = await axios.post(
         "http://localhost:2703/retailer/createOrUpdateRetailerIntegration",
-        data
+        payload
       );
-  
-      const { success, message } = response.data;
-  
+
+      const { success, message, data } = response.data;
+
       if (success) {
+        const retailerIntegrationId = response.data.retailerIntegrationId;
+
+        localStorage.setItem("retailerIntegrationId", retailerIntegrationId);
         localStorage.setItem(
           "supplierSettingId",
           selectedSupplierIds.join(",")
@@ -80,7 +81,7 @@ function RetailerPage1(props) {
         localStorage.setItem(
           "selectedSupplierName",
           JSON.stringify(selectedSupplierNames)
-        )
+        );
         toast.success(message);
         setPage(2);
       } else {
@@ -90,10 +91,10 @@ function RetailerPage1(props) {
       console.log("Error:", error);
       toast.error("An error occurred while submitting the form.");
     }
-  
+
     setIsLoading(false);
   };
-  
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -135,12 +136,12 @@ function RetailerPage1(props) {
           <div className="col-sm-6">
             <label>Select your Supplier(s)</label>
             <Select
-            options={supplierList}
-            isMulti
-            onChange={handleSelectChange}
-            value={selectedOptions}
-            placeholder="Select Supplier"
-          />
+              options={supplierList}
+              isMulti
+              onChange={handleSelectChange}
+              value={selectedOptions}
+              placeholder="Select Supplier"
+            />
           </div>
         </div>
       </form>
