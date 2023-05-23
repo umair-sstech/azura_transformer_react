@@ -3,7 +3,7 @@
 body,
 div#wrapper {
     &:after, &:before {
-        background-color: #49c5b6;
+        // background-color: #49c5b6;
     }
 }
 .auth-main{
@@ -41,12 +41,13 @@ div#wrapper {
 .auth-box {
 	width: 380px;
 	height: auto;
-    margin-left: 130px;
+    // margin-left: 130px;
+    margin: 0 auto;
 
 	.top{
         @extend .m-b-30;
         img{
-            width: 130px;
+            width: 90%;
         }
     }
 

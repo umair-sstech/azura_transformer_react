@@ -4,13 +4,13 @@ import "./Retailer.css";
 import { connect } from "react-redux";
 import { onLoading } from "../../actions";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function RetailerExportImage(props) {
   const { setPage } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [supplierImageList, setSupplierImageList] = useState([]);
-
 
   useEffect(() => {
     fetchData();
@@ -20,7 +20,6 @@ function RetailerExportImage(props) {
     try {
       setIsLoading(true);
       const supplierIds = localStorage.getItem("supplierSettingId");
-      console.log("supplierId", supplierIds); // Fetching supplierIds from localStorage
       const response = await axios.post(
         "http://localhost:2703/retailer/getSupplierImageList",
         { supplierId: supplierIds }
@@ -39,44 +38,48 @@ function RetailerExportImage(props) {
   };
 
   const submitData = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       setIsLoadingExit(true);
       const requestData = [];
-      const retailerIntegrationId= localStorage.getItem("retailerIntegrationId");
+      const retailerIntegrationId = localStorage.getItem(
+        "retailerIntegrationId"
+      );
 
-  
-      // Iterate over the supplier image list to gather the selected image sizes
-      Object.entries(supplierImageList).forEach(([supplierName, supplierData]) => {
-        supplierData.forEach((item) => {
-          const selectedSizes = item.imageResize
-            .split(",")
-            .filter((size, index) => {
-              const checkbox = document.getElementById(`checkbox-${item.id}-${index}`);
-              return checkbox.checked;
-            })
-            .join(",");
-  
-          if (selectedSizes) {
-            requestData.push({
-              id: retailerIntegrationId,
-              supplierId: item.id,
-              supplierImageSize: selectedSizes
-            });
-          }
-        });
-      });
-  
-      console.log("payload",requestData)
+      Object.entries(supplierImageList).forEach(
+        ([supplierName, supplierData]) => {
+          supplierData.forEach((item) => {
+            const selectedSizes = item.imageResize
+              .split(",")
+              .filter((size, index) => {
+                const checkbox = document.getElementById(
+                  `checkbox-${item.id}-${index}`
+                );
+                return checkbox.checked;
+              })
+              .join(",");
+
+            if (selectedSizes) {
+              requestData.push({
+                id: retailerIntegrationId,
+                supplierId: item.id,
+                supplierImageSize: selectedSizes,
+              });
+            }
+          });
+        }
+      );
+
       const response = await axios.post(
         "http://localhost:2703/retailer/createOrUpdateRetailerImage",
         requestData
       );
-      const { success } = response.data;
+      const { success, message } = response.data;
       if (success) {
-        console.log("Data submitted successfully");
+        toast.success(message);
+        setPage(5)
       } else {
-        console.error("Failed to submit data");
+        toast.error(message);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -84,7 +87,7 @@ function RetailerExportImage(props) {
       setIsLoadingExit(false);
     }
   };
-  
+
   return (
     <>
       <form onSubmit={submitData}>
@@ -123,53 +126,65 @@ function RetailerExportImage(props) {
           </div>
         </div>
         <div className="row">
-        <div className="col-6">
-        <Accordion defaultActiveKey="0" className="accordian__main">
-          {Object.entries(supplierImageList).map(([supplierName, supplierData], index) => (
-            <Card key={index}>
-              <Card.Header>
-                <Accordion.Toggle
-                  as="button"
-                  className="btn btn-link collapsed border  text-decoration-none"
-                  eventKey={index.toString()}
-                >
-                  <i className="fa fa-angle-down arrow"></i>
-                  <label className=''>{supplierName}</label>
-                </Accordion.Toggle>
-              </Card.Header>
-              <Accordion.Collapse eventKey={index.toString()} className="card-body">
-                <Card.Body>
-                  <div className="d-flex justify-content-around">
-                  <table className="table w-100 table-responsive-sm table-bordered">
-                  <thead>
-                    <tr>
-                      <th className="p-1">Image Size</th>
-                    </tr>
-                  </thead>
-                  <tbody className="image-size-list">
-                    {supplierData.map((item) => (
-                      <tr key={item.id}>
-                        <td>
-                          {item.imageResize.split(",").map((size, index) => (
-                            <div key={index} className="checkbox-size">
-                              <input type="checkbox" id={`checkbox-${item.id}-${index}`} />
-                              {size}
-                            </div>
-                          ))}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                
-                  </div>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          ))}
-        </Accordion>
-      </div>
-      </div>
+          <div className="col-6">
+            <Accordion defaultActiveKey="0" className="accordian__main">
+              {Object.entries(supplierImageList).map(
+                ([supplierName, supplierData], index) => (
+                  <Card key={index}>
+                    <Card.Header>
+                      <Accordion.Toggle
+                        as="button"
+                        className="btn btn-link collapsed border  text-decoration-none"
+                        eventKey={index.toString()}
+                      >
+                        <i className="fa fa-angle-down arrow"></i>
+                        <label className="">{supplierName}</label>
+                      </Accordion.Toggle>
+                    </Card.Header>
+                    <Accordion.Collapse
+                      eventKey={index.toString()}
+                      className="card-body"
+                    >
+                      <Card.Body>
+                        <div className="d-flex justify-content-around">
+                          <table className="table w-100 table-responsive-sm table-bordered">
+                            <thead>
+                              <tr>
+                                <th className="p-1">Image Size</th>
+                              </tr>
+                            </thead>
+                            <tbody className="image-size-list">
+                              {supplierData.map((item) => (
+                                <tr key={item.id}>
+                                  <td>
+                                    {item.imageResize
+                                      .split(",")
+                                      .map((size, index) => (
+                                        <div
+                                          key={index}
+                                          className="checkbox-size"
+                                        >
+                                          <input
+                                            type="checkbox"
+                                            id={`checkbox-${item.id}-${index}`}
+                                          />
+                                          {size}
+                                        </div>
+                                      ))}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                )
+              )}
+            </Accordion>
+          </div>
+        </div>
       </form>
     </>
   );

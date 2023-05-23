@@ -263,7 +263,8 @@ class App extends React.Component {
               ) : null}
 
               {this.props.user?.data.role == "SUPER_ADMIN" ||
-              this.props.user?.data.role == "COMPANY_ADMIN" ? (
+              this.props.user?.data.role == "COMPANY_ADMIN" ||
+              this.props.user?.data.role == "RETAILER_ADMIN"? (
                 <>
                   <Route exact path={`/retailer`} component={RetailerList} />
                   {this.props.user?.permissions.update_retailer ||

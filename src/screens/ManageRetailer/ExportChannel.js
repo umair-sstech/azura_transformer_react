@@ -51,7 +51,6 @@ function ExportChannel(props) {
       id: retailerIntegrationId,
       marketPlaceId: selectedOptions.value
     };
-  console.log("payload",payload)
     setIsLoading(true);
   
     axios.post("http://localhost:2703/retailer/createOrUpdateRetailerMarketplace", payload)
@@ -59,6 +58,9 @@ function ExportChannel(props) {
         const { success, message } = response.data;
         if (success) {
           toast.success(message);
+          localStorage.setItem("marketPlaceSettingId",selectedOptions.value)
+          localStorage.setItem("marketPlaceSettingName",selectedOptions.label)
+
           setPage(7)
         } else {
           toast.error(message);
