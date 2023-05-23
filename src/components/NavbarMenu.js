@@ -562,7 +562,8 @@ class NavbarMenu extends React.Component {
                         </li>
                       ) : null}
                       {this.props.user?.data.role == "SUPER_ADMIN" ||
-                      this.props.user?.data.role == "COMPANY_ADMIN" ? (
+                      this.props.user?.data.role == "COMPANY_ADMIN" ||
+                      this.props.user?.data.role == "RETAILER_ADMIN" ? (
                         <li
                           className={activeKey === "dashboard" ? "active" : ""}
                         >

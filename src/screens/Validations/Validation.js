@@ -203,20 +203,20 @@ export const validateMarketPlaceTrackingSync = (formData) => {
 //Retailer Setting Validation
 export const validateRetailerAccount = (formData) => {
   const errors = {};
-  const channel = formData.get("channel")
-  const apiEndpoint = formData.get("apiEndpoint")
+  const storeName = formData.get("storeName")
+  const endpointURL = formData.get("endpointURL")
   const authorizationToken = formData.get("authorizationToken")
 
-  if (!channel) {
-    errors.channel = "URL is required";
-  } else if(channel.trim().length === 0) {
-    errors.channel = "URL cannot be whitespace only";
+  if (!storeName) {
+    errors.storeName = "URL is required";
+  } else if(storeName.trim().length === 0) {
+    errors.storeName = "URL cannot be whitespace only";
   }
 
-  if(!apiEndpoint) {
-    errors.apiEndpoint = "API Endpoint is required";
-  } else if(apiEndpoint.trim().length === 0) {
-    errors.apiEndpoint = "API Endpoint cannot be whitespace only";
+  if(!endpointURL) {
+    errors.endpointURL = "API Endpoint is required";
+  } else if(endpointURL.trim().length === 0) {
+    errors.endpointURL = "API Endpoint cannot be whitespace only";
   }
 
   if (!authorizationToken) {

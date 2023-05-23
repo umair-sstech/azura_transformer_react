@@ -62,6 +62,9 @@ function ExportChannel(props) {
         const { success, message } = response.data;
         if (success) {
           toast.success(message);
+          localStorage.setItem("marketPlaceSettingId",selectedOptions.value)
+          localStorage.setItem("marketPlaceSettingName",selectedOptions.label)
+
           setPage(7)
         } else {
           toast.error(message);

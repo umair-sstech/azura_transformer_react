@@ -12,7 +12,6 @@ function RetailerExportImage(props) {
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [supplierImageList, setSupplierImageList] = useState([]);
 
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -20,7 +19,6 @@ function RetailerExportImage(props) {
   const fetchData = async () => {
     try {
       const supplierIds = localStorage.getItem("supplierSettingId");
-      console.log("supplierId", supplierIds); // Fetching supplierIds from localStorage
       const response = await axios.post(
         "http://localhost:2703/retailer/getSupplierImageList",
         { supplierId: supplierIds }
@@ -37,7 +35,7 @@ function RetailerExportImage(props) {
   };
 
   const submitData = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       setIsLoading(true);
       const requestData = [];
@@ -64,7 +62,7 @@ function RetailerExportImage(props) {
           }
         });
       });
-      if(requestData.length === 0) {
+      if (requestData.length === 0) {
         toast.error("You must select atleast one Image Size.");
       } else {
         console.log("payload", requestData)

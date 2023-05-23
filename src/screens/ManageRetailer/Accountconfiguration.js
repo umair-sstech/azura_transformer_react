@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import { FormContext } from "./ManageRetailerSetting";
 import { validateRetailerAccount } from "../Validations/Validation";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function Accountconfiguration(props) {
 
@@ -10,8 +12,8 @@ function Accountconfiguration(props) {
   const { processCancel, formData, setFormData } = useContext(FormContext);
 
   const [initFormData, setInitFormData] = useState({
-    channel: "",
-    apiEndpoint: "",
+    storeName: "",
+    endpointURL: "",
     authorizationToken: "",
   });
   const [formErrors, setFormErrors] = useState({});
@@ -27,6 +29,12 @@ function Accountconfiguration(props) {
     setIsFormValid(Object.keys(formErrors).length === 0);
   }, [formErrors]);
 
+  useEffect(() => {
+    getAccountConfigurationData();
+  }, []);
+
+  const marketPlaceSettingName = localStorage.getItem("marketPlaceSettingName")
+
   const handleChange = (key, value) => {
     const formData = new FormData(document.forms.accountForm);
     formData.set(key, value);
@@ -36,14 +44,43 @@ function Accountconfiguration(props) {
   };
 
   const handleInputChange = (e) => {
-    const {name, value , type} = e.target;
+    const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
 
     setInitFormData(prevState => ({
-    ...prevState,
+      ...prevState,
       [name]: trimmedValue,
     }));
     handleChange(name, value);
+  };
+
+  const getAccountConfigurationData = () => {
+    const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+
+    const payload = {
+      id: retailerIntegrationId,
+    };
+
+    axios
+      .post(
+        "http://localhost:2703/retailer/getRetailerIntegrationById",
+        payload
+      )
+      .then((response) => {
+        const { success, data } = response.data;
+        if (success && data.length > 0) {
+          const retailerIntegration = data[0];
+
+          setFormData({
+            storeName: retailerIntegration.storeName,
+            endpointURL: retailerIntegration.endpointURL,
+            authorizationToken: retailerIntegration.authorizationToken,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const handleSubmit = (e) => {
@@ -55,6 +92,37 @@ function Accountconfiguration(props) {
 
     if (Object.keys(errors).length === 0) {
       console.log(initFormData)
+      setIsLoading(true);
+
+      const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+      const marketPlaceSettingId = localStorage.getItem("marketPlaceSettingId");
+
+      const payload = {
+        id: retailerIntegrationId,
+        marketPlaceId: marketPlaceSettingId,
+        storeName: initFormData.storeName,
+        endpointURL: initFormData.endpointURL,
+        authorizationToken: initFormData.authorizationToken,
+      };
+
+      console.log("payload", payload);
+      axios
+        .post(
+          "http://localhost:2703/retailer/createOrUpdateRetailerAccountConfig",
+          payload
+        )
+        .then((response) => {
+          const { success, message } = response.data;
+          if (success) {
+            toast.success(message);
+          } else {
+            toast.error(message);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsLoading(false);
+        });
     }
   }
 
@@ -84,10 +152,8 @@ function Accountconfiguration(props) {
           </div>
         </div>
         <div className="col-row mt-3 mt-sm-0">
-            <div className="col-6"></div>
-            <label style={{ color: "#49c5b6" }}>
-              Selected Account: 
-            </label>
+          <div className="col-6">
+            <label style={{ color: "#49c5b6" }}>Selected Account:{marketPlaceSettingName}</label>
           </div>
           <div className="row">
             <div className="col-sm-6">
@@ -98,13 +164,13 @@ function Accountconfiguration(props) {
                 <input
                   className="form-control"
                   type="text"
-                  name="channel"
+                  name="storeName"
                   onChange={handleInputChange}
                   placeholder="Enter Channel"
-                  defaultValue={initFormData && initFormData.channel ? initFormData.channel : ""}
+                  defaultValue={initFormData && initFormData.storeName ? initFormData.storeName : ""}
                 />
-                {formErrors && formErrors.channel && (
-                  <span className="text-danger">{formErrors.channel}</span>
+                {formErrors && formErrors.storeName && (
+                  <span className="text-danger">{formErrors.storeName}</span>
                 )}
               </div>
             </div>
@@ -116,13 +182,13 @@ function Accountconfiguration(props) {
                 <input
                   className="form-control"
                   type="text"
-                  name="apiEndpoint"
+                  name="endpointURL"
                   onChange={handleInputChange}
                   placeholder="Enter API Endpoint"
-                  defaultValue={initFormData && initFormData.apiEndpoint ? initFormData.apiEndpoint : ""}
+                  defaultValue={initFormData && initFormData.endpointURL ? initFormData.endpointURL : ""}
                 />
-                {formErrors && formErrors.apiEndpoint && (
-                  <span className="text-danger">{formErrors.apiEndpoint}</span>
+                {formErrors && formErrors.endpointURL && (
+                  <span className="text-danger">{formErrors.endpointURL}</span>
                 )}
               </div>
             </div>
@@ -145,8 +211,8 @@ function Accountconfiguration(props) {
               </div>
             </div>
           </div>
-        
-      </form>
+        </div>
+      </form >
     </>
   );
 }
