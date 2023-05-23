@@ -3,9 +3,11 @@ import "../ManageRetailer/Retailer.css"
 import { Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
+import { onLoading } from '../../actions';
 
 function ProductExport(props) {
-  const {setPage}=props
+  const { setPage } = props
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
@@ -18,7 +20,6 @@ function ProductExport(props) {
     const supplierIds = localStorage.getItem("supplierSettingId");
     if (supplierIds) {
       try {
-        setIsLoading(true);
         const response = await axios.post(
           "http://localhost:2703/retailer/getSupplierProduct",
           { supplierId: supplierIds }
@@ -31,8 +32,6 @@ function ProductExport(props) {
         }
       } catch (error) {
         console.error("Error:", error);
-      } finally {
-        setIsLoading(false);
       }
     }
   };
@@ -43,20 +42,24 @@ function ProductExport(props) {
       checkbox.checked = e.target.checked;
     });
   };
-  
+
+  const checkAnyCheckboxChecked = (checkboxes) => {
+    return Object.values(checkboxes).some(box => box.checked)
+  }
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       setIsLoading(true);
-      const retailerIntegrationId= localStorage.getItem("retailerIntegrationId");
-     const supplierSettingId=  localStorage.getItem(
+      const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+      const supplierSettingId = localStorage.getItem(
         "supplierSettingId"
       );
       const requestData = [
         {
           id: retailerIntegrationId,
-          supplierId:supplierSettingId,
+          supplierId: supplierSettingId,
           categoryId: "",
           productCount: ""
         }
@@ -73,17 +76,23 @@ function ProductExport(props) {
       });
       requestData[0].categoryId = selectedCategories.join(',');
       requestData[0].productCount = selectedProductCounts.join(',');
-  
+      
+      const isChecked = checkAnyCheckboxChecked(checkboxes)
+      if(!isChecked) {
+        toast.error("Please select atleast one value.");
+        return;
+      }
+
       const response = await axios.post(
         "http://localhost:2703/retailer/createOrUpdateRetailerCategory",
         requestData
       );
-      const { success,message } = response.data;
+      const { success, message } = response.data;
       if (success) {
         toast.success(message)
         setPage(3)
       } else {
-     toast.error(message)
+        toast.error(message)
       }
     } catch (error) {
       console.error("Error:", error);
@@ -91,8 +100,8 @@ function ProductExport(props) {
       setIsLoading(false);
     }
   };
-  
-  
+
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -133,6 +142,13 @@ function ProductExport(props) {
           </div>
         </div>
         <div className='row'>
+          {!data ? (
+            <div className="loader-wrapper w-100" style={{ marginTop: "14%" }}>
+              <i className="fa fa-refresh fa-spin"></i>
+            </div>
+          ) : (
+            ""
+          )}
           <table className='product-table  w-100 table-responsive-sm'>
             <thead>
               <tr>
@@ -149,18 +165,18 @@ function ProductExport(props) {
               </tr>
             </thead>
             <tbody>
-            {data && data.supplier_product.map((product, index) => (
-              <tr key={product.supplierId}>
-                <td style={{ width: "5%" }}>
-                  <input type="checkbox" />
-                </td>
-                <td style={{ width: "6%" }}>{product.supplierId}</td>
-                <td style={{ width: "30%" }}>{data.supplier_list}</td>
-                <td>{product.Azura_Category_Tree}</td>
-                <td>{product.product_count}</td>
-              </tr>
-            ))}
-          </tbody>
+              {data && data.supplier_product.map((product, index) => (
+                <tr key={index}>
+                  <td style={{ width: "5%" }}>
+                    <input type="checkbox" />
+                  </td>
+                  <td style={{ width: "6%" }}>{product.supplierId}</td>
+                  <td style={{ width: "30%" }}>{data.supplier_list}</td>
+                  <td>{product.Azura_Category_Tree}</td>
+                  <td>{product.product_count}</td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       </form>
@@ -168,4 +184,9 @@ function ProductExport(props) {
   );
 }
 
-export default ProductExport;
+const mapStateToProps = ({ LoadingReducer }) => ({
+  loading: LoadingReducer.isLoading,
+});
+
+export default connect(mapStateToProps, { onLoading })(ProductExport);
+

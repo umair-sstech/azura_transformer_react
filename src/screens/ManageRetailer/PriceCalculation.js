@@ -44,67 +44,75 @@ function PriceCalculation(props) {
             </div>
           </div>
         </div>
-        <div className="row mt-5">
-        <Accordion>
-      <Card>
-        <Accordion.Toggle as={Card.Header} eventKey="0">
-          Supplier Name
-        </Accordion.Toggle>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>
-            <div className="row ml-5 mt-3">
-              <div className="col-3">
-                <div className="form-group">
-                  <label htmlFor="price">Select Price</label>
-                  <Select id="price" placeholder="Select Price" />
-                </div>
-              </div>
-              <div className="col-2">
-                <div className="form-group">
-                  <label htmlFor="value1">Multiple</label>
-                  <input
-                    id="value1"
-                    className="form-control"
-                    placeholder="Enter Value"
-                  />
-                </div>
-              </div>
-              <div className="col-2">
-                <div className="form-group">
-                  <label htmlFor="value2">Fixed</label>
-                  <input
-                    id="value2"
-                    className="form-control"
-                    placeholder="Enter Value"
-                  />
-                </div>
-              </div>
-              <div className="col-2">
-                <div className="form-group">
-                  <label htmlFor="value3">Tax</label>
-                  <input
-                    id="value3"
-                    className="form-control"
-                    placeholder="Enter Value"
-                  />
-                </div>
-              </div>
-              <div className="col-2">
-                <div className="form-group">
-                  <label htmlFor="value4">Discount</label>
-                  <input
-                    id="value4"
-                    className="form-control"
-                    placeholder="Enter Value"
-                  />
-                </div>
-              </div>
-            </div>
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
-    </div>
+        <div className="row mt-3">
+          <div className="col-12">
+            <Accordion defaultActiveKey="0" className="accordian__main">
+              <Card>
+                <Card.Header>
+                  <Accordion.Toggle
+                    eventKey="0"
+                    as="button"
+                    className="btn btn-link collapsed text-decoration-none"
+                    style={{ border: "1px solid #49c5b6" }}>
+                    Supplier Name
+                  </Accordion.Toggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey="0">
+                  <Card.Body>
+                    <div className="row mt-3 p-md-1">
+                      <div className="col-sm-6 col-md-4 col-lg-3">
+                        <div>
+                          <label htmlFor="price">Select Price</label>
+                          <Select id="price" placeholder="Select Price" />
+                        </div>
+                      </div>
+                      <div className="col-sm-6 mt-3 mt-sm-0 col-md-4 col-lg-3">
+                        <div className="form-group">
+                          <label htmlFor="value1">Multiple</label>
+                          <input
+                            id="value1"
+                            className="form-control"
+                            placeholder="Enter Value"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-sm-4 col-lg-2">
+                        <div className="form-group">
+                          <label htmlFor="value2">Fixed</label>
+                          <input
+                            id="value2"
+                            className="form-control"
+                            placeholder="Enter Value"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-sm-4 col-lg-2">
+                        <div className="form-group">
+                          <label htmlFor="value3">Tax</label>
+                          <input
+                            id="value3"
+                            className="form-control"
+                            placeholder="Enter Value"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-sm-4 col-lg-2">
+                        <div className="form-group">
+                          <label htmlFor="value4">Discount</label>
+                          <input
+                            id="value4"
+                            className="form-control"
+                            placeholder="Enter Value"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
+          </div>
+        </div>
       </form>
     </>
   );

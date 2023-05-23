@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Spinner } from "react-bootstrap";
 import Select from "react-select";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { FormContext } from "./ManageRetailerSetting";
 
 function RetailerPage1(props) {
   const { setPage } = props;
+  const { processCancel } = useContext(FormContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [supplierList, setSupplierList] = useState([]);
@@ -45,7 +47,6 @@ function RetailerPage1(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
 
     const userId = localStorage.getItem("_id");
     const userName = localStorage.getItem("name");
@@ -62,7 +63,13 @@ function RetailerPage1(props) {
       supplierId: selectedSupplierIds.join(","),
     };
 
+    if(!payload.supplierId) {
+      toast.error("Please select atleast one supplier");
+      return;
+    }
+
     try {
+      setIsLoading(true);
       const response = await axios.post(
         "http://localhost:2703/retailer/createOrUpdateRetailerIntegration",
         payload
@@ -83,6 +90,7 @@ function RetailerPage1(props) {
           JSON.stringify(selectedSupplierNames)
         );
         toast.success(message);
+        setIsLoading(false);
         setPage(2);
       } else {
         toast.error(message);
@@ -91,8 +99,6 @@ function RetailerPage1(props) {
       console.log("Error:", error);
       toast.error("An error occurred while submitting the form.");
     }
-
-    setIsLoading(false);
   };
 
   return (
@@ -126,7 +132,7 @@ function RetailerPage1(props) {
                   "Save & Exit"
                 )}
               </button>
-              <button className="btn btn-secondary w-auto btn-lg" type="button">
+              <button className="btn btn-secondary w-auto btn-lg" onClick={processCancel} type="button">
                 Exit
               </button>
             </div>
