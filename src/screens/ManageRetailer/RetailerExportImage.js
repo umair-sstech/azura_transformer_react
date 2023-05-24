@@ -8,17 +8,14 @@ import { toast } from "react-toastify";
 import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
 import { useHistory } from "react-router-dom";
 
-
 function RetailerExportImage(props) {
   const { setPage } = props;
-  const {
-    processCancel,
-  } = useContext(FormContext);
+  const { processCancel } = useContext(FormContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [supplierImageList, setSupplierImageList] = useState([]);
   const [selectedImageSizes, setSelectedImageSizes] = useState({});
-  const history=useHistory()
+  const history = useHistory();
 
   useEffect(() => {
     fetchData();
@@ -27,7 +24,9 @@ function RetailerExportImage(props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+        const retailerIntegrationId = localStorage.getItem(
+          "retailerIntegrationId"
+        );
         const response = await axios.post(
           "http://localhost:2703/retailer/getRetailerIntegrationById",
           { id: retailerIntegrationId }
@@ -38,7 +37,6 @@ function RetailerExportImage(props) {
           imageSizeMap[item.id] = item.supplierImageSize.split(",");
         });
         setSelectedImageSizes(imageSizeMap);
-        
       } catch (error) {
         console.error("Error:", error);
       }
@@ -77,8 +75,7 @@ function RetailerExportImage(props) {
       Object.entries(supplierImageList).forEach(
         ([supplierName, supplierData]) => {
           supplierData.forEach((item) => {
-            const selectedSizes = item.imageResize
-              .split(",")
+            const selectedSizes = item.imageResize?.split(",")
               .filter((size, index) => {
                 const checkbox = document.getElementById(
                   `checkbox-${item.id}-${index}`
@@ -159,7 +156,7 @@ function RetailerExportImage(props) {
         localStorage.removeItem("selectedSupplierName");
         localStorage.removeItem("retailerIntegrationId");
         toast.success(message);
-        history.push("/setting-retailer-list")
+        history.push("/setting-retailer-list");
       } else {
         toast.error(message);
       }
@@ -202,7 +199,11 @@ function RetailerExportImage(props) {
                   "Save & Exit"
                 )}
               </button>
-              <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={processCancel}>
+              <button
+                className="btn btn-secondary w-auto btn-lg"
+                type="button"
+                onClick={processCancel}
+              >
                 Exit
               </button>
             </div>
@@ -218,58 +219,64 @@ function RetailerExportImage(props) {
           )}
           <div className="col-md-6">
             <Accordion defaultActiveKey="0" className="accordian__main">
-              {Object.entries(supplierImageList).map(([supplierName, supplierData], index) => (
-                <Card key={index}>
-                  <Card.Header>
-                    <Accordion.Toggle
-                      className="btn btn-link collapsed text-decoration-none"
+              {Object.entries(supplierImageList).map(
+                ([supplierName, supplierData], index) => (
+                  <Card key={index}>
+                    <Card.Header>
+                      <Accordion.Toggle
+                        className="btn btn-link collapsed text-decoration-none"
+                        eventKey={index.toString()}
+                        style={{ border: "1px solid #49c5b6" }}
+                      >
+                        <i className="fa fa-angle-down arrow"></i>
+                        <label className="">{supplierName}</label>
+                      </Accordion.Toggle>
+                    </Card.Header>
+                    <Accordion.Collapse
                       eventKey={index.toString()}
-                      style={{ border: "1px solid #49c5b6" }}
+                      className="card-body"
                     >
-                      <i className="fa fa-angle-down arrow"></i>
-                      <label className=''>{supplierName}</label>
-                    </Accordion.Toggle>
-                  </Card.Header>
-                  <Accordion.Collapse eventKey={index.toString()} className="card-body">
-                    <Card.Body>
-                      <table className="table w-100 table-bordered">
-                        <thead>
-                          <tr>
-                            <th>
-                              <div className="checkbox-container">
-                                <label htmlFor="parent-checkbox"></label>
-                              </div>
-                            </th>
-                            <th>Image Size</th>
-                          </tr>
-                        </thead>
-                        <tbody className="image-size-list">
-                        {supplierData.map((item) => (
-                          <tr key={item.id}>
-                            <td>
-                              {item.imageResize
-                                .split(",")
-                                .map((size, index) => (
-                                  <div
-                                    key={index}
-                                    className="checkbox-size"
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      id={`checkbox-${item.id}-${index}`}
-                                    />
-                                    {size}
-                                  </div>
-                                ))}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                      </table>
-                    </Card.Body>
-                  </Accordion.Collapse>
-                </Card>
-              ))}
+                      <Card.Body>
+                        <table className="table w-100 table-bordered">
+                          <thead>
+                            <tr>
+                              <th>
+                                <div className="checkbox-container">
+                                  <label htmlFor="parent-checkbox"></label>
+                                </div>
+                              </th>
+                              <th>Image Size</th>
+                            </tr>
+                          </thead>
+                          <tbody className="image-size-list">
+                            {supplierData.map((item) => (
+                              <tr key={item.id}>
+                                <td>
+                                  {item.imageResize &&
+                                    item.imageResize
+                                      .split(",")
+                                      .map((size, index) => (
+                                        <div
+                                          key={index}
+                                          className="checkbox-size"
+                                        >
+                                          <input
+                                            type="checkbox"
+                                            id={`checkbox-${item.id}-${index}`}
+                                          />
+                                          {size}
+                                        </div>
+                                      ))}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                )
+              )}
             </Accordion>
           </div>
         </div>
