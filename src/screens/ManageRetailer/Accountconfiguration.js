@@ -1,9 +1,15 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
+import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
+import { useHistory } from "react-router-dom";
+
 
 function Accountconfiguration(props) {
+  const {
+    processCancel,
+  } = useContext(FormContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [formData, setFormData] = useState({
@@ -11,6 +17,8 @@ function Accountconfiguration(props) {
     endpointURL: "",
     authorizationToken: "",
   });
+
+  const history=useHistory()
   useEffect(() => {
     getAccountConfigurationData();
   }, []);
@@ -50,6 +58,12 @@ function Accountconfiguration(props) {
         const { success, message } = response.data;
         if (success) {
           toast.success(message);
+          localStorage.removeItem("supplierSettingId");
+          localStorage.removeItem("selectedSupplierName");
+          localStorage.removeItem("marketPlaceSettingId");
+          localStorage.removeItem("marketPlaceSettingName");
+          localStorage.removeItem("retailerIntegrationId");
+          history.push("/setting-retailer-list")
         } else {
           toast.error(message);
         }
@@ -105,23 +119,11 @@ function Accountconfiguration(props) {
                     <Spinner animation="border" size="sm" /> Please wait...
                   </>
                 ) : (
-                  "Save & Next"
-                )}
-              </button>
-              <button
-                className="btn btn-primary w-auto btn-lg mr-2"
-                type="submit"
-              >
-                {isLoadingExit ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : (
                   "Save & Exit"
                 )}
               </button>
-
-              <button className="btn btn-secondary w-auto btn-lg" type="button">
+              
+              <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={processCancel}>
                 Exit
               </button>
             </div>

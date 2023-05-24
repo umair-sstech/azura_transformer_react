@@ -47,6 +47,8 @@ const LogOut = ({ propData }) => {
         localStorage.removeItem("email");
         localStorage.removeItem("company");
         localStorage.removeItem("retailer");
+        localStorage.removeItem("newlyAddedRetailer");
+
         localStorage.removeItem("role");
         propData.onLoggedin(false);
         history.push("/login");
@@ -571,6 +573,11 @@ class NavbarMenu extends React.Component {
                             to="retailer"
                             onClick={() => {
                               localStorage.removeItem("supplierSettingId");
+                              localStorage.removeItem("selectedSupplierName");
+                              localStorage.removeItem("marketPlaceSettingId");
+                              localStorage.removeItem("marketPlaceSettingName");
+                              localStorage.removeItem("retailerIntegrationId");
+                              localStorage.removeItem("newlyAddedRetailer");
                             }}
                           >
                             Retailer

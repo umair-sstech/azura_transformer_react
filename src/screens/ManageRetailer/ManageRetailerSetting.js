@@ -14,6 +14,7 @@ import CurrencyConversion from "./CurrencyConversion";
 import PriceCalculation from "./PriceCalculation";
 import ExportChannel from "./ExportChannel";
 import Accountconfiguration from "./Accountconfiguration"
+import Swal from "sweetalert2";
 
 export const FormContext = createContext();
 
@@ -49,22 +50,26 @@ function ManageRetailerSetting(props) {
     }
   }, []);
 
-  useEffect(
-    () => () => {
-      setFormData();
-      setLogoData();
-      setIsRetailerAdded("");
-      localStorage.removeItem("newlyAddedRetailer");
-    },
-    []
-  );
+
 
   const processCancel = () => {
-    setFormData();
-    setLogoData();
-    setIsRetailerAdded("");
-    localStorage.removeItem("newlyAddedRetailer");
-    history.push("/retailer");
+    Swal.fire({
+      title: "Are you sure, <br> you want to exit ? ",
+      icon: "warning",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        history.push("/setting-retailer-list");
+        localStorage.removeItem("supplierSettingId");
+        localStorage.removeItem("selectedSupplierName");
+        localStorage.removeItem("retailerIntegrationId")
+       
+      }
+    });
   };
 
   const nextPage = (page) => {

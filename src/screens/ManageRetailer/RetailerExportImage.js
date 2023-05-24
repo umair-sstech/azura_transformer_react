@@ -1,18 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Button, Card, Col, Row, Spinner } from "react-bootstrap";
 import "./Retailer.css";
 import { connect } from "react-redux";
 import { onLoading } from "../../actions";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
+import { useHistory } from "react-router-dom";
+
 
 function RetailerExportImage(props) {
   const { setPage } = props;
+  const {
+    processCancel,
+  } = useContext(FormContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [supplierImageList, setSupplierImageList] = useState([]);
+  const [selectedImageSizes, setSelectedImageSizes] = useState({});
+  const history=useHistory()
 
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+        const response = await axios.post(
+          "http://localhost:2703/retailer/getRetailerIntegrationById",
+          { id: retailerIntegrationId }
+        );
+        const { success, data } = response.data;
+        const imageSizeMap = {};
+        data.forEach((item) => {
+          imageSizeMap[item.id] = item.supplierImageSize.split(",");
+        });
+        setSelectedImageSizes(imageSizeMap);
+        
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
     fetchData();
   }, []);
 
@@ -37,7 +68,58 @@ function RetailerExportImage(props) {
     }
   };
 
-  const submitData = async (e) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      const requestData = [];
+      const retailerIntegrationId = localStorage.getItem(
+        "retailerIntegrationId"
+      );
+
+      Object.entries(supplierImageList).forEach(
+        ([supplierName, supplierData]) => {
+          supplierData.forEach((item) => {
+            const selectedSizes = item.imageResize
+              .split(",")
+              .filter((size, index) => {
+                const checkbox = document.getElementById(
+                  `checkbox-${item.id}-${index}`
+                );
+                return checkbox.checked;
+              })
+              .join(",");
+
+            if (selectedSizes) {
+              requestData.push({
+                id: retailerIntegrationId,
+                supplierId: item.id,
+                supplierImageSize: selectedSizes,
+              });
+            }
+          });
+        }
+      );
+
+      const response = await axios.post(
+        "http://localhost:2703/retailer/createOrUpdateRetailerImage",
+        requestData
+      );
+      const { success, message } = response.data;
+      if (success) {
+        toast.success(message);
+        setPage(5);
+      } else {
+        toast.error(message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleOnClick=async(e)=>{
     e.preventDefault();
     try {
       setIsLoadingExit(true);
@@ -76,8 +158,11 @@ function RetailerExportImage(props) {
       );
       const { success, message } = response.data;
       if (success) {
+        localStorage.removeItem("supplierSettingId");
+        localStorage.removeItem("selectedSupplierName");
+        localStorage.removeItem("retailerIntegrationId");
         toast.success(message);
-        setPage(5)
+        history.push("/setting-retailer-list")
       } else {
         toast.error(message);
       }
@@ -86,11 +171,10 @@ function RetailerExportImage(props) {
     } finally {
       setIsLoadingExit(false);
     }
-  };
-
+  }
   return (
     <>
-      <form onSubmit={submitData}>
+      <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
@@ -110,6 +194,7 @@ function RetailerExportImage(props) {
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
+                onClick={handleOnClick}
               >
                 {isLoadingExit ? (
                   <>
@@ -119,7 +204,7 @@ function RetailerExportImage(props) {
                   "Save & Exit"
                 )}
               </button>
-              <button className="btn btn-secondary w-auto btn-lg" type="button">
+              <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={processCancel}>
                 Exit
               </button>
             </div>
@@ -157,17 +242,14 @@ function RetailerExportImage(props) {
                               {supplierData.map((item) => (
                                 <tr key={item.id}>
                                   <td>
-                                    {item.imageResize
-                                      .split(",")
+                                    {item.imageResize?.split(",")
                                       .map((size, index) => (
-                                        <div
-                                          key={index}
-                                          className="checkbox-size"
-                                        >
-                                          <input
-                                            type="checkbox"
-                                            id={`checkbox-${item.id}-${index}`}
-                                          />
+                                        <div key={index} className="checkbox-size">
+            <input
+              type="checkbox"
+              id={`checkbox-${item.id}-${index}`}
+              checked={selectedImageSizes[item.id]?.includes(size)}
+            />
                                           {size}
                                         </div>
                                       ))}

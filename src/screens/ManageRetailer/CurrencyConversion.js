@@ -1,19 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Spinner } from "react-bootstrap";
 import Select from "react-select";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
+import { useHistory } from "react-router-dom";
+
 
 function CurrencyConversion(props) {
   const { setPage } = props;
+  const {
+    processCancel,
+  } = useContext(FormContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [currencyList, setCurrencyList] = useState([]);
   const [selectedCurrency, setSelectedCurrency] = useState(null);
-  console.log("currencyId", selectedCurrency);
+  const history=useHistory()
 
   useEffect(() => {
     getSupplierData();
+    getRetailerIntegrationData()
   }, []);
 
   const getSupplierData = () => {
@@ -24,7 +31,7 @@ function CurrencyConversion(props) {
           const { success, message, data } = response.data;
           console.log("data",data)
           if (success) {
-            const options = Object.keys(response.data.data).map((currency) => ({
+            const options = Object.keys(data).map((currency) => ({
               value: data[currency],
               label: currency,
             }));
@@ -39,6 +46,10 @@ function CurrencyConversion(props) {
     } catch (error) {
       console.log(error);
     }
+   
+  };
+  const handleSelectChange = (selectedOptions) => {
+    setSelectedCurrency(selectedOptions);
   };
  
   const handleSubmit = (e) => {
@@ -48,11 +59,13 @@ function CurrencyConversion(props) {
 
       const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
       const currencyId = currencyList.find((currency) => currency?.value === selectedCurrency)?.value;
-  
+  console.log("valuecurrency",currencyId)
+
       const payload = {
         id: retailerIntegrationId,
-        currencyId: currencyId
+        currencyId: selectedCurrency?.value
       };
+      console.log("payload",payload)
       axios
         .post("http://localhost:2703/retailer/createOrUpdateRetailerIntegrationForCurrency", payload)
         .then((response) => {
@@ -75,6 +88,61 @@ function CurrencyConversion(props) {
     }
   };
   
+  const getRetailerIntegrationData = async () => {
+    try {
+      const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+      const response = await axios.post("http://localhost:2703/retailer/getRetailerIntegrationById", { id: retailerIntegrationId });
+      const { success, data } = response.data;
+  
+      if (success && data.length > 0) {
+        const selectedCurrencyOption = {
+          value: data[0].currencyId,
+          label: data[0].currencyNames,
+        };
+        console.log("selectedCurrencyOption",selectedCurrencyOption)
+        setSelectedCurrency(selectedCurrencyOption);
+      }
+    } catch (error) {
+      console.error("Failed to retrieve retailer integration data:", error);
+    }
+  };
+
+  const handleOnClick= async(e)=>{
+    e.preventDefault()
+    if (selectedCurrency) {
+      setIsLoadingExit(true);
+
+      const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+      const currencyId = currencyList.find((currency) => currency?.value === selectedCurrency)?.value;
+
+      const payload = {
+        id: retailerIntegrationId,
+        currencyId: selectedCurrency?.value
+      };
+      axios
+        .post("http://localhost:2703/retailer/createOrUpdateRetailerIntegrationForCurrency", payload)
+        .then((response) => {
+          const { success, message } = response.data;
+          if (success) {
+            localStorage.removeItem("supplierSettingId");
+            localStorage.removeItem("selectedSupplierName");
+            localStorage.removeItem("retailerIntegrationId");
+            toast.success(message);
+            history.push("/setting-retailer-list")
+          } else {
+            toast.error(message);
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to submit data:", error);
+        })
+        .finally(() => {
+          setIsLoadingExit(false);
+        });
+    } else {
+      toast.error("Please select a currency");
+    }
+  }
 
   return (
     <>
@@ -98,6 +166,7 @@ function CurrencyConversion(props) {
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
+                onClick={handleOnClick}
               >
                 {isLoadingExit ? (
                   <>
@@ -107,7 +176,7 @@ function CurrencyConversion(props) {
                   "Save & Exit"
                 )}
               </button>
-              <button className="btn btn-secondary w-auto btn-lg" type="button">
+              <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={processCancel}>
                 Exit
               </button>
             </div>
@@ -119,8 +188,10 @@ function CurrencyConversion(props) {
             <Select
             options={currencyList}
             placeholder="Select Currency"
-            onChange={(selectedOption) => setSelectedCurrency(selectedOption.value)}
+            onChange={handleSelectChange}
+            value={selectedCurrency}
           />
+          
           </div>
         </div>
       </form>

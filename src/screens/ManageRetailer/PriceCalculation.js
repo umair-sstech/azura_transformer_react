@@ -1,21 +1,24 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Spinner, Accordion, Card } from "react-bootstrap";
 import Select from "react-select";
 import { toast } from "react-toastify";
+import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
+import { useHistory } from "react-router-dom";
 
 function PriceCalculation(props) {
-  const {setPage}=props
+  const { setPage } = props;
+  const { processCancel } = useContext(FormContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [formData, setFormData] = useState([]);
-
   const [price, setPrice] = useState([]);
+  const history=useHistory()
 
   useEffect(() => {
     getPrice();
-    getRetailerIntegrationById()
+    getRetailerIntegrationById();
   }, []);
 
   const getPrice = () => {
@@ -45,7 +48,7 @@ function PriceCalculation(props) {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -53,29 +56,70 @@ function PriceCalculation(props) {
     setSelectedOptions(selectedOptions);
   };
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const retailerIntegrationId = localStorage.getItem(
+  //       "retailerIntegrationId"
+  //     );
+  //     const supplierSettingId = localStorage.getItem("supplierSettingId");
+
+  //     const payload = [
+  //       {
+  //         id: retailerIntegrationId,
+  //         supplierId: supplierSettingId,
+  //         costPriceField: selectedOptions.label,
+  //         multipleValue: formData.multipleValue,
+  //         fixedValue: formData.fixedValue,
+  //         taxValue: formData.taxValue,
+  //         discountValue: formData.discountValue,
+  //         discountType: "percentage",
+  //         extraValue: "",
+  //       },
+  //     ];
+  //     setIsLoading(true);
+  //     axios
+  //       .post(
+  //         "http://localhost:2703/retailer/createOrUpdateRetailerPriceCalculation",
+  //         payload
+  //       )
+  //       .then((response) => {
+  //         const { success, message } = response.data;
+  //         if (success) {
+  //           toast.success(message);
+  //           setPage(6);
+  //         } else {
+  //           toast.error(message);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error("Failed to submit data:", error);
+  //         setIsLoading(false);
+  //       });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
       const supplierSettingId = localStorage.getItem("supplierSettingId");
-
-      const payload = [
-        {
-          id: retailerIntegrationId,
-          supplierId: supplierSettingId,
-          costPriceField: selectedOptions.label,
-          multipleValue: formData.multipleValue,
-          fixedValue: formData.fixedValue,
-          taxValue: formData.taxValue,
-          discountValue: formData.discountValue,
-          discountType: "percentage",
-          extraValue: "",
-        }
-      ];
-
-    
-
-      console.log("payload",payload)
+  
+      const payload = supplierSettingId.split(",").map((supplierId) => ({
+        id: retailerIntegrationId,
+        supplierId,
+        costPriceField: selectedOptions.label,
+        multipleValue: formData.multipleValue,
+        fixedValue: formData.fixedValue,
+        taxValue: formData.taxValue,
+        discountValue: formData.discountValue,
+        discountType: "percentage",
+        extraValue: "",
+      }));
+  
+      setIsLoading(true);
       axios
         .post(
           "http://localhost:2703/retailer/createOrUpdateRetailerPriceCalculation",
@@ -84,28 +128,31 @@ function PriceCalculation(props) {
         .then((response) => {
           const { success, message } = response.data;
           if (success) {
-           
-           toast.success(message)
-           setPage(6)
+            toast.success(message);
+            setPage(6);
           } else {
             toast.error(message);
           }
         })
         .catch((error) => {
           console.error("Failed to submit data:", error);
+          setIsLoading(false);
         });
     } catch (error) {
       console.log(error);
     }
   };
-
+  
   const getRetailerIntegrationById = async () => {
     try {
       const id = localStorage.getItem("retailerIntegrationId");
-      const response = await axios.post("http://localhost:2703/retailer/getRetailerIntegrationById", {
-        id: id
-      });
-      const { success,message, data } = response.data;
+      const response = await axios.post(
+        "http://localhost:2703/retailer/getRetailerIntegrationById",
+        {
+          id: id,
+        }
+      );
+      const { success, message, data } = response.data;
       if (success) {
         const {
           costPriceField,
@@ -128,7 +175,52 @@ function PriceCalculation(props) {
       console.error("Failed to retrieve retailer integration data:", error);
     }
   };
-  
+
+  const handleOnClick = async (e) => {
+    e.preventDefault();
+    try {
+      const retailerIntegrationId = localStorage.getItem(
+        "retailerIntegrationId"
+      );
+      const supplierSettingId = localStorage.getItem("supplierSettingId");
+
+      const payload = supplierSettingId.split(",").map((supplierId) => ({
+        id: retailerIntegrationId,
+        supplierId,
+        costPriceField: selectedOptions.label,
+        multipleValue: formData.multipleValue,
+        fixedValue: formData.fixedValue,
+        taxValue: formData.taxValue,
+        discountValue: formData.discountValue,
+        discountType: "percentage",
+        extraValue: "",
+      }));
+      setIsLoadingExit(true);
+      axios
+        .post(
+          "http://localhost:2703/retailer/createOrUpdateRetailerPriceCalculation",
+          payload
+        )
+        .then((response) => {
+          const { success, message } = response.data;
+          if (success) {
+            localStorage.removeItem("supplierSettingId");
+            localStorage.removeItem("selectedSupplierName");
+            localStorage.removeItem("retailerIntegrationId");
+            toast.success(message);
+            history.push("/setting-retailer-list")
+          } else {
+            toast.error(message);
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to submit data:", error);
+          setIsLoadingExit(false);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -153,7 +245,7 @@ function PriceCalculation(props) {
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
-                disabled={isLoadingExit}
+                onClick={handleOnClick}
               >
                 {isLoadingExit ? (
                   <>
@@ -163,7 +255,11 @@ function PriceCalculation(props) {
                   "Save & Exit"
                 )}
               </button>
-              <button className="btn btn-secondary w-auto btn-lg" type="button">
+              <button
+                className="btn btn-secondary w-auto btn-lg"
+                type="button"
+                onClick={processCancel}
+              >
                 Exit
               </button>
             </div>
@@ -192,7 +288,7 @@ function PriceCalculation(props) {
                   placeholder="Enter Value"
                   name="multipleValue"
                   onChange={handleChange}
-                  value={formData.multipleValue || ''}
+                  value={formData.multipleValue || ""}
                 />
               </div>
             </div>
@@ -205,7 +301,7 @@ function PriceCalculation(props) {
                   placeholder="Enter Value"
                   name="fixedValue"
                   onChange={handleChange}
-                  value={formData.fixedValue || ''}
+                  value={formData.fixedValue || ""}
                 />
               </div>
             </div>
@@ -218,7 +314,7 @@ function PriceCalculation(props) {
                   placeholder="Enter Value"
                   name="taxValue"
                   onChange={handleChange}
-                  value={formData.taxValue || ''}
+                  value={formData.taxValue || ""}
                 />
               </div>
             </div>
@@ -231,7 +327,7 @@ function PriceCalculation(props) {
                   placeholder="Enter Value"
                   name="discountValue"
                   onChange={handleChange}
-                  value={formData.discountValue || ''}
+                  value={formData.discountValue || ""}
                 />
               </div>
             </div>
