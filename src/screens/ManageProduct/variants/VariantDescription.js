@@ -1,9 +1,9 @@
 import React from "react";
 import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
 
-const ProductDescription = () => {
+const VariantDescription = () => {
   return (
-    <Row>
+    <Row style={{marginBottom: "-15px"}}>
       <Col>
         <Accordion defaultActiveKey="3" className="accordian__main">
           <Card>
@@ -17,29 +17,20 @@ const ProductDescription = () => {
                 Description
               </Accordion.Toggle>
             </Card.Header>
-            <Accordion.Collapse eventKey="0" className="card-body p-3">
+            <Accordion.Collapse eventKey="0">
               <Card.Body>
-                <p>Brand : Guess</p>
-                <p>Collection: Spring/summer</p>
-                <p>Gender: Woman</p>
-                <p>Frame: Metal</p>
-                <p>Bridge, Mm: 18</p>
-                <p>Temples, Mm: 145 </p>
-                <p>Lenses Diameter, Mm: 61</p>
-                <p>Protection: Uv3</p>
-                <p>Logo: Yes</p>
-                <p style={{marginBottom: '-10px'}}>Original Packaging: Yes</p>
+                <p className="mt-2">This variant has no description.</p>
               </Card.Body>
             </Accordion.Collapse>
           </Card>
-          <hr />
-          <Button className="btn ml-3 mt-2 mb-2" variant="outline-primary">
+          {/* <hr /> */}
+          {/* <Button className="btn ml-3 mt-2 mb-2" variant="outline-primary">
             <i className="fa fa-edit mr-2"></i>Edit
-          </Button>
+          </Button> */}
         </Accordion>
       </Col>
     </Row>
   );
 };
 
-export default ProductDescription;
+export default VariantDescription;

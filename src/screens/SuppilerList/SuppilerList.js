@@ -21,6 +21,9 @@ function SuppilerList(props) {
   const [dataLimit, setdataLimit] = useState(5);
   const [status, setStatus] = useState("active");
   const [type, setType] = useState("Supplier");
+  const [autoId, setAutoId] = useState(1);
+
+  const startIndex = (currentPage - 1) * dataLimit + 1
 
   const history = useHistory();
 
@@ -59,6 +62,9 @@ function SuppilerList(props) {
           setSupplierList(
             response.data.filter((supplier) => supplier.status === 1)
           );
+          if (currentPage === 1) {
+            setAutoId((currentPage - 1) * dataLimit + 1);
+          }
         }
         setType(type);
 
@@ -163,6 +169,7 @@ function SuppilerList(props) {
                   <table className="table w-100 table-responsive-sm">
                     <thead>
                       <tr>
+                        <th>Id</th>
                         <th>Logo</th>
                         <th>Supplier Name</th>
 
@@ -176,8 +183,9 @@ function SuppilerList(props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {supplierList?.map((supplier) => (
+                      {supplierList?.map((supplier, index) => (
                         <tr key={supplier.id}>
+                          <td>{startIndex + index}</td>
                           <td>
                             {supplier.logo ? (
                               <img src={supplier.logo} className="list-logo" />
@@ -191,8 +199,8 @@ function SuppilerList(props) {
                           <td>
                             {supplier.updatedAt
                               ? moment(supplier.updated_on).format(
-                                  "MM/DD/YYYY hh:mm a"
-                                )
+                                "MM/DD/YYYY hh:mm a"
+                              )
                               : "N/A"}
                           </td>
 

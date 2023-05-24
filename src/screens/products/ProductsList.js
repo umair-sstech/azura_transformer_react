@@ -20,6 +20,9 @@ function ProductsList(props) {
   const [dataLimit, setdataLimit] = useState(5);
   const [status, setStatus] = useState("active");
   const [type, setType] = useState("MarketPlace");
+  const [autoId, setAutoId] = useState(1);
+
+  const startIndex = (currentPage - 1) * dataLimit + 1
 
   const history = useHistory();
 
@@ -61,6 +64,9 @@ function ProductsList(props) {
           setMarketPlaceList(
             response.data.filter((market_place) => market_place.status === 1)
           );
+          if (currentPage === 1) {
+            setAutoId((currentPage - 1) * dataLimit + 1);
+          }
         }
         setType(type);
 
@@ -144,9 +150,9 @@ function ProductsList(props) {
                       options={filterList}
                       onChange={(data) => {
                         setStatus(data.value);
-                        setCurrentPage(1); 
+                        setCurrentPage(1);
                       }}
-                      defaultValue={filterList[0]} 
+                      defaultValue={filterList[0]}
                     />
                   </div>
                   <InputGroup className="searchbar">
@@ -163,9 +169,9 @@ function ProductsList(props) {
                   <table className="table w-100 table-responsive-md">
                     <thead>
                       <tr>
-                      <th>Id</th>
+                        <th>Id</th>
                         <th>Supplier Name</th>
-                        
+
                         <th>Product Name</th>
                         <th>Product SKU</th>
                         <th>Parent SKU</th>
@@ -180,33 +186,33 @@ function ProductsList(props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {marketPlaceList.map((market_place) => (
+                      {marketPlaceList.map((market_place, idx) => (
                         <tr key={market_place.id}>
-                        <td>
-                        {market_place.logo ? (
-                          <img
-                            src={market_place.logo}
-                            alt={market_place.name}
-                            className="list-logo"
-                          />
-                        ) : (
-                          <div className="list-logo placeholder">N/A</div>
-                        )}
-                      </td>
-                          <td>{market_place.name}</td>
+                          <td>{startIndex + idx}</td>
+                          <td>
+                            {market_place.logo ? (
+                              <img
+                                src={market_place.logo}
+                                alt={market_place.name}
+                                className="list-logo"
+                              />
+                            ) : (
+                              <div className="list-logo placeholder">N/A</div>
+                            )}
+                          </td>
 
                           <td>{market_place.name}</td>
 
                           <td>{market_place.name}</td>
 
                           <td>{market_place.name}</td>
-                        
+
                           <td>{market_place.prefixName}</td>
                           <td>
                             {market_place.updatedAt
                               ? moment(market_place.updated_on).format(
-                                  "MM/DD/YYYY hh:mm a"
-                                )
+                                "MM/DD/YYYY hh:mm a"
+                              )
                               : "N/A"}
                           </td>
 

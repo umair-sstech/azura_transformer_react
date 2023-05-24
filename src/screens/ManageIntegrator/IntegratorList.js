@@ -21,7 +21,9 @@ function IntegratorList(props) {
   const [status, setStatus] = useState("active");
   const [type, setType] = useState("Integrator");
   const history = useHistory();
+  const [autoId, setAutoId] = useState(1);
 
+  const startIndex = (currentPage - 1) * dataLimit + 1
 
   const getSupplierInfo = async (currentPage, dataLimit) => {
     props.onLoading(true);
@@ -61,6 +63,9 @@ function IntegratorList(props) {
           setIntegratorList(
             response.data.filter((integrator) => integrator.status === 1)
           );
+          if (currentPage === 1) {
+            setAutoId((currentPage - 1) * dataLimit + 1);
+          }
         }
         setType(type);
 
@@ -142,13 +147,13 @@ function IntegratorList(props) {
               <div className="body">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <div style={{ minWidth: "110px" }}>
-                  <Select
+                    <Select
                       options={filterList}
                       onChange={(data) => {
                         setStatus(data.value);
-                        setCurrentPage(1); 
+                        setCurrentPage(1);
                       }}
-                      defaultValue={filterList[0]} 
+                      defaultValue={filterList[0]}
                     />
                   </div>
                   <Link className="link-btn" to={`/manage-integrator`}>
@@ -165,9 +170,10 @@ function IntegratorList(props) {
                   <table className="table w-100 table-responsive-sm">
                     <thead>
                       <tr>
-                      <th>Logo</th>
+                        <th>Id</th>
+                        <th>Logo</th>
                         <th>Integrator Name</th>
-                    
+
                         <th>Prefix Name</th>
                         <th>Last Update(UTC)</th>
                         {props.user.permissions.update_company ? (
@@ -179,42 +185,43 @@ function IntegratorList(props) {
                       </tr>
                     </thead>
                     <tbody>
-                    {integratorList.map((integrator) => (
-                      <tr key={integrator.id}>
-                      <td>
-                      {integrator.logo ? (
-                        <img
-                          src={integrator.logo}
-                          alt={integrator.name}
-                          className="list-logo"
-                        />
-                      ) : (
-                        <div className="list-logo placeholder">N/A</div>
-                      )}
-                    </td>
-                        <td>{integrator.name}</td>
+                      {integratorList.map((integrator, idx) => (
+                        <tr key={integrator.id}>
+                          <td>{startIndex + idx}</td>
+                          <td>
+                            {integrator.logo ? (
+                              <img
+                                src={integrator.logo}
+                                alt={integrator.name}
+                                className="list-logo"
+                              />
+                            ) : (
+                              <div className="list-logo placeholder">N/A</div>
+                            )}
+                          </td>
+                          <td>{integrator.name}</td>
 
-                       
-                        <td>{integrator.prefixName}</td>
-                        <td>
+
+                          <td>{integrator.prefixName}</td>
+                          <td>
                             {integrator.updatedAt
                               ? moment(integrator.updated_on).format(
-                                  "MM/DD/YYYY hh:mm a"
-                                )
+                                "MM/DD/YYYY hh:mm a"
+                              )
                               : "N/A"}
                           </td>
-                  
+
                           <>
-                          <td>
-                          <Form.Check
-                            type="switch"
-                            id={`${integrator.id}`}
-                            checked={integrator.status}
-                            onChange={(e) =>
-                              activateDeactivate(e, integrator.id)
-                            }
-                          />
-                        </td>
+                            <td>
+                              <Form.Check
+                                type="switch"
+                                id={`${integrator.id}`}
+                                checked={integrator.status}
+                                onChange={(e) =>
+                                  activateDeactivate(e, integrator.id)
+                                }
+                              />
+                            </td>
 
                             <td className="action-group">
                               <i
@@ -237,10 +244,10 @@ function IntegratorList(props) {
                               ></i>
                             </td>
                           </>
-                       
-                      </tr>
-                    ))}
-                              </tbody>
+
+                        </tr>
+                      ))}
+                    </tbody>
                   </table>
                   <div className="pagination-wrapper">
                     <Pagination

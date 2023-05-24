@@ -21,6 +21,9 @@ function MarketPlaceList(props) {
   const [dataLimit, setdataLimit] = useState(5);
   const [status, setStatus] = useState("active");
   const [type, setType] = useState("MarketPlace");
+  const [autoId, setAutoId] = useState(1);
+
+  const startIndex = (currentPage - 1) * dataLimit + 1
 
   const history = useHistory();
 
@@ -62,6 +65,9 @@ function MarketPlaceList(props) {
           setMarketPlaceList(
             response.data.filter((market_place) => market_place.status === 1)
           );
+          if (currentPage === 1) {
+            setAutoId((currentPage - 1) * dataLimit + 1);
+          }
         }
         setType(type);
 
@@ -145,9 +151,9 @@ function MarketPlaceList(props) {
                       options={filterList}
                       onChange={(data) => {
                         setStatus(data.value);
-                        setCurrentPage(1); 
+                        setCurrentPage(1);
                       }}
-                      defaultValue={filterList[0]} 
+                      defaultValue={filterList[0]}
                     />
                   </div>
                   <Link className="link-btn" to={`/manage-marketPlace`}>
@@ -164,9 +170,10 @@ function MarketPlaceList(props) {
                   <table className="table w-100 table-responsive-sm">
                     <thead>
                       <tr>
-                      <th>Logo</th>
+                        <th>Id</th>
+                        <th>Logo</th>
                         <th>Market Place Name</th>
-                        
+
                         <th>Prefix Name</th>
                         <th>Last Update(UTC)</th>
                         {props.user.permissions.update_company ? (
@@ -178,26 +185,27 @@ function MarketPlaceList(props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {marketPlaceList.map((market_place) => (
+                      {marketPlaceList.map((market_place, idx) => (
                         <tr key={market_place.id}>
-                        <td>
-                        {market_place.logo ? (
-                          <img
-                            src={market_place.logo}
-                            className="list-logo"
-                          />
-                        ) : (
-                          <div className="list-logo placeholder">N/A</div>
-                        )}
-                      </td>
+                          <td>{startIndex + idx}</td>
+                          <td>
+                            {market_place.logo ? (
+                              <img
+                                src={market_place.logo}
+                                className="list-logo"
+                              />
+                            ) : (
+                              <div className="list-logo placeholder">N/A</div>
+                            )}
+                          </td>
                           <td>{market_place.name}</td>
-                        
+
                           <td>{market_place.prefixName}</td>
                           <td>
                             {market_place.updatedAt
                               ? moment(market_place.updated_on).format(
-                                  "MM/DD/YYYY hh:mm a"
-                                )
+                                "MM/DD/YYYY hh:mm a"
+                              )
                               : "N/A"}
                           </td>
 

@@ -22,6 +22,9 @@ function FileUpload(props) {
   const [type, setType] = useState("Supplier");
   const [supplier, setSupplier] = useState("Choose Supplier");
   const [fileError, setFileError] = useState("");;
+  const [autoId, setAutoId] = useState(1);
+
+  const startIndex = (currentPage - 1) * dataLimit + 1
 
   const history = useHistory();
 
@@ -62,6 +65,9 @@ function FileUpload(props) {
           setSupplierList(
             response.data.filter((supplier) => supplier.status === 1)
           );
+          if (currentPage === 1) {
+            setAutoId((currentPage - 1) * dataLimit + 1);
+          }
         }
         setType(type);
 
@@ -157,9 +163,9 @@ function FileUpload(props) {
                       options={filterList}
                       onChange={(data) => {
                         setStatus(data.value);
-                        setCurrentPage(1); 
+                        setCurrentPage(1);
                       }}
-                      defaultValue={filterList[0]} 
+                      defaultValue={filterList[0]}
                     />
                   </div>
                   <div style={{ minWidth: "210px" }} className="supplier__dropdown">
@@ -168,19 +174,19 @@ function FileUpload(props) {
                       onChange={(data) => {
                         setSupplier(data.value);
                       }}
-                      defaultValue={{label: "Select Supplier"}} 
+                      defaultValue={{ label: "Select Supplier" }}
                     />
                   </div>
                   <div className="file__select">
                     <input
-                    className="form-control"
-                    type="file"
-                    name="csvfile"
-                    accept=".csv"
-                    onChange={handleFileInputChange}
+                      className="form-control"
+                      type="file"
+                      name="csvfile"
+                      accept=".csv"
+                      onChange={handleFileInputChange}
                     />
                     {fileError && <p style={{ color: "red" }}>{fileError}</p>}
-                  </div> 
+                  </div>
                 </div>
 
                 <div className="data-table">
@@ -192,9 +198,9 @@ function FileUpload(props) {
                   <table className="table w-100 table-responsive-lg">
                     <thead>
                       <tr>
-                      <th>Id</th>
+                        <th>Id</th>
                         <th>Supplier Name</th>
-                        
+
                         <th>Import Date /Time UTC</th>
                         <th>File Name</th>
                         <th>Import Type</th>
@@ -208,30 +214,30 @@ function FileUpload(props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {supplierList.map((market_place) => (
+                      {supplierList.map((market_place, idx) => (
                         <tr key={market_place.id}>
-                        <td>
-                        {market_place.logo ? (
-                          <img
-                            src={market_place.logo}
-                            alt={market_place.name}
-                            className="list-logo"
-                          />
-                        ) : (
-                          <div className="list-logo placeholder">N/A</div>
-                        )}
-                      </td>
-                          <td>{market_place.name}</td>
+                          <td>{startIndex + idx}</td>
+                          <td>
+                            {market_place.logo ? (
+                              <img
+                                src={market_place.logo}
+                                alt={market_place.name}
+                                className="list-logo"
+                              />
+                            ) : (
+                              <div className="list-logo placeholder">N/A</div>
+                            )}
+                          </td>
 
                           <td>{market_place.name}</td>
                           <td>{market_place.name}</td>
-                        
+
                           <td>{market_place.prefixName}</td>
                           <td>
                             {market_place.updatedAt
                               ? moment(market_place.updated_on).format(
-                                  "MM/DD/YYYY hh:mm a"
-                                )
+                                "MM/DD/YYYY hh:mm a"
+                              )
                               : "N/A"}
                           </td>
 
