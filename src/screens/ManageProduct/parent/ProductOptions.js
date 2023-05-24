@@ -3,7 +3,7 @@ import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
 
 const ProductOptions = () => {
   return (
-    <Row>
+    <Row style={{marginBottom: "-15px"}}>
       <Col>
         <Accordion defaultActiveKey="5" className="accordian__main">
           <Card>

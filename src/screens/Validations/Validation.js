@@ -199,3 +199,30 @@ export const validateMarketPlaceTrackingSync = (formData) => {
   }
   return errors;
 }
+
+//Retailer Setting Validation
+export const validateRetailerAccount = (formData) => {
+  const errors = {};
+  const storeName = formData.get("storeName")
+  const endpointURL = formData.get("endpointURL")
+  const authorizationToken = formData.get("authorizationToken")
+
+  if (!storeName) {
+    errors.storeName = "URL is required";
+  } else if(storeName.trim().length === 0) {
+    errors.storeName = "URL cannot be whitespace only";
+  }
+
+  if(!endpointURL) {
+    errors.endpointURL = "API Endpoint is required";
+  } else if(endpointURL.trim().length === 0) {
+    errors.endpointURL = "API Endpoint cannot be whitespace only";
+  }
+
+  if (!authorizationToken) {
+    errors.authorizationToken = "Authorization Token is required";
+  } else if(authorizationToken.trim().length === 0) {
+    errors.authorizationToken = "Authorization Token cannot be whitespace only";
+  }
+  return errors;
+}

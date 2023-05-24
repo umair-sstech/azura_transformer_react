@@ -4,7 +4,7 @@ import { Accordion, Card, Col, Row } from "react-bootstrap";
 const ProductIdentifiers = () => {
 
   return (
-    <Row>
+    <Row style={{marginBottom: "-15px"}}>
       <Col>
         <Accordion defaultActiveKey="0" className="accordian__main">
           <Card>

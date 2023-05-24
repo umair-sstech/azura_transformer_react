@@ -108,7 +108,6 @@ function RetailerPage1(props) {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
   
     const userId = localStorage.getItem("_id");
     const userName = localStorage.getItem("name");
@@ -126,8 +125,14 @@ function RetailerPage1(props) {
       companyId: null,
       supplierId: selectedSupplierIds.join(","),
     };
-  
+
+    if(!payload.supplierId) {
+      toast.error("Please select atleast one supplier");
+      return;
+    }
+
     try {
+      setIsLoading(true);
       const response = await axios.post(
         "http://localhost:2703/retailer/createOrUpdateRetailerIntegration",
         payload
@@ -143,6 +148,7 @@ function RetailerPage1(props) {
           JSON.stringify(selectedSupplierNames)
         );
         toast.success(message);
+        setIsLoading(false);
         setPage(2);
       } else {
         toast.error(message);

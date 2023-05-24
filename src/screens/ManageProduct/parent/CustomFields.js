@@ -3,7 +3,7 @@ import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
 
 const CustomFields = () => {
   return (
-    <Row>
+    <Row style={{marginBottom: "-15px"}}>
       <Col>
         <Accordion defaultActiveKey="7" className="accordian__main">
           <Card>

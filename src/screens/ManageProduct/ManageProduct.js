@@ -5,27 +5,19 @@ import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { onUpdateFormLoading } from "../../actions";
-import moment from "moment";
 import "./Products.css";
-import { Accordion, Card, Col, Form, Image, Row } from "react-bootstrap";
-import ProductAttributes from "./ProductAttributes";
-import CustomFields from "./CustomFields";
-import ProductOptions from "./ProductOptions";
-import ProductImages from "./ProductImages";
-import ProductDescription from "./ProductDescription";
-import ProductIdentifiers from "./ProductIdentifiers";
-import ProductTitle from "./ProductTitle";
-import ProductParent from "./ProductParent";
+import { Tab, Tabs } from "react-bootstrap";
+import Parent from "./parent/Parent";
+import Variant from "./variants/Variant";
 
 export const FormContext = createContext();
 
 const ManageProduct = (props) => {
-  const { name } = props;
-  const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [formData, setFormData] = useState();
   const [logoData, setLogoData] = useState();
   const [isCompanyAdded, setIsCompanyAdded] = useState("");
   const [createdDate, setCreatedDate] = useState("");
+  const [key, setKey] = useState('parent');
 
   const history = useHistory();
 
@@ -63,14 +55,6 @@ const ManageProduct = (props) => {
     []
   );
 
-  const processCancel = () => {
-    setFormData();
-    setLogoData();
-    setIsCompanyAdded("");
-    localStorage.removeItem("newlyAddedCompany");
-    history.push("/products");
-  };
-
   return (
     <>
       <div
@@ -98,54 +82,18 @@ const ManageProduct = (props) => {
                       <i className="fa fa-refresh fa-spin"></i>
                     </div>
                   ) : null}
-
-                  <div className="product__container">
-                    {/* Left Div */}
-                    <div className="left">
-                      <div className="product__header">
-                        <h3>
-                          PARENT SKU : <strong>GU7761-D_32F</strong>
-                        </h3>
-                        <div className="product__header2">
-                          <h3>
-                            <strong>1/1</strong>
-                          </h3>
-                          <p>Variants In Stock</p>
-                        </div>
-                      </div>
-
-                      <ProductTitle />
-                      <br />
-
-                      {/* Identifiers                         */}
-                      <ProductIdentifiers />
-                      <br />
-
-                      {/* Description                           */}
-                      <ProductDescription />
-                      <br />
-
-                      {/* Image */}
-                      <ProductImages />
-                      <br />
-
-                      {/* Options   */}
-                      <ProductOptions />
-                      <br />
-
-                      {/* Attributes */}
-                      <ProductAttributes />
-                      <br />
-
-                      {/* Custom Fields */}
-                      <CustomFields />
-                    </div>
-
-                    {/* Right Div */}
-                    <div className="right">
-                        <ProductParent />
-                    </div>
-                  </div>
+                  <Tabs
+                    id="controlled-tab-example"
+                    activeKey={key}
+                    onSelect={(k) => setKey(k)}
+                  >
+                    <Tab eventKey="parent" title="PARENT">
+                      <Parent />
+                    </Tab>
+                    <Tab eventKey="variants" title="VARIANTS">
+                      <Variant />
+                    </Tab>
+                  </Tabs>
                 </div>
               </div>
             </div>

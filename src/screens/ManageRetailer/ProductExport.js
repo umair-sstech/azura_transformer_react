@@ -5,6 +5,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
 import { useHistory } from "react-router-dom";
+import { connect } from "react-redux";
+import { onLoading } from "../../actions";
 
 function ProductExport(props) {
   const { setPage } = props;
@@ -23,7 +25,6 @@ function ProductExport(props) {
     const supplierIds = localStorage.getItem("supplierSettingId");
     if (supplierIds) {
       try {
-        setIsLoading(true);
         const response = await axios.post(
           "http://localhost:2703/retailer/getSupplierProduct",
           { supplierId: supplierIds }
@@ -37,8 +38,6 @@ function ProductExport(props) {
         }
       } catch (error) {
         console.error("Error:", error);
-      } finally {
-        setIsLoading(false);
       }
     }
   };
@@ -222,8 +221,15 @@ function ProductExport(props) {
             </div>
           </div>
         </div>
-        <div className="row">
-          <table className="product-table  w-100 table-responsive-sm">
+        <div className='row'>
+          {!data ? (
+            <div className="loader-wrapper w-100" style={{ marginTop: "14%" }}>
+              <i className="fa fa-refresh fa-spin"></i>
+            </div>
+          ) : (
+            ""
+          )}
+          <table className='product-table  w-100 table-responsive-sm'>
             <thead>
               <tr>
                 <th>
@@ -258,4 +264,9 @@ function ProductExport(props) {
   );
 }
 
-export default ProductExport;
+const mapStateToProps = ({ LoadingReducer }) => ({
+  loading: LoadingReducer.isLoading,
+});
+
+export default connect(mapStateToProps, { onLoading })(ProductExport);
+

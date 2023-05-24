@@ -20,7 +20,7 @@ const ProductAttributes = () => {
   }
 
   return (
-    <Row>
+    <Row style={{marginBottom: "-15px"}}>
       <Col>
         <Accordion defaultActiveKey="5" className="accordian__main">
           <Card>

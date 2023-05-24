@@ -1,15 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
 
 const ProductTitle = () => {
-  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
-
-  const handleAccordionToggle = () => {
-    setIsAccordionOpen(!isAccordionOpen);
-  };
 
   return (
-    <Row>
+    <Row style={{marginBottom: "-15px"}}>
       <Col>
         <Accordion defaultActiveKey="0" className="accordian__main">
           <Card>

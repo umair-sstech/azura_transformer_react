@@ -1,31 +1,38 @@
-import axios from "axios";
+
 import React, { useContext, useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
+import { FormContext } from "./ManageRetailerSetting";
+import { validateRetailerAccount } from "../Validations/Validation";
+import axios from "axios";
 import { toast } from "react-toastify";
-import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
 import { useHistory } from "react-router-dom";
 
 
 function Accountconfiguration(props) {
-  const {
-    processCancel,
-  } = useContext(FormContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
+  const { processCancel} = useContext(FormContext);
+
   const [formData, setFormData] = useState({
     storeName: "",
     endpointURL: "",
     authorizationToken: "",
   });
-
-  const history=useHistory()
   useEffect(() => {
     getAccountConfigurationData();
   }, []);
-  
+
+  const history=useHistory()
+  const [formErrors, setFormErrors] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
+
+
+  useEffect(() => {
+    getAccountConfigurationData();
+  }, []);
 
   const marketPlaceSettingName=localStorage.getItem("marketPlaceSettingName")
-  
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -57,13 +64,11 @@ function Accountconfiguration(props) {
       .then((response) => {
         const { success, message } = response.data;
         if (success) {
-          toast.success(message);
           localStorage.removeItem("supplierSettingId");
           localStorage.removeItem("selectedSupplierName");
-          localStorage.removeItem("marketPlaceSettingId");
-          localStorage.removeItem("marketPlaceSettingName");
           localStorage.removeItem("retailerIntegrationId");
-          history.push("/setting-retailer-list")
+          toast.success(message);
+          history.push("/setting-retailer-list");
         } else {
           toast.error(message);
         }
@@ -76,11 +81,11 @@ function Accountconfiguration(props) {
 
   const getAccountConfigurationData = () => {
     const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
-  
+
     const payload = {
       id: retailerIntegrationId,
     };
-  
+
     axios
       .post(
         "http://localhost:2703/retailer/getRetailerIntegrationById",
@@ -90,7 +95,7 @@ function Accountconfiguration(props) {
         const { success, data } = response.data;
         if (success && data.length > 0) {
           const retailerIntegration = data[0];
-  
+
           setFormData({
             storeName: retailerIntegration.storeName,
             endpointURL: retailerIntegration.endpointURL,
@@ -102,11 +107,10 @@ function Accountconfiguration(props) {
         console.error(error);
       });
   };
-  
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} name="accountForm">
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
@@ -130,59 +134,67 @@ function Accountconfiguration(props) {
           </div>
         </div>
         <div className="col-row mt-3 mt-sm-0">
-          <div className="col-6"></div>
-          <label style={{ color: "#49c5b6" }}>Selected Account:{marketPlaceSettingName}</label>
+          <div className="col-6">
+            <label style={{ color: "#49c5b6" }}>Selected Account:{marketPlaceSettingName}</label>
+          </div>
+          <div className="row">
+            <div className="col-sm-6">
+              <div className="form-group">
+                <label>
+                  Channel/Store <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  name="storeName"
+                  onChange={handleChange}
+                  placeholder="Enter Channel"
+                  defaultValue={formData && formData.storeName ? formData.storeName : ""}
+                />
+                {formErrors && formErrors.storeName && (
+                  <span className="text-danger">{formErrors.storeName}</span>
+                )}
+              </div>
+            </div>
+            <div className="col-sm-6">
+              <div className="form-group">
+                <label>
+                  API Endpoint <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  name="endpointURL"
+                  onChange={handleChange}
+                  placeholder="Enter API Endpoint"
+                  defaultValue={formData && formData.endpointURL ? formData.endpointURL : ""}
+                />
+                {formErrors && formErrors.endpointURL && (
+                  <span className="text-danger">{formErrors.endpointURL}</span>
+                )}
+              </div>
+            </div>
+            <div className="col-sm-6">
+              <div className="form-group">
+                <label>
+                  Authorization Token <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  name="authorizationToken"
+                  onChange={handleChange}
+                  placeholder="Enter token"
+                  defaultValue={formData && formData.authorizationToken ? formData.authorizationToken : ""}
+                />
+                {formErrors && formErrors.authorizationToken && (
+                  <span className="text-danger">{formErrors.authorizationToken}</span>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="row">
-          <div className="col-sm-6">
-            <div className="form-group">
-              <label>
-                Channel/Store <span style={{ color: "red" }}>*</span>
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                name="storeName"
-                placeholder="Enter Channel"
-                onChange={handleChange}
-                value={formData.storeName? formData.storeName:""}
-              />
-            </div>
-          </div>
-          <div className="col-sm-6">
-            <div className="form-group">
-              <label>
-                API Endpoint <span style={{ color: "red" }}>*</span>
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                name="endpointURL"
-                onChange={handleChange}
-                placeholder="Enter API Endpoint"
-                value={formData.endpointURL? formData.endpointURL:""}
-
-              />
-            </div>
-          </div>
-          <div className="col-sm-6">
-            <div className="form-group">
-              <label>
-                Authorization Token <span style={{ color: "red" }}>*</span>
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                name="authorizationToken"
-                placeholder="Enter token"
-                onChange={handleChange}
-                value={formData.authorizationToken? formData.authorizationToken:""}
-
-              />
-            </div>
-          </div>
-        </div>
-      </form>
+      </form >
     </>
   );
 }
