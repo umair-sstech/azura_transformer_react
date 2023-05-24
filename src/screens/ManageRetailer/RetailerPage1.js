@@ -141,7 +141,9 @@ function RetailerPage1(props) {
       const { success, message, data } = response.data;
   
       if (success) {
+          const newRetailerIntegrationId = response.data.retailerIntegrationId;
   
+        localStorage.setItem("retailerIntegrationId", newRetailerIntegrationId);
         localStorage.setItem("supplierSettingId", selectedSupplierIds.join(","));
         localStorage.setItem(
           "selectedSupplierName",

@@ -1,82 +1,61 @@
-
 import React, { useContext, useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import { FormContext } from "./ManageRetailerSetting";
 import { validateRetailerAccount } from "../Validations/Validation";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 
 
 function Accountconfiguration(props) {
+
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
-  const { processCancel} = useContext(FormContext);
+  const { processCancel, formData, setFormData } = useContext(FormContext);
 
-  const [formData, setFormData] = useState({
+  const [initFormData, setInitFormData] = useState({
     storeName: "",
     endpointURL: "",
     authorizationToken: "",
   });
-  useEffect(() => {
-    getAccountConfigurationData();
-  }, []);
-
-  const history=useHistory()
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
 
+  const history=useHistory()
+
+  useEffect(() => {
+    if (formData) {
+      setInitFormData(formData);
+    }
+  }, [props]);
+
+  useEffect(() => {
+    setIsFormValid(Object.keys(formErrors).length === 0);
+  }, [formErrors]);
 
   useEffect(() => {
     getAccountConfigurationData();
   }, []);
 
-  const marketPlaceSettingName=localStorage.getItem("marketPlaceSettingName")
+  const marketPlaceSettingName = localStorage.getItem("marketPlaceSettingName")
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = (key, value) => {
+    const formData = new FormData(document.forms.accountForm);
+    formData.set(key, value);
+    const errors = validateRetailerAccount(formData);
+    setFormErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const handleInputChange = (e) => {
+    const { name, value, type } = e.target;
+    const trimmedValue = type === "text" ? value.trim() : value;
 
-    const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
-    const marketPlaceSettingId = localStorage.getItem("marketPlaceSettingId");
-
-    const payload = {
-      id: retailerIntegrationId,
-      marketPlaceId: marketPlaceSettingId,
-      storeName: formData.storeName,
-      endpointURL: formData.endpointURL,
-      authorizationToken: formData.authorizationToken,
-    };
-
-    console.log("payload", payload);
-    axios
-      .post(
-        "http://localhost:2703/retailer/createOrUpdateRetailerAccountConfig",
-        payload
-      )
-      .then((response) => {
-        const { success, message } = response.data;
-        if (success) {
-          localStorage.removeItem("supplierSettingId");
-          localStorage.removeItem("selectedSupplierName");
-          localStorage.removeItem("retailerIntegrationId");
-          toast.success(message);
-          history.push("/setting-retailer-list");
-        } else {
-          toast.error(message);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setIsLoading(false);
-      });
+    setInitFormData(prevState => ({
+      ...prevState,
+      [name]: trimmedValue,
+    }));
+    handleChange(name, value);
   };
 
   const getAccountConfigurationData = () => {
@@ -108,6 +87,54 @@ function Accountconfiguration(props) {
       });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const errors = validateRetailerAccount(formData);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
+      console.log(initFormData)
+      setIsLoading(true);
+
+      const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+      const marketPlaceSettingId = localStorage.getItem("marketPlaceSettingId");
+
+      const payload = {
+        id: retailerIntegrationId,
+        marketPlaceId: marketPlaceSettingId,
+        storeName: initFormData.storeName,
+        endpointURL: initFormData.endpointURL,
+        authorizationToken: initFormData.authorizationToken,
+      };
+
+      console.log("payload", payload);
+      axios
+        .post(
+          "http://localhost:2703/retailer/createOrUpdateRetailerAccountConfig",
+          payload
+        )
+        .then((response) => {
+          const { success, message } = response.data;
+          if (success) {
+            setIsLoading(false)
+            localStorage.removeItem("supplierSettingId");
+            localStorage.removeItem("selectedSupplierName");
+            localStorage.removeItem("retailerIntegrationId");
+            toast.success(message);
+            history.push("/setting-retailer-list");
+          } else {
+            toast.error(message);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsLoading(false);
+        });
+    }
+  }
+
   return (
     <>
       <form onSubmit={handleSubmit} name="accountForm">
@@ -126,7 +153,7 @@ function Accountconfiguration(props) {
                   "Save & Exit"
                 )}
               </button>
-              
+
               <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={processCancel}>
                 Exit
               </button>
@@ -147,9 +174,9 @@ function Accountconfiguration(props) {
                   className="form-control"
                   type="text"
                   name="storeName"
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   placeholder="Enter Channel"
-                  defaultValue={formData && formData.storeName ? formData.storeName : ""}
+                  defaultValue={initFormData && initFormData.storeName ? initFormData.storeName : ""}
                 />
                 {formErrors && formErrors.storeName && (
                   <span className="text-danger">{formErrors.storeName}</span>
@@ -165,9 +192,9 @@ function Accountconfiguration(props) {
                   className="form-control"
                   type="text"
                   name="endpointURL"
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   placeholder="Enter API Endpoint"
-                  defaultValue={formData && formData.endpointURL ? formData.endpointURL : ""}
+                  defaultValue={initFormData && initFormData.endpointURL ? initFormData.endpointURL : ""}
                 />
                 {formErrors && formErrors.endpointURL && (
                   <span className="text-danger">{formErrors.endpointURL}</span>
@@ -183,9 +210,9 @@ function Accountconfiguration(props) {
                   className="form-control"
                   type="text"
                   name="authorizationToken"
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   placeholder="Enter token"
-                  defaultValue={formData && formData.authorizationToken ? formData.authorizationToken : ""}
+                  defaultValue={initFormData && initFormData.authorizationToken ? initFormData.authorizationToken : ""}
                 />
                 {formErrors && formErrors.authorizationToken && (
                   <span className="text-danger">{formErrors.authorizationToken}</span>
