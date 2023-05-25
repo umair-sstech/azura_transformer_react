@@ -18,15 +18,21 @@ const RetailerList = (props) => {
   const [retailerList, setRetailerList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
+  console.log("pages",totalPages)
   const [dataLimit, setdataLimit] = useState(5);
   const history = useHistory();
   const [searchText, setSearchText] = useState("active");
+  const [userRole, setUserRole] = useState("");
+   const [retailerId, setRetailerId] = useState("");
 
   const companyList = useCompanyList(props.user.data.role);
 
   useEffect(() => {
+    const user = props.user.data;
+    setUserRole(user.role);
+    setRetailerId(user.retailer);
     getDataFromApi(searchText);
-  }, [currentPage, dataLimit]);
+  }, [currentPage, dataLimit,props.user.data]);
 
   useEffect(() => {
     getDataFromApi(searchText);
@@ -34,6 +40,11 @@ const RetailerList = (props) => {
 
   const getDataFromApi = (search = "active") => {
     props.onLoading(true);
+      //   let apiURL = `${process.env.REACT_APP_RETAILER_SERVICE}/get-retailer-list?page=${currentPage}&limit=${dataLimit}&searchText=${search}`;
+  
+  //   if (userRole === "RETAILER_ADMIN") {
+  //     apiURL += `&retailerId=${retailerId}`;
+  //   }
     axios
       .get(
         `${process.env.REACT_APP_RETAILER_SERVICE}/get-retailer-list?page=${currentPage}&limit=${dataLimit}&searchText=${search}`
@@ -50,6 +61,9 @@ const RetailerList = (props) => {
       });
   };
 
+
+
+ 
   const updateCompanyHandler = (id) => {
     localStorage.setItem("newlyAddedRetailer", id);
     history.push("/manage-retailer");
@@ -159,7 +173,10 @@ const RetailerList = (props) => {
                     </thead>
                     <tbody>
                       {retailerList.map((data) => {
-                        return (
+                        if (userRole === "RETAILER_ADMIN" && data._id !== retailerId) {
+                          return null;
+                        }
+                        return  (
                           <tr key={data._id}>
                             <td>{data.retailer_code}</td>
                             <td>
@@ -217,26 +234,27 @@ const RetailerList = (props) => {
                     </tbody>
                   </table>
                   <div className="pagination-wrapper">
-                    <Pagination
-                      current={currentPage}
-                      total={totalPages}
-                      onPageChange={setCurrentPage}
-                    />
-                    <select
-                      name="companyOwner"
-                      className="form-control"
-                      onChange={(e) => {
-                        setCurrentPage(1);
-                        setdataLimit(e.target.value);
-                      }}
-                    >
-                      <option value={5}>5</option>
-                      <option value={10}>10</option>
-                      <option value={20}>20</option>
-                      <option value={50}>50</option>
-                      <option value={100}>100</option>
-                    </select>
-                  </div>
+                  <Pagination
+                    current={currentPage}
+                    total={totalPages}
+                    onPageChange={setCurrentPage}
+                  />
+                  <select
+                    name="companyOwner"
+                    className="form-control"
+                    onChange={(e) => {
+                      setCurrentPage(1);
+                      setdataLimit(e.target.value);
+                    }}
+                  >
+                    <option value={5}>5</option>
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
+                  </select>
+                </div>
+                
                 </div>
               </div>
             </div>

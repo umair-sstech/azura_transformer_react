@@ -62,50 +62,6 @@ function PriceCalculation(props) {
     setFormData(updatedFormData);
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const retailerIntegrationId = localStorage.getItem(
-  //       "retailerIntegrationId"
-  //     );
-  //     const supplierSettingId = localStorage.getItem("supplierSettingId");
-
-  //     const payload = supplierSettingId.split(",").map((supplierId) => ({
-  //       id: retailerIntegrationId,
-  //       supplierId,
-  //       costPriceField: selectedOptions.label,
-  //       multipleValue: formData.multipleValue,
-  //       fixedValue: formData.fixedValue,
-  //       taxValue: formData.taxValue,
-  //       discountValue: formData.discountValue,
-  //       discountType: "percentage",
-  //       extraValue: "",
-  //     }));
-  //     console.log("payload",payload)
-
-  //     setIsLoading(true);
-  //     axios
-  //       .post(
-  //         "http://localhost:2703/retailer/createOrUpdateRetailerPriceCalculation",
-  //         payload
-  //       )
-  //       .then((response) => {
-  //         const { success, message } = response.data;
-  //         if (success) {
-  //           toast.success(message);
-  //           setPage(6);
-  //         } else {
-  //           toast.error(message);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error("Failed to submit data:", error);
-  //         setIsLoading(false);
-  //       });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -147,25 +103,6 @@ function PriceCalculation(props) {
     }
   };
 
-  // const getRetailerIntegrationById = async () => {
-  //   try {
-  //     const id = localStorage.getItem("retailerIntegrationId");
-  //     const response = await axios.post(
-  //       "http://localhost:2703/retailer/getRetailerIntegrationById",
-  //       {
-  //         id: id,
-  //       }
-  //     );
-  //     const { success, message, data } = response.data;
-  //     if (success) {
-  //       setSupplierData(data);
-  //     } else {
-  //       toast.error(message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Failed to retrieve retailer integration data:", error);
-  //   }
-  // };
 
   const getRetailerIntegrationById = async () => {
     try {
@@ -179,8 +116,6 @@ function PriceCalculation(props) {
       const { success, message, data } = response.data;
       if (success) {
         setSupplierData(data);
-  
-        // Pre-fill form data and selected options based on the API response
         const initialFormData = {};
         const initialSelectedOptions = {};
   

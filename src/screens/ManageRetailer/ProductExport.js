@@ -15,6 +15,7 @@ function ProductExport(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+
   const history = useHistory();
 
   useEffect(() => {
@@ -51,6 +52,8 @@ function ProductExport(props) {
     });
   };
 
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -58,6 +61,7 @@ function ProductExport(props) {
       const retailerIntegrationId = localStorage.getItem(
         "retailerIntegrationId"
       );
+
       const supplierSettingId = localStorage.getItem("supplierSettingId");
       const requestData = supplierSettingId.split(",").map((supplierId) => ({
         id: retailerIntegrationId,
@@ -99,6 +103,9 @@ function ProductExport(props) {
       setIsLoading(false);
     }
   };
+
+
+
 
   const getRetailerIntegrationData = async () => {
     try {
@@ -246,7 +253,11 @@ function ProductExport(props) {
               data.supplier_product.map((product, index) => (
                 <tr key={product.supplierId}>
                   <td style={{ width: "5%" }}>
-                    <input type="checkbox" />
+                  <input
+                  type="checkbox"
+                />
+                
+
                   </td>
                   <td style={{ width: "6%" }}>{product.supplierId}</td>
                   <td style={{ width: "30%" }}>

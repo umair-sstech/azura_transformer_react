@@ -11,10 +11,10 @@ import { useHistory } from "react-router-dom";
 import Select from "react-select";
 import { Form, FormControl, InputGroup } from "react-bootstrap";
 import { API_PATH } from "../ApiPath/Apipath";
-import './ProductsList.css'
+import "./ProductsList.css";
 
 function ProductsList(props) {
-  const [marketPlaceList, setMarketPlaceList] = useState([]);
+  const [productList, setProductList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(5);
@@ -22,47 +22,48 @@ function ProductsList(props) {
   const [type, setType] = useState("MarketPlace");
   const [autoId, setAutoId] = useState(1);
 
-  const startIndex = (currentPage - 1) * dataLimit + 1
+  const startIndex = (currentPage - 1) * dataLimit + 1;
 
   const history = useHistory();
 
-  const getSupplierInfo = async (currentPage, dataLimit) => {
-    props.onLoading(true);
+  useEffect(() => {
+    getProductList();
+  }, []);
+
+  const getProductList = async (currentPage,dataLimit) => {
+    props.onLoading(true)
 
     try {
       const response = await axios.post(
-        `${API_PATH.GET_LIST}`,
-        {
+        "http://localhost:8000/product/getProductList", {
           page: currentPage,
           limit: dataLimit,
-          type: type,
           status: status !== "all" ? (status === "active" ? 1 : 0) : null,
-        }
-      );
-
-      return response.data;
-    } catch (error) {
-      console.log("error", error);
-
-      return null;
-    }
+        });
+        return response.data;
+      } catch (error) {
+        console.log("error", error);
+  
+        return null;
+      }
   };
+
 
   useEffect(() => {
     const fetchMarketPlaceInfo = async () => {
-      const response = await getSupplierInfo(currentPage, dataLimit);
+      const response = await getProductList(currentPage, dataLimit);
       if (response) {
         let totalPage = Math.ceil(response.totlaRecord / response.limit);
         setTotalPages(totalPage);
         if (status === "deactive") {
-          setMarketPlaceList(
-            response.data.filter((market_place) => market_place.status === 0)
+          setProductList(
+            response.data.filter((product) => product.status === 0)
           );
         } else if (status === "all") {
-          setMarketPlaceList(response.data);
+          setProductList(response.data);
         } else {
-          setMarketPlaceList(
-            response.data.filter((market_place) => market_place.status === 1)
+          setProductList(
+            response.data.filter((product) => product.status === 1)
           );
           if (currentPage === 1) {
             setAutoId((currentPage - 1) * dataLimit + 1);
@@ -96,11 +97,11 @@ function ProductsList(props) {
           .then((res) => {
             toast.success(res.data.message);
 
-            const index = marketPlaceList.findIndex(
-              (market_place) => market_place.id === supplierId
+            const index = productList.findIndex(
+              (product) => product.id === supplierId
             );
 
-            setMarketPlaceList((prevState) => [
+            setProductList((prevState) => [
               ...prevState.slice(0, index),
               {
                 ...prevState[index],
@@ -145,7 +146,7 @@ function ProductsList(props) {
             <div className="card">
               <div className="body">
                 <div className="mb-3 top__header">
-                  <div style={{ minWidth: "130px" }}>
+                 { /*<div style={{ minWidth: "130px" }}>
                     <Select
                       options={filterList}
                       onChange={(data) => {
@@ -154,9 +155,13 @@ function ProductsList(props) {
                       }}
                       defaultValue={filterList[0]}
                     />
-                  </div>
+                    </div>*/}
                   <InputGroup className="searchbar">
-                    <FormControl type="search" className="me-2" placeholder="Search Products by SKU Number, Parent SKU Number, Name, Category or Supplier..." />
+                    <FormControl
+                      type="search"
+                      className="me-2"
+                      placeholder="Search Products by SKU Number, Parent SKU Number, Name, Category or Supplier..."
+                    />
                   </InputGroup>
                 </div>
 
@@ -166,90 +171,82 @@ function ProductsList(props) {
                       <i className="fa fa-refresh fa-spin"></i>
                     </div>
                   ) : null}
-                  <table className="table w-100 table-responsive-md">
+                  <table className="w-100 table-responsive-md">
                     <thead>
                       <tr>
                         <th>Id</th>
                         <th>Supplier Name</th>
 
-                        <th>Product Name</th>
-                        <th>Product SKU</th>
+                        <th>Grand Parent SKU</th>
                         <th>Parent SKU</th>
-                        <th>Category</th>
+                        <th>Variant SKU</th>
                         <th>Brand</th>
+                        <th>Variant SKU</th>
+                        <th>Category</th>
                         {props.user.permissions.update_company ? (
                           <>
-                            <th>Status</th>
                             <th>Action</th>
                           </>
                         ) : null}
                       </tr>
                     </thead>
                     <tbody>
-                      {marketPlaceList.map((market_place, idx) => (
-                        <tr key={market_place.id}>
-                          <td>{startIndex + idx}</td>
-                          <td>
-                            {market_place.logo ? (
-                              <img
-                                src={market_place.logo}
-                                alt={market_place.name}
-                                className="list-logo"
-                              />
-                            ) : (
-                              <div className="list-logo placeholder">N/A</div>
-                            )}
-                          </td>
+                    {productList?.map((product, idx) => (
+                      <tr key={product.id}>
+                        <td>{startIndex + idx}</td>
+                        <td>supplier Name</td>
+                  
+                        <td>{product.Grandparent_SKU}</td>
+                  
+                        <td>{product.Parent_SKU}</td>
+                  
+                        <td>{product.Variant_SKU}</td>
+                        <td>{product.Brand}</td>
 
-                          <td>{market_place.name}</td>
+                        <td>{product.Azura_Category_Tree}</td>
 
-                          <td>{market_place.name}</td>
-
-                          <td>{market_place.name}</td>
-
-                          <td>{market_place.prefixName}</td>
-                          <td>
-                            {market_place.updatedAt
-                              ? moment(market_place.updated_on).format(
+                        <td>
+                          {product.updatedAt
+                            ? moment(product.updated_on).format(
                                 "MM/DD/YYYY hh:mm a"
                               )
-                              : "N/A"}
+                            : "N/A"}
+                        </td>
+                  
+                        <>
+                          {/*<td>
+                            <Form.Check
+                              type="switch"
+                              id={`${product.id}`}
+                              checked={product.status}
+                              onChange={(e) =>
+                                activateDeactivate(e, product.id)
+                              }
+                            />
+                            </td>*/}
+                  
+                          <td className="action-group">
+                            <i
+                              data-placement="top"
+                              title="Edit"
+                              className="fa fa-eye"
+                              onClick={() => {
+                                localStorage.setItem(
+                                  "marketPlaceId",
+                                  product.id
+                                );
+                                localStorage.setItem(
+                                  "marketPlaceName",
+                                  product.name
+                                );
+                  
+                                history.push(`/product-details`);
+                              }}
+                            ></i>
                           </td>
-
-                          <>
-                            <td>
-                              <Form.Check
-                                type="switch"
-                                id={`${market_place.id}`}
-                                checked={market_place.status}
-                                onChange={(e) =>
-                                  activateDeactivate(e, market_place.id)
-                                }
-                              />
-                            </td>
-
-                            <td className="action-group">
-                              <i
-                                data-placement="top"
-                                title="Edit"
-                                className="fa fa-edit edit"
-                                onClick={() => {
-                                  localStorage.setItem(
-                                    "marketPlaceId",
-                                    market_place.id
-                                  );
-                                  localStorage.setItem(
-                                    "marketPlaceName",
-                                    market_place.name
-                                  );
-
-                                  history.push(`/product-details`);
-                                }}
-                              ></i>
-                            </td>
-                          </>
-                        </tr>
-                      ))}
+                        </>
+                      </tr>
+                    ))}
                     </tbody>
                   </table>
                   <div className="pagination-wrapper">

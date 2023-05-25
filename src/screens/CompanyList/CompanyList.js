@@ -20,6 +20,7 @@ const CompanyList = (props) => {
     const [totalPages, setTotalPages] = useState(2);
     const [dataLimit, setdataLimit] = useState(5);
     const [searchText, setSearchText] = useState('active');
+    
     const history = useHistory()
 
     useEffect(() => {
