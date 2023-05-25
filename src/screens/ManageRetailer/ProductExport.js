@@ -51,10 +51,13 @@ function ProductExport(props) {
     });
   };
 
+  const checkAnyCheckboxChecked = (checkboxes) => {
+    return Object.values(checkboxes).some(box => box.checked)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setIsLoading(true);
       const retailerIntegrationId = localStorage.getItem(
         "retailerIntegrationId"
       );
@@ -82,6 +85,13 @@ function ProductExport(props) {
       requestData[0].categoryId = selectedCategories.join(",");
       requestData[0].productCount = selectedProductCounts.join(",");
 
+      const isChecked = checkAnyCheckboxChecked(checkboxes)
+      if(!isChecked) {
+        toast.error("Please select atleast one value.");
+        return;
+      }
+
+      setIsLoading(true);
       const response = await axios.post(
         "http://localhost:2703/retailer/createOrUpdateRetailerCategory",
         requestData
@@ -125,7 +135,6 @@ function ProductExport(props) {
   const handleOnClick = async (e) => {
     e.preventDefault();
     try {
-      setIsLoadingExit(true);
       const retailerIntegrationId = localStorage.getItem(
         "retailerIntegrationId"
       );
@@ -153,6 +162,13 @@ function ProductExport(props) {
       requestData[0].categoryId = selectedCategories.join(",");
       requestData[0].productCount = selectedProductCounts.join(",");
 
+      const isChecked = checkAnyCheckboxChecked(checkboxes)
+      if(!isChecked) {
+        toast.error("Please select atleast one value.");
+        return;
+      }
+
+      setIsLoadingExit(true)
       const response = await axios.post(
         "http://localhost:2703/retailer/createOrUpdateRetailerCategory",
         requestData

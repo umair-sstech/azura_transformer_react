@@ -121,6 +121,10 @@ function ExportChannel(props) {
       id: retailerIntegrationId,
       marketPlaceId: selectedOptions.value
     };
+    if(!payload.marketPlaceId) {
+      toast.error("Must select atlease one account.")
+      return;
+    }
     setIsLoadingExit(true);
   
     axios.post("http://localhost:2703/retailer/createOrUpdateRetailerMarketplace", payload)

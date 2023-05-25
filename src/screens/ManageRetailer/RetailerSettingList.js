@@ -136,7 +136,7 @@ function RetailerSettingList(props) {
           <PageHeader
             HeaderText="Retailer Setting List"
             Breadcrumb={[
-              { name: "Retailer", navigate: "#" },
+              { name: "Retailer", navigate: "/retailer" },
               { name: "Retailer Setting List", navigate: "#" },
             ]}
           />
@@ -166,7 +166,7 @@ function RetailerSettingList(props) {
                       <i className="fa fa-refresh fa-spin"></i>
                     </div>
                   ) : null}
-                  <table className="table w-100 table-responsive-sm">
+                  <table className="table w-100 table-responsive-md">
                     <thead>
                       <tr>
                       <th>id</th>
@@ -181,10 +181,9 @@ function RetailerSettingList(props) {
                     </thead>
                     <tbody>
                       {retailerSetting.map((retailer,index) => (
-                        <>
                         <tr key={retailer.id}>
                         <td>{startIndex + index}</td>
-                          <td>{retailer.supplierNames}</td>
+                          <td>{retailer.supplierNames?.join(" / ")}</td>
                           <td>{retailer.currencyNames}</td>
                           <td>{retailer.marketPlaceNames}</td>
                           
@@ -230,7 +229,6 @@ function RetailerSettingList(props) {
                           </td>
                         </>
                         </tr>
-                        </>
                       ))}
                     </tbody>
                   </table>

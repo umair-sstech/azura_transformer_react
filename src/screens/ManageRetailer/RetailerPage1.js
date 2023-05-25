@@ -16,7 +16,7 @@ function RetailerPage1(props) {
   const [supplierList, setSupplierList] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
 
-  const history=useHistory()
+  const history = useHistory()
 
   const handleSelectChange = (selectedOptions) => {
     setSelectedOptions(selectedOptions);
@@ -50,17 +50,17 @@ function RetailerPage1(props) {
       console.log(error);
     }
   };
-  
+
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
   //   setIsLoading(true);
-  
+
   //   const userId = localStorage.getItem("_id");
   //   const userName = localStorage.getItem("name");
   //   const retailerId = localStorage.getItem("newlyAddedRetailer");
   //   const selectedSupplierIds = selectedOptions.map((option) => option.value);
   //   const selectedSupplierNames = selectedOptions.map((option) => option.label);
-  
+
   //   const payload = {
   //     userId,
   //     userName,
@@ -72,18 +72,18 @@ function RetailerPage1(props) {
   //   if (retailerIntegrationId) {
   //     payload.id = retailerIntegrationId;
   //   }
-  
+
   //   try {
   //     const response = await axios.post(
   //       "http://localhost:2703/retailer/createOrUpdateRetailerIntegration",
   //       payload
   //     );
-  
+
   //     const { success, message, data } = response.data;
-  
+
   //     if (success) {
   //       const newRetailerIntegrationId = response.data.retailerIntegrationId;
-  
+
   //       localStorage.setItem("retailerIntegrationId", newRetailerIntegrationId);
   //       localStorage.setItem(
   //         "supplierSettingId",
@@ -102,21 +102,21 @@ function RetailerPage1(props) {
   //     console.log("Error:", error);
   //     toast.error("An error occurred while submitting the form.");
   //   }
-  
+
   //   setIsLoading(false);
   // };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const userId = localStorage.getItem("_id");
     const userName = localStorage.getItem("name");
     const retailerId = localStorage.getItem("newlyAddedRetailer");
     const selectedSupplierIds = selectedOptions.map((option) => option.value);
     const selectedSupplierNames = selectedOptions.map((option) => option.label);
-  
+
     const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
-  
+
     const payload = {
       id: retailerIntegrationId ? retailerIntegrationId : "", // Check if "id" exists and use it for update, otherwise leave it empty for create
       userId,
@@ -126,7 +126,7 @@ function RetailerPage1(props) {
       supplierId: selectedSupplierIds.join(","),
     };
 
-    if(!payload.supplierId) {
+    if (!payload.supplierId) {
       toast.error("Please select atleast one supplier");
       return;
     }
@@ -137,12 +137,12 @@ function RetailerPage1(props) {
         "http://localhost:2703/retailer/createOrUpdateRetailerIntegration",
         payload
       );
-  
+
       const { success, message, data } = response.data;
-  
+
       if (success) {
-          const newRetailerIntegrationId = response.data.retailerIntegrationId;
-  
+        const newRetailerIntegrationId = response.data.retailerIntegrationId;
+
         localStorage.setItem("retailerIntegrationId", newRetailerIntegrationId);
         localStorage.setItem("supplierSettingId", selectedSupplierIds.join(","));
         localStorage.setItem(
@@ -159,17 +159,17 @@ function RetailerPage1(props) {
       console.log("Error:", error);
       toast.error("An error occurred while submitting the form.");
     }
-  
+
     setIsLoading(false);
   };
-  
+
 
   const getRetailerIntegrationData = async () => {
     try {
       const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
       const response = await axios.post("http://localhost:2703/retailer/getRetailerIntegrationById", { id: retailerIntegrationId });
       const { success, data } = response.data;
-  
+
       if (success && data.length > 0) {
         const selectedSupplierOptions = data.map((entry) => ({
           value: entry.supplierId,
@@ -182,9 +182,8 @@ function RetailerPage1(props) {
     }
   };
 
-  const handleOnClick= async (e)=>{
+  const handleOnClick = async (e) => {
     e.preventDefault()
-    setIsLoadingExit(true);
 
     const userId = localStorage.getItem("_id");
     const userName = localStorage.getItem("name");
@@ -204,7 +203,13 @@ function RetailerPage1(props) {
       payload.id = retailerIntegrationId;
     }
 
+    if (!payload.supplierId) {
+      toast.error("Please select atleast one supplier");
+      return;
+    }
+
     try {
+      setIsLoadingExit(true);
       const response = await axios.post(
         "http://localhost:2703/retailer/createOrUpdateRetailerIntegration",
         payload
@@ -228,7 +233,7 @@ function RetailerPage1(props) {
 
     setIsLoadingExit(false);
   }
-  
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -271,12 +276,12 @@ function RetailerPage1(props) {
           <div className="col-sm-6">
             <label>Select your Supplier(s)</label>
             <Select
-  options={supplierList}
-  isMulti
-  onChange={handleSelectChange}
-  value={selectedOptions}
-  placeholder="Select Supplier"
-/>
+              options={supplierList}
+              isMulti
+              onChange={handleSelectChange}
+              value={selectedOptions}
+              placeholder="Select Supplier"
+            />
 
           </div>
         </div>
