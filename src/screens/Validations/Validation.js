@@ -226,3 +226,41 @@ export const validateRetailerAccount = (formData) => {
   }
   return errors;
 }
+
+export const validatePriceCalculation = (formData) => {
+  const errors = {}
+  const multipleValue = formData.get("multipleValue")
+  const fixedValue = formData.get("fixedValue")
+  const taxValue = formData.get("taxValue")
+  const discountValue = formData.get("discountValue")
+
+  // if (!formData.costPriceField) {
+  //   errors.costPriceField = "Please Select Sync Frequency";
+  // }
+
+  if(!multipleValue) {
+    errors.multipleValue = "Multiple Value is required";
+  } else if(multipleValue < 0) {
+    errors.multipleValue = "Multiple Value cannot be negative";
+  }
+
+  if(!fixedValue) {
+    errors.fixedValue = "Fixed Value is required";
+  } else if(fixedValue < 0) {
+    errors.fixedValue = "Fixed Value cannot be negative";
+  }
+
+  if(!taxValue) {
+    errors.taxValue = "Tax Value is required";
+  } else if(taxValue < 0) {
+    errors.taxValue = "Tax Value cannot be negative";
+  }
+
+  if(!discountValue) {
+    errors.discountValue = "Discount Value is required";
+  } else if(discountValue < 0) {
+    errors.discountValue = "Discount Value cannot be negative";
+  }
+
+  return errors;
+}

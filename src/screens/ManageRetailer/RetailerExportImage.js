@@ -34,7 +34,7 @@ function RetailerExportImage(props) {
         const { success, data } = response.data;
         const imageSizeMap = {};
         data.forEach((item) => {
-          imageSizeMap[item.id] = item.supplierImageSize.split(",");
+          imageSizeMap[item.id] = item?.supplierImageSize?.split(",");
         });
         setSelectedImageSizes(imageSizeMap);
       } catch (error) {
@@ -95,6 +95,11 @@ function RetailerExportImage(props) {
         }
       );
 
+      if(requestData.length === 0) {
+        toast.error("You must select atleast one image size.")
+        return;
+      }
+
       const response = await axios.post(
         "http://localhost:2703/retailer/createOrUpdateRetailerImage",
         requestData
@@ -145,6 +150,11 @@ function RetailerExportImage(props) {
           });
         }
       );
+
+      if(requestData.length === 0) {
+        toast.error("You must select atleast one image size.")
+        return;
+      }
 
       const response = await axios.post(
         "http://localhost:2703/retailer/createOrUpdateRetailerImage",
@@ -250,25 +260,22 @@ function RetailerExportImage(props) {
                           </thead>
                           <tbody className="image-size-list">
                             {supplierData.map((item) => (
-                              <tr key={item.id}>
-                                <td>
-                                  {item.imageResize &&
-                                    item.imageResize
-                                      .split(",")
-                                      .map((size, index) => (
-                                        <div
-                                          key={index}
-                                          className="checkbox-size"
-                                        >
-                                          <input
-                                            type="checkbox"
-                                            id={`checkbox-${item.id}-${index}`}
-                                          />
-                                          {size}
-                                        </div>
-                                      ))}
-                                </td>
-                              </tr>
+                              <>
+                                {item?.imageResize?.split(",").map((size, idx) => (
+                                  <tr key={idx}>
+                                    <td>
+                                      <div className="checkbox-container">
+                                        <input
+                                          type="checkbox"
+                                          id={`checkbox-${item.id}-${idx}`}
+                                        />
+                                        <label htmlFor={`checkbox-${index}`}></label>
+                                      </div>
+                                    </td>
+                                    <td>{size}</td>
+                                  </tr>
+                                ))}
+                              </>
                             ))}
                           </tbody>
                         </table>

@@ -22,6 +22,9 @@ const CompanyList = (props) => {
     const [searchText, setSearchText] = useState('active');
     
     const history = useHistory()
+    const [autoId, setAutoId] = useState(1);
+
+    const startIndex = (currentPage - 1) * dataLimit + 1
 
     useEffect(() => {
         props.onLoading(true)
@@ -39,6 +42,9 @@ const CompanyList = (props) => {
                 let totlePage = Math.ceil(res.data.totlaRecord / res.data.limit)
                 setTotalPages(totlePage)
                 setCompanyList(res.data.companies)
+                if (currentPage === 1) {
+                    setAutoId((currentPage - 1) * dataLimit + 1);
+                }
                 props.onLoading(false)
             })
             .catch(e => {
@@ -127,6 +133,7 @@ const CompanyList = (props) => {
                                     <table className="table w-100 table-responsive-lg">
                                         <thead>
                                             <tr>
+                                                <th>Id</th>
                                                 <th>Company Code</th>
                                                 <th>Logo</th>
                                                 <th>Company Name</th>
@@ -142,6 +149,7 @@ const CompanyList = (props) => {
                                         <tbody>
                                             {companyList.map((data, index) => {
                                                 return (<tr key={data._id}>
+                                                    <td>{startIndex + index}</td>
                                                     <td>{data.company_code}</td>
                                                     <td>
                                                         {data.logo?.contentType ?

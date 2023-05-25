@@ -21,9 +21,11 @@ const UserList = (props) => {
     const [dataLimit, setdataLimit] = useState(5);
     const [searchText, setSearchText] = useState('active');
     const history = useHistory()
+    const [autoId, setAutoId] = useState(1);
 
-    useEffect(() =>
-    {
+    const startIndex = (currentPage - 1) * dataLimit + 1
+
+    useEffect(() => {
         getDataFromApi(searchText)
     }, [currentPage, dataLimit]);
 
@@ -34,6 +36,9 @@ const UserList = (props) => {
                 let totlePage = Math.ceil(res.data.totlaRecord / res.data.limit)
                 setTotalPages(totlePage)
                 setUserList(res.data.users)
+                if (currentPage === 1) {
+                    setAutoId((currentPage - 1) * dataLimit + 1);
+                }
                 props.onLoading(false)
             })
             .catch(e => {
@@ -42,8 +47,7 @@ const UserList = (props) => {
             })
     }
 
-    const updateUserHandler = (id) =>
-    {
+    const updateUserHandler = (id) => {
         localStorage.setItem("newlyAddedUser", id)
         history.push('/manage-user')
     }
@@ -132,6 +136,7 @@ const UserList = (props) => {
                                     <table className="table w-100 table-responsive-sm">
                                         <thead>
                                             <tr>
+                                                <th>Id</th>
                                                 <th>User Code</th>
                                                 <th>User Name</th>
                                                 <th>Company</th>
@@ -147,8 +152,9 @@ const UserList = (props) => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {userList.map((data) => {
+                                            {userList.map((data, idx) => {
                                                 return (<tr key={data._id}>
+                                                    <td>{startIndex + idx}</td>
                                                     <td>{data.user_code || "N/A"}</td>
                                                     <td>
                                                         {data.name}

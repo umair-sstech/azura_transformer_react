@@ -24,6 +24,9 @@ const RetailerList = (props) => {
   const [searchText, setSearchText] = useState("active");
   const [userRole, setUserRole] = useState("");
    const [retailerId, setRetailerId] = useState("");
+  const [autoId, setAutoId] = useState(1);
+
+  const startIndex = (currentPage - 1) * dataLimit + 1
 
   const companyList = useCompanyList(props.user.data.role);
 
@@ -53,6 +56,9 @@ const RetailerList = (props) => {
         let totlePage = Math.ceil(res.data.totlaRecord / res.data.limit);
         setTotalPages(totlePage);
         setRetailerList(res.data.retailers);
+        if (currentPage === 1) {
+          setAutoId((currentPage - 1) * dataLimit + 1);
+        }
         props.onLoading(false);
       })
       .catch((e) => {
@@ -69,7 +75,7 @@ const RetailerList = (props) => {
     history.push("/manage-retailer");
   };
 
-  const retailerSetting=(id)=>{
+  const retailerSetting = (id) => {
     localStorage.setItem("newlyAddedRetailer", id)
   }
 
@@ -158,6 +164,7 @@ const RetailerList = (props) => {
                   <table className="table w-100 table-responsive-md">
                     <thead>
                       <tr>
+                        <th>Id</th>
                         <th>Retailer Code</th>
                         <th>Logo</th>
                         <th>Retailer Name</th>
@@ -172,12 +179,13 @@ const RetailerList = (props) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {retailerList.map((data) => {
+                      {retailerList.map((data, idx) => {
                         if (userRole === "RETAILER_ADMIN" && data._id !== retailerId) {
                           return null;
                         }
-                        return  (
+                        return (
                           <tr key={data._id}>
+                            <td>{startIndex + idx}</td>
                             <td>{data.retailer_code}</td>
                             <td>
                               {data.logo?.contentType ? (
@@ -194,8 +202,8 @@ const RetailerList = (props) => {
                             <td>
                               {data.updated_on
                                 ? moment(data.updated_on).format(
-                                    "MM/DD/YYYY hh:mm a"
-                                  )
+                                  "MM/DD/YYYY hh:mm a"
+                                )
                                 : "N/A"}
                             </td>
                             {props.user.permissions.update_retailer ? (
@@ -223,10 +231,10 @@ const RetailerList = (props) => {
                               </>
                             ) : null}
                             <td>
-                            <Link className="link-btn  px-2 py-1" to={'/setting-retailer-list'} onClick={() => retailerSetting(data._id)}>
-                            Add Setting
-                          </Link>
-                          
+                              <Link className="link-btn  px-2 py-1" to={'/setting-retailer-list'} onClick={() => retailerSetting(data._id)}>
+                                Add Setting
+                              </Link>
+
                             </td>
                           </tr>
                         );
