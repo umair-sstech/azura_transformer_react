@@ -2,25 +2,25 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import Pagination from "react-responsive-pagination";
 import axios from "axios";
-import "../SuppilerList/SuppilerList.css";
 import { onLoading } from "../../actions";
 import { connect } from "react-redux";
 import PageHeader from "../../components/PageHeader";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { Form } from "react-bootstrap";
 import Select from "react-select";
+import { Form } from "react-bootstrap";
 import { API_PATH } from "../ApiPath/Apipath";
 
-function SuppilerList(props) {
+function ApiLogs(props) {
   const [supplierList, setSupplierList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(5);
   const [status, setStatus] = useState("active");
   const [type, setType] = useState("Supplier");
+  const [supplier, setSupplier] = useState("Choose Supplier");
+  const [fileError, setFileError] = useState("");;
   const [autoId, setAutoId] = useState(1);
 
   const startIndex = (currentPage - 1) * dataLimit + 1
@@ -31,13 +31,15 @@ function SuppilerList(props) {
     props.onLoading(true);
 
     try {
-      const response = await axios.post(`${API_PATH.GET_LIST}`, {
-        page: currentPage,
-        limit: dataLimit,
-        type: type,
-        status: status !== "all" ? (status === "active" ? 1 : 0) : null,
-      });
-
+      const response = await axios.post(
+        `${API_PATH.GET_LIST}`,
+        {
+          page: currentPage,
+          limit: dataLimit,
+          type: type,
+          status: status !== "all" ? (status === "active" ? 1 : 0) : null,
+        }
+      );
       return response.data;
     } catch (error) {
       console.log("error", error);
@@ -47,12 +49,12 @@ function SuppilerList(props) {
   };
 
   useEffect(() => {
-    const fetchSupplierInfo = async () => {
+    const fetchSupplierIfo = async () => {
       const response = await getSupplierInfo(currentPage, dataLimit);
       if (response) {
         let totalPage = Math.ceil(response.totlaRecord / response.limit);
         setTotalPages(totalPage);
-        if (status === "deactive") {
+        if (status === "failed") {
           setSupplierList(
             response.data.filter((supplier) => supplier.status === 0)
           );
@@ -71,18 +73,18 @@ function SuppilerList(props) {
         props.onLoading(false);
       }
     };
-    fetchSupplierInfo();
+    fetchSupplierIfo();
   }, [currentPage, dataLimit, status]);
 
   const activateDeactivate = (event, supplierId) => {
     const status = event.target.checked;
     Swal.fire({
-      title: `${status ? "Activate" : "Deactivate"} Supplier?`,
+      title: `${status ? "Success" : "Failed"} Supplier?`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: `Yes, ${status ? "Activate" : "Deactivate"} it!`,
+      confirmButtonText: `Yes, ${status ? "Success" : "Failed"} it!`,
     }).then((result) => {
       if (result.isConfirmed) {
         props.onLoading(true);
@@ -95,7 +97,7 @@ function SuppilerList(props) {
             toast.success(res.data.message);
 
             const index = supplierList.findIndex(
-              (supplier) => supplier.id === supplierId
+              (market_place) => market_place.id === supplierId
             );
 
             setSupplierList((prevState) => [
@@ -119,10 +121,21 @@ function SuppilerList(props) {
   };
 
   let filterList = [
-    { label: "Activate", value: "active" },
-    { label: "Deactivate", value: "deactive" },
-    { label: "All", value: "all" },
+    { label: "Success", value: "success" },
+    { label: "Failed", value: "failed" },
+    { label: "All", value: "all" }
   ];
+
+  let chooseSupplierList = supplierList.map((data) => {
+    return {
+      value: data.id,
+      label: data.name,
+    };
+  })
+
+  const handleFileInputChange = () => {
+    setFileError("");
+  };
 
   return (
     <div
@@ -134,18 +147,16 @@ function SuppilerList(props) {
       <div>
         <div className="container-fluid">
           <PageHeader
-            HeaderText="Supplier List"
+            HeaderText="Api Logs"
             Breadcrumb={[
-              { name: "Integration", navigate: "#" },
-              { name: "Supplier List", navigate: "#" },
+              { name: "Api Logs", navigate: "#" },
             ]}
-            style={{ position: "sticky", top: 0, zIndex: 999 }}
           />
           <div className="tab-component">
             <div className="card">
               <div className="body">
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                  <div style={{ minWidth: "110px" }}>
+                <div className="mb-3 top__header">
+                  <div style={{ minWidth: "140px" }}>
                     <Select
                       options={filterList}
                       onChange={(data) => {
@@ -155,9 +166,6 @@ function SuppilerList(props) {
                       defaultValue={filterList[0]}
                     />
                   </div>
-                  <Link className="link-btn" to={`/manage-supplier`}>
-                    Add Supplier
-                  </Link>
                 </div>
 
                 <div className="data-table">
@@ -166,39 +174,47 @@ function SuppilerList(props) {
                       <i className="fa fa-refresh fa-spin"></i>
                     </div>
                   ) : null}
-                  <table className="table w-100 table-responsive-sm">
+                  <table className="table w-100 table-responsive-lg">
                     <thead>
                       <tr>
                         <th>#</th>
-                        <th>Logo</th>
                         <th>Supplier Name</th>
 
-                        <th>Prefix Name</th>
-                        <th>Last Update(UTC)</th>
-
-                        <>
-                          <th>Status</th>
-                          <th>Action</th>
-                        </>
+                        <th>Import Date /Time UTC</th>
+                        <th>File Name</th>
+                        <th>Import Type</th>
+                        <th>Lines</th>
+                        {props.user.permissions.update_company ? (
+                          <>
+                            <th>Status</th>
+                            <th>Download</th>
+                          </>
+                        ) : null}
                       </tr>
                     </thead>
                     <tbody>
-                      {supplierList?.map((supplier, index) => (
-                        <tr key={supplier.id}>
-                          <td>{startIndex + index}</td>
+                      {supplierList.map((market_place, idx) => (
+                        <tr key={market_place.id}>
+                          <td>{startIndex + idx}</td>
                           <td>
-                            {supplier.logo ? (
-                              <img src={supplier.logo} className="list-logo" />
+                            {market_place.logo ? (
+                              <img
+                                src={market_place.logo}
+                                alt={market_place.name}
+                                className="list-logo"
+                              />
                             ) : (
                               <div className="list-logo placeholder">N/A</div>
                             )}
                           </td>
-                          <td>{supplier.name}</td>
 
-                          <td>{supplier.prefixName}</td>
+                          <td>{market_place.name}</td>
+                          <td>{market_place.name}</td>
+
+                          <td>{market_place.prefixName}</td>
                           <td>
-                            {supplier.updatedAt
-                              ? moment(supplier.updated_on).format(
+                            {market_place.updatedAt
+                              ? moment(market_place.updated_on).format(
                                 "MM/DD/YYYY hh:mm a"
                               )
                               : "N/A"}
@@ -208,10 +224,10 @@ function SuppilerList(props) {
                             <td>
                               <Form.Check
                                 type="switch"
-                                id={`${supplier.id}`}
-                                checked={supplier.status}
+                                id={`${market_place.id}`}
+                                checked={market_place.status}
                                 onChange={(e) =>
-                                  activateDeactivate(e, supplier.id)
+                                  activateDeactivate(e, market_place.id)
                                 }
                               />
                             </td>
@@ -220,18 +236,18 @@ function SuppilerList(props) {
                               <i
                                 data-placement="top"
                                 title="Edit"
-                                className="fa fa-edit edit"
+                                className="fa fa-solid fa-download"
                                 onClick={() => {
                                   localStorage.setItem(
-                                    "supplierId",
-                                    supplier.id
+                                    "marketPlaceId",
+                                    market_place.id
                                   );
                                   localStorage.setItem(
-                                    "supplierName",
-                                    supplier.name
+                                    "marketPlaceName",
+                                    market_place.name
                                   );
 
-                                  history.push(`/manage-supplier`);
+                                  history.push(`/manage-marketPlace`);
                                 }}
                               ></i>
                             </td>
@@ -274,4 +290,4 @@ const mapStateToProps = ({ LoadingReducer, loginReducer }) => ({
   loading: LoadingReducer.isLoading,
   user: loginReducer.user,
 });
-export default connect(mapStateToProps, { onLoading })(SuppilerList);
+export default connect(mapStateToProps, { onLoading })(ApiLogs);

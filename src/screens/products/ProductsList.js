@@ -156,10 +156,11 @@ function ProductsList(props) {
                       defaultValue={filterList[0]}
                     />
                     </div>*/}
-                  <InputGroup className="searchbar">
+                  <InputGroup>
+                    <InputGroup.Text id="search">Search</InputGroup.Text>
                     <FormControl
                       type="search"
-                      className="me-2"
+                      className=""
                       placeholder="Search Products by SKU Number, Parent SKU Number, Name, Category or Supplier..."
                     />
                   </InputGroup>
@@ -174,7 +175,7 @@ function ProductsList(props) {
                   <table className="w-100 table-responsive-md">
                     <thead>
                       <tr>
-                        <th>Id</th>
+                        <th>#</th>
                         <th>Supplier Name</th>
 
                         <th>Grand Parent SKU</th>

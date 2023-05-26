@@ -92,6 +92,35 @@ class NavbarMenu extends React.Component {
     this.activeMenutabwhenNavigate("/" + activeKey);
   }
 
+  logoutHandler = () => {
+    this.props.onSystemLoading(true);
+    const token = localStorage.getItem("token");
+
+    const userId = this.props.user.data._id;
+    this.props
+      .onLogOut(token, userId)
+      .then((res) => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("_id");
+        localStorage.removeItem("token");
+        localStorage.removeItem("name");
+        localStorage.removeItem("email");
+        localStorage.removeItem("company");
+        localStorage.removeItem("retailer");
+        localStorage.removeItem("newlyAddedRetailer");
+
+        localStorage.removeItem("role");
+        this.props.onLoggedin(false);
+        this.props.history.push("/login");
+        this.props.onSystemLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        this.props.onLoggedin(false);
+        this.props.onSystemLoading(false);
+      });
+  };
+
   activeMenutabwhenNavigate(activeKey) {
     if (
       activeKey === "/dashboard" ||
@@ -207,6 +236,7 @@ class NavbarMenu extends React.Component {
       sideMenuTab,
       isToastMessage,
       activeKey,
+      history
     } = this.props;
     var path = window.location.pathname;
     document.body.classList.add(themeColor);
@@ -446,48 +476,52 @@ class NavbarMenu extends React.Component {
 
         <div id="left-sidebar" className="sidebar" style={{ zIndex: 9 }}>
           <div className="sidebar-scroll">
-            <div className="user-account">
+            <div className="user-account d-flex align-items-center">
               <img
                 src="user2.jpg"
                 className="rounded-circle user-photo"
                 alt="User Profile Picture"
               />
               <Dropdown>
-                <span style={{ display: "flex", marginTop: "10px" }}>
+                {/* <span style={{ display: "flex", marginTop: "10px" }}>
                   {localStorage.getItem("name")}
-                </span>
-                {/*<Dropdown.Toggle
+                </span> */}
+                <Dropdown.Toggle
                   variant="none"
                   as="a"
                   id="dropdown-basic"
                   className="user-name"
+                  style={{cursor: "pointer"}}
                 >
                   <strong>{this.props.user?.data.name}</strong>
-                </Dropdown.Toggle>*/}
+                </Dropdown.Toggle>
 
                 <Dropdown.Menu className="dropdown-menu-right account">
                   {/* <Dropdown.Item> */}
+                  {this.props.user?.data.role === "SUPER_ADMIN" ? (
+                    <Dropdown.Item onClick={() => history.push(`/profile`)}>
+                      {/* <Link to="profile"> */}
+                        <i className="icon-user"></i> <span>My Profile</span>
+                      {/* </Link> */}
+                    </Dropdown.Item>
+                  ): null}
                   {this.props.user?.data.role == "COMPANY_ADMIN" ? (
-                    <Link to="company-profile">
-                      <i className="icon-user"></i>Profile
-                    </Link>
+                    <Dropdown.Item onClick={() => history.push(`/company-profile`)}>
+                      {/* <Link to="company-profile"> */}
+                        <i className="icon-user"></i>My Profile
+                      {/* </Link> */}
+                    </Dropdown.Item>
                   ) : null}
                   {this.props.user?.data.role == "RETAILER_ADMIN" ? (
-                    <Link to="retailer-profile">
-                      <i className="icon-user"></i>Profile
-                    </Link>
+                    <Dropdown.Item onClick={() => history.push(`/retailer-profile`)}>
+                      {/* <Link to="retailer-profile"> */}
+                        <i className="icon-user"></i>My Profile
+                      {/* </Link> */}
+                    </Dropdown.Item>
                   ) : null}
                   {/* </Dropdown.Item> */}
-                  <Dropdown.Item href="appinbox">
-                    {" "}
-                    <i className="icon-envelope-open"></i>Messages
-                  </Dropdown.Item>
-                  <Dropdown.Item>
-                    {" "}
-                    <i className="icon-settings"></i>Settings
-                  </Dropdown.Item>
                   <li className="divider"></li>
-                  <Dropdown.Item>
+                  <Dropdown.Item onClick={this.logoutHandler}>
                     {" "}
                     <i className="icon-power"></i>Logout
                   </Dropdown.Item>
@@ -605,10 +639,10 @@ class NavbarMenu extends React.Component {
                   <ul className="collapse">
                     {this.props.user?.data.role == "SUPER_ADMIN" ? (
                       <li className={activeKey === "dashboard" ? "active" : ""}>
-                        <Link to="integration">Add New</Link>
+                        <Link to="integration">Manage Integration</Link>
                       </li>
                     ) : null}
-                    {this.props.user?.data.role == "SUPER_ADMIN" ? (
+                    {/* {this.props.user?.data.role == "SUPER_ADMIN" ? (
                       <li
                         className={activeKey === "dashboard" ? "active" : ""}
                         onClick={() => {
@@ -641,7 +675,7 @@ class NavbarMenu extends React.Component {
                       >
                         <Link to="integrator">Integrator</Link>
                       </li>
-                    ) : null}
+                    ) : null} */}
                   </ul>
                 </li>
 
@@ -676,7 +710,7 @@ class NavbarMenu extends React.Component {
                   </ul>
                 </li>
 
-                <li className="" id="reportDropDown">
+                {/* <li className="" id="reportDropDown">
                   <a
                     href="#!"
                     className="has-arrow"
@@ -692,7 +726,7 @@ class NavbarMenu extends React.Component {
                       <Link to="logs">Transaction Reports</Link>
                     </li>
                   </ul>
-                </li>
+                </li> */}
                 <li className="" id="logDropDown">
                   <a
                     href="#!"
@@ -706,14 +740,14 @@ class NavbarMenu extends React.Component {
                   </a>
                   <ul className="collapse">
                     <li className={activeKey === "dashboard" ? "active" : ""}>
-                      <Link to="logs">API Logs</Link>
+                      <Link to="/apilogs">API Logs</Link>
                     </li>
-                    <li className={activeKey === "dashboard" ? "active" : ""}>
+                    {/* <li className={activeKey === "dashboard" ? "active" : ""}>
                       <Link to="logs">Change Logs</Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </li>
-                <li className="" id="settingsDropDown">
+                {/* <li className="" id="settingsDropDown">
                   <a
                     href="#!"
                     className="has-arrow"
@@ -732,7 +766,7 @@ class NavbarMenu extends React.Component {
                       <Link to="logs">My Preference</Link>
                     </li>
                   </ul>
-                </li>
+                </li> */}
               </ul>
             </Nav>
 
@@ -808,7 +842,7 @@ class NavbarMenu extends React.Component {
                     }
                     id="menu"
                   >
-                    <Nav id="left-sidebar-nav" className="sidebar-nav">
+                    {/* <Nav id="left-sidebar-nav" className="sidebar-nav">
                       <ul id="main-menu" className="metismenu">
                         <li className="" id="dashboradContainer">
                           <a
@@ -1469,7 +1503,7 @@ class NavbarMenu extends React.Component {
                           </ul>
                         </li>
                       </ul>
-                    </Nav>
+                    </Nav> */}
                   </div>
                   <div
                     className={

@@ -90,6 +90,8 @@ import ProductsList from "./screens/products/ProductsList";
 import FileUpload from "./screens/products/FileUpload";
 import RetailerSettingList from "./screens/ManageRetailer/RetailerSettingList";
 import ManageProduct from "./screens/ManageProduct/ManageProduct";
+import ApiLogs from "./screens/Logs/ApiLogs";
+import Profile from "./screens/Profile/Profile";
 window.__DEV__ = true;
 
 class App extends React.Component {
@@ -243,6 +245,11 @@ class App extends React.Component {
               <Route exact path={`/leafletmap`} component={leafletmap} />
               <Route
                 exact
+                path={`/profile`}
+                component={Profile}
+              />
+              <Route
+                exact
                 path={`/company-profile`}
                 component={UpdateProfile}
               />
@@ -252,7 +259,7 @@ class App extends React.Component {
                 component={RetailerProfile}
               />
               {this.props.user?.data.role == "SUPER_ADMIN" ||
-              this.props.user?.data.role == "COMPANY_ADMIN" ? (
+                this.props.user?.data.role == "COMPANY_ADMIN" ? (
                 <>
                   <Route exact path={`/company`} component={CompanyList} />
                   <Route
@@ -264,37 +271,37 @@ class App extends React.Component {
               ) : null}
 
               {this.props.user?.data.role == "SUPER_ADMIN" ||
-              this.props.user?.data.role == "COMPANY_ADMIN" ||
-              this.props.user?.data.role == "RETAILER_ADMIN"? (
+                this.props.user?.data.role == "COMPANY_ADMIN" ||
+                this.props.user?.data.role == "RETAILER_ADMIN" ? (
                 <>
                   <Route exact path={`/retailer`} component={RetailerList} />
                   {this.props.user?.permissions.update_retailer ||
-                  this.props.user?.permissions.add_retailer ? (
+                    this.props.user?.permissions.add_retailer ? (
                     <>
-                    <Route
-                    exact
-                    path={`/manage-retailer`}
-                    component={ManageRetailer}
-                  />
-                  <Route exact path={`/setting-retailer-list`} component={RetailerSettingList}/>
-                  <Route
-                  exact
-                  path={`/setting-retailer`}
-                  component={ManageRetailerSetting}
-                />
+                      <Route
+                        exact
+                        path={`/manage-retailer`}
+                        component={ManageRetailer}
+                      />
+                      <Route exact path={`/setting-retailer-list`} component={RetailerSettingList} />
+                      <Route
+                        exact
+                        path={`/setting-retailer`}
+                        component={ManageRetailerSetting}
+                      />
                     </>
-                   
+
                   ) : null}
                 </>
               ) : null}
 
               {this.props.user?.data.role == "SUPER_ADMIN" ||
-              this.props.user?.data.role == "COMPANY_ADMIN" ||
-              this.props.user?.data.role == "RETAILER_ADMIN" ? (
+                this.props.user?.data.role == "COMPANY_ADMIN" ||
+                this.props.user?.data.role == "RETAILER_ADMIN" ? (
                 <>
                   <Route exact path={`/user`} component={UserList} />
                   {this.props.user?.permissions.update_retailer ||
-                  this.props.user?.permissions.add_retailer ? (
+                    this.props.user?.permissions.add_retailer ? (
                     <Route exact path={`/manage-user`} component={ManageUser} />
                   ) : null}
                   {this.props.user?.permissions.update_user ? (
@@ -324,8 +331,8 @@ class App extends React.Component {
                     component={ManageSuppiler}
                   />
                 </>
-                ) : null}
-              
+              ) : null}
+
               {this.props.user?.data.role == "SUPER_ADMIN" ? (
                 <>
                   <Route
@@ -351,8 +358,15 @@ class App extends React.Component {
               {this.props.user?.data.role === "SUPER_ADMIN" ? (
                 <>
                   <Route exact path={`/products`} component={ProductsList} />
-                  <Route exact path={`/product-details`} component={ManageProduct}/>
+                  <Route exact path={`/product-details`} component={ManageProduct} />
                   <Route exact path={`/file-upload`} component={FileUpload} />
+
+                </>
+              ) : null}
+
+              {this.props.user?.data.role === "SUPER_ADMIN" ? (
+                <>
+                  <Route exact path={`/apilogs`} component={ApiLogs} />
 
                 </>
               ) : null}

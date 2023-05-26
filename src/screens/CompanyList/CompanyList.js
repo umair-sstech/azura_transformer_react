@@ -133,7 +133,7 @@ const CompanyList = (props) => {
                                     <table className="table w-100 table-responsive-lg">
                                         <thead>
                                             <tr>
-                                                <th>Id</th>
+                                                <th>#</th>
                                                 <th>Company Code</th>
                                                 <th>Logo</th>
                                                 <th>Company Name</th>

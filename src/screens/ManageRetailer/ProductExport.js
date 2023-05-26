@@ -257,7 +257,7 @@ function ProductExport(props) {
                 <th>
                   <input type="checkbox" onChange={handleCheckboxChange} />
                 </th>
-                <th>Id</th>
+                <th>#</th>
                 <th>Supplier Name</th>
                 <th>Category</th>
                 <th>Product Count</th>
