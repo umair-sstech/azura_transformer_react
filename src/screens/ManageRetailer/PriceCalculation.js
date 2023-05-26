@@ -88,10 +88,15 @@ function PriceCalculation(props) {
     handleChange(name, value);
   };
 
-
   const checkAnyValueIsNegative = (payload) => {
-    return payload.some(val => val.multipleValue < 0 || val.fixedValue < 0 || val.taxValue < 0 || val.discountValue < 0)
-  }
+    return payload.some(
+      (val) =>
+        val.multipleValue < 0 ||
+        val.fixedValue < 0 ||
+        val.taxValue < 0 ||
+        val.discountValue < 0
+    );
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -120,14 +125,16 @@ function PriceCalculation(props) {
           extraValue: "",
         }));
 
-        if (selectedOptions[supplierSettingId].value === "" || selectedOptions[supplierSettingId].label === "Select Price") {
-          return toast.error("Please select Price.")
+        if (
+          selectedOptions[supplierSettingId].value === "" ||
+          selectedOptions[supplierSettingId].label === "Select Price"
+        ) {
+          return toast.error("Please select Price.");
         }
-        const checkNegativeValue = checkAnyValueIsNegative(payload)
+        const checkNegativeValue = checkAnyValueIsNegative(payload);
         if (checkNegativeValue) {
-          return toast.error("Values can not be negative.")
+          return toast.error("Values can not be negative.");
         }
-
 
         setIsLoading(true);
         const response = await axios.post(
@@ -147,7 +154,6 @@ function PriceCalculation(props) {
       }
     }
   };
-
 
   const getRetailerIntegrationById = async () => {
     try {
@@ -193,7 +199,7 @@ function PriceCalculation(props) {
     if (!form) {
       return;
     }
-    const formData = new FormData(form)
+    const formData = new FormData(form);
     const errors = validatePriceCalculation(formData);
     setFormErrors(errors);
 
@@ -216,12 +222,15 @@ function PriceCalculation(props) {
           extraValue: "",
         }));
 
-        if (selectedOptions[supplierSettingId].value === "" || selectedOptions[supplierSettingId].label === "Select Price") {
-          return toast.error("Please select Price.")
+        if (
+          selectedOptions[supplierSettingId].value === "" ||
+          selectedOptions[supplierSettingId].label === "Select Price"
+        ) {
+          return toast.error("Please select Price.");
         }
-        const checkNegativeValue = checkAnyValueIsNegative(payload)
+        const checkNegativeValue = checkAnyValueIsNegative(payload);
         if (checkNegativeValue) {
-          return toast.error("Values can not be negative.")
+          return toast.error("Values can not be negative.");
         }
 
         setIsLoadingExit(true);
@@ -358,14 +367,20 @@ function PriceCalculation(props) {
                               className="form-control"
                               placeholder="Enter Value"
                               type="number"
+                              step="any"
                               name="multipleValue"
                               onChange={(e) =>
                                 handleInputChange(e, supplier.supplierId)
                               }
-                              defaultValue={initFormData[supplier.supplierId]?.multipleValue || ""}
+                              defaultValue={
+                                initFormData[supplier.supplierId]
+                                  ?.multipleValue || ""
+                              }
                             />
                             {formErrors && formErrors.multipleValue && (
-                              <span className="text-danger">{formErrors.multipleValue}</span>
+                              <span className="text-danger">
+                                {formErrors.multipleValue}
+                              </span>
                             )}
                           </div>
                         </div>
@@ -376,15 +391,21 @@ function PriceCalculation(props) {
                               id="value2"
                               className="form-control"
                               placeholder="Enter Value"
+                              step="any"
                               type="number"
                               name="fixedValue"
                               onChange={(e) =>
                                 handleInputChange(e, supplier.supplierId)
                               }
-                              defaultValue={initFormData[supplier.supplierId]?.fixedValue || ""}
+                              defaultValue={
+                                initFormData[supplier.supplierId]?.fixedValue ||
+                                ""
+                              }
                             />
                             {formErrors && formErrors.fixedValue && (
-                              <span className="text-danger">{formErrors.fixedValue}</span>
+                              <span className="text-danger">
+                                {formErrors.fixedValue}
+                              </span>
                             )}
                           </div>
                         </div>
@@ -396,14 +417,20 @@ function PriceCalculation(props) {
                               className="form-control"
                               placeholder="Enter Value"
                               type="number"
+                              step="any"
                               name="taxValue"
                               onChange={(e) =>
                                 handleInputChange(e, supplier.supplierId)
                               }
-                              defaultValue={initFormData[supplier.supplierId]?.taxValue || ""}
+                              defaultValue={
+                                initFormData[supplier.supplierId]?.taxValue ||
+                                ""
+                              }
                             />
                             {formErrors && formErrors.taxValue && (
-                              <span className="text-danger">{formErrors.taxValue}</span>
+                              <span className="text-danger">
+                                {formErrors.taxValue}
+                              </span>
                             )}
                           </div>
                         </div>
@@ -415,14 +442,20 @@ function PriceCalculation(props) {
                               className="form-control"
                               placeholder="Enter Value"
                               type="number"
+                              step="any"
                               name="discountValue"
                               onChange={(e) =>
                                 handleInputChange(e, supplier.supplierId)
                               }
-                              defaultValue={initFormData[supplier.supplierId]?.discountValue || ""}
+                              defaultValue={
+                                initFormData[supplier.supplierId]
+                                  ?.discountValue || ""
+                              }
                             />
                             {formErrors && formErrors.discountValue && (
-                              <span className="text-danger">{formErrors.discountValue}</span>
+                              <span className="text-danger">
+                                {formErrors.discountValue}
+                              </span>
                             )}
                           </div>
                         </div>

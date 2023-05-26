@@ -194,7 +194,7 @@ function ProductsList(props) {
                     {productList?.map((product, idx) => (
                       <tr key={product.id}>
                         <td>{startIndex + idx}</td>
-                        <td>supplier Name</td>
+                        <td>{product.Supplier}</td>
                   
                         <td>{product.Grandparent_SKU}</td>
                   

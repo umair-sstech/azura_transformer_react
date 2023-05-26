@@ -114,8 +114,6 @@ function ProductExport(props) {
   };
 
 
-
-
   const getRetailerIntegrationData = async () => {
     try {
       const retailerIntegrationId = localStorage.getItem(

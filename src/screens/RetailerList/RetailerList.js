@@ -18,7 +18,6 @@ const RetailerList = (props) => {
   const [retailerList, setRetailerList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
-  console.log("pages",totalPages)
   const [dataLimit, setdataLimit] = useState(5);
   const history = useHistory();
   const [searchText, setSearchText] = useState("active");
@@ -68,8 +67,6 @@ const RetailerList = (props) => {
   };
 
 
-
- 
   const updateCompanyHandler = (id) => {
     localStorage.setItem("newlyAddedRetailer", id);
     history.push("/manage-retailer");

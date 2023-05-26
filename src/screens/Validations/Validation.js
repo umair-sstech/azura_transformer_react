@@ -229,14 +229,12 @@ export const validateRetailerAccount = (formData) => {
 
 export const validatePriceCalculation = (formData) => {
   const errors = {}
+ 
   const multipleValue = formData.get("multipleValue")
   const fixedValue = formData.get("fixedValue")
   const taxValue = formData.get("taxValue")
   const discountValue = formData.get("discountValue")
 
-  // if (!formData.costPriceField) {
-  //   errors.costPriceField = "Please Select Sync Frequency";
-  // }
 
   if(!multipleValue) {
     errors.multipleValue = "Multiple Value is required";

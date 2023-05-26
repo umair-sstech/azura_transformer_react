@@ -1,13 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Logo from "../../assets/images/logo-white.svg";
+import azuralogo from "../../assets/images/azura-logo.png";
+
 import axios from "axios";
 import { Formik } from "formik";
 import * as Yup from 'yup'
 import { toast } from "react-toastify";
 import { onLoading } from "../../actions";
 import { Spinner } from "react-bootstrap";
+import { withRouter } from 'react-router-dom';
 
 class ResetPassword extends React.Component {
 
@@ -30,21 +32,22 @@ class ResetPassword extends React.Component {
                 )
             })
         });
+
         return (
             <div className="theme-cyan">
                 <div>
                     <div className="vertical-align-wrap">
-                        <div className="vertical-align-middle auth-main">
+                        <div className="">
                             <div className="auth-box">
                                 <div className="top">
-                                    <img src={Logo} alt="Lucid" style={{ height: "40px", margin: "10px" }} />
+                                    <img src={azuralogo} alt="Lucid" style={{ height: "74px",margin: "19px",marginBottom: "8px" }} />
                                 </div>
                                 <div className="card">
                                     <div className="header">
                                         <p className="lead">Reset Password</p>
                                     </div>
                                     <div className="body">
-                                        <p>Please enter your New PAssword below.</p>
+                                        <p>Please enter your New Password below.</p>
 
 
                                         <Formik
@@ -61,6 +64,7 @@ class ResetPassword extends React.Component {
                                                     {
                                                         resetForm({ values: '' })
                                                         toast.success("Password has been reseted")
+                                                        this.props.history.push('/login'); 
                                                         this.props.onLoading(false)
                                                     }).catch(e => {
                                                         toast.error(e.response.data.message || "Something went wrong")
@@ -100,7 +104,7 @@ class ResetPassword extends React.Component {
                                                                 {errors.confirmPassword}
                                                             </span>
                                                         </div>
-                                                        <button className="btn btn-primary btn-lg btn-block" type="submit" disabled={this.props.isLoading}>
+                                                        <button className="btn btn-primary btn-lg btn-block" type="submit"  onSubmit={this.onSubmit}  disabled={this.props.isLoading}>
                                                             {this.props.isLoading ? (<>
                                                                 <Spinner animation="border" size="sm" /> Please wait...
                                                             </>) : "Reset Password"}

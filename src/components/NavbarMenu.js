@@ -191,8 +191,10 @@ class NavbarMenu extends React.Component {
       }
     }
     setTimeout(() => {
-      activeMenu.classList.toggle("active");
-      activeMenu.children[1].classList.toggle("in");
+      if (activeMenu) {
+        activeMenu.classList.toggle("active");
+        activeMenu.children[1].classList.toggle("in");
+      }
     }, 10);
   }
 
@@ -514,20 +516,29 @@ class NavbarMenu extends React.Component {
                 <li className="" id="dashboardDropDown">
                   <a
                     href="#!"
-                    className="has-arrow"
+                    className=""
                     onClick={(e) => {
                       e.preventDefault();
                       this.activeMenutabContainer("dashboardDropDown");
                     }}
-                  >
-                    <i className="icon-home"></i> <span>Dashboard</span>
-                  </a>
-                  <ul className="collapse">
+                  ></a>
+                  <ul>
                     <li className={activeKey === "dashboard" ? "active" : ""}>
-                      <Link to="dashboard">Analytical</Link>
+                      <Link to="dashboard" className="dashboard">
+                        {" "}
+                        <div className="row">
+                          <div className="col-3">
+                            <i className="icon-home" style={{margin:"-43px",content:""}}></i>
+                          </div>
+                          <div>
+                            <span style={{ margin: "-37px",color:"#17191c" }}>Dashboard</span>
+                          </div>
+                        </div>
+                      </Link>
                     </li>
                   </ul>
                 </li>
+
                 {this.props.user?.data.role !== "RETAILER_USER" ? (
                   <li
                     className={
