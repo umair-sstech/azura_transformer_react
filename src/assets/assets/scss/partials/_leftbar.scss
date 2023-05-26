@@ -258,6 +258,10 @@
                 left: 19px;
             }
 		}
+
+		.first__link::before {
+			content: '';
+		}
 		
 		ul ul a {
 			padding: 10px 15px 10px 70px;

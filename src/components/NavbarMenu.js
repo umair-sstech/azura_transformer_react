@@ -562,7 +562,7 @@ class NavbarMenu extends React.Component {
                   ></a>
                   <ul>
                     <li className={activeKey === "dashboard" ? "active" : ""}>
-                      <Link to="dashboard" className="dashboard">
+                      <Link to="dashboard" className="dashboard first__link">
                         {" "}
                         <div className="row">
                           <div className="col-3">

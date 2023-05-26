@@ -34,7 +34,7 @@ class ResetPassword extends React.Component {
         });
 
         return (
-            <div className="theme-cyan">
+            <div className="">
                 <div>
                     <div className="vertical-align-wrap">
                         <div className="">

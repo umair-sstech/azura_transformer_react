@@ -42,7 +42,7 @@ class ForgotPassword extends React.Component {
   render()
   {
     return (
-      <div className="theme-cyan">
+      <div className="">
         <div className="hide-border">
           <div className="vertical-align-wrap">
             <div className="">
