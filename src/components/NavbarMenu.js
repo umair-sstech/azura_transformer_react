@@ -238,7 +238,7 @@ class NavbarMenu extends React.Component {
       sideMenuTab,
       isToastMessage,
       activeKey,
-      history
+      history,
     } = this.props;
     var path = window.location.pathname;
     document.body.classList.add(themeColor);
@@ -493,7 +493,7 @@ class NavbarMenu extends React.Component {
                   as="a"
                   id="dropdown-basic"
                   className="user-name"
-                  style={{cursor: "pointer"}}
+                  style={{ cursor: "pointer" }}
                 >
                   <strong>{this.props.user?.data.name}</strong>
                 </Dropdown.Toggle>
@@ -503,21 +503,25 @@ class NavbarMenu extends React.Component {
                   {this.props.user?.data.role === "SUPER_ADMIN" ? (
                     <Dropdown.Item onClick={() => history.push(`/profile`)}>
                       {/* <Link to="profile"> */}
-                        <i className="icon-user"></i> <span>My Profile</span>
+                      <i className="icon-user"></i> <span>My Profile</span>
                       {/* </Link> */}
                     </Dropdown.Item>
-                  ): null}
+                  ) : null}
                   {this.props.user?.data.role == "COMPANY_ADMIN" ? (
-                    <Dropdown.Item onClick={() => history.push(`/company-profile`)}>
+                    <Dropdown.Item
+                      onClick={() => history.push(`/company-profile`)}
+                    >
                       {/* <Link to="company-profile"> */}
-                        <i className="icon-user"></i>My Profile
+                      <i className="icon-user"></i>My Profile
                       {/* </Link> */}
                     </Dropdown.Item>
                   ) : null}
                   {this.props.user?.data.role == "RETAILER_ADMIN" ? (
-                    <Dropdown.Item onClick={() => history.push(`/retailer-profile`)}>
+                    <Dropdown.Item
+                      onClick={() => history.push(`/retailer-profile`)}
+                    >
                       {/* <Link to="retailer-profile"> */}
-                        <i className="icon-user"></i>My Profile
+                      <i className="icon-user"></i>My Profile
                       {/* </Link> */}
                     </Dropdown.Item>
                   ) : null}
@@ -562,10 +566,15 @@ class NavbarMenu extends React.Component {
                         {" "}
                         <div className="row">
                           <div className="col-3">
-                            <i className="icon-home" style={{margin:"-43px",content:""}}></i>
+                            <i
+                              className="icon-home"
+                              style={{ margin: "-43px", content: "" }}
+                            ></i>
                           </div>
                           <div>
-                            <span style={{ margin: "-37px",color:"#17191c" }}>Dashboard</span>
+                            <span style={{ margin: "-37px", color: "#17191c" }}>
+                              Dashboard
+                            </span>
                           </div>
                         </div>
                       </Link>
@@ -650,7 +659,20 @@ class NavbarMenu extends React.Component {
                   <ul className="collapse">
                     {this.props.user?.data.role == "SUPER_ADMIN" ? (
                       <li className={activeKey === "dashboard" ? "active" : ""}>
-                        <Link to="integration">Manage Integration</Link>
+                        <Link
+                          to="integration"
+                          onClick={() => {
+                            localStorage.removeItem("supplierId");
+                            localStorage.removeItem("supplierName");
+                            localStorage.removeItem("selectedOption");
+                            localStorage.removeItem("marketPlaceId");
+                            localStorage.removeItem("marketPlaceName");
+                            localStorage.removeItem("integratorId");
+                            localStorage.removeItem("integratorName");
+                          }}
+                        >
+                          Manage Integration
+                        </Link>
                       </li>
                     ) : null}
                     {/* {this.props.user?.data.role == "SUPER_ADMIN" ? (

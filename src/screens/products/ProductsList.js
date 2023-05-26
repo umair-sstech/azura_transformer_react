@@ -20,6 +20,8 @@ function ProductsList(props) {
   const [dataLimit, setdataLimit] = useState(5);
   const [status, setStatus] = useState("active");
   const [type, setType] = useState("MarketPlace");
+  const [search, setSearch] = useState("");
+  console.log("search",search)
   const [autoId, setAutoId] = useState(1);
 
   const startIndex = (currentPage - 1) * dataLimit + 1;
@@ -30,30 +32,50 @@ function ProductsList(props) {
     getProductList();
   }, []);
 
-  const getProductList = async (currentPage,dataLimit) => {
-    props.onLoading(true)
+  // const getProductList = async (currentPage,dataLimit) => {
+  //   props.onLoading(true)
+
+  //   try {
+  //     const response = await axios.post(
+  //       "http://localhost:8000/product/getProductList", {
+  //         page: currentPage,
+  //         limit: dataLimit,
+  //         status: status !== "all" ? (status === "active" ? 1 : 0) : null,
+  //       });
+  //       return response.data;
+  //     } catch (error) {
+  //       console.log("error", error);
+
+  //       return null;
+  //     }
+  // };
+
+  const getProductList = async (currentPage, dataLimit, search) => {
+    props.onLoading(true);
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/product/getProductList", {
+        "http://localhost:8000/product/getProductList",
+        {
           page: currentPage,
           limit: dataLimit,
           status: status !== "all" ? (status === "active" ? 1 : 0) : null,
-        });
-        return response.data;
-      } catch (error) {
-        console.log("error", error);
-  
-        return null;
-      }
+          search: search,
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.log("error", error);
+      return null;
+    }
   };
 
-
   useEffect(() => {
-    const fetchMarketPlaceInfo = async () => {
-      const response = await getProductList(currentPage, dataLimit);
+    const getProductData = async () => {
+      const response = await getProductList(currentPage, dataLimit, search);
       if (response) {
-        let totalPage = Math.ceil(response.totlaRecord / response.limit);
+        let totalPage = Math.ceil(response.totalRecord / response.limit);
         setTotalPages(totalPage);
         if (status === "deactive") {
           setProductList(
@@ -70,12 +92,12 @@ function ProductsList(props) {
           }
         }
         setType(type);
-
         props.onLoading(false);
       }
     };
-    fetchMarketPlaceInfo();
-  }, [currentPage, dataLimit, status]);
+
+    getProductData();
+  }, [currentPage, dataLimit, status,search]);
 
   const activateDeactivate = (event, supplierId) => {
     const status = event.target.checked;
@@ -126,6 +148,12 @@ function ProductsList(props) {
     { label: "Deactivate", value: "deactive" },
     { label: "All", value: "all" },
   ];
+
+  const handleSearch = (event) => {
+  const { value } = event.target;
+  setSearch(value);
+  setCurrentPage(1); // Reset the current page when a new search is performed
+};
   return (
     <div
       style={{ flex: 1 }}
@@ -146,7 +174,7 @@ function ProductsList(props) {
             <div className="card">
               <div className="body">
                 <div className="mb-3 top__header">
-                 { /*<div style={{ minWidth: "130px" }}>
+                  {/*<div style={{ minWidth: "130px" }}>
                     <Select
                       options={filterList}
                       onChange={(data) => {
@@ -162,6 +190,8 @@ function ProductsList(props) {
                       type="search"
                       className=""
                       placeholder="Search Products by SKU Number, Parent SKU Number, Name, Category or Supplier..."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
                     />
                   </InputGroup>
                 </div>
@@ -182,8 +212,8 @@ function ProductsList(props) {
                         <th>Parent SKU</th>
                         <th>Variant SKU</th>
                         <th>Brand</th>
-                        <th>Variant SKU</th>
                         <th>Category</th>
+                        <th>Last Update(UTC)</th>
                         {props.user.permissions.update_company ? (
                           <>
                             <th>Action</th>
@@ -192,30 +222,30 @@ function ProductsList(props) {
                       </tr>
                     </thead>
                     <tbody>
-                    {productList?.map((product, idx) => (
-                      <tr key={product.id}>
-                        <td>{startIndex + idx}</td>
-                        <td>{product.Supplier}</td>
-                  
-                        <td>{product.Grandparent_SKU}</td>
-                  
-                        <td>{product.Parent_SKU}</td>
-                  
-                        <td>{product.Variant_SKU}</td>
-                        <td>{product.Brand}</td>
+                      {productList?.map((product, idx) => (
+                        <tr key={product.id}>
+                          <td>{startIndex + idx}</td>
+                          <td>{product.Supplier}</td>
 
-                        <td>{product.Azura_Category_Tree}</td>
+                          <td>{product.Grandparent_SKU}</td>
 
-                        <td>
-                          {product.updatedAt
-                            ? moment(product.updated_on).format(
-                                "MM/DD/YYYY hh:mm a"
-                              )
-                            : "N/A"}
-                        </td>
-                  
-                        <>
-                          {/*<td>
+                          <td>{product.Parent_SKU}</td>
+
+                          <td>{product.Variant_SKU}</td>
+                          <td>{product.Brand}</td>
+
+                          <td>{product.Azura_Category_Tree}</td>
+
+                          <td>
+                            {product.updatedAt
+                              ? moment(product.updated_on).format(
+                                  "MM/DD/YYYY hh:mm a"
+                                )
+                              : "N/A"}
+                          </td>
+
+                          <>
+                            {/*<td>
                             <Form.Check
                               type="switch"
                               id={`${product.id}`}
@@ -225,29 +255,29 @@ function ProductsList(props) {
                               }
                             />
                             </td>*/}
-                  
-                          <td className="action-group">
-                            <i
-                              data-placement="top"
-                              title="Edit"
-                              className="fa fa-eye"
-                              onClick={() => {
-                                localStorage.setItem(
-                                  "marketPlaceId",
-                                  product.id
-                                );
-                                localStorage.setItem(
-                                  "marketPlaceName",
-                                  product.name
-                                );
-                  
-                                history.push(`/product-details`);
-                              }}
-                            ></i>
-                          </td>
-                        </>
-                      </tr>
-                    ))}
+
+                            <td className="action-group">
+                              <i
+                                data-placement="top"
+                                title="Edit"
+                                className="fa fa-eye"
+                                onClick={() => {
+                                  localStorage.setItem(
+                                    "marketPlaceId",
+                                    product.id
+                                  );
+                                  localStorage.setItem(
+                                    "marketPlaceName",
+                                    product.name
+                                  );
+
+                                  history.push(`/product-details`);
+                                }}
+                              ></i>
+                            </td>
+                          </>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                   <div className="pagination-wrapper">

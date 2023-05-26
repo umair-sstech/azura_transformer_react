@@ -16,7 +16,6 @@ function CurrencyConversion(props) {
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [currencyList, setCurrencyList] = useState([]);
   const [selectedCurrency, setSelectedCurrency] = useState(null);
-  console.log("selectdedCure", selectedCurrency?.label)
   const history = useHistory()
 
   useEffect(() => {
