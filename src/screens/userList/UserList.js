@@ -136,7 +136,7 @@ const UserList = (props) => {
                                     <table className="table w-100 table-responsive-sm">
                                         <thead>
                                             <tr>
-                                                <th>Id</th>
+                                                <th>#</th>
                                                 <th>User Code</th>
                                                 <th>User Name</th>
                                                 <th>Company</th>

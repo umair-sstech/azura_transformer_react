@@ -198,7 +198,7 @@ function FileUpload(props) {
                   <table className="table w-100 table-responsive-lg">
                     <thead>
                       <tr>
-                        <th>Id</th>
+                        <th>#</th>
                         <th>Supplier Name</th>
 
                         <th>Import Date /Time UTC</th>

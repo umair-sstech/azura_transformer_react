@@ -170,7 +170,7 @@ function MarketPlaceList(props) {
                   <table className="table w-100 table-responsive-sm">
                     <thead>
                       <tr>
-                        <th>Id</th>
+                        <th>#</th>
                         <th>Logo</th>
                         <th>Market Place Name</th>
 

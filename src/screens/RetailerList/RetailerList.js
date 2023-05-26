@@ -161,7 +161,7 @@ const RetailerList = (props) => {
                   <table className="table w-100 table-responsive-md">
                     <thead>
                       <tr>
-                        <th>Id</th>
+                        <th>#</th>
                         <th>Retailer Code</th>
                         <th>Logo</th>
                         <th>Retailer Name</th>

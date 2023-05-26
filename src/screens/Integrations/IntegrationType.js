@@ -8,10 +8,10 @@ function IntegrationType(props) {
   const options = [
     { value: "Supplier", label: "Supplier" },
     { value: "market_place", label: "Market Place" },
-    { value: "Shopping Cart", label: "Shopping Cart" },
-    { value: "Carrier", label: "Carrier" },
-    { value: "TMS", label: "TMS" },
-    { value: "WMS", label: "WMS" },
+    { value: "Shopping Cart", label: "Shopping Cart", isDisabled: true },
+    { value: "Carrier", label: "Carrier", isDisabled: true },
+    { value: "TMS", label: "TMS", isDisabled: true },
+    { value: "WMS", label: "WMS", isDisabled: true },
     { value: "Integrator", label: "Integrator" },
   ];
   
@@ -68,6 +68,7 @@ function IntegrationType(props) {
                       value={selectedOption}
                       onChange={handleChange}
                       options={options}
+                      isDisabled={false}
                       className="select-option"
                     />
                   </div>
