@@ -3,6 +3,7 @@ const PRODUCT_API_URL=process.env.REACT_APP_API_URL_PRODUCT
 const API_LOG=process.env.REACT_APP_URL_API_LOG
 const API_RETAILER_URL=process.env.REACT_APP_RETAILER_SERVICE
 
+
 export const API_PATH = {
   GET_LIST:`${API_BASE_URL}/integration/getIntegrationInfo`,
   CREATE_INTEGRATION_INFO: `${API_BASE_URL}/integration/createIntegrationInfo`,
@@ -46,6 +47,8 @@ GET_RETAILER_SUPPLIER_LIST:`${API_RETAILER_URL}/getSupplierList`,
 CREATE_RETAILER_SUPPLIER:`${API_RETAILER_URL}/createOrUpdateRetailerIntegration`,
 GET_RETAILER_INTEGRATION_LIST:`${API_RETAILER_URL}/getRetailerIntegrationList`,
 CHANGE_STATUS:`${API_RETAILER_URL}/changeRetailerIntegrationStatus`,
+API_LOGS:`${API_RETAILER_URL}/changeRetailerIntegrationStatus`,
+
 
 
 

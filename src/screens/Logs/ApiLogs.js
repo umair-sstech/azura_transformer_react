@@ -39,7 +39,7 @@ function ApiLogs(props) {
     props.onLoading(true);
     axios
       .get(
-        `http://localhost:9000/apiLog/getAPILogs?page=${currentPage}&limit=${dataLimit}&searchText=${search}`
+        `${API_PATH.GET_API_LOG}?page=${currentPage}&limit=${dataLimit}&searchText=${search}`
       )
       .then((res) => {
         let totlePage = Math.ceil(res.data.totlaRecord / res.data.limit);
