@@ -23,6 +23,8 @@ import {
   searchProgressBar,
 } from "../../actions";
 import SparkleCard from "../../components/SparkleCard";
+import axios from "axios";
+import { API_PATH } from "../ApiPath/Apipath";
 
 var timer = null;
 class Dashbord extends React.Component {
@@ -35,27 +37,50 @@ class Dashbord extends React.Component {
   componentDidMount() {
     window.scrollTo(0, 0);
     this.loadDataCard();
-    this.setState({
-      cardData: [...sparkleCardData],
-    });
   }
 
   async loadDataCard() {
-    const { cardData } = this.state;
-    var allCardData = cardData;
-    cardData.map((data, i) => {
-      var uData = [];
-      data.sparklineData.data.map((d, j) => {
-        uData[j] = Math.floor(Math.random() * 10) + 1;
+    try {
+      const response = await axios.get(`${API_PATH.GET_DASHBOARD_DATA}`);
+      const data = response.data;
+
+      const updatedCardData = sparkleCardData.map((card) => {
+        let count;
+        switch (card.heading) {
+          case 'SUPPLIER':
+            count = data.suppliers;
+            break;
+          case 'INTEGRATOR':
+            count = data.integrators;
+            break;
+          case 'MARKETPLACE':
+            count = data.MarketPlace;
+            break;
+          case 'PRODUCT':
+            count = data.products;
+            break;
+          default:
+            count = 0;
+        }
+
+        return {
+          ...card,
+          money: count,
+        };
       });
-      allCardData[i].sparklineData.data = [...uData];
-    });
-    this.setState({ cardData: [...allCardData] });
+
+      this.setState({ cardData: updatedCardData, loadingPage: false });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      this.setState({ loadingPage: false });
+    }
   }
 
+
   render() {
-    const { loadingPage } = this.props;
+    const {loadingPage}=this.props
     const { cardData } = this.state;
+    console.log("cardData",cardData)
     if (loadingPage) {
       return (
         <div className="page-loader-wrapper">
@@ -81,20 +106,18 @@ class Dashbord extends React.Component {
               Breadcrumb={[{ name: "Dashboard", navigate: "#" }]}
             />
             <div className="row clearfix">
-              {cardData.map((data, i) => (
-                <SparkleCard
-                  index={i}
-                  key={data.heading}
-                  Heading={data.heading}
-                  Money={data.money}
-                  PerText={data.perText}
-                  isRandomUpdate={true}
-                  // Data={data.sparklineData}
-                  mainData={data.sparklineData.data}
-                  chartColor={data.sparklineData.areaStyle.color}
-                  ContainerClass="col-lg-3 col-md-6 col-sm-6"
-                />
-              ))}
+            {cardData.map((data, i) => (
+              <SparkleCard
+                index={i}
+                key={data.heading}
+                Heading={data.heading}
+                Money={data.money}
+                isRandomUpdate={true}
+                mainData={data.sparklineData.data}
+                chartColor={data.sparklineData.areaStyle.color}
+                ContainerClass="col-lg-3 col-md-6 col-sm-6"
+              />
+            ))}
             </div>
 
           {/*  <div className="row clearfix">

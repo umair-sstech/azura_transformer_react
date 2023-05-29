@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PageHeader from '../../components/PageHeader';
 
-const Profile = (props) =>
-{
+const Profile = (props) =>{
+const [profile,setProfile]=useState({})
+
+const getProfile=async(e)=>{
+  try {
+    
+  } catch (error) {
+    console.log("error",error)
+  }
+}
+
    return (
         <>
         <div
@@ -37,8 +46,8 @@ const Profile = (props) =>
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Logo</th>
                           <th>Name</th>
+                          <th>Country</th>
                           <th>Last Update(UTC)</th>
                             <th>Action</th>
                          
@@ -49,9 +58,9 @@ const Profile = (props) =>
                           <tr>
                             <td>1</td>
                             <td>
-                            <div className="list-logo placeholder">N/A</div>
+                            Azura Fashion
                             </td>
-                            <td>Azura Fashion</td>
+                            <td>India</td>
   
                             <td>Time Zone</td>
                            

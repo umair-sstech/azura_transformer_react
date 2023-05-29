@@ -323,8 +323,8 @@ class NavbarMenu extends React.Component {
                         this.props.onPressNotification();
                       }}
                     >
-                      <i className="icon-bell"></i>
-                      <span className="notification-dot"></span>
+                  {/* <i className="icon-bell"></i>
+                      <span className="notification-dot"></span>*/}
                     </a>
                     <ul
                       className={
@@ -561,7 +561,7 @@ class NavbarMenu extends React.Component {
                     }}
                   ></a>
                   <ul>
-                    <li className={activeKey === "dashboard" ? "active" : ""}>
+                    <li className="">
                       <Link to="dashboard" className="dashboard first__link">
                         {" "}
                         <div className="row">
@@ -572,7 +572,7 @@ class NavbarMenu extends React.Component {
                             ></i>
                           </div>
                           <div>
-                            <span style={{ margin: "-37px", color: "#17191c" }}>
+                            <span style={{ margin: "-37px", color: "#17191c" }} className="dashboard">
                               Dashboard
                             </span>
                           </div>
@@ -599,7 +599,7 @@ class NavbarMenu extends React.Component {
                         this.activeMenutabContainer("dataInsertDropDown");
                       }}
                     >
-                      <i className="icon-plus"></i> <span>Manage</span>
+                      <i className="fa fa-building-o"></i> <span>Manage</span>
                     </a>
                     <ul
                       className={
@@ -654,7 +654,7 @@ class NavbarMenu extends React.Component {
                       this.activeMenutabContainer("dataInsertDropDown1");
                     }}
                   >
-                    <i className="icon-plus"></i> <span>Integration</span>
+                    <i className="fa fa-gear"></i> <span>Integration</span>
                   </a>
                   <ul className="collapse">
                     {this.props.user?.data.role == "SUPER_ADMIN" ? (
@@ -721,7 +721,7 @@ class NavbarMenu extends React.Component {
                       this.activeMenutabContainer("productDropDown");
                     }}
                   >
-                    <i className="icon-plus"></i> <span>Products</span>
+                    <i className="fa fa-tags"></i> <span>Products</span>
                   </a>
                   <ul className="collapse">
                     {this.props.user?.data.role === "SUPER_ADMIN" ? (
@@ -769,7 +769,7 @@ class NavbarMenu extends React.Component {
                       this.activeMenutabContainer("logDropDown");
                     }}
                   >
-                    <i className="icon-info"></i> <span>Logs</span>
+                    <i className="fa fa-history"></i> <span>Logs</span>
                   </a>
                   <ul className="collapse">
                     <li className={activeKey === "dashboard" ? "active" : ""}>
@@ -1802,12 +1802,12 @@ class NavbarMenu extends React.Component {
                           <span>Email Redirect</span>
                         </label>
                       </li>
-                      <li>
+                     {/* <li>
                         <label className="fancy-checkbox">
                           <input type="checkbox" name="checkbox" />
                           <span>Notifications</span>
                         </label>
-                      </li>
+                        </li>*/}
                       <li>
                         <label className="fancy-checkbox">
                           <input type="checkbox" name="checkbox" />
