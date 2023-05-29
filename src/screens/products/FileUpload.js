@@ -21,61 +21,81 @@ function FileUpload(props) {
   const [status, setStatus] = useState("active");
   const [type, setType] = useState("Supplier");
   const [supplier, setSupplier] = useState("Choose Supplier");
-  const [fileError, setFileError] = useState("");;
+  console.log("supplier",supplier)
+  const [fileError, setFileError] = useState("");
   const [autoId, setAutoId] = useState(1);
+  const [fileData, setFileData] = useState([]);
 
-  const startIndex = (currentPage - 1) * dataLimit + 1
+  const startIndex = (currentPage - 1) * dataLimit + 1;
 
   const history = useHistory();
 
-  const getSupplierInfo = async (currentPage, dataLimit) => {
+  useEffect(() => {
+    getProductList();
+    getSupplierData()
+  }, []);
+
+  const getProductList = async (currentPage, dataLimit, search) => {
     props.onLoading(true);
 
     try {
       const response = await axios.post(
-        `${API_PATH.GET_LIST}`,
+        "http://localhost:8000/product/getFileList",
         {
           page: currentPage,
           limit: dataLimit,
-          type: type,
           status: status !== "all" ? (status === "active" ? 1 : 0) : null,
+          search: search,
         }
       );
+
       return response.data;
     } catch (error) {
       console.log("error", error);
-
       return null;
     }
   };
 
   useEffect(() => {
-    const fetchSupplierIfo = async () => {
-      const response = await getSupplierInfo(currentPage, dataLimit);
+    const getProductData = async () => {
+      const response = await getProductList(currentPage, dataLimit);
       if (response) {
-        let totalPage = Math.ceil(response.totlaRecord / response.limit);
+        let totalPage = Math.ceil(response.totalRecord / response.limit);
         setTotalPages(totalPage);
         if (status === "deactive") {
-          setSupplierList(
-            response.data.filter((supplier) => supplier.status === 0)
-          );
+          setFileData(response.data.filter((product) => product.status === 0));
         } else if (status === "all") {
-          setSupplierList(response.data);
+          setFileData(response.data);
         } else {
-          setSupplierList(
-            response.data.filter((supplier) => supplier.status === 1)
-          );
+          setFileData(response.data.filter((product) => product.status === 1));
           if (currentPage === 1) {
             setAutoId((currentPage - 1) * dataLimit + 1);
           }
         }
         setType(type);
-
         props.onLoading(false);
       }
     };
-    fetchSupplierIfo();
+
+    getProductData();
   }, [currentPage, dataLimit, status]);
+
+  const getSupplierData = () => {
+    try {
+      axios
+        .get(`${API_PATH.GET_CURRENCY}`)
+        .then((response) => {
+          const { success, message, data } = response.data;
+          setSupplier(data)
+        })
+        .catch((error) => {
+          console.error("Failed to retrieve supplier list:", error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+
+  };
 
   const activateDeactivate = (event, supplierId) => {
     const status = event.target.checked;
@@ -98,7 +118,7 @@ function FileUpload(props) {
             toast.success(res.data.message);
 
             const index = supplierList.findIndex(
-              (market_place) => market_place.id === supplierId
+              (filedata) => filedata.id === supplierId
             );
 
             setSupplierList((prevState) => [
@@ -132,7 +152,7 @@ function FileUpload(props) {
       value: data.id,
       label: data.name,
     };
-  })
+  });
 
   const handleFileInputChange = () => {
     setFileError("");
@@ -168,7 +188,10 @@ function FileUpload(props) {
                       defaultValue={filterList[0]}
                     />
                   </div>
-                  <div style={{ minWidth: "210px" }} className="supplier__dropdown">
+                  <div
+                    style={{ minWidth: "210px" }}
+                    className="supplier__dropdown"
+                  >
                     <Select
                       options={chooseSupplierList}
                       onChange={(data) => {
@@ -177,7 +200,7 @@ function FileUpload(props) {
                       defaultValue={{ label: "Select Supplier" }}
                     />
                   </div>
-                  <div className="file__select">
+                { /* <div className="file__select">
                     <input
                       className="form-control"
                       type="file"
@@ -186,7 +209,7 @@ function FileUpload(props) {
                       onChange={handleFileInputChange}
                     />
                     {fileError && <p style={{ color: "red" }}>{fileError}</p>}
-                  </div>
+                    </div>*/}
                 </div>
 
                 <div className="data-table">
@@ -205,74 +228,29 @@ function FileUpload(props) {
                         <th>File Name</th>
                         <th>Import Type</th>
                         <th>Lines</th>
-                        {props.user.permissions.update_company ? (
-                          <>
-                            <th>Status</th>
-                            <th>Download</th>
-                          </>
-                        ) : null}
+
+                        <th>Download</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {supplierList.map((market_place, idx) => (
-                        <tr key={market_place.id}>
+                      {fileData.map((filedata, idx) => (
+                        <tr key={filedata.id}>
                           <td>{startIndex + idx}</td>
-                          <td>
-                            {market_place.logo ? (
-                              <img
-                                src={market_place.logo}
-                                alt={market_place.name}
-                                className="list-logo"
-                              />
-                            ) : (
-                              <div className="list-logo placeholder">N/A</div>
-                            )}
+                          <td>{filedata.supplierName}</td>
+
+                          <td></td>
+                          <td>{filedata.fileName}</td>
+
+                          <td>{filedata.protocol}</td>
+
+                          <td></td>
+                          <td className="action-group">
+                            <i
+                              data-placement="top"
+                              title="Edit"
+                              className="fa fa-solid fa-download"
+                            ></i>
                           </td>
-
-                          <td>{market_place.name}</td>
-                          <td>{market_place.name}</td>
-
-                          <td>{market_place.prefixName}</td>
-                          <td>
-                            {market_place.updatedAt
-                              ? moment(market_place.updated_on).format(
-                                "MM/DD/YYYY hh:mm a"
-                              )
-                              : "N/A"}
-                          </td>
-
-                          <>
-                            <td>
-                              <Form.Check
-                                type="switch"
-                                id={`${market_place.id}`}
-                                checked={market_place.status}
-                                onChange={(e) =>
-                                  activateDeactivate(e, market_place.id)
-                                }
-                              />
-                            </td>
-
-                            <td className="action-group">
-                              <i
-                                data-placement="top"
-                                title="Edit"
-                                className="fa fa-solid fa-download"
-                                onClick={() => {
-                                  localStorage.setItem(
-                                    "marketPlaceId",
-                                    market_place.id
-                                  );
-                                  localStorage.setItem(
-                                    "marketPlaceName",
-                                    market_place.name
-                                  );
-
-                                  history.push(`/manage-marketPlace`);
-                                }}
-                              ></i>
-                            </td>
-                          </>
                         </tr>
                       ))}
                     </tbody>

@@ -1,6 +1,7 @@
 const API_BASE_URL = process.env.REACT_APP_API_URL_SUPPLIER;
 const PRODUCT_API_URL=process.env.REACT_APP_API_URL_PRODUCT
 const API_LOG=process.env.REACT_APP_URL_API_LOG
+const API_RETAILER_URL=process.env.REACT_APP_RETAILER_SERVICE
 
 export const API_PATH = {
   GET_LIST:`${API_BASE_URL}/integration/getIntegrationInfo`,
@@ -18,6 +19,42 @@ export const API_PATH = {
   MARKET_PLACE_SYNCSETTING:`${API_BASE_URL}/integration/createOrUpdateMarketplaceIntegratorSyncSetting`,
   CHANGE_STATUS: `${API_BASE_URL}/integration/changeIntegrationStatus`,
   GET_SUPPLIER_FILE_MAPPING:`${API_BASE_URL}/Integration/getSupplierFields?supplierId`,
-  GET_API_LOG:`${API_LOG}/apiLog/getAPILogs`
+  GET_API_LOG:`${API_LOG}/apiLog/getAPILogs`,
+  GET_ACCOUNT:`${API_RETAILER_URL}/getRetailerIntegrationById`,
+  CREAT_ACCOUNT_CONFIGURATION:`${API_RETAILER_URL}/createOrUpdateRetailerAccountConfig`,
+  GET_CURRENCY:`${API_RETAILER_URL}/getCurrency`,
+
+  CREAT_CURRENCY:`${API_RETAILER_URL}/createOrUpdateRetailerIntegrationForCurrency`,
+GET_RETAILER_BY_ID:`${API_RETAILER_URL}/getRetailerIntegrationById`,
+
+GET_RETAILER_MARKETPLACE:`${API_RETAILER_URL}/getMarketplaceList`,
+
+CREATE_RETAILER_MARKETPLACE:`${API_RETAILER_URL}/createOrUpdateRetailerMarketplace`,
+
+GET_RETAILER_PRICE_LIST:`${API_RETAILER_URL}/getPriceList`,
+
+CREATE_RETAILER_PRICE:`${API_RETAILER_URL}/createOrUpdateRetailerPriceCalculation`,
+
+GET_RETAILER_PRODUCT:`${API_RETAILER_URL}/getSupplierProduct`,
+
+CREATE_RETAILER_CATEGORY:`${API_RETAILER_URL}/createOrUpdateRetailerCategory`,
+
+CREATE_RETAILER_IMAGE:`${API_RETAILER_URL}/createOrUpdateRetailerImage`,
+GET_RETAILER_IMAGE_LIST:`${API_RETAILER_URL}/getSupplierImageList`,
+
+GET_RETAILER_SUPPLIER_LIST:`${API_RETAILER_URL}/getSupplierList`,
+CREATE_RETAILER_SUPPLIER:`${API_RETAILER_URL}/createOrUpdateRetailerIntegration`,
+GET_RETAILER_INTEGRATION_LIST:`${API_RETAILER_URL}/getRetailerIntegrationList`,
+CHANGE_STATUS:`${API_RETAILER_URL}/changeRetailerIntegrationStatus`,
+
+
+
+
+
+
+
+
+
+
 
 };

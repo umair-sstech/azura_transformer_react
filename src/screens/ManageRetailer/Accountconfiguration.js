@@ -5,6 +5,7 @@ import { validateRetailerAccount } from "../Validations/Validation";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useHistory } from 'react-router-dom';
+import { API_PATH } from "../ApiPath/Apipath";
 
 
 function Accountconfiguration(props) {
@@ -67,7 +68,7 @@ function Accountconfiguration(props) {
 
     axios
       .post(
-        "http://localhost:2703/retailer/getRetailerIntegrationById",
+        `${API_PATH.GET_ACCOUNT}`,
         payload
       )
       .then((response) => {
@@ -112,7 +113,7 @@ function Accountconfiguration(props) {
       console.log("payload", payload);
       axios
         .post(
-          "http://localhost:2703/retailer/createOrUpdateRetailerAccountConfig",
+          `${API_PATH.CREAT_ACCOUNT_CONFIGURATION}`,
           payload
         )
         .then((response) => {

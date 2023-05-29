@@ -122,11 +122,11 @@ function ManageRetailerSetting(props) {
         <div className="container-fluid">
           <PageHeader
             HeaderText={
-              isRetailerAdded ? "Retailer Edit" : "Add Retailer Setting"
+              isRetailerAdded ? "Integration Edit" : "Add Integration Setting"
             }
             Breadcrumb={[
               { name: "Manage", navigate: "#" },
-              { name: "Retailer Setting", navigate: "#" },
+              { name: "Integration Setting", navigate: "#" },
             ]}
           />
           <div className="tab-component">

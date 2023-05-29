@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
 import { useHistory } from "react-router-dom";
+import { API_PATH } from "../ApiPath/Apipath";
 
 
 function CurrencyConversion(props) {
@@ -26,7 +27,7 @@ function CurrencyConversion(props) {
   const getSupplierData = () => {
     try {
       axios
-        .get("http://localhost:2703/retailer/getCurrency")
+        .get(`${API_PATH.GET_CURRENCY}`)
         .then((response) => {
           const { success, message, data } = response.data;
           console.log("data", data)
@@ -70,7 +71,7 @@ function CurrencyConversion(props) {
     };
     console.log("payload", payload)
     axios
-      .post("http://localhost:2703/retailer/createOrUpdateRetailerIntegrationForCurrency", payload)
+      .post(`${API_PATH.CREAT_CURRENCY}`, payload)
       .then((response) => {
         const { success, message } = response.data;
         if (success) {
@@ -91,7 +92,7 @@ function CurrencyConversion(props) {
   const getRetailerIntegrationData = async () => {
     try {
       const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
-      const response = await axios.post("http://localhost:2703/retailer/getRetailerIntegrationById", { id: retailerIntegrationId });
+      const response = await axios.post(`${API_PATH.GET_RETAILER_BY_ID}`, { id: retailerIntegrationId });
       const { success, data } = response.data;
 
       if (success && data.length > 0) {
@@ -123,7 +124,7 @@ function CurrencyConversion(props) {
       currencyId: selectedCurrency?.value
     };
     axios
-      .post("http://localhost:2703/retailer/createOrUpdateRetailerIntegrationForCurrency", payload)
+      .post(`${API_PATH.CREAT_CURRENCY}`, payload)
       .then((response) => {
         const { success, message } = response.data;
         if (success) {

@@ -7,6 +7,7 @@ import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { onLoading } from "../../actions";
+import { API_PATH } from "../ApiPath/Apipath";
 
 function ProductExport(props) {
   const { setPage } = props;
@@ -27,7 +28,7 @@ function ProductExport(props) {
     if (supplierIds) {
       try {
         const response = await axios.post(
-          "http://localhost:2703/retailer/getSupplierProduct",
+         `${API_PATH.GET_RETAILER_PRODUCT}`,
           { supplierId: supplierIds }
         );
         const { success, data } = response.data;
@@ -96,7 +97,7 @@ function ProductExport(props) {
 
       setIsLoading(true);
       const response = await axios.post(
-        "http://localhost:2703/retailer/createOrUpdateRetailerCategory",
+       `${API_PATH.CREATE_RETAILER_CATEGORY}`,
         requestData
       );
       const { success, message } = response.data;
@@ -114,27 +115,6 @@ function ProductExport(props) {
   };
 
 
-  const getRetailerIntegrationData = async () => {
-    try {
-      const retailerIntegrationId = localStorage.getItem(
-        "retailerIntegrationId"
-      );
-
-      const response = await axios.post(
-        "http://localhost:2703/retailer/getRetailerIntegrationById",
-        { id: retailerIntegrationId }
-      );
-      const { success, data } = response.data;
-
-      if (success && data.length > 0) {
-        const selectedCategories = data[0].categoryId.split(",");
-        console.log("selectedCategories", selectedCategories);
-        setSelectedCheckboxes(selectedCategories);
-      }
-    } catch (error) {
-      console.error("Failed to retrieve retailer integration data:", error);
-    }
-  };
 
   const handleOnClick = async (e) => {
     e.preventDefault();
@@ -174,7 +154,7 @@ function ProductExport(props) {
 
       setIsLoadingExit(true)
       const response = await axios.post(
-        "http://localhost:2703/retailer/createOrUpdateRetailerCategory",
+       `${API_PATH.CREATE_RETAILER_CATEGORY}`,
         requestData
       );
       const { success, message } = response.data;

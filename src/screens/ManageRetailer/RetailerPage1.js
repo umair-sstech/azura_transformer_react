@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
 import { useHistory } from "react-router-dom";
+import { API_PATH } from "../ApiPath/Apipath";
 
 function RetailerPage1(props) {
   const { setPage } = props;
@@ -30,7 +31,7 @@ function RetailerPage1(props) {
   const getSupplierData = () => {
     try {
       axios
-        .get("http://localhost:2703/retailer/getSupplierList")
+        .get(`${API_PATH.GET_RETAILER_SUPPLIER_LIST}`)
         .then((response) => {
           const { success, message, data } = response.data;
           if (success) {
@@ -51,61 +52,7 @@ function RetailerPage1(props) {
     }
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setIsLoading(true);
-
-  //   const userId = localStorage.getItem("_id");
-  //   const userName = localStorage.getItem("name");
-  //   const retailerId = localStorage.getItem("newlyAddedRetailer");
-  //   const selectedSupplierIds = selectedOptions.map((option) => option.value);
-  //   const selectedSupplierNames = selectedOptions.map((option) => option.label);
-
-  //   const payload = {
-  //     userId,
-  //     userName,
-  //     retailerId,
-  //     companyId: null,
-  //     supplierId: selectedSupplierIds.join(","),
-  //   };
-  //   const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
-  //   if (retailerIntegrationId) {
-  //     payload.id = retailerIntegrationId;
-  //   }
-
-  //   try {
-  //     const response = await axios.post(
-  //       "http://localhost:2703/retailer/createOrUpdateRetailerIntegration",
-  //       payload
-  //     );
-
-  //     const { success, message, data } = response.data;
-
-  //     if (success) {
-  //       const newRetailerIntegrationId = response.data.retailerIntegrationId;
-
-  //       localStorage.setItem("retailerIntegrationId", newRetailerIntegrationId);
-  //       localStorage.setItem(
-  //         "supplierSettingId",
-  //         selectedSupplierIds.join(",")
-  //       );
-  //       localStorage.setItem(
-  //         "selectedSupplierName",
-  //         JSON.stringify(selectedSupplierNames)
-  //       );
-  //       toast.success(message);
-  //       setPage(2);
-  //     } else {
-  //       toast.error(message);
-  //     }
-  //   } catch (error) {
-  //     console.log("Error:", error);
-  //     toast.error("An error occurred while submitting the form.");
-  //   }
-
-  //   setIsLoading(false);
-  // };
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -134,7 +81,7 @@ function RetailerPage1(props) {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "http://localhost:2703/retailer/createOrUpdateRetailerIntegration",
+        `${API_PATH.CREATE_RETAILER_SUPPLIER}`,
         payload
       );
 
@@ -167,7 +114,7 @@ function RetailerPage1(props) {
   const getRetailerIntegrationData = async () => {
     try {
       const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
-      const response = await axios.post("http://localhost:2703/retailer/getRetailerIntegrationById", { id: retailerIntegrationId });
+      const response = await axios.post(`${API_PATH.GET_RETAILER_BY_ID}`, { id: retailerIntegrationId });
       const { success, data } = response.data;
 
       if (success && data.length > 0) {
@@ -211,7 +158,7 @@ function RetailerPage1(props) {
     try {
       setIsLoadingExit(true);
       const response = await axios.post(
-        "http://localhost:2703/retailer/createOrUpdateRetailerIntegration",
+        `${API_PATH.CREATE_RETAILER_SUPPLIER}`,
         payload
       );
 

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
 import { useHistory } from "react-router-dom";
 import { validatePriceCalculation } from "../Validations/Validation";
+import { API_PATH } from "../ApiPath/Apipath";
 
 function PriceCalculation(props) {
   const { setPage } = props;
@@ -38,7 +39,7 @@ function PriceCalculation(props) {
   const getPrice = () => {
     try {
       axios
-        .get("http://localhost:2703/retailer/getPriceList")
+        .get(`${API_PATH.GET_RETAILER_PRICE_LIST}`)
         .then((response) => {
           const { success, message, data } = response.data;
           if (success) {
@@ -138,7 +139,7 @@ function PriceCalculation(props) {
 
         setIsLoading(true);
         const response = await axios.post(
-          "http://localhost:2703/retailer/createOrUpdateRetailerPriceCalculation",
+          `${API_PATH.CREATE_RETAILER_PRICE}`,
           payload
         );
         const { success, message } = response.data;
@@ -159,7 +160,7 @@ function PriceCalculation(props) {
     try {
       const id = localStorage.getItem("retailerIntegrationId");
       const response = await axios.post(
-        "http://localhost:2703/retailer/getRetailerIntegrationById",
+        `${API_PATH.GET_RETAILER_BY_ID}`,
         {
           id: id,
         }
@@ -236,7 +237,7 @@ function PriceCalculation(props) {
         setIsLoadingExit(true);
         axios
           .post(
-            "http://localhost:2703/retailer/createOrUpdateRetailerPriceCalculation",
+            `${API_PATH.CREATE_RETAILER_PRICE}`,
             payload
           )
           .then((response) => {

@@ -5,6 +5,7 @@ import Select from "react-select";
 import { toast } from 'react-toastify';
 import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
 import { useHistory } from 'react-router-dom';
+import { API_PATH } from '../ApiPath/Apipath';
 
 
 
@@ -32,7 +33,7 @@ function ExportChannel(props) {
   const getMarketPlaceList = () => {
     try {
       axios
-        .get("http://localhost:2703/retailer/getMarketplaceList")
+        .get(`${API_PATH.GET_RETAILER_MARKETPLACE}`)
         .then((response) => {
           const { success, message, data } = response.data;
           if (success) {
@@ -57,7 +58,7 @@ function ExportChannel(props) {
     try {
       const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
       axios
-        .post("http://localhost:2703/retailer/getRetailerIntegrationById", { id: retailerIntegrationId })
+        .post(`${API_PATH.GET_RETAILER_BY_ID}`, { id: retailerIntegrationId })
         .then((response) => {
           const { success, data } = response.data;
           if (success && data.length > 0) {
@@ -91,7 +92,7 @@ function ExportChannel(props) {
     }
     setIsLoading(true);
   
-    axios.post("http://localhost:2703/retailer/createOrUpdateRetailerMarketplace", payload)
+    axios.post(`${API_PATH.CREATE_RETAILER_MARKETPLACE}`, payload)
       .then(response => {
         const { success, message } = response.data;
         if (success) {
@@ -127,7 +128,7 @@ function ExportChannel(props) {
     }
     setIsLoadingExit(true);
   
-    axios.post("http://localhost:2703/retailer/createOrUpdateRetailerMarketplace", payload)
+    axios.post(`${API_PATH.CREATE_RETAILER_MARKETPLACE}`, payload)
       .then(response => {
         const { success, message } = response.data;
         if (success) {

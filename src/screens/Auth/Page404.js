@@ -2,6 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Logo from "../../assets/images/logo-white.svg";
+import azuralogo from "../../assets/images/azura-logo.png";
+
 
 class Page404 extends React.Component {
   render() {
@@ -9,10 +11,10 @@ class Page404 extends React.Component {
       <div className="theme-cyan">
         <div >
           <div className="vertical-align-wrap">
-            <div className="vertical-align-middle auth-main">
+            <div className="">
               <div className="auth-box">
                 <div className="top">
-                  <img src={Logo} alt="Lucid" style={{ height: "40px", margin: "10px" }} />
+                  <img src={azuralogo} alt="Lucid" style={{ height: "74px",margin: "19px",marginBottom: "8px" }} />
                 </div>
                 <div className="card">
                   <div className="header">

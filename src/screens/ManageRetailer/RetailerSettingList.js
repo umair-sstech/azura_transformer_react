@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Select from "react-select";
 import { Form } from "react-bootstrap";
+import { API_PATH } from "../ApiPath/Apipath";
 
 function RetailerSettingList(props) {
   const [retailerSetting, setRetailerSetting] = useState([]);
@@ -29,7 +30,7 @@ function RetailerSettingList(props) {
 
     try {
       const retailerId=localStorage.getItem("newlyAddedRetailer")
-      const response = await axios.post("http://localhost:2703/retailer/getRetailerIntegrationList", {
+      const response = await axios.post(`${API_PATH.GET_RETAILER_INTEGRATION_LIST}`, {
         page: currentPage,
         limit: dataLimit,
         status: status !== "all" ? (status === "active" ? 1 : 0) : null,
@@ -87,7 +88,7 @@ function RetailerSettingList(props) {
         props.onLoading(true);
 
         axios
-          .post("http://localhost:2703/retailer/changeRetailerIntegrationStatus"
+          .post(`${API_PATH.CHANGE_STATUS}`
           , {
             id: id,
             status: status,

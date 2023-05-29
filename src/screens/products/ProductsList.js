@@ -32,23 +32,6 @@ function ProductsList(props) {
     getProductList();
   }, []);
 
-  // const getProductList = async (currentPage,dataLimit) => {
-  //   props.onLoading(true)
-
-  //   try {
-  //     const response = await axios.post(
-  //       "http://localhost:8000/product/getProductList", {
-  //         page: currentPage,
-  //         limit: dataLimit,
-  //         status: status !== "all" ? (status === "active" ? 1 : 0) : null,
-  //       });
-  //       return response.data;
-  //     } catch (error) {
-  //       console.log("error", error);
-
-  //       return null;
-  //     }
-  // };
 
   const getProductList = async (currentPage, dataLimit, search) => {
     props.onLoading(true);

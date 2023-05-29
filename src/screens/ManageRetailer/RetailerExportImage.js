@@ -7,6 +7,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
 import { useHistory } from "react-router-dom";
+import { API_PATH } from "../ApiPath/Apipath";
 
 function RetailerExportImage(props) {
   const { setPage } = props;
@@ -28,7 +29,7 @@ function RetailerExportImage(props) {
           "retailerIntegrationId"
         );
         const response = await axios.post(
-          "http://localhost:2703/retailer/getRetailerIntegrationById",
+          `${API_PATH.GET_RETAILER_BY_ID}`,
           { id: retailerIntegrationId }
         );
         const { success, data } = response.data;
@@ -49,7 +50,7 @@ function RetailerExportImage(props) {
     try {
       const supplierIds = localStorage.getItem("supplierSettingId");
       const response = await axios.post(
-        "http://localhost:2703/retailer/getSupplierImageList",
+        `${API_PATH.GET_RETAILER_IMAGE_LIST}`,
         { supplierId: supplierIds }
       );
       const { success, data } = response.data;
@@ -101,7 +102,7 @@ function RetailerExportImage(props) {
       }
 
       const response = await axios.post(
-        "http://localhost:2703/retailer/createOrUpdateRetailerImage",
+       `${API_PATH.CREATE_RETAILER_IMAGE}`,
         requestData
       );
       const { success, message } = response.data;
@@ -157,7 +158,7 @@ function RetailerExportImage(props) {
       }
 
       const response = await axios.post(
-        "http://localhost:2703/retailer/createOrUpdateRetailerImage",
+       `${API_PATH.CREATE_RETAILER_IMAGE}`,
         requestData
       );
       const { success, message } = response.data;

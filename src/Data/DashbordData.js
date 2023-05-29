@@ -2,7 +2,7 @@ export const sparkleCardData = [
   {
     heading: "SUPPLIER",
     // money: "$22,500",
-    // perText: "19% compared to last week",
+    perText: "Total : 5",
     sparklineData: {
       type: "line",
       data: [1, 4, 1, 3, 7, 1],
@@ -18,7 +18,7 @@ export const sparkleCardData = [
   {
     heading: "INTEGRATOR",
     // money: "$500",
-    // perText: "19% compared to last week",
+    perText: "Total : 1",
     sparklineData: {
       type: "line",
       data: [1, 4, 2, 3, 6, 2],
@@ -34,7 +34,7 @@ export const sparkleCardData = [
   {
     heading: "MARKETPLACE",
     // money: "$21,215",
-    // perText: "19% compared to last week",
+    perText: "Total : 1",
     sparklineData: {
       type: "line",
       data: [1, 4, 2, 3, 1, 5],
@@ -50,7 +50,7 @@ export const sparkleCardData = [
   {
     heading: "PRODUCT",
     // money: "$421,215",
-    // perText: "19% compared to last week",
+    perText: "Total : 1000",
     sparklineData: {
       type: "line",
       data: [1, 3, 5, 1, 4, 2],
