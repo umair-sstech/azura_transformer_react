@@ -138,7 +138,7 @@ function MarketPlaceList(props) {
           <PageHeader
             HeaderText="Market Place List"
             Breadcrumb={[
-              { name: "Integration", navigate: "#" },
+              { name: "Integration", navigate: "/integration" },
               { name: "Market Place List", navigate: "#" },
             ]}
           />

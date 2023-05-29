@@ -154,7 +154,7 @@ const Profile = (props) => {
                         <div className="form-group">
                           <label>
                             {" "}
-                            Profile Logo <span style={{ color: "red" }}>*</span>
+                            Profile Logo
                           </label>
 
                           <input
