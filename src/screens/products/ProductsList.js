@@ -15,13 +15,13 @@ import "./ProductsList.css";
 
 function ProductsList(props) {
   const [productList, setProductList] = useState([]);
+  console.log("productList",productList)
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(5);
   const [status, setStatus] = useState("active");
   const [type, setType] = useState("MarketPlace");
   const [search, setSearch] = useState("");
-  console.log("search",search)
   const [autoId, setAutoId] = useState(1);
 
   const startIndex = (currentPage - 1) * dataLimit + 1;
@@ -29,7 +29,7 @@ function ProductsList(props) {
   const history = useHistory();
 
   useEffect(() => {
-    getProductList();
+    // getProductList()
   }, []);
 
 
@@ -37,8 +37,10 @@ function ProductsList(props) {
     props.onLoading(true);
 
     try {
+
       const response = await axios.post(
-        "http://localhost:8000/product/getProductList",
+
+        `${API_PATH.GET_PRODUCT_LIST}`,
         {
           page: currentPage,
           limit: dataLimit,

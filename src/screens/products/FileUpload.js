@@ -31,16 +31,15 @@ function FileUpload(props) {
   const history = useHistory();
 
   useEffect(() => {
-    getProductList();
-    getSupplierData()
+    // getFileList();
   }, []);
 
-  const getProductList = async (currentPage, dataLimit, search) => {
+  const getFileList = async (currentPage, dataLimit, search) => {
     props.onLoading(true);
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/product/getFileList",
+        `${API_PATH.GET_FILE_UPLOAD}`,
         {
           page: currentPage,
           limit: dataLimit,
@@ -58,7 +57,7 @@ function FileUpload(props) {
 
   useEffect(() => {
     const getProductData = async () => {
-      const response = await getProductList(currentPage, dataLimit);
+      const response = await getFileList(currentPage, dataLimit);
       if (response) {
         let totalPage = Math.ceil(response.totalRecord / response.limit);
         setTotalPages(totalPage);
@@ -80,22 +79,7 @@ function FileUpload(props) {
     getProductData();
   }, [currentPage, dataLimit, status]);
 
-  const getSupplierData = () => {
-    try {
-      axios
-        .get(`${API_PATH.GET_CURRENCY}`)
-        .then((response) => {
-          const { success, message, data } = response.data;
-          setSupplier(data)
-        })
-        .catch((error) => {
-          console.error("Failed to retrieve supplier list:", error);
-        });
-    } catch (error) {
-      console.log(error);
-    }
 
-  };
 
   const activateDeactivate = (event, supplierId) => {
     const status = event.target.checked;
@@ -154,8 +138,25 @@ function FileUpload(props) {
     };
   });
 
-  const handleFileInputChange = () => {
-    setFileError("");
+  const downloadFile = async (filePath) => {
+    console.log("filepath",filePath)
+    try {
+      const response = await axios.get(filePath, {
+        responseType: 'blob', 
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filePath.substring(filePath.lastIndexOf('/') + 1));
+      document.body.appendChild(link);
+      link.click();
+
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.log('error', error);
+    }
   };
 
   return (
@@ -200,16 +201,6 @@ function FileUpload(props) {
                       defaultValue={{ label: "Select Supplier" }}
                     />
                   </div>
-                { /* <div className="file__select">
-                    <input
-                      className="form-control"
-                      type="file"
-                      name="csvfile"
-                      accept=".csv"
-                      onChange={handleFileInputChange}
-                    />
-                    {fileError && <p style={{ color: "red" }}>{fileError}</p>}
-                    </div>*/}
                 </div>
 
                 <div className="data-table">
@@ -218,7 +209,7 @@ function FileUpload(props) {
                       <i className="fa fa-refresh fa-spin"></i>
                     </div>
                   ) : null}
-                  <table className="table w-100 table-responsive-lg">
+                  <table className="table w-100 table-responsive-md">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -227,7 +218,6 @@ function FileUpload(props) {
                         <th>Import Date /Time UTC</th>
                         <th>File Name</th>
                         <th>Import Type</th>
-                        <th>Lines</th>
 
                         <th>Download</th>
                       </tr>
@@ -238,17 +228,16 @@ function FileUpload(props) {
                           <td>{startIndex + idx}</td>
                           <td>{filedata.supplierName}</td>
 
-                          <td></td>
+                          <td>{filedata.startDate}</td>
                           <td>{filedata.fileName}</td>
 
                           <td>{filedata.protocol}</td>
-
-                          <td></td>
                           <td className="action-group">
                             <i
                               data-placement="top"
                               title="Edit"
                               className="fa fa-solid fa-download"
+                              onClick={() => downloadFile(filedata.localPath)}
                             ></i>
                           </td>
                         </tr>

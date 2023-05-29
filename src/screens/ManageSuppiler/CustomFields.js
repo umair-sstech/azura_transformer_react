@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import {  Accordion, Card, Button, Row, Col } from "react-bootstrap";
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import { API_PATH } from '../ApiPath/Apipath';
 
 function CustomFields(props) {
   const { customFieldsData, setCustomFieldsData } = props;
@@ -18,7 +19,7 @@ function CustomFields(props) {
       customFieldId: customFieldId
     };
     axios
-      .post("http://localhost:8001/Integration/deleteCustomField", requestBody)
+      .post(`${API_PATH.DELETE_CUSTOM_FIELD}`, requestBody)
       .then(response => {
         const {success,message,data}=response.data
         if(success){

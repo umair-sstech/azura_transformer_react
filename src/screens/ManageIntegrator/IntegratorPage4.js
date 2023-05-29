@@ -143,7 +143,7 @@ function IntegratorPage4(props) {
 
     axios
       .get(
-        `http://localhost:8001/integration/getMarketplaceIntegratorSyncSetting?integrationId=${integrationId}`
+        `${API_PATH.GET_SYNC_SETTING}?integrationId=${integrationId}`
       )
       .then((response) => {
         const { success, message, data } = response.data;

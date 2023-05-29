@@ -7,6 +7,7 @@ import axios from "axios";
 import Select from "react-dropdown-select";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
+import { API_PATH } from "../ApiPath/Apipath";
 
 function MarketPlacePage2(props) {
   const { setPage } = props;
@@ -29,7 +30,7 @@ function MarketPlacePage2(props) {
   const getCategoryData = () => {
     try {
       axios
-        .get("http://localhost:8001/integration/getCategoryFields")
+        .get(`${API_PATH.GET_CATEGORY_MAPPING}`)
         .then((response) => {
           const categories = Object.keys(
             response.data.data.master_Category
@@ -91,7 +92,7 @@ function MarketPlacePage2(props) {
 
     axios
       .post(
-        "http://localhost:8001/integration/createOrUpdateAzuraMysaleCategoryMapping",
+        `${API_PATH.CREATE_CATEGORY_MAPPING}`,
         mappingData
       )
       .then((response) => {
@@ -122,7 +123,7 @@ function MarketPlacePage2(props) {
     setIsLoadingExit(true);
     axios
       .post(
-        "http://localhost:8001/integration/createOrUpdateAzuraMysaleCategoryMapping",
+        `${API_PATH.CREATE_CATEGORY_MAPPING}`,
         mappings
       )
 

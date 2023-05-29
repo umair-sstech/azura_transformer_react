@@ -136,7 +136,7 @@ function SuppilerList(props) {
           <PageHeader
             HeaderText="Supplier List"
             Breadcrumb={[
-              { name: "Integration", navigate: "#" },
+              { name: "Integration", navigate: "/integration" },
               { name: "Supplier List", navigate: "#" },
             ]}
             style={{ position: "sticky", top: 0, zIndex: 999 }}

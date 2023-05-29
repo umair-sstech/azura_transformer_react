@@ -70,7 +70,7 @@ class Login extends React.Component {
   render()
   {
     return (
-      <div className="">
+      <div className="" style={{border:"none"}}>
         <div className="hide-border">
           <div className="vertical-align-wrap">
             <div className="">

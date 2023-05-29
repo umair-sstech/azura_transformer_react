@@ -5,6 +5,7 @@ import { onLoading } from "../../actions";
 import "./Integrator.css";
 import axios from "axios";
 import { FormContext } from "./ManageIntegrator";
+import { API_PATH } from "../ApiPath/Apipath";
 
 function IntegratorPage2(props) {
   const {
@@ -17,7 +18,7 @@ function IntegratorPage2(props) {
   const getCategoryData = () => {
     try {
       axios
-        .get("http://localhost:8001/integration/getCategoryFields")
+        .get(`${API_PATH.GET_CATEGORY_MAPPING}`)
         .then((response) =>
           setCategoryFields(response.data.data.master_Category)
         )

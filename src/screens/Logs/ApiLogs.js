@@ -13,27 +13,22 @@ import { Form } from "react-bootstrap";
 import { API_PATH } from "../ApiPath/Apipath";
 
 function ApiLogs(props) {
-  const [supplierList, setSupplierList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(5);
   const [searchText, setSearchText] = useState("active");
-  const [type, setType] = useState("Supplier");
   const [autoId, setAutoId] = useState(1);
   const [apiLog, setApiLog] = useState([]);
-  console.log("apiLogs",apiLog)
 
   const startIndex = (currentPage - 1) * dataLimit + 1;
 
   useEffect(() => {
-  
     getAPILogList(searchText);
   }, [currentPage, dataLimit]);
 
   useEffect(() => {
     getAPILogList(searchText);
   }, [searchText]);
-
 
   const getAPILogList = (search = "active") => {
     props.onLoading(true);
@@ -55,8 +50,6 @@ function ApiLogs(props) {
         props.onLoading(false);
       });
   };
-
-
 
   let filterList = [
     { label: "Success", value: "success" },
@@ -85,7 +78,6 @@ function ApiLogs(props) {
                     <Select
                       options={filterList}
                       onChange={(data) => {
-                     
                         setCurrentPage(1);
                       }}
                       defaultValue={filterList[0]}
@@ -94,12 +86,15 @@ function ApiLogs(props) {
                 </div>
 
                 <div className="data-table">
-                  {props.loading ? (
+                  {props.isLoading ? (
                     <div className="loader-wrapper">
+                      {" "}
                       <i className="fa fa-refresh fa-spin"></i>
+                      {" "}
                     </div>
                   ) : null}
-                  <table className="table w-100 table-responsive-lg">
+                  {" "}
+                  <table className="table w-100 table-responsive-md">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -120,8 +115,6 @@ function ApiLogs(props) {
                           <td>{apiLog.statusCode}</td>
                           <td>{apiLog.status}</td>
                           <td>{apiLog.message}</td>
-
-
                         </tr>
                       ))}
                     </tbody>

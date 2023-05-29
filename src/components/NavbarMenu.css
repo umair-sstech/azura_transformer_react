@@ -16,3 +16,21 @@ img.img-responsive.logo.website-logo{
 .dropdown-menu-right {
     height: 90px;
 }
+.sidebar-nav .metismenu > li.active > a {
+    background-color: #49c5b6 !important;
+  }
+  .sidebar-nav .metismenu > li.active > a > span > .dashboard {
+    background-color: #49c5b6 !important;
+  }
+  .theme-cyan .sidebar-nav .metismenu > li i {
+    color: #007566 !important;
+  }
+  .sidebar-nav .metismenu a:hover, .sidebar-nav .metismenu a:focus, .sidebar-nav .metismenu a:active {
+    background: #49c5b6 !important;
+}
+.sidebar-nav .metismenu ul a {
+    color: #000 !important;
+}
+.sidebar-nav .metismenu .has-arrow::after {
+    color: #000 !important;
+  }
