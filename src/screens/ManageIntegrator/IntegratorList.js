@@ -138,7 +138,7 @@ function IntegratorList(props) {
           <PageHeader
             HeaderText="Integrator List"
             Breadcrumb={[
-              { name: "Integration", navigate: "#" },
+              { name: "Integration", navigate: "/integration" },
               { name: "Integrator List", navigate: "#" },
             ]}
           />

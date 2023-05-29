@@ -274,7 +274,7 @@ export const validateProfile = (formData) => {
     errors.name = "Name is required";
   } else if(name.trim().length === 0) {
     errors.name = "Name can not be whitespace only";
-  }  else if (name.length > 15) {
+  }  else if (name.length > 25) {
     errors.name = "Name must be less than or equal to 15 characters";
   }
 
