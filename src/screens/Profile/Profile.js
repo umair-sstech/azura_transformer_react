@@ -105,7 +105,6 @@ const Profile = (props) => {
             <PageHeader
               HeaderText="Manage Profile"
               Breadcrumb={[
-                { name: "Integration", navigate: "#" },
                 { name: "Manage Profile", navigate: "#" },
               ]}
               style={{ position: "sticky", top: 0, zIndex: 999 }}
