@@ -199,11 +199,7 @@ function ProductsList(props) {
                         <th>Brand</th>
                         <th>Category</th>
                         <th>Last Update(UTC)</th>
-                        {props.user.permissions.update_company ? (
-                          <>
                             <th>Action</th>
-                          </>
-                        ) : null}
                       </tr>
                     </thead>
                     <tbody>
