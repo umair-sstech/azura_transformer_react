@@ -262,3 +262,25 @@ export const validatePriceCalculation = (formData) => {
 
   return errors;
 }
+
+//Profile Validation
+export const validateProfile = (formData) => {
+  const errors = {}
+ 
+  const name = formData.get("name")
+  const country = formData.get("country");
+
+  if(!name) {
+    errors.name = "Name is required";
+  } else if(name.trim().length === 0) {
+    errors.name = "Name can not be whitespace only";
+  }  else if (name.length > 15) {
+    errors.name = "Name must be less than or equal to 15 characters";
+  }
+
+  if(!country) {
+    errors.country = "Country is required";
+  }
+
+  return errors;
+}

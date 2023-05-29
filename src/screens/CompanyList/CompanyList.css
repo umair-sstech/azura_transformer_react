@@ -33,6 +33,10 @@ ul.pagination {
     z-index: 10;
 }
 
+td:nth-child(2) {
+    white-space: pre-wrap !important;
+}
+
 .tab-component .nav-link {
     border: none !important;
     color: #000;
