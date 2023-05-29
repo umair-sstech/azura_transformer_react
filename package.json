@@ -2,7 +2,7 @@
   "name": "lucid",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://eros.narola.online:551/pma/lk/data/saas-devkit",
+  "homepage": "http://20.213.17.31/azura_transformer",
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fullcalendar/core": "^4.3.1",
