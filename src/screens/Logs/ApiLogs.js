@@ -16,47 +16,47 @@ function ApiLogs(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(5);
-  const [searchText, setSearchText] = useState("active");
+  const [searchText, setSearchText] = useState("Success");
   const [autoId, setAutoId] = useState(1);
   const [apiLog, setApiLog] = useState([]);
 
   const startIndex = (currentPage - 1) * dataLimit + 1;
 
   useEffect(() => {
-    getAPILogList(searchText);
-  }, [currentPage, dataLimit]);
+    getAPILogList();
+  }, [currentPage, dataLimit, searchText]);
 
-  useEffect(() => {
-    getAPILogList(searchText);
-  }, [searchText]);
+  const getAPILogList = () => {
+  props.onLoading(true);
+  axios
+    .get(
+      `${API_PATH.GET_API_LOG}?page=${currentPage}&limit=${dataLimit}&searchText=${searchText}`
+    )
+    .then((res) => {
+      let totlePage = Math.ceil(res.data.totalRecord / res.data.limit);
+      setTotalPages(totlePage);
+      setApiLog(res.data.apiLog);
+      if (currentPage === 1) {
+        setAutoId((currentPage - 1) * dataLimit + 1);
+      }
+      props.onLoading(false);
+    })
+    .catch((e) => {
+      setApiLog([]);
+      props.onLoading(false);
+    });
+};
 
-  const getAPILogList = (search = "active") => {
-    props.onLoading(true);
-    axios
-      .get(
-        `${API_PATH.GET_API_LOG}?page=${currentPage}&limit=${dataLimit}&searchText=${search}`
-      )
-      .then((res) => {
-        let totlePage = Math.ceil(res.data.totlaRecord / res.data.limit);
-        setTotalPages(totlePage);
-        setApiLog(res.data.apiLog);
-        if (currentPage === 1) {
-          setAutoId((currentPage - 1) * dataLimit + 1);
-        }
-        props.onLoading(false);
-      })
-      .catch((e) => {
-        setApiLog([]);
-        props.onLoading(false);
-      });
-  };
+const handleFilterChange = (selectedOption) => {
+  setCurrentPage(1);
+  setSearchText(selectedOption.value);
+};
 
-  let filterList = [
-    { label: "Success", value: "success" },
-    { label: "Failed", value: "failed" },
-    { label: "All", value: "all" },
-  ];
-
+let filterList = [
+  { label: "Success", value: "Success" },
+  { label: "Error", value: "Error" },
+  { label: "All", value: "all" },
+];
   return (
     <div
       style={{ flex: 1 }}
@@ -75,13 +75,11 @@ function ApiLogs(props) {
               <div className="body">
                 <div className="mb-3 top__header">
                   <div style={{ minWidth: "140px" }}>
-                    <Select
-                      options={filterList}
-                      onChange={(data) => {
-                        setCurrentPage(1);
-                      }}
-                      defaultValue={filterList[0]}
-                    />
+                  <Select
+                  options={filterList}
+                  onChange={handleFilterChange}
+                  defaultValue={filterList[0]}
+                />
                   </div>
                 </div>
 
@@ -99,7 +97,6 @@ function ApiLogs(props) {
                       <tr>
                         <th>#</th>
                         <th>Method</th>
-
                         <th>URL</th>
                         <th>Status Code</th>
                         <th>Status</th>
