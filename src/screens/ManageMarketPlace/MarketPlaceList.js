@@ -18,7 +18,7 @@ function MarketPlaceList(props) {
   const [marketPlaceList, setMarketPlaceList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
-  const [dataLimit, setdataLimit] = useState(5);
+  const [dataLimit, setdataLimit] = useState(10);
   const [status, setStatus] = useState("active");
   const [type, setType] = useState("MarketPlace");
   const [autoId, setAutoId] = useState(1);
@@ -256,7 +256,7 @@ function MarketPlaceList(props) {
                         setdataLimit(e.target.value);
                       }}
                     >
-                      <option value={5}>5</option>
+                      
                       <option value={10}>10</option>
                       <option value={20}>20</option>
                       <option value={50}>50</option>
