@@ -258,8 +258,7 @@ class App extends React.Component {
                 path={`/retailer-profile`}
                 component={RetailerProfile}
               />
-              {this.props.user?.data.role == "SUPER_ADMIN" ||
-                this.props.user?.data.role == "COMPANY_ADMIN" ? (
+              {this.props.user?.data.role == "SUPER_ADMIN" ? (
                 <>
                   <Route exact path={`/company`} component={CompanyList} />
                   <Route

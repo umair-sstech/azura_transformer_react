@@ -44,7 +44,6 @@ function IntegrationType(props) {
             <PageHeader
               HeaderText={"Integration List"}
               Breadcrumb={[
-                { name: "Integration", navigate: "#" },
                 { name: "Integrations List", navigate: "#" },
               ]}
               className="page-header"
@@ -62,7 +61,7 @@ function IntegrationType(props) {
                     className="select__container"
                   >
                     <label htmlFor="combo-box-demo">
-                      Type of Integrations
+                      Select Integration
                     </label>
                     <Select
                       value={selectedOption}

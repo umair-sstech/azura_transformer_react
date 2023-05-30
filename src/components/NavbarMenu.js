@@ -610,8 +610,7 @@ class NavbarMenu extends React.Component {
                           : "collapse"
                       }
                     >
-                      {this.props.user?.data.role == "SUPER_ADMIN" ||
-                      this.props.user?.data.role == "COMPANY_ADMIN" ? (
+                      {this.props.user?.data.role == "SUPER_ADMIN" ? (
                         <li
                           className={activeKey === "dashboard" ? "active" : ""}
                         >

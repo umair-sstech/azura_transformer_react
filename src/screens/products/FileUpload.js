@@ -218,7 +218,7 @@ function FileUpload(props) {
                         <th>Import Date /Time UTC</th>
                         <th>File Name</th>
                         <th>Import Type</th>
-
+                        <th>Lines</th>
                         <th>Download</th>
                       </tr>
                     </thead>
@@ -232,6 +232,7 @@ function FileUpload(props) {
                           <td>{filedata.fileName}</td>
 
                           <td>{filedata.protocol}</td>
+                          <td>{filedata.rowCount}</td>
                           <td className="action-group">
                             <i
                               data-placement="top"

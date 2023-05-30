@@ -22,7 +22,7 @@ const RetailerList = (props) => {
   const history = useHistory();
   const [searchText, setSearchText] = useState("active");
   const [userRole, setUserRole] = useState("");
-   const [retailerId, setRetailerId] = useState("");
+  const [retailerId, setRetailerId] = useState("");
   const [autoId, setAutoId] = useState(1);
 
   const startIndex = (currentPage - 1) * dataLimit + 1

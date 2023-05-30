@@ -6,6 +6,8 @@ import { Spinner } from 'react-bootstrap';
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 import { validateProfile } from '../Validations/Validation';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Profile = (props) => {
 
@@ -13,6 +15,8 @@ const Profile = (props) => {
     name: "",
     logo: "",
     country: "",
+    email:"",
+    password:""
   });
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -26,6 +30,25 @@ const Profile = (props) => {
       setFormData(formData);
     }
   }, [props]);
+
+  const userId = localStorage.getItem('_id');
+
+  useEffect(() => {
+    if (userId) {
+      fetchUserData();
+    }
+  }, [userId]);
+  
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:2704/user/${userId}`);
+      const userData = response.data.data;
+      setFormData(userData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
 
   const handleChange = (key, value) => {
     const newFormData = new FormData(document.forms.myForm);
@@ -42,24 +65,55 @@ const Profile = (props) => {
       logo: file,
     }));
   };
-
-  const handleNameChange = (e) => {
-    const name = e.target.value.trim();
+  const handleNameChange = (e, key) => {
+    const value = e.target.value.trim();
     setFormData((prevState) => ({
       ...prevState,
-      name
-    }))
-    handleChange("name", name)
+      [key]: value,
+    }));
+    handleChange(key, value);
   };
+  
 
   const handleSelect = (selectedOption) => {
     const selectedCountry = selectedOption.value;
     setFormData((prevState) => ({
       ...prevState,
       country: selectedCountry,
-    }))
-    handleChange("country", selectedCountry)
-  }
+    }));
+    handleChange("country", selectedCountry);
+  };
+  
+
+  const updateProfile = async () => {
+    try {
+      setIsLoading(true);
+  
+      const formDataToUpdate = {
+        name: formData.name,
+        country: formData.country,
+        email:formData.email,
+        password:formData.password
+      };
+  
+      const response = await axios.post(
+        "http://localhost:2704/user/update",
+        formDataToUpdate
+      );
+  
+      if (response.status === 200) {
+        toast.success("Profile updated successfully");
+        console.log(response.data);
+      } else {
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -69,8 +123,8 @@ const Profile = (props) => {
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      alert("Submitted")
-      console.log(formData)
+      updateProfile();
+      history.push("/dashboard")
     }
   }
 
@@ -176,41 +230,69 @@ const Profile = (props) => {
                             name="name"
                             placeholder="Profile Name"
                             defaultValue={formData && formData.name ? formData.name : ""}
-                            onChange={handleNameChange}
+                            onChange={(e) => handleNameChange(e, "name")}
                           />
                           {formErrors.name && (
                             <span className="text-danger">{formErrors.name}</span>
                           )}
                         </div>
                       </div>
+
+                      <div className='col-sm-6'>
+                      <div className="form-group">
+                        <label>
+                          Email <span style={{ color: "red" }}>*</span>
+                        </label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          name="email"
+                          placeholder="Profile Name"
+                          defaultValue={formData && formData.email ? formData.email : ""}
+                          onChange={(e) => handleNameChange(e, "email")}
+                        />
+                        {formErrors.email && (
+                          <span className="text-danger">{formErrors.email}</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className='col-sm-6'>
+                    <div className="form-group">
+                      <label>
+                        Password <span style={{ color: "red" }}>*</span>
+                      </label>
+                      <input
+                        className="form-control"
+                        type="text"
+                        name="name"
+                        placeholder="password"
+                        defaultValue={formData && formData.password ? formData.password : ""}
+                        onChange={(e) => handleNameChange(e, "password")}
+                      />
+                      {formErrors.password && (
+                        <span className="text-danger">{formErrors.password}</span>
+                      )}
+                    </div>
+                  </div>
                     </div>
 
                     <div className='row'>
-                      <div className='col-sm-6'>
+                      <div className='col-12'>
                         <div className="form-group">
                           <label>
                             Country <span style={{ color: "red" }}>*</span>
                           </label>
                           <Select
-                            options={countryList?.map((data) => (
-                              {
-                                value: data.name,
-                                label: data.name,
-                              }
-                            )
-                            )}
-                            name='country'
-                            placeholder="Select Country"
-                            // onChange={(data) => {
-                            //   if (data) {
-                            //     let event = {
-                            //       target: { name: "country", value: data },
-                            //     };
-                            //     handleSelect(event);
-                            //   }
-                            // }}
-                            onChange={handleSelect}
-                          />
+                          options={countryList?.map((data) => ({
+                            value: data.name,
+                            label: data.name,
+                          }))}
+                          name='country'
+                          placeholder="Select Country"
+                          value={formData.country ? { value: formData.country, label: formData.country } : null}
+                          onChange={handleSelect}
+                        />
+                        
                           {formErrors.country &&
                             <span className="error" style={{ color: "red" }}>
                               {formErrors.country}
