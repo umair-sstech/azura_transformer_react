@@ -94,7 +94,7 @@ function ApiLogs(props) {
                     </div>
                   ) : null}
                   {" "}
-                  <table className="table w-100 table-responsive-md">
+                  <table className="table w-100 table-responsive-lg">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -114,7 +114,7 @@ function ApiLogs(props) {
                           <td>{apiLog.url}</td>
                           <td>{apiLog.statusCode}</td>
                           <td>{apiLog.status}</td>
-                          <td>{apiLog.message}</td>
+                          <td style={{whiteSpace: "pre-wrap"}}>{apiLog.message}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -124,6 +124,7 @@ function ApiLogs(props) {
                       current={currentPage}
                       total={totalPages}
                       onPageChange={setCurrentPage}
+                      maxWidth={400}
                     />
                     <select
                       name="companyOwner"

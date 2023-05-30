@@ -114,18 +114,19 @@ const UserList = (props) => {
                         <div className='card'>
                             <div className='body'>
                                 <div className='d-flex justify-content-between align-items-center mb-3'>
-                                    <div className='d-flex justify-content-between align-items-center'>
-                                        <div className='mr-2' style={{ minWidth: "110px" }}>
-                                            <Select
-                                                options={filterList}
-                                                onChange={(data) => {
-                                                    setSearchText(data.value)
-                                                    getDataFromApi(data.value)
-                                                }}
-                                                defaultValue={filterList[1]}
-                                            />
-                                        </div>
-                                    </div>{props.user.permissions.add_user ? <Link className='link-btn' to={`/manage-user`} >
+                                    {/* <div className='d-flex justify-content-between align-items-center'> */}
+                                    <div className='mr-2' style={{ minWidth: "110px" }}>
+                                        <Select
+                                            options={filterList}
+                                            onChange={(data) => {
+                                                setSearchText(data.value)
+                                                getDataFromApi(data.value)
+                                            }}
+                                            defaultValue={filterList[1]}
+                                        />
+                                    </div>
+                                    {/* </div> */}
+                                    {props.user.permissions.add_user ? <Link className='link-btn' to={`/manage-user`} >
                                         Add User
                                     </Link> : null}
                                 </div>
@@ -133,7 +134,7 @@ const UserList = (props) => {
                                     {props.loading ? <div className='loader-wrapper' >
                                         <i className="fa fa-refresh fa-spin"></i>
                                     </div> : null}
-                                    <table className="table w-100 table-responsive-sm">
+                                    <table className="table w-100 table-responsive-lg">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -188,6 +189,7 @@ const UserList = (props) => {
                                             current={currentPage}
                                             total={totalPages}
                                             onPageChange={setCurrentPage}
+                                            maxWidth={400}
                                         />
                                         <select name="companyOwner" className="form-control" onChange={(e) => {
                                             setCurrentPage(1)

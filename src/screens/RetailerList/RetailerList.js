@@ -243,6 +243,7 @@ const RetailerList = (props) => {
                     current={currentPage}
                     total={totalPages}
                     onPageChange={setCurrentPage}
+                    maxWidth={400}
                   />
                   <select
                     name="companyOwner"

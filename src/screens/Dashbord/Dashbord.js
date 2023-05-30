@@ -1,8 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import "echarts-gl";
-import echarts from "echarts";
-import LogoiCON from "../../assets/images/logo-icon.svg";
+import AzuraLogo from "../../assets/images/azura-logo.png";
 import AwsomeImage from "../../assets/images/blog/blog-page-4.jpg";
 import AwsomeImageOt from "../../assets/images/blog/blog-page-2.jpg";
 import PageHeader from "../../components/PageHeader";
@@ -32,6 +31,7 @@ class Dashbord extends React.Component {
     super(props);
     this.state = {
       cardData: [],
+      loadingPage: false,
     };
   }
   componentDidMount() {
@@ -41,6 +41,7 @@ class Dashbord extends React.Component {
 
   async loadDataCard() {
     try {
+      this.setState({ loadingPage: true });
       const response = await axios.get(`${API_PATH.GET_DASHBOARD_DATA}`);
       const data = response.data;
 
@@ -78,15 +79,14 @@ class Dashbord extends React.Component {
 
 
   render() {
-    const {loadingPage}=this.props
-    const { cardData } = this.state;
-    console.log("cardData",cardData)
+    const { cardData, loadingPage } = this.state;
+
     if (loadingPage) {
       return (
         <div className="page-loader-wrapper">
           <div className="loader">
             <div className="m-t-30">
-              <img src={LogoiCON} width="48" height="48" alt="Lucid" />
+              <img src={AzuraLogo} style={{ height: "74px",margin: "19px" }} alt="Azura" />
             </div>
             <p>Please wait...</p>
           </div>

@@ -183,6 +183,7 @@ const CompanyList = (props) => {
                                             current={currentPage}
                                             total={totalPages}
                                             onPageChange={setCurrentPage}
+                                            maxWidth={400}
                                         />
                                         <select name="companyOwner" className="form-control" onChange={(e) => {
                                             setCurrentPage(1)
