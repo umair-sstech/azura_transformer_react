@@ -8,6 +8,8 @@ import { useHistory } from "react-router-dom";
 import { validateProfile } from '../Validations/Validation';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useContext } from 'react';
+import { UserContext } from '../../context/UserContext';
 
 const Profile = (props) => {
 
@@ -22,6 +24,7 @@ const Profile = (props) => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
+  const { updateUserProfileName } = useContext(UserContext);
 
   const history = useHistory();
 
@@ -102,6 +105,7 @@ const Profile = (props) => {
       );
   
       if (response.status === 200) {
+        updateUserProfileName(response.data.data.name);
         toast.success("Profile updated successfully");
         console.log(response.data);
       } else {
@@ -262,8 +266,8 @@ const Profile = (props) => {
                       </label>
                       <input
                         className="form-control"
-                        type="text"
-                        name="name"
+                        type="password"
+                        name="password"
                         placeholder="password"
                         defaultValue={formData && formData.password ? formData.password : ""}
                         onChange={(e) => handleNameChange(e, "password")}

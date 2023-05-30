@@ -92,6 +92,7 @@ import RetailerSettingList from "./screens/ManageRetailer/RetailerSettingList";
 import ManageProduct from "./screens/ManageProduct/ManageProduct";
 import ApiLogs from "./screens/Logs/ApiLogs";
 import Profile from "./screens/Profile/Profile";
+import { UserProvider } from "./context/UserContext";
 window.__DEV__ = true;
 
 class App extends React.Component {
@@ -138,10 +139,10 @@ class App extends React.Component {
           <div className="loader">
             <div className="m-t-30">
               <img
-                src={require("./assets/images/logo-icon.svg")}
+                src={require("./assets/images/refreshLogo.png")}
                 width="48"
                 height="48"
-                alt="Lucid"
+                alt="Refresh"
               />
             </div>
             <p>Please wait...</p>
@@ -166,6 +167,7 @@ class App extends React.Component {
 
         <Switch>
           <Protected>
+            <UserProvider>
             <NavbarMenu />
             <div id="wrapper">
               {/* <Redirect exact from="/" to={'/dashboard'} /> */}
@@ -370,6 +372,7 @@ class App extends React.Component {
                 </>
               ) : null}
             </div>
+            </UserProvider>
           </Protected>
         </Switch>
       </>
