@@ -106,7 +106,6 @@ const UserList = (props) => {
                     <PageHeader
                         HeaderText="User List"
                         Breadcrumb={[
-                            { name: "Manage", navigate: "#" },
                             { name: "User List", navigate: "#" },
                         ]}
                     />

@@ -7,7 +7,7 @@ function SupplierPage5(props) {
   const { setPage } = props;
 
   const options = [
-    { value: "SFTP", label: "SFTP" },
+    { value: "SFTP", label: "SFTP / FTP" },
     { value: "HTTP", label: "HTTP" },
   ];
 

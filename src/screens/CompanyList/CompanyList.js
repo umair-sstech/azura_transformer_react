@@ -103,7 +103,6 @@ const CompanyList = (props) => {
                     <PageHeader
                         HeaderText="Company List"
                         Breadcrumb={[
-                            { name: "Manage", navigate: "#" },
                             { name: "Company List", navigate: "#" },
                         ]}
                     />

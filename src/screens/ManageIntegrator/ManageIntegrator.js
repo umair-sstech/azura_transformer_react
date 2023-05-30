@@ -68,9 +68,6 @@ function ManageIntegrator(props) {
       case "4":
         setPage("4");
         break;
-      case "5":
-        setPage("5");
-        break;
       default:
         setPage("1");
     }
@@ -165,12 +162,6 @@ function ManageIntegrator(props) {
                         ),
                         4: (
                           <IntegratorPage5
-                            onButtonClick={nextPage}
-                            setPage={setPage}
-                          />
-                        ),
-                        5: (
-                          <IntegratorPage6
                             onButtonClick={nextPage}
                             setPage={setPage}
                           />

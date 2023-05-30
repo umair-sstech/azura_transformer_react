@@ -91,15 +91,16 @@ export const validateSftpForm = (formData) => {
 
     errors.password = "Password cannot be whitespace only";
 
-  } else if (password.length < 8) {
+  } 
+  // else if (password.length < 8) {
 
-    errors.password = "Password must be atleast 8 characters long";
+  //   errors.password = "Password must be atleast 8 characters long";
 
-  } else if(!/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(password)) {
+  // } else if(!/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(password)) {
     
-    errors.password = "Password have at least one character uppercase, atleast one character lowercase, at least one digit and at least one special character."
+  //   errors.password = "Password have at least one character uppercase, atleast one character lowercase, at least one digit and at least one special character."
   
-  }
+  // }
 
   if(!port) {
     

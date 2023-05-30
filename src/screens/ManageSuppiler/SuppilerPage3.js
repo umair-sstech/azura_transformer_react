@@ -31,7 +31,6 @@ function SuppilerPage3(props) {
       label: "Use AI",
       textbox: true,
       message: "e.g. Please generate the {value} from {Parent_Title}",
-      message1: "{Please use the mentioned tag for data generation}",
     },
     {
       value: "extract",
@@ -815,7 +814,7 @@ function SuppilerPage3(props) {
                               {selectedOption &&
                                 selectedOption.value === "use_AI" && (
                                   <label className="ml-3 text-success">
-                                    {selectedOption.message}
+                                  e.g. Please generate the "{key}" from  "Parent_Title"
                                   </label>
                                 )}
                                 {selectedOption &&

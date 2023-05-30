@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 import { validateProfile } from '../Validations/Validation';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { API_PATH } from '../ApiPath/Apipath';
 
 const Profile = (props) => {
 
@@ -97,8 +98,7 @@ const Profile = (props) => {
       };
   
       const response = await axios.post(
-        "http://localhost:2704/user/update",
-        formDataToUpdate
+`${API_PATH.UPDATE_USER_PROFILE}`,        formDataToUpdate
       );
   
       if (response.status === 200) {

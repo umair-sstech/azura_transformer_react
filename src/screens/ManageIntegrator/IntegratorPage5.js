@@ -186,7 +186,7 @@ function IntegratorPage5(props) {
                 "Save & Next"
               )}
               </button>
-              <button
+           {/*   <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
                 onClick={handleOnClick}
@@ -198,7 +198,7 @@ function IntegratorPage5(props) {
               ) : (
                 "Save & Exit"
               )}
-              </button>
+              </button>*/}
 
               <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={processCancel}>
                 Exit

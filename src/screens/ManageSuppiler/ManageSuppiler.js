@@ -143,7 +143,7 @@ function ManageSuppiler(props) {
                     <MultiStepProgressBar
                       setPage={setPage}
                       page={page}
-                      // onPageNumberClick={nextPageNumber}
+                      onPageNumberClick={nextPageNumber}
                     />
                     {
                       {

@@ -3,9 +3,11 @@ const PRODUCT_API_URL = process.env.REACT_APP_API_URL_PRODUCT;
 const API_LOG = process.env.REACT_APP_URL_API_LOG;
 const API_RETAILER_URL = process.env.REACT_APP_RETAILER_SERVICE;
 const API_DASHBOARD=process.env.REACT_APP_URL_DASHBOARD
+const API_USER=process.env.REACT_APP_USER_SERVICE
 
 export const API_PATH = {
 GET_DASHBOARD_DATA:`${API_DASHBOARD}/dashboard/get_dashboard`,
+UPDATE_USER_PROFILE:`${API_USER}/user/update`,
 
   GET_LIST: `${API_BASE_URL}/integration/getIntegrationInfo`,
   CREATE_INTEGRATION_INFO: `${API_BASE_URL}/integration/createIntegrationInfo`,
@@ -27,7 +29,7 @@ GET_DASHBOARD_DATA:`${API_DASHBOARD}/dashboard/get_dashboard`,
   CREATE_CATEGORY_MAPPING:`${API_BASE_URL}/integration/createOrUpdateAzuraMysaleCategoryMapping`,
   MARKET_PLACE_SYNCSETTING: `${API_BASE_URL}/integration/createOrUpdateMarketplaceIntegratorSyncSetting`,
   GET_SYNC_SETTING:`${API_BASE_URL}/integration/getMarketplaceIntegratorSyncSetting`,
-  CHANGE_STATUS: `${API_BASE_URL}/integration/changeIntegrationStatus`,
+  CHANGE_SUPPLIER_STATUS: `${API_BASE_URL}/integration/changeIntegrationStatus`,
   GET_SUPPLIER_FILE_MAPPING: `${API_BASE_URL}/Integration/getSupplierFields?supplierId`,
   GET_API_LOG: `${API_LOG}/apiLog/getAPILogs`,
   GET_ACCOUNT: `${API_RETAILER_URL}/getRetailerIntegrationById`,

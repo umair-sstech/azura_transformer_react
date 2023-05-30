@@ -90,7 +90,7 @@ function MarketPlaceList(props) {
       if (result.isConfirmed) {
         props.onLoading(true);
         axios
-          .post(`${API_PATH.CHANGE_STATUS}`, {
+          .post(`${API_PATH.CHANGE_SUPPLIER_STATUS}`, {
             supplierId: supplierId,
             status: status,
           })

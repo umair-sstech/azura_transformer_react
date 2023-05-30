@@ -151,7 +151,6 @@ function ProductsList(props) {
           <PageHeader
             HeaderText="Products List"
             Breadcrumb={[
-              { name: "Products", navigate: "#" },
               { name: "Products List", navigate: "#" },
             ]}
           />
@@ -192,6 +191,7 @@ function ProductsList(props) {
                       <tr>
                         <th>#</th>
                         <th>Supplier Name</th>
+                        <th>Logo</th>
 
                         <th>Grand Parent SKU</th>
                         <th>Parent SKU</th>
@@ -207,6 +207,13 @@ function ProductsList(props) {
                         <tr key={product.id}>
                           <td>{startIndex + idx}</td>
                           <td>{product.Supplier}</td>
+                          <td>
+                            {product.Image_Parent_1_original ? (
+                              <img src={product.Image_Parent_1_original} className="list-logo" />
+                            ) : (
+                              <div className="list-logo placeholder">N/A</div>
+                            )}
+                          </td>
 
                           <td>{product.Grandparent_SKU}</td>
 

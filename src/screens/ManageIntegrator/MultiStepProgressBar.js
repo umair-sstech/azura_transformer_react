@@ -8,7 +8,7 @@ const stepNames = [
   "Product Sync Settings",
   "Order Sync Settings",
   "Tracking Settings",
-  "Extra Settings",
+  // "Extra Settings",
 ];
 
 const styles = {
@@ -43,13 +43,10 @@ const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
   } else if (page == "2") {
     stepPercentage = 40;
   } else if (page == "3") {
-    stepPercentage = 60;
+    stepPercentage = 70;
   } else if (page == "4") {
-    stepPercentage = 80;
-  } else if (page == "5") {
     stepPercentage = 100;
-  
-  } else {
+  }else {
     stepPercentage = 0;
   }
 
@@ -113,7 +110,7 @@ const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
               ></div>
             )}
           </Step>
-          <Step>
+           { /*<Step>
             {({ accomplished, index }) => (
               <div
                 className={`indexedStep ${
@@ -123,7 +120,7 @@ const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
               ></div>
             )}
           </Step>
-      { /*   <Step>
+        <Step>
             {({ accomplished, index }) => (
               <div
                 className={`indexedStep ${

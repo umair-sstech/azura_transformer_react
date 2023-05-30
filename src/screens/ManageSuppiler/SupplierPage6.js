@@ -242,7 +242,7 @@ function SupplierPage6(props) {
                     <tr key={option.value}>
                       <td>
                         <input
-                          type="checkbox"
+                          type="radio"
                           checked={selectedOptions.includes(option.value)}
                           onChange={() => handleOptionChange(option.value)}
                         />
@@ -256,7 +256,7 @@ function SupplierPage6(props) {
                     <tr key={option.value}>
                       <td>
                         <input
-                          type="checkbox"
+                          type="radio"
                           checked={selectedOptions.includes(option.value)}
                           onChange={() => handleOptionChange(option.value)}
                         />

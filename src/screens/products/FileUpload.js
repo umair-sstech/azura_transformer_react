@@ -22,7 +22,6 @@ function FileUpload(props) {
   const [type, setType] = useState("Supplier");
   const [supplier, setSupplier] = useState("Choose Supplier");
   console.log("supplier",supplier)
-  const [fileError, setFileError] = useState("");
   const [autoId, setAutoId] = useState(1);
   const [fileData, setFileData] = useState([]);
 
@@ -31,8 +30,24 @@ function FileUpload(props) {
   const history = useHistory();
 
   useEffect(() => {
-    // getFileList();
+    getSupplierList()
   }, []);
+
+
+  const getSupplierList = async () => {
+    try {
+      const response = await axios.post('http://localhost:8001/integration/getIntegrationInfo', {
+        type: 'Supplier'
+      });
+      const suppliers = response.data;
+      setSupplier(suppliers);
+    } catch (error) {
+      console.error('Error fetching suppliers:', error);
+    }
+  };
+  
+
+  
 
   const getFileList = async (currentPage, dataLimit, search) => {
     props.onLoading(true);
@@ -171,7 +186,6 @@ function FileUpload(props) {
           <PageHeader
             HeaderText="File Upload"
             Breadcrumb={[
-              { name: "Products", navigate: "#" },
               { name: "File Upload", navigate: "#" },
             ]}
           />

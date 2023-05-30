@@ -125,7 +125,6 @@ const RetailerList = (props) => {
           <PageHeader
             HeaderText="Retailer List"
             Breadcrumb={[
-              { name: "Manage", navigate: "#" },
               { name: "Retailer List", navigate: "#" },
             ]}
           />
