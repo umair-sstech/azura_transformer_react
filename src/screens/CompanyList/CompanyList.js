@@ -18,7 +18,7 @@ const CompanyList = (props) => {
     const [companyList, setCompanyList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(2);
-    const [dataLimit, setdataLimit] = useState(5);
+    const [dataLimit, setdataLimit] = useState(10);
     const [searchText, setSearchText] = useState('active');
     
     const history = useHistory()
@@ -189,7 +189,7 @@ const CompanyList = (props) => {
                                             setCurrentPage(1)
                                             setdataLimit(e.target.value)
                                         }}>
-                                            <option value={5}>5</option>
+                                          
                                             <option value={10}>10</option>
                                             <option value={20}>20</option>
                                             <option value={50}>50</option>
