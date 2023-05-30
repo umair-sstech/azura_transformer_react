@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import "echarts-gl";
-import Fecicon from "../../assets/images/Fevicon.png"
+import refreshLogo from "../../assets/images/refreshLogo.png"
 import AwsomeImage from "../../assets/images/blog/blog-page-4.jpg";
 import AwsomeImageOt from "../../assets/images/blog/blog-page-2.jpg";
 import PageHeader from "../../components/PageHeader";
@@ -86,7 +86,7 @@ class Dashbord extends React.Component {
         <div className="page-loader-wrapper">
           <div className="loader">
             <div className="m-t-30">
-              <img src={Fecicon} style={{ height: "50px"}} alt="Azura" />
+              <img src={refreshLogo} style={{ height: "44px" }} alt="Azura" />
             </div>
             <p>Please wait...</p>
           </div>
