@@ -132,7 +132,7 @@ function ManageIntegrator(props) {
                     <MultiStepProgressBar
                       setPage={setPage}
                       page={page}
-                      // onPageNumberClick={nextPageNumber}
+                      onPageNumberClick={nextPageNumber}
                     />
                     {
                       {
