@@ -108,7 +108,7 @@ let filterList = [
                         <tr key={apiLog._id}>
                           <td>{startIndex + idx}</td>
                           <td>{apiLog.method}</td>
-                          <td>{apiLog.url}</td>
+                          <td style={{whiteSpace: "pre-wrap"}}>{apiLog.url}</td>
                           <td>{apiLog.statusCode}</td>
                           <td>{apiLog.status}</td>
                           <td style={{whiteSpace: "pre-wrap"}}>{apiLog.message}</td>

@@ -46,6 +46,14 @@ class PageHeader extends React.Component {
       document.body.classList.add("layout-fullwidth");
     }
   };
+
+  doNavigate = (item) => {
+    if(!item.items) return;
+    item.items.forEach(element => {
+      localStorage.removeItem(element)
+    });
+  };
+
   render() {
     const { HeaderText, Breadcrumb } = this.props;
     return (
@@ -83,7 +91,7 @@ class PageHeader extends React.Component {
                     key={item.name + index}
                     className="breadcrumb-item active"
                   >
-                    <Link to={item.navigate ? item.navigate : null}>
+                    <Link to={item.navigate ? item.navigate : null} onClick={() => this.doNavigate(item)}>
                       {item.name}
                     </Link>
                   </li>
