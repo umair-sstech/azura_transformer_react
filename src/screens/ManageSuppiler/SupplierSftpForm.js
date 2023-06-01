@@ -477,7 +477,6 @@ function SupplierSftpForm(props) {
                 placeholder="*"
                   name="day"
                   value={syncFrequency.split(" ")[2] || ""}
-
                   onChange={handleSyncFrequency}
                 />
                 <label>
@@ -581,3 +580,32 @@ const mapStateToProps = ({ LoadingReducer }) => ({
   isLoading: LoadingReducer.isLoading,
 });
 export default connect(mapStateToProps, { onLoading })(SupplierSftpForm);
+
+
+
+
+// Assuming timeZoneData is an array containing the available time zone options
+
+// const defaultTimeZone = timeZoneData.find((data) => data.text === "(UTC+10:00) Canberra, Melbourne, Sydney");
+
+// const [initFormData, setInitFormData] = useState({
+//   supplierId: "",
+//   supplierName: "",
+//   settingType: settingType,
+//   password: "",
+//   hostName: "",
+//   userName: "",
+//   port: "",
+//   protocol: "",
+//   urlPath: "",
+//   syncFrequency: "",
+//   timeZone: defaultTimeZone ? { value: defaultTimeZone.abbr, label: defaultTimeZone.text } : null,
+// });
+
+// const handleTimeZoneChange = (selectedOption) => {
+//   const timeZone = selectedOption;
+//   setInitFormData({ ...initFormData, timeZone });
+//   handleChange("timeZone", timeZone);
+// };
+
+// Rest of your code...
