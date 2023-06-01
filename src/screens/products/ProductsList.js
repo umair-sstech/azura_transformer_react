@@ -192,14 +192,16 @@ function ProductsList(props) {
                         <th>#</th>
                         <th>Supplier Name</th>
                         <th>Logo</th>
-
                         <th>Grand Parent SKU</th>
                         <th>Parent SKU</th>
                         <th>Variant SKU</th>
                         <th>Brand</th>
                         <th>Category</th>
+                        <th>Title</th>
+                        <th>Cost Price</th>
+                        <th>Retail Price</th>
                         <th>Last Update(UTC)</th>
-                            <th>Action</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -223,6 +225,9 @@ function ProductsList(props) {
                           <td>{product.Brand}</td>
 
                           <td>{product.Azura_Category_Tree}</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
 
                           <td>
                             {product.updatedAt

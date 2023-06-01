@@ -63,6 +63,22 @@ export const sparkleCardData = [
       symbolSize: 1,
     },
   },
+  {
+    heading: "TODAY'S COST",
+    // money: "$421,215",
+    perText: "Total : 1000",
+    sparklineData: {
+      type: "line",
+      data: [1, 3, 5, 1, 4, 2],
+      areaStyle: {
+        color: "#95b3d7",
+      },
+      itemStyle: {
+        color: "#4f81bc",
+      },
+      symbolSize: 1,
+    },
+  }
 ];
 
 export const sparkleCardData1 = [

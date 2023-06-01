@@ -150,6 +150,7 @@ function SuppilerInfo(props) {
               const supplierId = data.id;
               if (supplierId) {
                 localStorage.setItem("supplierId", supplierId);
+
               }
               const supplierName = data.name;
               if (supplierName) {
@@ -178,8 +179,13 @@ function SuppilerInfo(props) {
       return;
     }
 
+    
     const formData = new FormData(form);
     const errors = validateIntegrationInfoForm(formData);
+    if (initFormData.logo) {
+      delete errors.logo;
+    }
+
     setFormErrors(errors);
     setIsLoadingExit(true);
     const supplierId = localStorage.getItem("supplierId");
@@ -212,8 +218,11 @@ function SuppilerInfo(props) {
           const { success, message, data } = response.data;
           if (success) {
             const supplierId = data.id;
+           
+
             if (supplierId) {
               localStorage.setItem("supplierId", supplierId);
+
             }
             const supplierName = data.name;
             if (supplierName) {

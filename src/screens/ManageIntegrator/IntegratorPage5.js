@@ -174,7 +174,7 @@ function IntegratorPage5(props) {
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
-              <button
+              {/*<button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
@@ -185,8 +185,8 @@ function IntegratorPage5(props) {
               ) : (
                 "Save & Next"
               )}
-              </button>
-           {/*   <button
+              </button>*/}
+           <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
                 onClick={handleOnClick}
@@ -198,7 +198,7 @@ function IntegratorPage5(props) {
               ) : (
                 "Save & Exit"
               )}
-              </button>*/}
+              </button>
 
               <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={processCancel}>
                 Exit

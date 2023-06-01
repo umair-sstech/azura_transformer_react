@@ -152,6 +152,9 @@ function MarketPlacePage1(props) {
     const formData = new FormData(form);
 
     const errors = validateIntegrationInfoForm(formData);
+    if (initFormData.logo) {
+      delete errors.logo;
+    }
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
@@ -240,6 +243,9 @@ function MarketPlacePage1(props) {
     const formData = new FormData(form);
 
     const errors = validateIntegrationInfoForm(formData);
+    if (initFormData.logo) {
+      delete errors.logo;
+    }
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
