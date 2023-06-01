@@ -23,6 +23,8 @@ function SupplierHttpForm(props) {
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
+  const [syncFrequency, setSyncFrequency] = useState("")
+
 
   const history = useHistory();
 
@@ -59,16 +61,50 @@ function SupplierHttpForm(props) {
     }
   };
 
-  const handleSyncFrequency = (selectedOption) => {
-    const syncFrequency = selectedOption.value;
-    setInitFormData({ ...initFormData, syncFrequency: syncFrequency });
-    // setFormErrors({ ...formErrors, syncFrequency: "" });
-    const formData = new FormData(document.forms.httpForm);
-    formData.set("syncFrequency", syncFrequency)
-    const errors = validateHttpForm(formData);
-    setFormErrors(errors);
-    setIsFormValid(Object.keys(errors).length === 0);
-  };
+  // const handleSyncFrequency = (selectedOption) => {
+  //   const syncFrequency = selectedOption.value;
+  //   setInitFormData({ ...initFormData, syncFrequency: syncFrequency });
+  //   // setFormErrors({ ...formErrors, syncFrequency: "" });
+  //   const formData = new FormData(document.forms.httpForm);
+  //   formData.set("syncFrequency", syncFrequency)
+  //   const errors = validateHttpForm(formData);
+  //   setFormErrors(errors);
+  //   setIsFormValid(Object.keys(errors).length === 0);
+  // };
+
+  const handleSyncFrequency = (e) => {
+    const { name, value, type } = e.target;
+    const trimmedValue = type === "text" ? value.trim() : value;
+  
+    setInitFormData((prevState) => ({
+      ...prevState,
+      [name]: trimmedValue,
+    }));
+  
+    const updatedSyncFrequency = syncFrequency.split(" "); 
+    switch (name) {
+      case "minute":
+        updatedSyncFrequency[0] = trimmedValue;
+        break;
+      case "hour":
+        updatedSyncFrequency[1] = trimmedValue;
+        break;
+      case "day":
+        updatedSyncFrequency[2] = trimmedValue;
+        break;
+      case "month":
+        updatedSyncFrequency[3] = trimmedValue;
+        break;
+      case "week":
+        updatedSyncFrequency[4] = trimmedValue;
+        break;
+      default:
+        break;
+    }
+  
+    // Update the syncFrequency state with the modified array
+    setSyncFrequency(updatedSyncFrequency.join(" "));
+  }
 
   const handleInputChange = (e) => {
     const urlPath = e.target.value.trim()
@@ -93,12 +129,15 @@ function SupplierHttpForm(props) {
     if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
+      const syncFrequency = `${formData.get("minute")} ${formData.get("hour")} ${formData.get("day")} ${formData.get("month")} ${formData.get("week")}`;
 
       const payload = {
         ...initFormData,
         settingType,
         supplierId,
         supplierName,
+      syncFrequency,
+
         password: "",
         hostName: "",
         userName: "",
@@ -172,8 +211,10 @@ function SupplierHttpForm(props) {
           const supplierData = response.data.data;
           setFormData({
             ...supplierData,
-            syncFrequency: supplierData.syncFrequency,
           });
+          const { syncFrequency } = supplierData;
+
+          setSyncFrequency(syncFrequency);
         
         })
         .catch((error) => {
@@ -249,7 +290,7 @@ function SupplierHttpForm(props) {
                 </small>
               </div>
             </div>
-            <div className="col-12">
+          { /* <div className="col-12">
               <div className="form-group">
                 <label>
                   Sync Frequency <span style={{ color: "red" }}>*</span>
@@ -269,7 +310,102 @@ function SupplierHttpForm(props) {
                   </span>
                 )}
               </div>
-            </div>
+                </div>*/}
+
+                <div className="col-12">
+                <div className="row">
+                <div className="col-sm-4 col-lg-2">
+                <div className="form-group">
+                 <label>
+                     Minute <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <input
+                      className="form-control"
+                      type="text"
+                    placeholder="*"
+                      name="minute"
+                      value={syncFrequency.split(" ")[0] || ""}
+                      onChange={handleSyncFrequency}
+                    />
+                   
+                   
+                </div>
+                </div>
+                <div className="col-sm-4 col-lg-2">
+                <div className="form-group">
+                 <label>
+                     Hour <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <input
+                      className="form-control"
+                      type="text"
+                    placeholder="*"
+                      name="hour"
+                      value={syncFrequency.split(" ")[1] || ""}
+                      onChange={handleSyncFrequency}
+                    />
+                   
+                </div>
+                </div>
+                <div className="col-sm-4 col-lg-2">
+                <div className="form-group">
+                 <label>
+                     Day <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <input
+                      className="form-control"
+                      type="text"
+                    placeholder="*"
+                      name="day"
+                      value={syncFrequency.split(" ")[2] || ""}
+    
+                      onChange={handleSyncFrequency}
+                    />
+                   
+                </div>
+                </div>
+                <div className="col-sm-4 col-lg-3">
+                <div className="form-group">
+                 <label>
+                     Month <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <input
+                      className="form-control"
+                      type="text"
+                    placeholder="*"
+                      name="month"
+                      value={syncFrequency.split(" ")[3] || ""}
+    
+                      onChange={handleSyncFrequency}
+                    />
+                    
+                </div>
+                </div>
+                <div className="col-sm-4 col-lg-3">
+                <div className="form-group">
+                 <label>
+                     Week <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <input
+                      className="form-control"
+                      type="text"
+                    placeholder="*"
+                      name="week"
+                      value={syncFrequency.split(" ")[4] || ""}
+    
+                      onChange={handleSyncFrequency}
+                    />
+                    
+                </div>
+                </div>
+                </div>
+                <small className="form-text text-muted csv-text">
+                Learn more. &nbsp;&nbsp;&nbsp; <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="csv-text">
+                https://crontab.guru/
+              </a>
+              </small>
+               
+                </div>
           </div>
         </div>
       </form>

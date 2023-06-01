@@ -126,7 +126,7 @@ export const validateSftpForm = (formData) => {
 
 
   if (!syncFrequency) {
-    errors.syncFrequency = "Please Select Sync Frequency";
+    errors.syncFrequency = "Please Enter Frequency";
   }
   if (!timeZone) {
     errors.timeZone = "Please Select TimeZone";
@@ -170,9 +170,7 @@ export const validateMarketPlaceInfoForm = (formData) => {
 };
 export const validateMarketPlaceProductSync = (formData) => {
   const errors = {};
-  if (!formData.productSyncFrequency) {
-    errors.productSyncFrequency = "Please Select Sync Frequency";
-  }
+ 
   if (!formData.productTimeZone) {
     errors.productTimeZone = "Please Select TimeZone";
   }
@@ -181,9 +179,7 @@ export const validateMarketPlaceProductSync = (formData) => {
 
 export const validateMarketPlaceOrderSync = (formData) => {
   const errors = {};
-  if (!formData.orderSyncFrequency) {
-    errors.orderSyncFrequency = "Please Select Sync Frequency";
-  }
+
   if (!formData.orderTimeZone) {
     errors.orderTimeZone = "Please Select TimeZone";
   }
@@ -192,9 +188,7 @@ export const validateMarketPlaceOrderSync = (formData) => {
 
 export const validateMarketPlaceTrackingSync = (formData) => {
   const errors = {};
-  if (!formData.trackingSyncFrequency) {
-    errors.trackingSyncFrequency = "Please Select Sync Frequency";
-  }
+ 
   if (!formData.trackingTimeZone) {
     errors.trackingTimeZone = "Please Select TimeZone";
   }

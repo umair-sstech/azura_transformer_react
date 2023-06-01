@@ -22,6 +22,8 @@ function MarketPlacePage4(props) {
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
+  const [orderSyncFrequency, setOrderSyncFrequency] = useState("");
+
   const history = useHistory();
 
   useEffect(() => {
@@ -45,102 +47,130 @@ function MarketPlacePage4(props) {
     }
   };
 
-  const handleSyncFrequency = (selectedOption) => {
-    setFormData({ ...formData, orderSyncFrequency: selectedOption.value });
-    setFormErrors({ ...formErrors, orderSyncFrequency: "" });
+  const handleSyncFrequency = (e) => {
+    const { name, value, type } = e.target;
+    const trimmedValue = type === "text" ? value.trim() : value;
+
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: trimmedValue,
+    }));
+
+    const updatedSyncFrequency = orderSyncFrequency.split(" ");
+    switch (name) {
+      case "minute":
+        updatedSyncFrequency[0] = trimmedValue;
+        break;
+      case "hour":
+        updatedSyncFrequency[1] = trimmedValue;
+        break;
+      case "day":
+        updatedSyncFrequency[2] = trimmedValue;
+        break;
+      case "month":
+        updatedSyncFrequency[3] = trimmedValue;
+        break;
+      case "week":
+        updatedSyncFrequency[4] = trimmedValue;
+        break;
+      default:
+        break;
+    }
+    setOrderSyncFrequency(updatedSyncFrequency.join(" "));
   };
 
   const handleTimeZoneChange = (selectedOption) => {
     setFormData({ ...formData, orderTimeZone: selectedOption });
     setFormErrors({ ...formErrors, orderTimeZone: "" });
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = validateMarketPlaceOrderSync(formData);
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-    const integrationId = localStorage.getItem("marketPlaceId");
-    const integrationName = localStorage.getItem("marketPlaceName");
+      const integrationId = localStorage.getItem("marketPlaceId");
+      const integrationName = localStorage.getItem("marketPlaceName");
 
-    const { value, label } = formData.orderTimeZone;
+      const { value, label } = formData.orderTimeZone;
 
-    const timeZoneString = `${value}`;
+      const timeZoneString = `${value}`;
 
-    const payload = {
-      ...formData,
-      orderTimeZone: timeZoneString,
-      integrationId,
-      integrationName,
-    };
-    setIsLoading(true)
-    axios
-      .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
-      .then((response) => {
-        const { success, message, data } = response.data;
-        if (success) {
-          toast.success(message);
-          setFormData({});
-          setPage(5);
-        } else {
-          toast.error(message);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setIsLoading(false)
-      });
+      const payload = {
+        ...formData,
+        orderSyncFrequency,
+        orderTimeZone: timeZoneString,
+        integrationId,
+        integrationName,
+      };
+      setIsLoading(true);
+      axios
+        .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
+        .then((response) => {
+          const { success, message, data } = response.data;
+          if (success) {
+            toast.success(message);
+            setFormData({});
+            setPage(5);
+          } else {
+            toast.error(message);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsLoading(false);
+        });
+    }
   };
-  }
+
   const handleOnClick = (e) => {
     e.preventDefault();
     const errors = validateMarketPlaceOrderSync(formData);
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-    const integrationId = localStorage.getItem("marketPlaceId");
-    const integrationName = localStorage.getItem("marketPlaceName");
+      const integrationId = localStorage.getItem("marketPlaceId");
+      const integrationName = localStorage.getItem("marketPlaceName");
 
-    const { value, label } = formData.orderTimeZone;
+      const { value, label } = formData.orderTimeZone;
 
-    const timeZoneString = `${value}`;
+      const timeZoneString = `${value}`;
 
-    const payload = {
-      ...formData,
-      orderTimeZone: timeZoneString,
-      integrationId,
-      integrationName,
-    };
-    setIsLoadingExit(true)
-    axios
-      .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
-      .then((response) => {
-        const { success, message, data } = response.data;
-        if (success) {
-          toast.success(message);
-          setFormData({});
-          history.push("/market-place");
-          localStorage.removeItem("marketPlaceId");
-          localStorage.removeItem("marketPLaceName");
-        } else {
-          toast.error(message);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setIsLoadingExit(false)
-      });
+      const payload = {
+        ...formData,
+        orderSyncFrequency,
+        orderTimeZone: timeZoneString,
+        integrationId,
+        integrationName,
+      };
+      setIsLoadingExit(true);
+      axios
+        .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
+        .then((response) => {
+          const { success, message, data } = response.data;
+          if (success) {
+            toast.success(message);
+            setFormData({});
+            history.push("/market-place");
+            localStorage.removeItem("marketPlaceId");
+            localStorage.removeItem("marketPLaceName");
+          } else {
+            toast.error(message);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsLoadingExit(false);
+        });
+    }
   };
-}
 
   const getProductData = () => {
     const integrationId = localStorage.getItem("marketPlaceId");
 
     axios
-      .get(
-        `${API_PATH.GET_SYNC_SETTING}?integrationId=${integrationId}`
-      )
+      .get(`${API_PATH.GET_SYNC_SETTING}?integrationId=${integrationId}`)
       .then((response) => {
         const { success, message, data } = response.data;
         if (success) {
@@ -148,13 +178,14 @@ function MarketPlacePage4(props) {
             (tz) => tz.abbr == data.orderTimeZone
           );
           setFormData({
-            orderSyncFrequency: data.orderSyncFrequency,
             orderTimeZone: {
               value: orderTimeZone.abbr,
               label: orderTimeZone.text,
             },
             type: "order",
           });
+          const { orderSyncFrequency } = data;
+          setOrderSyncFrequency(orderSyncFrequency);
         } else {
         }
       })
@@ -176,26 +207,26 @@ function MarketPlacePage4(props) {
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
-              {isLoading ? (
-                <>
-                  <Spinner animation="border" size="sm" /> Please wait...
-                </>
-              ) : (
-                "Save & Next"
-              )}
+                {isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Next"
+                )}
               </button>
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="button"
                 onClick={handleOnClick}
               >
-              {isLoadingExit ? (
-                <>
-                  <Spinner animation="border" size="sm" /> Please wait...
-                </>
-              ) : (
-                "Save & Exit"
-              )}
+                {isLoadingExit ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Exit"
+                )}
               </button>
 
               <button
@@ -210,21 +241,98 @@ function MarketPlacePage4(props) {
         </div>
         <div className="row mt-3 mt-sm-0">
           <div className="col-12">
-            <div className="form-group">
-              <label>
-                Sync Frequency <span style={{ color: "red" }}>*</span>
-              </label>
-              <Select
-                placeholder="Select Frequency"
-                options={syncFrequencyOptions}
-                onChange={handleSyncFrequency}
-                value={syncFrequencyOptions.find(
-                  (option) => option.value === formData.orderSyncFrequency
-                )}
-              />
-              {formErrors.orderSyncFrequency && (
-                <span className="text-danger">{formErrors.orderSyncFrequency}</span>
-              )}
+            <label>
+              Sync Frequency <span style={{ color: "red" }}>*</span>
+            </label>
+            <div className="row">
+              <div className="col-sm-4 col-lg-2">
+                <div className="form-group">
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder="*"
+                    name="minute"
+                    value={orderSyncFrequency?.split(" ")[0] || ""}
+                    onChange={handleSyncFrequency}
+                  />
+                  <label>
+                    Minute <span style={{ color: "red" }}>*</span>
+                  </label>
+                </div>
+              </div>
+              <div className="col-sm-4 col-lg-2">
+                <div className="form-group">
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder="*"
+                    name="hour"
+                    value={orderSyncFrequency?.split(" ")[1] || ""}
+                    onChange={handleSyncFrequency}
+                  />
+                  <label>
+                    Hour <span style={{ color: "red" }}>*</span>
+                  </label>
+                </div>
+              </div>
+              <div className="col-sm-4 col-lg-2">
+                <div className="form-group">
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder="*"
+                    name="day"
+                    value={orderSyncFrequency?.split(" ")[2] || ""}
+                    onChange={handleSyncFrequency}
+                  />
+                  <label>
+                    Day(Month) <span style={{ color: "red" }}>*</span>
+                  </label>
+                </div>
+              </div>
+              <div className="col-sm-4 col-lg-3">
+                <div className="form-group">
+                  
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder="*"
+                    name="month"
+                    value={orderSyncFrequency?.split(" ")[3] || ""}
+                    onChange={handleSyncFrequency}
+                  />
+                  <label>
+                    Month <span style={{ color: "red" }}>*</span>
+                  </label>
+                </div>
+              </div>
+              <div className="col-sm-4 col-lg-3">
+                <div className="form-group">
+                  
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder="*"
+                    name="week"
+                    value={orderSyncFrequency?.split(" ")[4] || ""}
+                    onChange={handleSyncFrequency}
+                  />
+                  <label>
+                    Day(Week) <span style={{ color: "red" }}>*</span>
+                  </label>
+                </div>
+              </div>
+              <small className="form-text text-muted csv-text px-3">
+                Learn more about Cronjob: &nbsp;{" "}
+                <a
+                  href="https://crontab.guru/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="csv-text"
+                >
+                  https://crontab.guru
+                </a>
+              </small>
             </div>
           </div>
           <div className="col-12">
