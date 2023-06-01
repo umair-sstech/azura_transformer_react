@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 import Select from "react-select";
 import { Form } from "react-bootstrap";
 import { API_PATH } from "../ApiPath/Apipath";
+import LogModal from "./LogModal";
 
 function ApiLogs(props) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,6 +20,8 @@ function ApiLogs(props) {
   const [searchText, setSearchText] = useState("Success");
   const [autoId, setAutoId] = useState(1);
   const [apiLog, setApiLog] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
 
   const startIndex = (currentPage - 1) * dataLimit + 1;
 
@@ -46,6 +49,11 @@ function ApiLogs(props) {
       props.onLoading(false);
     });
 };
+
+ const openModal = (id) => {
+  setSelectedId(id);
+  setShowModal(true);
+ }
 
 const handleFilterChange = (selectedOption) => {
   setCurrentPage(1);
@@ -101,6 +109,7 @@ let filterList = [
                         <th>Status Code</th>
                         <th>Status</th>
                         <th>Message</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -112,6 +121,14 @@ let filterList = [
                           <td>{apiLog.statusCode}</td>
                           <td>{apiLog.status}</td>
                           <td style={{whiteSpace: "pre-wrap"}}>{apiLog.message}</td>
+                          <td className="action-group">
+                            <i
+                              data-placement="top"
+                              title="Edit"
+                              className="fa fa-eye"
+                              onClick={() => openModal(apiLog._id)}
+                            ></i>
+                            </td>
                         </tr>
                       ))}
                     </tbody>
@@ -144,6 +161,8 @@ let filterList = [
           </div>
         </div>
       </div>
+
+      <LogModal showModal={showModal} setShowModal={setShowModal} selectedId={selectedId} />
     </div>
   );
 }
