@@ -64,7 +64,7 @@ export const sparkleCardData = [
     },
   },
   {
-    heading: "TODAY'S COST",
+    heading: "TODAY'S COST($)",
     // money: "$421,215",
     perText: "Total : 1000",
     sparklineData: {

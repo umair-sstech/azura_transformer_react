@@ -24,6 +24,8 @@ function IntegratorPage4(props) {
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
+  const [orderSyncFrequency,setOrderSyncFrequency]=useState("")
+
 
   const history = useHistory();
 
@@ -48,11 +50,43 @@ function IntegratorPage4(props) {
     }
   };
 
-  const handleSyncFrequency = (selectedOption) => {
-    setFormData({ ...formData, orderSyncFrequency: selectedOption.value });
-    setFormErrors({ ...formErrors, orderSyncFrequency: "" });
+  // const handleSyncFrequency = (selectedOption) => {
+  //   setFormData({ ...formData, orderSyncFrequency: selectedOption.value });
+  //   setFormErrors({ ...formErrors, orderSyncFrequency: "" });
 
-  };
+  // };
+
+  const handleSyncFrequency = (e) => {
+    const { name, value, type } = e.target;
+    const trimmedValue = type === "text" ? value.trim() : value;
+  
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: trimmedValue,
+    }));
+  
+    const updatedSyncFrequency = orderSyncFrequency.split(" "); 
+    switch (name) {
+      case "minute":
+        updatedSyncFrequency[0] = trimmedValue;
+        break;
+      case "hour":
+        updatedSyncFrequency[1] = trimmedValue;
+        break;
+      case "day":
+        updatedSyncFrequency[2] = trimmedValue;
+        break;
+      case "month":
+        updatedSyncFrequency[3] = trimmedValue;
+        break;
+      case "week":
+        updatedSyncFrequency[4] = trimmedValue;
+        break;
+      default:
+        break;
+    }
+    setOrderSyncFrequency(updatedSyncFrequency.join(" "));
+  }
 
   const handleTimeZoneChange = (selectedOption) => {
     setFormData({ ...formData, orderTimeZone: selectedOption });
@@ -75,6 +109,7 @@ function IntegratorPage4(props) {
 
     const payload = {
       ...formData,
+      orderSyncFrequency,
       orderTimeZone: timeZoneString,
       integrationId,
       integrationName,
@@ -113,6 +148,7 @@ function IntegratorPage4(props) {
 
     const payload = {
       ...formData,
+      orderSyncFrequency,
       orderTimeZone: timeZoneString,
       integrationId,
       integrationName,
@@ -138,6 +174,7 @@ function IntegratorPage4(props) {
       });
   };
   }
+
   const getProductData = () => {
     const integrationId = localStorage.getItem("integratorId");
 
@@ -152,13 +189,17 @@ function IntegratorPage4(props) {
             (tz) => tz.abbr == data.orderTimeZone
           );
           setFormData({
-            orderSyncFrequency: data.orderSyncFrequency,
             orderTimeZone: {
               value: orderTimeZone.abbr,
               label: orderTimeZone.text,
             },
             type: "order",
           });
+          const { orderSyncFrequency } = data;
+
+          setOrderSyncFrequency(orderSyncFrequency);
+        
+        
         } else {
         }
       })
@@ -214,26 +255,101 @@ function IntegratorPage4(props) {
         </div>
       </div>
       <div className="row mt-3 mt-sm-0">
-        <div className="col-12">
-          <div className="form-group">
-            <label>
-              Sync Frequency <span style={{ color: "red" }}>*</span>
-            </label>
-            <Select
-                placeholder="Select Frequency"
-                options={syncFrequencyOptions}
-                value={syncFrequencyOptions.find(
-                  (option) => option.value === formData.orderSyncFrequency
-                )}
-                onChange={handleSyncFrequency}
-              />
-              {formErrors.orderSyncFrequency && (
-                <span className="text-danger">
-                  {formErrors.orderSyncFrequency}
-                </span>
-              )}
-          </div>
-        </div>
+      <div className="col-12">
+      <label>Sync Frequency <span style={{ color: "red" }}>*</span></label>
+      <div className="row">
+      <div className="col-sm-4 col-lg-2">
+      <div className="form-group">
+       
+          <input
+            className="form-control"
+            type="text"
+          placeholder="*"
+            name="minute"
+            value={orderSyncFrequency?.split(" ")[0] || ""}
+            onChange={handleSyncFrequency}
+          />
+          <label>
+          Minute <span style={{ color: "red" }}>*</span>
+         </label>
+         
+      </div>
+      </div>
+      <div className="col-sm-4 col-lg-2">
+      <div className="form-group">
+      
+          <input
+            className="form-control"
+            type="text"
+          placeholder="*"
+            name="hour"
+            value={orderSyncFrequency?.split(" ")[1] || ""}
+            onChange={handleSyncFrequency}
+          />
+          <label>
+           Hour <span style={{ color: "red" }}>*</span>
+          </label>
+      </div>
+      </div>
+      <div className="col-sm-4 col-lg-2">
+      <div className="form-group">
+      
+          <input
+            className="form-control"
+            type="text"
+          placeholder="*"
+            name="day"
+            value={orderSyncFrequency?.split(" ")[2] || ""}
+
+            onChange={handleSyncFrequency}
+          />
+          <label>
+           Day(Month) <span style={{ color: "red" }}>*</span>
+          </label>
+      </div>
+      </div>
+      <div className="col-sm-4 col-lg-3">
+      <div className="form-group">
+       
+          <input
+            className="form-control"
+            type="text"
+          placeholder="*"
+            name="month"
+            value={orderSyncFrequency?.split(" ")[3] || ""}
+
+            onChange={handleSyncFrequency}
+          />
+          <label>
+           Month <span style={{ color: "red" }}>*</span>
+          </label>
+      </div>
+      </div>
+      <div className="col-sm-4 col-lg-3">
+      <div className="form-group">
+      
+          <input
+            className="form-control"
+            type="text"
+          placeholder="*"
+            name="week"
+            value={orderSyncFrequency?.split(" ")[4] || ""}
+
+            onChange={handleSyncFrequency}
+          />
+          <label>
+          Day(Week) <span style={{ color: "red" }}>*</span>
+         </label>
+      </div>
+      </div>
+      <small className="form-text text-muted csv-text px-3">
+              Learn more about Cornjob: &nbsp; <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="csv-text">
+              https://crontab.guru
+            </a>
+            </small>
+      </div>
+    
+      </div>
         <div className="col-12">
           <div className="form-group">
             <label>

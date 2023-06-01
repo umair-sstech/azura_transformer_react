@@ -60,8 +60,8 @@ class Dashbord extends React.Component {
           case 'PRODUCT':
             count = data.products;
             break;
-            case 'COST':
-              // count = data.products;
+            case `TODAY'S COST($)`:
+              count = data.cost;
               break;
           default:
             count = 0;

@@ -26,6 +26,7 @@ function IntegratoePage3(props) {
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
+  const [productSyncFrequency,setProductSyncFrequency]=useState("")
 
   const history = useHistory();
 
@@ -50,21 +51,56 @@ function IntegratoePage3(props) {
     }
   };
 
-  const handleSyncFrequency = (selectedOption) => {
-    setFormData({ ...formData, productSyncFrequency: selectedOption.value });
-    setFormErrors({ ...formErrors, productSyncFrequency: "" });
-  };
+  // const handleSyncFrequency = (selectedOption) => {
+  //   setFormData({ ...formData, productSyncFrequency: selectedOption.value });
+  //   setFormErrors({ ...formErrors, productSyncFrequency: "" });
+  // };
+
+  const handleSyncFrequency = (e) => {
+    const { name, value, type } = e.target;
+    const trimmedValue = type === "text" ? value.trim() : value;
+  
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: trimmedValue,
+    }));
+  
+    const updatedSyncFrequency = productSyncFrequency.split(" "); 
+    switch (name) {
+      case "minute":
+        updatedSyncFrequency[0] = trimmedValue;
+        break;
+      case "hour":
+        updatedSyncFrequency[1] = trimmedValue;
+        break;
+      case "day":
+        updatedSyncFrequency[2] = trimmedValue;
+        break;
+      case "month":
+        updatedSyncFrequency[3] = trimmedValue;
+        break;
+      case "week":
+        updatedSyncFrequency[4] = trimmedValue;
+        break;
+      default:
+        break;
+    }
+  
+    // Update the syncFrequency state with the modified array
+    setProductSyncFrequency(updatedSyncFrequency.join(" "));
+  }
 
   const handleTimeZoneChange = (selectedOption) => {
     setFormData({ ...formData, productTimeZone: selectedOption });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const errors = validateMarketPlaceProductSync(formData);
-    setFormErrors(errors);
 
-    if (Object.keys(errors).length === 0) {
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const errors = validateMarketPlaceProductSync(formData);
+  setFormErrors(errors);
+
+  if (Object.keys(errors).length === 0) {
     const integrationId = localStorage.getItem("integratorId");
     const integrationName = localStorage.getItem("integratorName");
 
@@ -74,11 +110,12 @@ function IntegratoePage3(props) {
 
     const payload = {
       ...formData,
+      productSyncFrequency,
       productTimeZone: timeZoneString,
       integrationId,
       integrationName,
     };
-    setIsLoading(true)
+    setIsLoading(true);
     axios
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
       .then((response) => {
@@ -93,10 +130,11 @@ function IntegratoePage3(props) {
       })
       .catch((error) => {
         console.error(error);
-        setIsLoading(false)
+        setIsLoading(false);
       });
-  };
-}
+  }
+};
+
   
   const handleOnClick = (e) => {
     e.preventDefault();
@@ -113,6 +151,7 @@ function IntegratoePage3(props) {
 
     const payload = {
       ...formData,
+      productSyncFrequency,
       productTimeZone: timeZoneString,
       integrationId,
       integrationName,
@@ -153,14 +192,15 @@ function IntegratoePage3(props) {
             (tz) => tz.abbr == data.productTimeZone
           );
           setFormData({
-            productSyncFrequency: data.productSyncFrequency,
             productTimeZone: {
               value: productTimeZone.abbr,
               label: productTimeZone.text,
             },
             type: "product",
           });
-        } else {
+          const { productSyncFrequency } = data;
+
+          setProductSyncFrequency(productSyncFrequency);
         }
       })
       .catch((error) => {
@@ -215,7 +255,7 @@ function IntegratoePage3(props) {
           </div>
         </div>
         <div className="row mt-3 mt-sm-0">
-          <div className="col-12">
+         {/* <div className="col-12">
             <div className="form-group">
               <label>
                 Sync Frequency <span style={{ color: "red" }}>*</span>
@@ -234,8 +274,103 @@ function IntegratoePage3(props) {
                 </span>
               )}
             </div>
-          </div>
-          <div className="col-12">
+              </div>*/}
+              <div className="col-12">
+              <label>Sync Frequency <span style={{ color: "red" }}>*</span></label>
+              <div className="row mt-3">
+             
+              <div className="col-sm-4 col-lg-2">
+              <div className="form-group">
+               
+                  <input
+                    className="form-control"
+                    type="text"
+                  placeholder="*"
+                    name="minute"
+                    value={productSyncFrequency.split(" ")[0] || ""}
+                    onChange={handleSyncFrequency}
+                  />
+                  <label>
+                  Minute <span style={{ color: "red" }}>*</span>
+                 </label>
+                 
+              </div>
+              </div>
+              <div className="col-sm-4 col-lg-2">
+              <div className="form-group">
+              
+                  <input
+                    className="form-control"
+                    type="text"
+                  placeholder="*"
+                    name="hour"
+                    value={productSyncFrequency.split(" ")[1] || ""}
+                    onChange={handleSyncFrequency}
+                  />
+                  <label>
+                   Hour <span style={{ color: "red" }}>*</span>
+                  </label>
+              </div>
+              </div>
+              <div className="col-sm-4 col-lg-2">
+              <div className="form-group">
+              
+                  <input
+                    className="form-control"
+                    type="text"
+                  placeholder="*"
+                    name="day"
+                    value={productSyncFrequency.split(" ")[2] || ""}
+  
+                    onChange={handleSyncFrequency}
+                  />
+                  <label>
+                   Day(Month) <span style={{ color: "red" }}>*</span>
+                  </label>
+              </div>
+              </div>
+              <div className="col-sm-4 col-lg-3">
+              <div className="form-group">
+               
+                  <input
+                    className="form-control"
+                    type="text"
+                  placeholder="*"
+                    name="month"
+                    value={productSyncFrequency.split(" ")[3] || ""}
+  
+                    onChange={handleSyncFrequency}
+                  />
+                  <label>
+                   Month <span style={{ color: "red" }}>*</span>
+                  </label>
+              </div>
+              </div>
+              <div className="col-sm-4 col-lg-3">
+              <div className="form-group">
+               
+                  <input
+                    className="form-control"
+                    type="text"
+                  placeholder="*"
+                    name="week"
+                    value={productSyncFrequency.split(" ")[4] || ""}
+  
+                    onChange={handleSyncFrequency}
+                  />
+                  <label>
+                   Day(Week) <span style={{ color: "red" }}>*</span>
+                  </label>
+              </div>
+              </div>
+              <small className="form-text text-muted csv-text px-3">
+              Learn more about Cronjob: &nbsp; <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="csv-text">
+              https://crontab.guru
+            </a>
+            </small>
+              </div>
+              </div>
+            <div className="col-12 mt-3">
             <div className="form-group">
               <label>
                 TimeZone <span style={{ color: "red" }}>*</span>

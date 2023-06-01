@@ -36,6 +36,8 @@ function SupplierSftpForm(props) {
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
+  const [syncFrequency, setSyncFrequency] = useState("")
+
 
   useEffect(() => {
     if (formData) {
@@ -56,16 +58,20 @@ function SupplierSftpForm(props) {
         .then((response) => {
           const supplierData = response.data.data;
           let timeZone = timeZoneData.find((tz) => tz.abbr == supplierData.timeZone);
-          
+
           setFormData({
             ...supplierData,
             protocol: supplierData.protocol,
-            syncFrequency: supplierData.syncFrequency,
+            syncFrequency:supplierData.syncFrequency,
             timeZone: {
               value: timeZone.abbr,
               label: timeZone.text,
             },
           });
+          const { syncFrequency } = supplierData;
+
+          // Set the syncFrequency value to the state
+          setSyncFrequency(syncFrequency);
         })
         .catch((error) => {
           console.log("error", error);
@@ -113,6 +119,40 @@ function SupplierSftpForm(props) {
     handleChange(name, value);
   };
 
+  const handleSyncFrequency = (e) => {
+    const { name, value, type } = e.target;
+    const trimmedValue = type === "text" ? value.trim() : value;
+  
+    setInitFormData((prevState) => ({
+      ...prevState,
+      [name]: trimmedValue,
+    }));
+  
+    const updatedSyncFrequency = syncFrequency.split(" "); 
+    switch (name) {
+      case "minute":
+        updatedSyncFrequency[0] = trimmedValue;
+        break;
+      case "hour":
+        updatedSyncFrequency[1] = trimmedValue;
+        break;
+      case "day":
+        updatedSyncFrequency[2] = trimmedValue;
+        break;
+      case "month":
+        updatedSyncFrequency[3] = trimmedValue;
+        break;
+      case "week":
+        updatedSyncFrequency[4] = trimmedValue;
+        break;
+      default:
+        break;
+    }
+  
+    // Update the syncFrequency state with the modified array
+    setSyncFrequency(updatedSyncFrequency.join(" "));
+  };
+
   const handleProtocolChange = (selectedOption) => {
     const protocol = selectedOption.value;
     setInitFormData({ ...initFormData, protocol });
@@ -120,12 +160,13 @@ function SupplierSftpForm(props) {
     // setFormErrors({ ...formErrors, protocol: "" });
   };
 
-  const handleSyncFrequency = (selectedOption) => {
-    const syncFrequency = selectedOption.value;
-    setInitFormData({ ...initFormData, syncFrequency });
-    // handleChange("syncFrequency", syncFrequency);
-    setFormErrors({...formErrors, syncFrequency: ""})
-  };
+  // const handleSyncFrequency = (selectedOption) => {
+  //   const syncFrequency = selectedOption.value;
+  //   setInitFormData({ ...initFormData, syncFrequency });
+  //   // handleChange("syncFrequency", syncFrequency);
+  //   setFormErrors({...formErrors, syncFrequency: ""})
+  // };
+  
   const handleTimeZoneChange = (selectedOption) => {
     const timeZone = selectedOption;
     setInitFormData({...initFormData, timeZone });
@@ -136,42 +177,40 @@ function SupplierSftpForm(props) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    const errors = validateSftpForm(formData);
-    setFormErrors(errors);
-
-    if (Object.keys(errors).length === 0) {
-      const supplierId = localStorage.getItem("supplierId");
-      const supplierName = localStorage.getItem("supplierName");
-
-      const payload = {
-        ...initFormData,
-        settingType,
-        timeZone: initFormData?.timeZone?.value,
-        supplierId,
-        supplierName,
-      };
-
-      formData.set("sftpData", payload)
-      setIsLoading(true)
-      axios
-        .post(`${API_PATH.IMPORT_SETTING}`, payload)
-        .then((response) => {
-          const { success, message } = response.data;
-          console.log("response", response);
-          if (success) {
-            toast.success(message);
-            onSubmit();
-          } else {
-            toast.error(message);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          setIsLoading(false)
-        });
-    }
+  
+    const supplierId = localStorage.getItem("supplierId");
+    const supplierName = localStorage.getItem("supplierName");
+  
+    const syncFrequency = `${formData.get("minute")} ${formData.get("hour")} ${formData.get("day")} ${formData.get("month")} ${formData.get("week")}`;
+  
+    const payload = {
+      ...initFormData,
+      settingType,
+      timeZone: initFormData?.timeZone?.value,
+      supplierId,
+      supplierName,
+      syncFrequency,
+    };
+  
+    setIsLoading(true);
+    axios
+      .post(`${API_PATH.IMPORT_SETTING}`, payload)
+      .then((response) => {
+        const { success, message } = response.data;
+        console.log("response", response);
+        if (success) {
+          toast.success(message);
+          onSubmit();
+        } else {
+          toast.error(message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setIsLoading(false);
+      });
   };
-
+  
   const handleOnClick = (e) => {
     e.preventDefault();
     const form = e.currentTarget.closest("form");
@@ -391,7 +430,98 @@ function SupplierSftpForm(props) {
               </div>
             </div>
             <div className="col-12">
-              <div className="form-group">
+            <div className="row">
+            <div className="col-sm-4 col-lg-2">
+            <div className="form-group">
+             <label>
+                 Minute <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                placeholder="*"
+                  name="minute"
+                  value={syncFrequency.split(" ")[0] || ""}
+                  onChange={handleSyncFrequency}
+                />
+               
+               
+            </div>
+            </div>
+            <div className="col-sm-4 col-lg-2">
+            <div className="form-group">
+             <label>
+                 Hour <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                placeholder="*"
+                  name="hour"
+                  value={syncFrequency.split(" ")[1] || ""}
+                  onChange={handleSyncFrequency}
+                />
+               
+            </div>
+            </div>
+            <div className="col-sm-4 col-lg-2">
+            <div className="form-group">
+             <label>
+                 Day <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                placeholder="*"
+                  name="day"
+                  value={syncFrequency.split(" ")[2] || ""}
+
+                  onChange={handleSyncFrequency}
+                />
+               
+            </div>
+            </div>
+            <div className="col-sm-4 col-lg-3">
+            <div className="form-group">
+             <label>
+                 Month <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                placeholder="*"
+                  name="month"
+                  value={syncFrequency.split(" ")[3] || ""}
+
+                  onChange={handleSyncFrequency}
+                />
+                
+            </div>
+            </div>
+            <div className="col-sm-4 col-lg-3">
+            <div className="form-group">
+             <label>
+                 Week <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                placeholder="*"
+                  name="week"
+                  value={syncFrequency.split(" ")[4] || ""}
+
+                  onChange={handleSyncFrequency}
+                />
+                
+            </div>
+            </div>
+            </div>
+            <small className="form-text text-muted csv-text">
+            Learn more. &nbsp;&nbsp;&nbsp; <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="csv-text">
+            https://crontab.guru/
+          </a>
+          </small>
+            { /* <div className="form-group">
                 <label>
                   Sync Frequency <span style={{ color: "red" }}>*</span>
                 </label>
@@ -409,7 +539,7 @@ function SupplierSftpForm(props) {
                     {formErrors.syncFrequency}
                   </span>
                 )}
-              </div>
+                </div>*/}
             </div>
             <div className="col-12">
               <div className="form-group">
