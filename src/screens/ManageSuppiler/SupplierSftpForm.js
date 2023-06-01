@@ -225,6 +225,8 @@ function SupplierSftpForm(props) {
     if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
+      const syncFrequency = `${formData.get("minute")} ${formData.get("hour")} ${formData.get("day")} ${formData.get("month")} ${formData.get("week")}`;
+
 
       const payload = {
         ...initFormData,
@@ -232,6 +234,7 @@ function SupplierSftpForm(props) {
         settingType,
         supplierId,
         supplierName,
+        syncFrequency
       };
       setIsLoadingExit(true)
       axios
@@ -430,12 +433,11 @@ function SupplierSftpForm(props) {
               </div>
             </div>
             <div className="col-12">
+            <label>Sync Frequency <span style={{ color: "red" }}>*</span></label>
             <div className="row">
             <div className="col-sm-4 col-lg-2">
             <div className="form-group">
-             <label>
-                 Minute <span style={{ color: "red" }}>*</span>
-                </label>
+             
                 <input
                   className="form-control"
                   type="text"
@@ -444,15 +446,15 @@ function SupplierSftpForm(props) {
                   value={syncFrequency.split(" ")[0] || ""}
                   onChange={handleSyncFrequency}
                 />
-               
+                <label>
+                Minute <span style={{ color: "red" }}>*</span>
+               </label>
                
             </div>
             </div>
             <div className="col-sm-4 col-lg-2">
             <div className="form-group">
-             <label>
-                 Hour <span style={{ color: "red" }}>*</span>
-                </label>
+            
                 <input
                   className="form-control"
                   type="text"
@@ -461,14 +463,14 @@ function SupplierSftpForm(props) {
                   value={syncFrequency.split(" ")[1] || ""}
                   onChange={handleSyncFrequency}
                 />
-               
+                <label>
+                 Hour <span style={{ color: "red" }}>*</span>
+                </label>
             </div>
             </div>
             <div className="col-sm-4 col-lg-2">
             <div className="form-group">
-             <label>
-                 Day <span style={{ color: "red" }}>*</span>
-                </label>
+             
                 <input
                   className="form-control"
                   type="text"
@@ -478,14 +480,14 @@ function SupplierSftpForm(props) {
 
                   onChange={handleSyncFrequency}
                 />
-               
+                <label>
+                Day(Month) <span style={{ color: "red" }}>*</span>
+               </label>
             </div>
             </div>
             <div className="col-sm-4 col-lg-3">
             <div className="form-group">
-             <label>
-                 Month <span style={{ color: "red" }}>*</span>
-                </label>
+            
                 <input
                   className="form-control"
                   type="text"
@@ -495,14 +497,15 @@ function SupplierSftpForm(props) {
 
                   onChange={handleSyncFrequency}
                 />
+                <label>
+                Month <span style={{ color: "red" }}>*</span>
+               </label>
                 
             </div>
             </div>
             <div className="col-sm-4 col-lg-3">
             <div className="form-group">
-             <label>
-                 Week <span style={{ color: "red" }}>*</span>
-                </label>
+             
                 <input
                   className="form-control"
                   type="text"
@@ -512,12 +515,14 @@ function SupplierSftpForm(props) {
 
                   onChange={handleSyncFrequency}
                 />
-                
+                <label>
+                 Day(Week) <span style={{ color: "red" }}>*</span>
+                </label>
             </div>
             </div>
             </div>
             <small className="form-text text-muted csv-text">
-            Learn more. &nbsp;&nbsp;&nbsp; <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="csv-text">
+            Learn more about Cronjob. &nbsp; <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="csv-text">
             https://crontab.guru/
           </a>
           </small>
@@ -541,7 +546,7 @@ function SupplierSftpForm(props) {
                 )}
                 </div>*/}
             </div>
-            <div className="col-12">
+            <div className="col-12 mt-3">
               <div className="form-group">
                 <label>
                   TimeZone <span style={{ color: "red" }}>*</span>
