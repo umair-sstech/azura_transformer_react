@@ -110,8 +110,8 @@ function ManageSuppiler(props) {
             <PageHeader
               HeaderText={isSuppilerAdded ? "Supplier Update" : "Supplier Add"}
               Breadcrumb={[
-                { name: "Integration", navigate: "/integration" },
-                { name: "Supplier List", navigate: "/supplier" },
+                { name: "Integration", navigate: "/integration", items: ["supplierId", "supplierName"] },
+                { name: "Supplier List", navigate: "/supplier", items: ["supplierId", "supplierName"] },
                 {
                   name: isSuppilerAdded ? "Supplier Update" : "Supplier Add",
                   navigate: "#",
@@ -143,7 +143,7 @@ function ManageSuppiler(props) {
                     <MultiStepProgressBar
                       setPage={setPage}
                       page={page}
-                      // onPageNumberClick={nextPageNumber}
+                      onPageNumberClick={nextPageNumber}
                     />
                     {
                       {
@@ -172,9 +172,9 @@ function ManageSuppiler(props) {
                           />
                         ),
                         5: (
-                         <SuppilerPage5
-                          onButtonClick={nextPage}
-                          setPage={setPage}
+                          <SuppilerPage5
+                            onButtonClick={nextPage}
+                            setPage={setPage}
                           />
                         ),
                         6: (

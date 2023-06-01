@@ -97,8 +97,8 @@ function ManageIntegrator(props) {
                 isIntegrator ? "Integrator Update" : "Integrator Add"
               }
               Breadcrumb={[
-                { name: "Integration", navigate: "#" },
-                { name: "Integrator List", navigate: "/integrator" },
+                { name: "Integration", navigate: "/integration", items: ["integratorId", "integratorName"] },
+                { name: "Integrator List", navigate: "/integrator", items: ["integratorId", "integratorName"] },
                 {
                   name: isIntegrator
                     ? "Integrator Update"

@@ -73,7 +73,6 @@ function MarketPlacePage2(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault(e);
-    setIsLoading(true);
     const integrationId = localStorage.getItem("marketPlaceId");
     const integrationName = localStorage.getItem("marketPlaceName");
 
@@ -89,7 +88,8 @@ function MarketPlacePage2(props) {
       azuraCategoryId: mapping.azuraCategoryId,
       mysaleCategoryId: mapping.mysaleCategoryId,
     }));
-
+    
+    setIsLoading(true);
     axios
       .post(
         `${API_PATH.CREATE_CATEGORY_MAPPING}`,
@@ -104,6 +104,8 @@ function MarketPlacePage2(props) {
       })
       .catch((error) => {
         console.log(error);
+        setIsLoading(false);
+      }).finally(() => {
         setIsLoading(false);
       });
   };

@@ -23,15 +23,13 @@ function SupplierPage2(props) {
     setFormData,
     processCancel,
   } = useContext(FormContext);
-
   const [initFormData, setInitFormData] = useState({
     csvfile: "",
     supplier_id: "",
     update: false,
   });
+  const [csvName, setCsvName] = useState("");
   const [fileError, setFileError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingExit, setIsLoadingExit] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -43,19 +41,59 @@ function SupplierPage2(props) {
   const handleFileInputChange = () => {
     setFileError("");
   };
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   const form = event.target;
+  //   const formData = new FormData(form);
+  //   const fileInput = document.querySelector('input[type="file"]');
+  //   const { csvfile } = formData;
+  //   if (csvName && !formData.update) {
+  //     setPage("3");
+  //   }
+  //   if (fileInput.files.length === 0 && !csvfile && !formData.update) {
+  //     setFileError("Please select a file to upload.");
+  //   }
+  //   const supplierId = localStorage.getItem("supplierId");
+  //   formData.set("supplier_id", supplierId);
+  //   try {
+  //     const response = await axios.post(`${API_PATH.ADD_CSV_DATA}`, formData);
+  //     const { success, message } = response.data;
+  //     if (success) {
+  //       setFormData({
+  //         ...formData,
+  //       });
+  //       toast.success(message);
+  //       setPage("3");
+  //     } else {
+  //       // toast.error(message);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
     const fileInput = document.querySelector('input[type="file"]');
+    console.log("fileInput--", fileInput.files)
+    const { csvfile } = formData;
+    if (csvName && !formData.update) {
+      setPage("3");
+    }
 
-    if (fileInput.files.length === 0) {
+    if (fileInput.files.length === 0 && !csvfile) {
       setFileError("Please select a file to upload.");
-    } else {
-      const form = e.target;
-      const formData = new FormData(form);
+    }
+    // if ((initFormData.csvName == null && initFormData.csvPath == null) && fileInput.files.length === 0) {
+    //   setFileError("Please select a file to upload.");
+    // } 
+    else {
+
       const supplierId = localStorage.getItem("supplierId");
       formData.set("supplier_id", supplierId);
-      setIsLoading(true);
+
       try {
         const response = await axios.post(`${API_PATH.ADD_CSV_DATA}`, formData);
         const { success, message } = response.data;
@@ -64,14 +102,12 @@ function SupplierPage2(props) {
             ...formData,
           });
           toast.success(message);
-          setIsLoading(false);
           setPage("3");
         } else {
           toast.error(message);
         }
       } catch (error) {
         console.error(error);
-        setIsLoading(false);
       }
     }
   };
@@ -84,16 +120,16 @@ function SupplierPage2(props) {
       const form = e.target.closest("form");
       const formData = new FormData(form);
       formData.append("supplier_id", initFormData.id);
-      setIsLoadingExit(true);
       try {
         const response = await axios.post(`${API_PATH.ADD_CSV_DATA}`, formData);
-        const { success, message, data } = response.data;
+        const { success, message } = response.data;
         if (success) {
+          // const { csvPath, csvName, csvJSON } = response.data.data;
           setFormData({
             ...formData,
+            // csvPath, csvName, csvJSON
           });
-          toast.success(message);
-          setIsLoadingExit(false);
+          // toast.success("data.....");
           history.push("/supplier");
           localStorage.removeItem("supplierId");
           localStorage.removeItem("supplierName");
@@ -102,11 +138,9 @@ function SupplierPage2(props) {
         }
       } catch (error) {
         console.error(error);
-        setIsLoadingExit(false);
       }
     }
   };
-
   const getSupplierDataById = () => {
     const supplierId = localStorage.getItem("supplierId");
     axios
@@ -115,6 +149,7 @@ function SupplierPage2(props) {
         const supplierData = response.data.data;
 
         setFormData(supplierData);
+        setCsvName(supplierData.csvName);
       })
       .catch((error) => {
         console.log("error", error);
@@ -135,26 +170,14 @@ function SupplierPage2(props) {
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                 >
-                  {isLoading ? (
-                    <>
-                      <Spinner animation="border" size="sm" /> Please wait...
-                    </>
-                  ) : (
-                    "Save & Next"
-                  )}
+                  Save & Next
                 </button>
                 <button
                   className="btn btn-primary w-auto btn-lg mr-2"
-                  type="button"
+                  type="submit"
                   onClick={handleOnClick}
                 >
-                  {isLoadingExit ? (
-                    <>
-                      <Spinner animation="border" size="sm" /> Please wait...
-                    </>
-                  ) : (
-                    "Save & Exit"
-                  )}
+                  Save & Exit
                 </button>
                 <button
                   className="btn btn-secondary w-auto btn-lg"
@@ -166,8 +189,8 @@ function SupplierPage2(props) {
               </div>
             </div>
           </div>
-          <div className="row mt-3 mt-sm-0">
-            <div className="col-sm-6">
+          <div className="row">
+            <div className="col-6">
               <div className="form-group">
                 <label>
                   Upload File <span style={{ color: "red" }}>*</span>
