@@ -134,6 +134,9 @@ function IntegratorInfo(props) {
     const formData = new FormData(form);
 
     const errors = validateIntegrationInfoForm(formData);
+    if (initFormData.logo) {
+      delete errors.logo;
+    }
     setFormErrors(errors);
     if (Object.keys(errors).length === 0) {
       const prefixName = generatePrefixName(formData.get("name"));
@@ -202,6 +205,10 @@ function IntegratorInfo(props) {
     }
     const formData = new FormData(form);
     const errors = validateIntegrationInfoForm(formData);
+    
+    if (initFormData.logo) {
+      delete errors.logo;
+    }
     setFormErrors(errors);
     if (Object.keys(errors).length === 0) {
       const prefixName = generatePrefixName(formData.get("name"));
