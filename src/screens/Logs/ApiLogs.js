@@ -108,6 +108,7 @@ let filterList = [
                         <th>URL</th>
                         <th>Status Code</th>
                         <th>Status</th>
+                        <th>Created Time</th>
                         <th>Message</th>
                         <th>Action</th>
                       </tr>
@@ -120,11 +121,15 @@ let filterList = [
                           <td style={{whiteSpace: "pre-wrap"}}>{apiLog.url}</td>
                           <td>{apiLog.statusCode}</td>
                           <td>{apiLog.status}</td>
+                          <td style={{whiteSpace: "pre-wrap"}}>{moment(apiLog.created_on).format(
+                                "MM/DD/YYYY hh:mm a"
+                              )}</td>
                           <td style={{whiteSpace: "pre-wrap"}}>{apiLog.message}</td>
                           <td className="action-group">
                             <i
                               data-placement="top"
                               title="Edit"
+                              style={{color: "#49c5b6"}}
                               className="fa fa-eye"
                               onClick={() => openModal(apiLog._id)}
                             ></i>

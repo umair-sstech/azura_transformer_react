@@ -255,6 +255,7 @@ function ProductsList(props) {
                                 data-placement="top"
                                 title="Edit"
                                 className="fa fa-eye"
+                                style={{color: "#49c5b6"}}
                                 onClick={() => {
 
                                   history.push(`/product-details/${product.id}`);
