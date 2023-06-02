@@ -28,7 +28,7 @@ const styles = {
 
 const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
   const totalSteps = stepNames.length;
-  const stepPercentage = ((page - 1) / (totalSteps - 1)) * 120;
+  const stepPercentage = ((page - 1) / (totalSteps - 1)) * 115;
 
   return (
     <div>

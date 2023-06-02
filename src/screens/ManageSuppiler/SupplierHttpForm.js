@@ -104,6 +104,13 @@ function SupplierHttpForm(props) {
   
     // Update the syncFrequency state with the modified array
     setSyncFrequency(updatedSyncFrequency.join(" "));
+    // const formData = new FormData(document.forms.httpForm);
+    // formData.set("syncFrequency", updatedSyncFrequency)
+    // const errors = validateHttpForm(formData);
+    // // const errors = updatedSyncFrequency.some(data => data === "")
+    // console.log("err--", errors)
+    // setFormErrors(errors);
+    // setIsFormValid(Object.keys(errors).length === 0);
   }
 
   const handleInputChange = (e) => {
@@ -136,7 +143,7 @@ function SupplierHttpForm(props) {
         settingType,
         supplierId,
         supplierName,
-      syncFrequency,
+        syncFrequency,
 
         password: "",
         hostName: "",
@@ -399,7 +406,7 @@ function SupplierHttpForm(props) {
                 </div>
                 </div>
                 </div>
-                <small className="form-text text-muted csv-text">
+                <small className="form-text text-muted csv-text" style={{marginTop: "-10px"}}>
                 Learn more. &nbsp;&nbsp;&nbsp; <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="csv-text">
                 https://crontab.guru/
               </a>

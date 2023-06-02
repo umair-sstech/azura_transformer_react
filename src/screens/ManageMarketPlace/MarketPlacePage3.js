@@ -252,7 +252,7 @@ function MarketPlacePage3(props) {
         <div className="row mt-3 mt-sm-0">
         <div className="col-12">
         <label>Sync Frequency</label>
-        <div className="row mt-3">
+        <div className="row">
        
         <div className="col-sm-4 col-lg-2">
         <div className="form-group">
@@ -338,14 +338,14 @@ function MarketPlacePage3(props) {
             </label>
         </div>
         </div>
-        <small className="form-text text-muted csv-text px-3">
+        <small className="form-text text-muted csv-text px-3" style={{marginTop: "-20px"}}>
         Learn more: &nbsp; <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="csv-text">
         https://crontab.guru
       </a>
       </small>
         </div>
         </div>
-          <div className="col-12">
+          <div className="col-12 mt-3">
             <div className="form-group">
               <label>
                 TimeZone <span style={{ color: "red" }}>*</span>
