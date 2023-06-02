@@ -1,3 +1,11 @@
 .ck.ck-powered-by{
     display: none;
 }
+.ck-content {
+    height: 300px;
+}
+
+.ck-editor__editable {
+    font-weight: 400;
+    color: black;
+}

@@ -733,7 +733,7 @@ class NavbarMenu extends React.Component {
                         <ul className="collapse">
                           {this.props.user?.data.role === "SUPER_ADMIN" ? (
                             <li className={activeKey === "dashboard" ? "active" : ""}>
-                              <Link to="products">Products List</Link>
+                              <Link to="/products">Products List</Link>
                             </li>
                           ) : null}
                           {this.props.user?.data.role === "SUPER_ADMIN" ? (
