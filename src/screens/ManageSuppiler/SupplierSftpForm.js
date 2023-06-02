@@ -177,7 +177,10 @@ function SupplierSftpForm(props) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
+    const errors = validateSftpForm(formData);
+    setFormErrors(errors);
   
+    if (Object.keys(errors).length === 0) {
     const supplierId = localStorage.getItem("supplierId");
     const supplierName = localStorage.getItem("supplierName");
   
@@ -209,6 +212,7 @@ function SupplierSftpForm(props) {
         console.error(error);
         setIsLoading(false);
       });
+    }
   };
   
   const handleOnClick = (e) => {
