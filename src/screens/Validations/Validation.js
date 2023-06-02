@@ -137,7 +137,28 @@ export const validateSftpForm = (formData) => {
 export const validateHttpForm = (formData) => {
   const errors = {};
   const urlPath = formData.get("urlPath")
-  const syncFrequency = formData.get("syncFrequency")
+  // const syncFrequency1 = formData.get("syncFrequency");
+
+// const convertedData = syncFrequency.reduce((acc, value, index) => {
+//   switch (index) {
+//     case 0:
+//       return { ...acc, Minute: value };
+//     case 1:
+//       return { ...acc, Hour: value };
+//     case 2:
+//       return { ...acc, Day: value };
+//     case 3:
+//       return { ...acc, Month: value };
+//     case 4:
+//       return { ...acc, Year: value };
+//     default:
+//       return acc;
+//   }
+// }, {});
+
+// console.log(convertedData);
+
+//   console.log("sync---", syncFrequency)
 
   if (!urlPath) {
     errors.urlPath = "URL is required";
@@ -147,10 +168,14 @@ export const validateHttpForm = (formData) => {
     errors.urlPath = "URL must be a valid URL";
   }
 
+  // if(!syncFrequency) {
+  //   errors.syncFrequency = "This field is required."
+  // } else if(syncFrequency.trim().length === 0) {
+  //   errors.syncFrequency = "Sync Frequency can not be whitespace only."
+  // } else if(!/^[0-9*]+$/.test(syncFrequency)) {
+  //   errors.syncFrequency = "Sync Frequency must be a number or *."
+  // }
 
-  if (!syncFrequency) {
-    errors.syncFrequency = "Please Select Sync Frequency";
-  }
   return errors;
 };
 

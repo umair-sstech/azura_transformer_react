@@ -177,7 +177,10 @@ function SupplierSftpForm(props) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-  
+    const errors = validateSftpForm(formData);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
     const supplierId = localStorage.getItem("supplierId");
     const supplierName = localStorage.getItem("supplierName");
   
@@ -209,6 +212,7 @@ function SupplierSftpForm(props) {
         console.error(error);
         setIsLoading(false);
       });
+    }
   };
   
   const handleOnClick = (e) => {
@@ -520,7 +524,7 @@ function SupplierSftpForm(props) {
             </div>
             </div>
             </div>
-            <small className="form-text text-muted csv-text">
+            <small className="form-text text-muted csv-text" style={{marginTop: "-20px"}}>
             Learn more about Cronjob. &nbsp; <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="csv-text">
             https://crontab.guru/
           </a>
@@ -580,32 +584,3 @@ const mapStateToProps = ({ LoadingReducer }) => ({
   isLoading: LoadingReducer.isLoading,
 });
 export default connect(mapStateToProps, { onLoading })(SupplierSftpForm);
-
-
-
-
-// Assuming timeZoneData is an array containing the available time zone options
-
-// const defaultTimeZone = timeZoneData.find((data) => data.text === "(UTC+10:00) Canberra, Melbourne, Sydney");
-
-// const [initFormData, setInitFormData] = useState({
-//   supplierId: "",
-//   supplierName: "",
-//   settingType: settingType,
-//   password: "",
-//   hostName: "",
-//   userName: "",
-//   port: "",
-//   protocol: "",
-//   urlPath: "",
-//   syncFrequency: "",
-//   timeZone: defaultTimeZone ? { value: defaultTimeZone.abbr, label: defaultTimeZone.text } : null,
-// });
-
-// const handleTimeZoneChange = (selectedOption) => {
-//   const timeZone = selectedOption;
-//   setInitFormData({ ...initFormData, timeZone });
-//   handleChange("timeZone", timeZone);
-// };
-
-// Rest of your code...
