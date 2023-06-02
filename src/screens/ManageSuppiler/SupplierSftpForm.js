@@ -13,7 +13,7 @@ import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
 
 function SupplierSftpForm(props) {
-  const {onSubmit, settingType} = props;
+  const { onSubmit, settingType } = props;
   const { processCancel, formData, setFormData } = useContext(FormContext);
 
   const [initFormData, setInitFormData] = useState({
@@ -36,8 +36,7 @@ function SupplierSftpForm(props) {
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
-  const [syncFrequency, setSyncFrequency] = useState("")
-
+  const [syncFrequency, setSyncFrequency] = useState("");
 
   useEffect(() => {
     if (formData) {
@@ -57,12 +56,14 @@ function SupplierSftpForm(props) {
         .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
         .then((response) => {
           const supplierData = response.data.data;
-          let timeZone = timeZoneData.find((tz) => tz.abbr == supplierData.timeZone);
+          let timeZone = timeZoneData.find(
+            (tz) => tz.abbr == supplierData.timeZone
+          );
 
           setFormData({
             ...supplierData,
             protocol: supplierData.protocol,
-            syncFrequency:supplierData.syncFrequency,
+            syncFrequency: supplierData.syncFrequency,
             timeZone: {
               value: timeZone.abbr,
               label: timeZone.text,
@@ -109,11 +110,11 @@ function SupplierSftpForm(props) {
   };
 
   const handleInputChange = (e) => {
-    const {name, value , type} = e.target;
+    const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
 
-    setInitFormData(prevState => ({
-    ...prevState,
+    setInitFormData((prevState) => ({
+      ...prevState,
       [name]: trimmedValue,
     }));
     handleChange(name, value);
@@ -122,41 +123,121 @@ function SupplierSftpForm(props) {
   const handleSyncFrequency = (e) => {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
-  
+
     setInitFormData((prevState) => ({
       ...prevState,
       [name]: trimmedValue,
     }));
-  
-    const updatedSyncFrequency = syncFrequency.split(" "); 
+
+    const updatedSyncFrequency = syncFrequency.split(" ");
     switch (name) {
       case "minute":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "Minute must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "Please Enter Minute between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "",
+          }));
+        }
         updatedSyncFrequency[0] = trimmedValue;
         break;
+
       case "hour":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "Hour must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "Please Enter Hour between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "",
+          }));
+        }
         updatedSyncFrequency[1] = trimmedValue;
         break;
       case "day":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "Day(Month) must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "Please Enter Day between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "",
+          }));
+        }
         updatedSyncFrequency[2] = trimmedValue;
         break;
       case "month":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "Month must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "Please Enter Month between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "",
+          }));
+        }
         updatedSyncFrequency[3] = trimmedValue;
         break;
       case "week":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "Day(Week) must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "Please Enter Day(Week) between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "",
+          }));
+        }
         updatedSyncFrequency[4] = trimmedValue;
         break;
       default:
         break;
     }
-  
-    // Update the syncFrequency state with the modified array
+
     setSyncFrequency(updatedSyncFrequency.join(" "));
   };
 
   const handleProtocolChange = (selectedOption) => {
     const protocol = selectedOption.value;
     setInitFormData({ ...initFormData, protocol });
-    handleChange("protocol", protocol)
+    handleChange("protocol", protocol);
     // setFormErrors({ ...formErrors, protocol: "" });
   };
 
@@ -166,10 +247,10 @@ function SupplierSftpForm(props) {
   //   // handleChange("syncFrequency", syncFrequency);
   //   setFormErrors({...formErrors, syncFrequency: ""})
   // };
-  
+
   const handleTimeZoneChange = (selectedOption) => {
     const timeZone = selectedOption;
-    setInitFormData({...initFormData, timeZone });
+    setInitFormData({ ...initFormData, timeZone });
     handleChange("timeZone", timeZone);
   };
 
@@ -179,42 +260,46 @@ function SupplierSftpForm(props) {
     const formData = new FormData(form);
     const errors = validateSftpForm(formData);
     setFormErrors(errors);
-  
+
     if (Object.keys(errors).length === 0) {
-    const supplierId = localStorage.getItem("supplierId");
-    const supplierName = localStorage.getItem("supplierName");
-  
-    const syncFrequency = `${formData.get("minute")} ${formData.get("hour")} ${formData.get("day")} ${formData.get("month")} ${formData.get("week")}`;
-  
-    const payload = {
-      ...initFormData,
-      settingType,
-      timeZone: initFormData?.timeZone?.value,
-      supplierId,
-      supplierName,
-      syncFrequency,
-    };
-  
-    setIsLoading(true);
-    axios
-      .post(`${API_PATH.IMPORT_SETTING}`, payload)
-      .then((response) => {
-        const { success, message } = response.data;
-        console.log("response", response);
-        if (success) {
-          toast.success(message);
-          onSubmit();
-        } else {
-          toast.error(message);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setIsLoading(false);
-      });
+      const supplierId = localStorage.getItem("supplierId");
+      const supplierName = localStorage.getItem("supplierName");
+
+      const syncFrequency = `${formData.get("minute")} ${formData.get(
+        "hour"
+      )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
+        "week"
+      )}`;
+
+      const payload = {
+        ...initFormData,
+        settingType,
+        timeZone: initFormData?.timeZone?.value,
+        supplierId,
+        supplierName,
+        syncFrequency,
+      };
+
+      setIsLoading(true);
+      axios
+        .post(`${API_PATH.IMPORT_SETTING}`, payload)
+        .then((response) => {
+          const { success, message } = response.data;
+          console.log("response", response);
+          if (success) {
+            toast.success(message);
+            onSubmit();
+          } else {
+            toast.error(message);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsLoading(false);
+        });
     }
   };
-  
+
   const handleOnClick = (e) => {
     e.preventDefault();
     const form = e.currentTarget.closest("form");
@@ -222,15 +307,18 @@ function SupplierSftpForm(props) {
       return;
     }
 
-    const formData = new FormData(form)
+    const formData = new FormData(form);
     const errors = validateSftpForm(formData);
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
-      const syncFrequency = `${formData.get("minute")} ${formData.get("hour")} ${formData.get("day")} ${formData.get("month")} ${formData.get("week")}`;
-
+      const syncFrequency = `${formData.get("minute")} ${formData.get(
+        "hour"
+      )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
+        "week"
+      )}`;
 
       const payload = {
         ...initFormData,
@@ -238,9 +326,9 @@ function SupplierSftpForm(props) {
         settingType,
         supplierId,
         supplierName,
-        syncFrequency
+        syncFrequency,
       };
-      setIsLoadingExit(true)
+      setIsLoadingExit(true);
       axios
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
@@ -256,7 +344,7 @@ function SupplierSftpForm(props) {
         })
         .catch((error) => {
           console.error(error);
-          setIsLoadingExit(false)
+          setIsLoadingExit(false);
         });
     }
   };
@@ -277,26 +365,26 @@ function SupplierSftpForm(props) {
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                 >
-                {isLoading ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : (
-                  "Save & Next"
-                )}
+                  {isLoading ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Please wait...
+                    </>
+                  ) : (
+                    "Save & Next"
+                  )}
                 </button>
                 <button
                   className="btn btn-primary w-auto btn-lg mr-2"
                   type="submit"
                   onClick={handleOnClick}
                 >
-                {isLoadingExit ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : (
-                  "Save & Next"
-                )}
+                  {isLoadingExit ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Please wait...
+                    </>
+                  ) : (
+                    "Save & Next"
+                  )}
                 </button>
                 <button
                   className="btn btn-secondary w-auto btn-lg"
@@ -320,7 +408,12 @@ function SupplierSftpForm(props) {
                   name="hostName"
                   placeholder="Enter Host Name"
                   onChange={handleInputChange}
-                  defaultValue={initFormData && initFormData.hostName?initFormData.hostName:""}                />
+                  defaultValue={
+                    initFormData && initFormData.hostName
+                      ? initFormData.hostName
+                      : ""
+                  }
+                />
                 {formErrors.hostName && (
                   <span className="text-danger">{formErrors.hostName}</span>
                 )}
@@ -437,99 +530,116 @@ function SupplierSftpForm(props) {
               </div>
             </div>
             <div className="col-12">
-            <label>Sync Frequency <span style={{ color: "red" }}>*</span></label>
-            <div className="row">
-            <div className="col-sm-4 col-lg-2">
-            <div className="form-group">
-             
-                <input
-                  className="form-control"
-                  type="text"
-                placeholder="*"
-                  name="minute"
-                  value={syncFrequency.split(" ")[0] || ""}
-                  onChange={handleSyncFrequency}
-                />
-                <label>
-                Minute <span style={{ color: "red" }}>*</span>
-               </label>
-               
-            </div>
-            </div>
-            <div className="col-sm-4 col-lg-2">
-            <div className="form-group">
-            
-                <input
-                  className="form-control"
-                  type="text"
-                placeholder="*"
-                  name="hour"
-                  value={syncFrequency.split(" ")[1] || ""}
-                  onChange={handleSyncFrequency}
-                />
-                <label>
-                 Hour <span style={{ color: "red" }}>*</span>
-                </label>
-            </div>
-            </div>
-            <div className="col-sm-4 col-lg-2">
-            <div className="form-group">
-             
-                <input
-                  className="form-control"
-                  type="text"
-                placeholder="*"
-                  name="day"
-                  value={syncFrequency.split(" ")[2] || ""}
-                  onChange={handleSyncFrequency}
-                />
-                <label>
-                Day(Month) <span style={{ color: "red" }}>*</span>
-               </label>
-            </div>
-            </div>
-            <div className="col-sm-4 col-lg-3">
-            <div className="form-group">
-            
-                <input
-                  className="form-control"
-                  type="text"
-                placeholder="*"
-                  name="month"
-                  value={syncFrequency.split(" ")[3] || ""}
-
-                  onChange={handleSyncFrequency}
-                />
-                <label>
-                Month <span style={{ color: "red" }}>*</span>
-               </label>
-                
-            </div>
-            </div>
-            <div className="col-sm-4 col-lg-3">
-            <div className="form-group">
-             
-                <input
-                  className="form-control"
-                  type="text"
-                placeholder="*"
-                  name="week"
-                  value={syncFrequency.split(" ")[4] || ""}
-
-                  onChange={handleSyncFrequency}
-                />
-                <label>
-                 Day(Week) <span style={{ color: "red" }}>*</span>
-                </label>
-            </div>
-            </div>
-            </div>
-            <small className="form-text text-muted csv-text" style={{marginTop: "-20px"}}>
-            Learn more about Cronjob. &nbsp; <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="csv-text">
-            https://crontab.guru/
-          </a>
-          </small>
-            { /* <div className="form-group">
+              <label>
+                Sync Frequency <span style={{ color: "red" }}>*</span>
+              </label>
+              <div className="row">
+                <div className="col-sm-4 col-lg-2">
+                  <div className="form-group">
+                    <input
+                      className="form-control"
+                      type="text"
+                      placeholder="*"
+                      name="minute"
+                      value={syncFrequency.split(" ")[0] || ""}
+                      onChange={handleSyncFrequency}
+                    />
+                    <label>
+                      Minute <span style={{ color: "red" }}>*</span>
+                    </label>
+                    {formErrors.minute && (
+                      <span className="text-danger">{formErrors.minute}</span>
+                    )}
+                  </div>
+                </div>
+                <div className="col-sm-4 col-lg-2">
+                  <div className="form-group">
+                    <input
+                      className="form-control"
+                      type="text"
+                      placeholder="*"
+                      name="hour"
+                      value={syncFrequency.split(" ")[1] || ""}
+                      onChange={handleSyncFrequency}
+                    />
+                    <label>
+                      Hour <span style={{ color: "red" }}>*</span>
+                    </label>
+                    {formErrors.hour && (
+                      <span className="text-danger">{formErrors.hour}</span>
+                    )}
+                  </div>
+                </div>
+                <div className="col-sm-4 col-lg-2">
+                  <div className="form-group">
+                    <input
+                      className="form-control"
+                      type="text"
+                      placeholder="*"
+                      name="day"
+                      value={syncFrequency.split(" ")[2] || ""}
+                      onChange={handleSyncFrequency}
+                    />
+                    <label>
+                      Day(Month) <span style={{ color: "red" }}>*</span>
+                    </label>
+                    {formErrors.day && (
+                      <span className="text-danger">{formErrors.day}</span>
+                    )}
+                  </div>
+                </div>
+                <div className="col-sm-4 col-lg-3">
+                  <div className="form-group">
+                    <input
+                      className="form-control"
+                      type="text"
+                      placeholder="*"
+                      name="month"
+                      value={syncFrequency.split(" ")[3] || ""}
+                      onChange={handleSyncFrequency}
+                    />
+                    <label>
+                      Month <span style={{ color: "red" }}>*</span>
+                    </label>
+                    {formErrors.month && (
+                      <span className="text-danger">{formErrors.month}</span>
+                    )}
+                  </div>
+                </div>
+                <div className="col-sm-4 col-lg-3">
+                  <div className="form-group">
+                    <input
+                      className="form-control"
+                      type="text"
+                      placeholder="*"
+                      name="week"
+                      value={syncFrequency.split(" ")[4] || ""}
+                      onChange={handleSyncFrequency}
+                    />
+                    <label>
+                      Day(Week) <span style={{ color: "red" }}>*</span>
+                    </label>
+                    {formErrors.week && (
+                      <span className="text-danger">{formErrors.week}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <small
+                className="form-text text-muted csv-text"
+                style={{ marginTop: "-20px" }}
+              >
+                Learn more about Cronjob. &nbsp;{" "}
+                <a
+                  href="https://crontab.guru/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="csv-text"
+                >
+                  https://crontab.guru
+                </a>
+              </small>
+              {/* <div className="form-group">
                 <label>
                   Sync Frequency <span style={{ color: "red" }}>*</span>
                 </label>
@@ -564,8 +674,7 @@ function SupplierSftpForm(props) {
                   placeholder="Select TimeZone"
                   name="timeZone"
                   onChange={handleTimeZoneChange}
-                  value={initFormData.timeZone?initFormData.timeZone:""}
-                
+                  value={initFormData.timeZone ? initFormData.timeZone : ""}
                 />
 
                 {formErrors.timeZone && (

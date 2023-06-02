@@ -68,25 +68,105 @@ function IntegratoePage3(props) {
     const updatedSyncFrequency = productSyncFrequency.split(" "); 
     switch (name) {
       case "minute":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "Minute must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "Please Enter Minute between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "",
+          }));
+        }
         updatedSyncFrequency[0] = trimmedValue;
         break;
+
       case "hour":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "Hour must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "Please Enter Hour between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "",
+          }));
+        }
         updatedSyncFrequency[1] = trimmedValue;
         break;
       case "day":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "Day(Month) must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "Please Enter Day between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "",
+          }));
+        }
         updatedSyncFrequency[2] = trimmedValue;
         break;
       case "month":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "Month must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "Please Enter Month between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "",
+          }));
+        }
         updatedSyncFrequency[3] = trimmedValue;
         break;
       case "week":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "Day(Week) must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "Please Enter Day(Week) between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "",
+          }));
+        }
         updatedSyncFrequency[4] = trimmedValue;
         break;
       default:
         break;
     }
   
-    // Update the syncFrequency state with the modified array
     setProductSyncFrequency(updatedSyncFrequency.join(" "));
   }
 
@@ -293,7 +373,9 @@ const handleSubmit = (e) => {
                   <label>
                   Minute <span style={{ color: "red" }}>*</span>
                  </label>
-                 
+                 {formErrors.minute && (
+                  <span className="text-danger">{formErrors.minute}</span>
+                )}
               </div>
               </div>
               <div className="col-sm-4 col-lg-2">
@@ -310,6 +392,9 @@ const handleSubmit = (e) => {
                   <label>
                    Hour <span style={{ color: "red" }}>*</span>
                   </label>
+                  {formErrors.hour && (
+                    <span className="text-danger">{formErrors.hour}</span>
+                  )}
               </div>
               </div>
               <div className="col-sm-4 col-lg-2">
@@ -327,6 +412,9 @@ const handleSubmit = (e) => {
                   <label>
                    Day(Month) <span style={{ color: "red" }}>*</span>
                   </label>
+                  {formErrors.day && (
+                    <span className="text-danger">{formErrors.day}</span>
+                  )}
               </div>
               </div>
               <div className="col-sm-4 col-lg-3">
@@ -344,6 +432,9 @@ const handleSubmit = (e) => {
                   <label>
                    Month <span style={{ color: "red" }}>*</span>
                   </label>
+                  {formErrors.month && (
+                    <span className="text-danger">{formErrors.month}</span>
+                  )}
               </div>
               </div>
               <div className="col-sm-4 col-lg-3">
@@ -361,6 +452,9 @@ const handleSubmit = (e) => {
                   <label>
                    Day(Week) <span style={{ color: "red" }}>*</span>
                   </label>
+                  {formErrors.week && (
+                    <span className="text-danger">{formErrors.week}</span>
+                  )}
               </div>
               </div>
               <small className="form-text text-muted csv-text px-3" style={{marginTop: "-20px"}}>

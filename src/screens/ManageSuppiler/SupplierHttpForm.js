@@ -75,43 +75,116 @@ function SupplierHttpForm(props) {
   const handleSyncFrequency = (e) => {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
-  
+
     setInitFormData((prevState) => ({
       ...prevState,
       [name]: trimmedValue,
     }));
-  
-    const updatedSyncFrequency = syncFrequency.split(" "); 
+
+    const updatedSyncFrequency = syncFrequency.split(" ");
     switch (name) {
       case "minute":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "Minute must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "Please Enter Minute between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "",
+          }));
+        }
         updatedSyncFrequency[0] = trimmedValue;
         break;
+
       case "hour":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "Hour must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "Please Enter Hour between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "",
+          }));
+        }
         updatedSyncFrequency[1] = trimmedValue;
         break;
       case "day":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "Day(Month) must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "Please Enter Day between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "",
+          }));
+        }
         updatedSyncFrequency[2] = trimmedValue;
         break;
       case "month":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "Month must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "Please Enter Month between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "",
+          }));
+        }
         updatedSyncFrequency[3] = trimmedValue;
         break;
       case "week":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "Day(Week) must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "Please Enter Day(Week) between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "",
+          }));
+        }
         updatedSyncFrequency[4] = trimmedValue;
         break;
       default:
         break;
     }
-  
-    // Update the syncFrequency state with the modified array
+
     setSyncFrequency(updatedSyncFrequency.join(" "));
-    // const formData = new FormData(document.forms.httpForm);
-    // formData.set("syncFrequency", updatedSyncFrequency)
-    // const errors = validateHttpForm(formData);
-    // // const errors = updatedSyncFrequency.some(data => data === "")
-    // console.log("err--", errors)
-    // setFormErrors(errors);
-    // setIsFormValid(Object.keys(errors).length === 0);
-  }
+  };
 
   const handleInputChange = (e) => {
     const urlPath = e.target.value.trim()
@@ -297,122 +370,117 @@ function SupplierHttpForm(props) {
                 </small>
               </div>
             </div>
-          { /* <div className="col-12">
-              <div className="form-group">
+                <div className="col-12">
                 <label>
                   Sync Frequency <span style={{ color: "red" }}>*</span>
                 </label>
-                <Select
-                  placeholder="Select Frequency"
-                  options={syncFrequencyOptions}
-                  name="syncFrequency"
-                  onChange={handleSyncFrequency}
-                  value={syncFrequencyOptions.find(
-                    (option) => option.value === initFormData.syncFrequency
-                  )}
-                />
-                {formErrors.syncFrequency && (
-                  <span className="text-danger">
-                    {formErrors.syncFrequency}
-                  </span>
-                )}
-              </div>
-                </div>*/}
-
-                <div className="col-12">
                 <div className="row">
-                <div className="col-sm-4 col-lg-2">
-                <div className="form-group">
-                 <label>
-                     Minute <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <input
-                      className="form-control"
-                      type="text"
-                    placeholder="*"
-                      name="minute"
-                      value={syncFrequency.split(" ")[0] || ""}
-                      onChange={handleSyncFrequency}
-                    />
-                   
-                   
+                  <div className="col-sm-4 col-lg-2">
+                    <div className="form-group">
+                      <input
+                        className="form-control"
+                        type="text"
+                        placeholder="*"
+                        name="minute"
+                        value={syncFrequency.split(" ")[0] || ""}
+                        onChange={handleSyncFrequency}
+                      />
+                      <label>
+                        Minute <span style={{ color: "red" }}>*</span>
+                      </label>
+                      {formErrors.minute && (
+                        <span className="text-danger">{formErrors.minute}</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-sm-4 col-lg-2">
+                    <div className="form-group">
+                      <input
+                        className="form-control"
+                        type="text"
+                        placeholder="*"
+                        name="hour"
+                        value={syncFrequency.split(" ")[1] || ""}
+                        onChange={handleSyncFrequency}
+                      />
+                      <label>
+                        Hour <span style={{ color: "red" }}>*</span>
+                      </label>
+                      {formErrors.hour && (
+                        <span className="text-danger">{formErrors.hour}</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-sm-4 col-lg-2">
+                    <div className="form-group">
+                      <input
+                        className="form-control"
+                        type="text"
+                        placeholder="*"
+                        name="day"
+                        value={syncFrequency.split(" ")[2] || ""}
+                        onChange={handleSyncFrequency}
+                      />
+                      <label>
+                        Day(Month) <span style={{ color: "red" }}>*</span>
+                      </label>
+                      {formErrors.day && (
+                        <span className="text-danger">{formErrors.day}</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-sm-4 col-lg-3">
+                    <div className="form-group">
+                      <input
+                        className="form-control"
+                        type="text"
+                        placeholder="*"
+                        name="month"
+                        value={syncFrequency.split(" ")[3] || ""}
+                        onChange={handleSyncFrequency}
+                      />
+                      <label>
+                        Month <span style={{ color: "red" }}>*</span>
+                      </label>
+                      {formErrors.month && (
+                        <span className="text-danger">{formErrors.month}</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-sm-4 col-lg-3">
+                    <div className="form-group">
+                      <input
+                        className="form-control"
+                        type="text"
+                        placeholder="*"
+                        name="week"
+                        value={syncFrequency.split(" ")[4] || ""}
+                        onChange={handleSyncFrequency}
+                      />
+                      <label>
+                        Day(Week) <span style={{ color: "red" }}>*</span>
+                      </label>
+                      {formErrors.week && (
+                        <span className="text-danger">{formErrors.week}</span>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                </div>
-                <div className="col-sm-4 col-lg-2">
-                <div className="form-group">
-                 <label>
-                     Hour <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <input
-                      className="form-control"
-                      type="text"
-                    placeholder="*"
-                      name="hour"
-                      value={syncFrequency.split(" ")[1] || ""}
-                      onChange={handleSyncFrequency}
-                    />
-                   
-                </div>
-                </div>
-                <div className="col-sm-4 col-lg-2">
-                <div className="form-group">
-                 <label>
-                     Day <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <input
-                      className="form-control"
-                      type="text"
-                    placeholder="*"
-                      name="day"
-                      value={syncFrequency.split(" ")[2] || ""}
-    
-                      onChange={handleSyncFrequency}
-                    />
-                   
-                </div>
-                </div>
-                <div className="col-sm-4 col-lg-3">
-                <div className="form-group">
-                 <label>
-                     Month <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <input
-                      className="form-control"
-                      type="text"
-                    placeholder="*"
-                      name="month"
-                      value={syncFrequency.split(" ")[3] || ""}
-    
-                      onChange={handleSyncFrequency}
-                    />
-                    
-                </div>
-                </div>
-                <div className="col-sm-4 col-lg-3">
-                <div className="form-group">
-                 <label>
-                     Week <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <input
-                      className="form-control"
-                      type="text"
-                    placeholder="*"
-                      name="week"
-                      value={syncFrequency.split(" ")[4] || ""}
-    
-                      onChange={handleSyncFrequency}
-                    />
-                    
-                </div>
-                </div>
-                </div>
-                <small className="form-text text-muted csv-text" style={{marginTop: "-10px"}}>
-                Learn more. &nbsp;&nbsp;&nbsp; <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="csv-text">
-                https://crontab.guru/
-              </a>
-              </small>
-               
-                </div>
+                <small
+                  className="form-text text-muted csv-text"
+                  style={{ marginTop: "-20px" }}
+                >
+                  Learn more about Cronjob. &nbsp;{" "}
+                  <a
+                    href="https://crontab.guru/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="csv-text"
+                  >
+                    https://crontab.guru
+                  </a>
+                </small>
+              </div>
           </div>
         </div>
       </form>
