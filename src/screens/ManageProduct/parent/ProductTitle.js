@@ -1,16 +1,28 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
+import { ProductContext } from "../../ProductContext/ProductContext";
 
 const ProductTitle = () => {
+  const titleValue = useContext(ProductContext);
+  const [title, setTitle] = useState("");
+  console.log("title", title);
+
+  useEffect(() => {
+    setTitle(titleValue);
+  }, [titleValue]);
+
+  const handleChange = (event) => {
+    setTitle(event.target.value);
+  };
 
   return (
-    <Row style={{marginBottom: "-15px"}}>
+    <Row style={{ marginBottom: "-15px" }}>
       <Col>
         <Accordion defaultActiveKey="0" className="accordian__main">
           <Card>
             <Card.Header>
               <Accordion.Toggle
-                style={{textDecoration: "none"}} 
+                style={{ textDecoration: "none" }}
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
@@ -24,6 +36,8 @@ const ProductTitle = () => {
                   placeholder="Title..."
                   name="title"
                   className="form-control mt-2"
+                  value={title ? title : ""}
+                  onChange={handleChange}
                 />
               </Card.Body>
             </Accordion.Collapse>

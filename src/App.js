@@ -359,7 +359,7 @@ class App extends React.Component {
               {this.props.user?.data.role === "SUPER_ADMIN" ? (
                 <>
                   <Route exact path={`/products`} component={ProductsList} />
-                  <Route exact path={`/product-details`} component={ManageProduct} />
+                  <Route exact path={`/product-details/:id`} component={ManageProduct} />
                   <Route exact path={`/file-upload`} component={FileUpload} />
 
                 </>

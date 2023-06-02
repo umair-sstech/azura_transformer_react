@@ -251,20 +251,13 @@ function ProductsList(props) {
 
                             <td className="action-group">
                               <i
+                              style={{color:"#49c5b6"}}
                                 data-placement="top"
                                 title="Edit"
                                 className="fa fa-eye"
                                 onClick={() => {
-                                  localStorage.setItem(
-                                    "marketPlaceId",
-                                    product.id
-                                  );
-                                  localStorage.setItem(
-                                    "marketPlaceName",
-                                    product.name
-                                  );
 
-                                  history.push(`/product-details`);
+                                  history.push(`/product-details/${product.id}`);
                                 }}
                               ></i>
                             </td>

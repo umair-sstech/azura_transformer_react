@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Card, Col, Image, Row } from "react-bootstrap";
 import airConditioner from "../../../assets/images/air-conditioner.png"
+import { useParams } from "react-router-dom";
 
 const ProductParent = () => {
   return (

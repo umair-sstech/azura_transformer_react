@@ -1,5 +1,9 @@
 import React from "react";
 import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import "@ckeditor/ckeditor5-build-classic/build/translations/en-gb";
+import "./Product.css"
 
 const ProductDescription = () => {
   return (
@@ -19,20 +23,9 @@ const ProductDescription = () => {
             </Card.Header>
             <Accordion.Collapse eventKey="0">
               <Card.Body>
-                <div className="p-2">
-                  <p>Brand : Guess</p>
-                  <p>Collection: Spring/summer</p>
-                  <p>Gender: Woman</p>
-                  <p>Frame: Metal</p>
-                  <p>Bridge, Mm: 18</p>
-                  <p>Temples, Mm: 145 </p>
-                  <p>Lenses Diameter, Mm: 61</p>
-                  <p>Protection: Uv3</p>
-                  <p>Logo: Yes</p>
-                  <p style={{marginBottom: "-10px"}}>
-                    Original Packaging: Yes
-                  </p>
-                </div>
+              <CKEditor
+              editor={ClassicEditor}
+            />
               </Card.Body>
             </Accordion.Collapse>
           </Card>
