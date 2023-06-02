@@ -47,18 +47,42 @@ export const validateSftpForm = (formData) => {
 
   if (!minute) {
     errors.minute = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(minute)) {
+    errors.minute = "Minute must contain only digits or '*'";
+  } else if(minute.length > 100) {
+    errors.minute = "Please Enter Minute between 100 characters";
   }
+
   if (!hour) {
     errors.hour = "Hour is required";
+  } else if(!/^[0-9*]+$/.test(hour)) {
+    errors.hour = "Hour must contain only digits or '*'";
+  } else if(hour.length > 100) {
+    errors.hour = "Please Enter Hour between 100 characters";
   }
+
   if (!day) {
     errors.day = "Day(Month) is required";
+  } else if(!/^[0-9*]+$/.test(day)) {
+    errors.day = "Day must contain only digits or '*'";
+  } else if(day.length > 100) {
+    errors.day = "Please Enter Day between 100 characters";
   }
+
   if (!month) {
     errors.month = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(month)) {
+    errors.month = "Month must contain only digits or '*'";
+  } else if(month.length > 100) {
+    errors.month = "Please Enter Month between 100 characters";
   }
+
   if (!week) {
     errors.week = "Day(Week) is required";
+  } else if(!/^[0-9*]+$/.test(week)) {
+    errors.week = "week must contain only digits or '*'";
+  } else if(week.length > 100) {
+    errors.week = "Please Enter week between 100 characters";
   }
 
   if (!hostName) {
@@ -134,18 +158,42 @@ export const validateHttpForm = (formData) => {
 
   if (!minute) {
     errors.minute = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(minute)) {
+    errors.minute = "Minute must contain only digits or '*'";
+  } else if(minute.length > 100) {
+    errors.minute = "Please Enter Minute between 100 characters";
   }
+
   if (!hour) {
     errors.hour = "Hour is required";
+  } else if(!/^[0-9*]+$/.test(hour)) {
+    errors.hour = "Hour must contain only digits or '*'";
+  } else if(hour.length > 100) {
+    errors.hour = "Please Enter Hour between 100 characters";
   }
+
   if (!day) {
     errors.day = "Day(Month) is required";
+  } else if(!/^[0-9*]+$/.test(day)) {
+    errors.day = "Day must contain only digits or '*'";
+  } else if(day.length > 100) {
+    errors.day = "Please Enter Day between 100 characters";
   }
+
   if (!month) {
     errors.month = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(month)) {
+    errors.month = "Month must contain only digits or '*'";
+  } else if(month.length > 100) {
+    errors.month = "Please Enter Month between 100 characters";
   }
+
   if (!week) {
     errors.week = "Day(Week) is required";
+  } else if(!/^[0-9*]+$/.test(week)) {
+    errors.week = "Week must contain only digits or '*'";
+  } else if(week.length > 100) {
+    errors.week = "Please Enter Week between 100 characters";
   }
 
   if (!urlPath) {
@@ -155,8 +203,6 @@ export const validateHttpForm = (formData) => {
   } else if (!/([a-zA-Z0-9\s_\\.\-\(\):])+\.[^.]+/i.test(urlPath)) {
     errors.urlPath = "URL must be a valid URL";
   }
-
-
 
   return errors;
 };
@@ -178,29 +224,54 @@ export const validateMarketPlaceInfoForm = (formData) => {
 };
 export const validateMarketPlaceProductSync = (formData) => {
   const errors = {};
-  const minute = formData.minute;
-  const hour = formData.hour;
-  const day = formData.day;
-  const month = formData.month;
-  const week = formData.week;
+  const minute = formData.get("minute");
+  const hour = formData.get("hour");
+  const day = formData.get("day");
+  const month = formData.get("month");
+  const week = formData.get("week");
+  const productTimeZone = formData.get("productTimeZone");
 
   if (!minute) {
     errors.minute = "Minute is required";
-  }
-  if (!hour) {
-    errors.hour = "Hour is required";
-  }
-  if (!day) {
-    errors.day = "Day(Month) is required";
-  }
-  if (!month) {
-    errors.month = "Minute is required";
-  }
-  if (!week) {
-    errors.week = "Day(Week) is required";
+  } else if(!/^[0-9*]+$/.test(minute)) {
+    errors.minute = "Minute must contain only digits or '*'";
+  } else if(minute.length > 100) {
+    errors.minute = "Please Enter Minute between 100 characters";
   }
 
-  if (!formData.productTimeZone) {
+  if (!hour) {
+    errors.hour = "Hour is required";
+  } else if(!/^[0-9*]+$/.test(hour)) {
+    errors.hour = "Hour must contain only digits or '*'";
+  } else if(hour.length > 100) {
+    errors.hour = "Please Enter Hour between 100 characters";
+  }
+
+  if (!day) {
+    errors.day = "Day(Month) is required";
+  } else if(!/^[0-9*]+$/.test(day)) {
+    errors.day = "Day must contain only digits or '*'";
+  } else if(day.length > 100) {
+    errors.day = "Please Enter Day between 100 characters";
+  }
+
+  if (!month) {
+    errors.month = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(month)) {
+    errors.month = "Month must contain only digits or '*'";
+  } else if(month.length > 100) {
+    errors.month = "Please Enter Month between 100 characters";
+  }
+
+  if (!week) {
+    errors.week = "Day(Week) is required";
+  } else if(!/^[0-9*]+$/.test(week)) {
+    errors.week = "Week must contain only digits or '*'";
+  } else if(week.length > 100) {
+    errors.week = "Please Enter Week between 100 characters";
+  }
+
+  if (!productTimeZone) {
     errors.productTimeZone = "Please Select TimeZone";
   }
   return errors;
@@ -208,9 +279,54 @@ export const validateMarketPlaceProductSync = (formData) => {
 
 export const validateMarketPlaceOrderSync = (formData) => {
   const errors = {};
- 
+  const minute = formData.get("minute");
+  const hour = formData.get("hour");
+  const day = formData.get("day");
+  const month = formData.get("month");
+  const week = formData.get("week");
+  const orderTimeZone = formData.get("orderTimeZone");
 
-  if (!formData.orderTimeZone) {
+  if (!minute) {
+    errors.minute = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(minute)) {
+    errors.minute = "Minute must contain only digits or '*'";
+  } else if(minute.length > 100) {
+    errors.minute = "Please Enter Minute between 100 characters";
+  }
+
+  if (!hour) {
+    errors.hour = "Hour is required";
+  } else if(!/^[0-9*]+$/.test(hour)) {
+    errors.hour = "Hour must contain only digits or '*'";
+  } else if(hour.length > 100) {
+    errors.hour = "Please Enter Hour between 100 characters";
+  }
+
+  if (!day) {
+    errors.day = "Day(Month) is required";
+  } else if(!/^[0-9*]+$/.test(day)) {
+    errors.day = "Day must contain only digits or '*'";
+  } else if(day.length > 100) {
+    errors.day = "Please Enter Day between 100 characters";
+  }
+
+  if (!month) {
+    errors.month = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(month)) {
+    errors.month = "Month must contain only digits or '*'";
+  } else if(month.length > 100) {
+    errors.month = "Please Enter Month between 100 characters";
+  }
+
+  if (!week) {
+    errors.week = "Day(Week) is required";
+  } else if(!/^[0-9*]+$/.test(week)) {
+    errors.week = "Week must contain only digits or '*'";
+  } else if(week.length > 100) {
+    errors.week = "Please Enter Week between 100 characters";
+  }
+
+  if (!orderTimeZone) {
     errors.orderTimeZone = "Please Select TimeZone";
   }
   return errors;
@@ -218,8 +334,54 @@ export const validateMarketPlaceOrderSync = (formData) => {
 
 export const validateMarketPlaceTrackingSync = (formData) => {
   const errors = {};
+  const minute = formData.get("minute");
+  const hour = formData.get("hour");
+  const day = formData.get("day");
+  const month = formData.get("month");
+  const week = formData.get("week");
+  const trackingTimeZone = formData.get("trackingTimeZone");
 
-  if (!formData.trackingTimeZone) {
+  if (!minute) {
+    errors.minute = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(minute)) {
+    errors.minute = "Minute must contain only digits or '*'";
+  } else if(minute.length > 100) {
+    errors.minute = "Please Enter Minute between 100 characters";
+  }
+
+  if (!hour) {
+    errors.hour = "Hour is required";
+  } else if(!/^[0-9*]+$/.test(hour)) {
+    errors.hour = "Hour must contain only digits or '*'";
+  } else if(hour.length > 100) {
+    errors.hour = "Please Enter Hour between 100 characters";
+  }
+
+  if (!day) {
+    errors.day = "Day(Month) is required";
+  } else if(!/^[0-9*]+$/.test(day)) {
+    errors.day = "Day must contain only digits or '*'";
+  } else if(day.length > 100) {
+    errors.day = "Please Enter Day between 100 characters";
+  }
+
+  if (!month) {
+    errors.month = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(month)) {
+    errors.month = "Month must contain only digits or '*'";
+  } else if(month.length > 100) {
+    errors.month = "Please Enter Month between 100 characters";
+  }
+
+  if (!week) {
+    errors.week = "Day(Week) is required";
+  } else if(!/^[0-9*]+$/.test(week)) {
+    errors.week = "Week must contain only digits or '*'";
+  } else if(week.length > 100) {
+    errors.week = "Please Enter Week between 100 characters";
+  }
+
+  if (!trackingTimeZone) {
     errors.trackingTimeZone = "Please Select TimeZone";
   }
   return errors;
@@ -324,5 +486,171 @@ export const validateProfile = (formData) => {
     errors.country = "Country is required";
   }
 
+  return errors;
+};
+
+//Integrator Page - 3
+export const validateIntegratorProductSync = (formData) => {
+  const errors = {};
+  const minute = formData.get("minute");
+  const hour = formData.get("hour");
+  const day = formData.get("day");
+  const month = formData.get("month");
+  const week = formData.get("week");
+  const productTimeZone = formData.get("productTimeZone");
+
+  if (!minute) {
+    errors.minute = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(minute)) {
+    errors.minute = "Minute must contain only digits or '*'";
+  } else if(minute.length > 100) {
+    errors.minute = "Please Enter Minute between 100 characters";
+  }
+
+  if (!hour) {
+    errors.hour = "Hour is required";
+  } else if(!/^[0-9*]+$/.test(hour)) {
+    errors.hour = "Hour must contain only digits or '*'";
+  } else if(hour.length > 100) {
+    errors.hour = "Please Enter Hour between 100 characters";
+  }
+
+  if (!day) {
+    errors.day = "Day(Month) is required";
+  } else if(!/^[0-9*]+$/.test(day)) {
+    errors.day = "Day must contain only digits or '*'";
+  } else if(day.length > 100) {
+    errors.day = "Please Enter Day between 100 characters";
+  }
+
+  if (!month) {
+    errors.month = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(month)) {
+    errors.month = "Month must contain only digits or '*'";
+  } else if(month.length > 100) {
+    errors.month = "Please Enter Month between 100 characters";
+  }
+
+  if (!week) {
+    errors.week = "Day(Week) is required";
+  } else if(!/^[0-9*]+$/.test(week)) {
+    errors.week = "Week must contain only digits or '*'";
+  } else if(week.length > 100) {
+    errors.week = "Please Enter Week between 100 characters";
+  }
+  
+  if (!productTimeZone) {
+    errors.productTimeZone = "Please Select TimeZone";
+  }
+  return errors;
+};
+
+export const validateIntegratorOrderSync = (formData) => {
+  const errors = {};
+  const minute = formData.get("minute");
+  const hour = formData.get("hour");
+  const day = formData.get("day");
+  const month = formData.get("month");
+  const week = formData.get("week");
+  const orderTimeZone = formData.get("orderTimeZone");
+
+  if (!minute) {
+    errors.minute = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(minute)) {
+    errors.minute = "Minute must contain only digits or '*'";
+  } else if(minute.length > 100) {
+    errors.minute = "Please Enter Minute between 100 characters";
+  }
+
+  if (!hour) {
+    errors.hour = "Hour is required";
+  } else if(!/^[0-9*]+$/.test(hour)) {
+    errors.hour = "Hour must contain only digits or '*'";
+  } else if(hour.length > 100) {
+    errors.hour = "Please Enter Hour between 100 characters";
+  }
+
+  if (!day) {
+    errors.day = "Day(Month) is required";
+  } else if(!/^[0-9*]+$/.test(day)) {
+    errors.day = "Day must contain only digits or '*'";
+  } else if(day.length > 100) {
+    errors.day = "Please Enter Day between 100 characters";
+  }
+
+  if (!month) {
+    errors.month = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(month)) {
+    errors.month = "Month must contain only digits or '*'";
+  } else if(month.length > 100) {
+    errors.month = "Please Enter Month between 100 characters";
+  }
+
+  if (!week) {
+    errors.week = "Day(Week) is required";
+  } else if(!/^[0-9*]+$/.test(week)) {
+    errors.week = "Week must contain only digits or '*'";
+  } else if(week.length > 100) {
+    errors.week = "Please Enter Week between 100 characters";
+  }
+
+  if (!orderTimeZone) {
+    errors.orderTimeZone = "Please Select TimeZone";
+  }
+  return errors;
+};
+
+export const validateIntegratorTrackingSync = (formData) => {
+  const errors = {};
+  const minute = formData.get("minute");
+  const hour = formData.get("hour");
+  const day = formData.get("day");
+  const month = formData.get("month");
+  const week = formData.get("week");
+  const trackingTimeZone = formData.get("trackingTimeZone");
+
+  if (!minute) {
+    errors.minute = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(minute)) {
+    errors.minute = "Minute must contain only digits or '*'";
+  } else if(minute.length > 100) {
+    errors.minute = "Please Enter Minute between 100 characters";
+  }
+
+  if (!hour) {
+    errors.hour = "Hour is required";
+  } else if(!/^[0-9*]+$/.test(hour)) {
+    errors.hour = "Hour must contain only digits or '*'";
+  } else if(hour.length > 100) {
+    errors.hour = "Please Enter Hour between 100 characters";
+  }
+
+  if (!day) {
+    errors.day = "Day(Month) is required";
+  } else if(!/^[0-9*]+$/.test(day)) {
+    errors.day = "Day must contain only digits or '*'";
+  } else if(day.length > 100) {
+    errors.day = "Please Enter Day between 100 characters";
+  }
+
+  if (!month) {
+    errors.month = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(month)) {
+    errors.month = "Month must contain only digits or '*'";
+  } else if(month.length > 100) {
+    errors.month = "Please Enter Month between 100 characters";
+  }
+
+  if (!week) {
+    errors.week = "Day(Week) is required";
+  } else if(!/^[0-9*]+$/.test(week)) {
+    errors.week = "Week must contain only digits or '*'";
+  } else if(week.length > 100) {
+    errors.week = "Please Enter Week between 100 characters";
+  }
+
+  if (!trackingTimeZone) {
+    errors.trackingTimeZone = "Please Select TimeZone";
+  }
   return errors;
 };

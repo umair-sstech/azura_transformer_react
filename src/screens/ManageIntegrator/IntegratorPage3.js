@@ -7,28 +7,36 @@ import timeZoneData from "../../Data/timeZone";
 import { API_PATH } from "../ApiPath/Apipath";
 import { Spinner } from "react-bootstrap";
 import { FormContext } from "./ManageIntegrator";
-import { validateMarketPlaceProductSync } from "../Validations/Validation";
+import { validateIntegratorProductSync } from "../Validations/Validation";
 
 
 function IntegratoePage3(props) {
   const {setPage}=props
-  const {
+  const { processCancel, formData, setFormData } = useContext(FormContext);
   
-    processCancel,
-  } = useContext(FormContext);
-  
-  const [formData, setFormData] = useState({
+  const [initFormData, setInitFormData] = useState({
     productSyncFrequency: "",
     productTimeZone: "",
     type: "product",
   });
   const [formErrors, setFormErrors] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [productSyncFrequency,setProductSyncFrequency]=useState("")
 
   const history = useHistory();
+
+  useEffect(() => {
+    if (formData) {
+      setInitFormData(formData);
+    }
+  }, [props]);
+
+  useEffect(() => {
+    setIsFormValid(Object.keys(formErrors).length === 0);
+  }, [formErrors]);
 
   useEffect(() => {
     getCronTimeData();
@@ -60,12 +68,12 @@ function IntegratoePage3(props) {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
   
-    setFormData((prevState) => ({
+    setInitFormData((prevState) => ({
       ...prevState,
       [name]: trimmedValue,
     }));
   
-    const updatedSyncFrequency = productSyncFrequency.split(" "); 
+    const updatedSyncFrequency = productSyncFrequency.split(" ");
     switch (name) {
       case "minute":
         if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
@@ -170,26 +178,43 @@ function IntegratoePage3(props) {
     setProductSyncFrequency(updatedSyncFrequency.join(" "));
   }
 
-  const handleTimeZoneChange = (selectedOption) => {
-    setFormData({ ...formData, productTimeZone: selectedOption });
+  const handleChange = (key, value) => {
+    const formData = new FormData(document.forms.integrator3);
+    formData.set(key, value);
+    const errors = validateIntegratorProductSync(formData);
+    setFormErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
   };
 
+  const handleTimeZoneChange = (selectedOption) => {
+    const productTimeZone = selectedOption;
+    setInitFormData({ ...initFormData, productTimeZone });
+    handleChange("productTimeZone", productTimeZone);
+  };
 
 const handleSubmit = (e) => {
   e.preventDefault();
-  const errors = validateMarketPlaceProductSync(formData);
+  const form = e.target;
+  const formData = new FormData(form);
+  const errors = validateIntegratorProductSync(formData);
   setFormErrors(errors);
 
   if (Object.keys(errors).length === 0) {
     const integrationId = localStorage.getItem("integratorId");
     const integrationName = localStorage.getItem("integratorName");
 
-    const { value, label } = formData.productTimeZone;
+    const { value, label } = initFormData.productTimeZone;
 
     const timeZoneString = `${value}`;
 
+    const productSyncFrequency = `${formData.get("minute")} ${formData.get(
+      "hour"
+    )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
+      "week"
+    )}`;
+
     const payload = {
-      ...formData,
+      ...initFormData,
       productSyncFrequency,
       productTimeZone: timeZoneString,
       integrationId,
@@ -218,19 +243,30 @@ const handleSubmit = (e) => {
   
   const handleOnClick = (e) => {
     e.preventDefault();
-    const errors = validateMarketPlaceProductSync(formData);
+    const form = e.currentTarget.closest("form");
+    if (!form) {
+      return;
+    }
+    const formData = new FormData(form);
+    const errors = validateIntegratorProductSync(formData);
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
     const integrationId = localStorage.getItem("integratorId");
     const integrationName = localStorage.getItem("integratorName");
 
-    const { value, label } = formData.productTimeZone;
+    const { value, label } = initFormData.productTimeZone;
 
     const timeZoneString = `${value}`;
 
+    const productSyncFrequency = `${formData.get("minute")} ${formData.get(
+      "hour"
+    )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
+      "week"
+    )}`;
+
     const payload = {
-      ...formData,
+      ...initFormData,
       productSyncFrequency,
       productTimeZone: timeZoneString,
       integrationId,
@@ -293,7 +329,7 @@ const handleSubmit = (e) => {
   }, []);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} name="integrator3">
       <div style={{ marginTop: "30px" }}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
@@ -374,8 +410,8 @@ const handleSubmit = (e) => {
                   Minute <span style={{ color: "red" }}>*</span>
                  </label>
                  {formErrors.minute && (
-                  <span className="text-danger">{formErrors.minute}</span>
-                )}
+                    <p className="text-danger mt-n2">{formErrors.minute}</p>
+                  )}
               </div>
               </div>
               <div className="col-sm-4 col-lg-2">
@@ -393,7 +429,7 @@ const handleSubmit = (e) => {
                    Hour <span style={{ color: "red" }}>*</span>
                   </label>
                   {formErrors.hour && (
-                    <span className="text-danger">{formErrors.hour}</span>
+                    <p className="text-danger mt-n2">{formErrors.hour}</p>
                   )}
               </div>
               </div>
@@ -413,7 +449,7 @@ const handleSubmit = (e) => {
                    Day(Month) <span style={{ color: "red" }}>*</span>
                   </label>
                   {formErrors.day && (
-                    <span className="text-danger">{formErrors.day}</span>
+                    <p className="text-danger mt-n2">{formErrors.day}</p>
                   )}
               </div>
               </div>
@@ -433,7 +469,7 @@ const handleSubmit = (e) => {
                    Month <span style={{ color: "red" }}>*</span>
                   </label>
                   {formErrors.month && (
-                    <span className="text-danger">{formErrors.month}</span>
+                    <p className="text-danger mt-n2">{formErrors.month}</p>
                   )}
               </div>
               </div>
@@ -453,7 +489,7 @@ const handleSubmit = (e) => {
                    Day(Week) <span style={{ color: "red" }}>*</span>
                   </label>
                   {formErrors.week && (
-                    <span className="text-danger">{formErrors.week}</span>
+                    <p className="text-danger mt-n2">{formErrors.week}</p>
                   )}
               </div>
               </div>
@@ -477,8 +513,9 @@ const handleSubmit = (e) => {
                   };
                 })}
                 placeholder="Select TimeZone"
-                value={formData.productTimeZone ? formData.productTimeZone : ""}
+                value={initFormData.productTimeZone ? initFormData.productTimeZone : ""}
                 onChange={handleTimeZoneChange}
+                name="productTimeZone"
               />
               {formErrors.productTimeZone && (
                 <span className="text-danger">{formErrors.productTimeZone}</span>

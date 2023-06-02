@@ -8,23 +8,34 @@ import timeZoneData from "../../Data/timeZone";
 import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageIntegrator";
 import { Spinner } from "react-bootstrap";
-import { validateMarketPlaceTrackingSync } from "../Validations/Validation";
+import { validateIntegratorTrackingSync } from "../Validations/Validation";
 
 function IntegratorPage5(props) {
   const { setPage } = props;
-  const { processCancel } = useContext(FormContext);
-  const [formData, setFormData] = useState({
+  const { processCancel, formData, setFormData } = useContext(FormContext);
+  const [initFormData, setInitFormData] = useState({
     trackingSyncFrequency: "",
     trackingTimeZone: "",
     type: "tracking",
   });
   const [formErrors, setFormErrors] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [trackingSyncFrequency, setTrackingSyncFrequency] = useState("");
 
   const history = useHistory();
+
+  useEffect(() => {
+    if (formData) {
+      setInitFormData(formData);
+    }
+  }, [props]);
+
+  useEffect(() => {
+    setIsFormValid(Object.keys(formErrors).length === 0);
+  }, [formErrors]);
 
   useEffect(() => {
     getCronTimeData();
@@ -56,7 +67,7 @@ function IntegratorPage5(props) {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
 
-    setFormData((prevState) => ({
+    setInitFormData((prevState) => ({
       ...prevState,
       [name]: trimmedValue,
     }));
@@ -64,18 +75,99 @@ function IntegratorPage5(props) {
     const updatedSyncFrequency = trackingSyncFrequency.split(" ");
     switch (name) {
       case "minute":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "Minute must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "Please Enter Minute between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "",
+          }));
+        }
         updatedSyncFrequency[0] = trimmedValue;
         break;
+
       case "hour":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "Hour must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "Please Enter Hour between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "",
+          }));
+        }
         updatedSyncFrequency[1] = trimmedValue;
         break;
       case "day":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "Day(Month) must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "Please Enter Day between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "",
+          }));
+        }
         updatedSyncFrequency[2] = trimmedValue;
         break;
       case "month":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "Month must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "Please Enter Month between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "",
+          }));
+        }
         updatedSyncFrequency[3] = trimmedValue;
         break;
       case "week":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "Day(Week) must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "Please Enter Day(Week) between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "",
+          }));
+        }
         updatedSyncFrequency[4] = trimmedValue;
         break;
       default:
@@ -86,64 +178,85 @@ function IntegratorPage5(props) {
     setTrackingSyncFrequency(updatedSyncFrequency.join(" "));
   };
 
-  const handleTimeZoneChange = (selectedOption) => {
-    setFormData({ ...formData, trackingTimeZone: selectedOption });
-    setFormErrors({ ...formErrors, trackingTimeZone: "" });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const errors = validateMarketPlaceTrackingSync(formData);
+  const handleChange = (key, value) => {
+    const formData = new FormData(document.forms.integrator5);
+    formData.set(key, value);
+    const errors = validateIntegratorTrackingSync(formData);
     setFormErrors(errors);
-
-    if (Object.keys(errors).length === 0) {
-      const integrationId = localStorage.getItem("integratorId");
-      const integrationName = localStorage.getItem("integratorName");
-
-      const { value, label } = formData.trackingTimeZone;
-      const timeZoneString = `${value}`;
-      const payload = {
-        ...formData,
-        trackingSyncFrequency,
-        trackingTimeZone: timeZoneString,
-        integrationId,
-        integrationName,
-      };
-      setIsLoading(true);
-      axios
-        .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
-        .then((response) => {
-          const { success, message, data } = response.data;
-          if (success) {
-            toast.success(message);
-            setFormData({});
-            setPage(5);
-          } else {
-            toast.error(message);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
+    setIsFormValid(Object.keys(errors).length === 0);
   };
+
+  const handleTimeZoneChange = (selectedOption) => {
+    const trackingTimeZone = selectedOption;
+    setInitFormData({ ...initFormData, trackingTimeZone });
+    handleChange("trackingTimeZone", trackingTimeZone);
+  };
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const form = e.target;
+  //   const formData = new FormData(form);
+  //   const errors = validateIntegratorTrackingSync(formData);
+  //   setFormErrors(errors);
+
+  //   if (Object.keys(errors).length === 0) {
+  //     const integrationId = localStorage.getItem("integratorId");
+  //     const integrationName = localStorage.getItem("integratorName");
+
+  //     const { value, label } = initFormData.trackingTimeZone;
+  //     const timeZoneString = `${value}`;
+  //     const trackingSyncFrequency = `${formData.get("minute")} ${formData.get(
+  //       "hour"
+  //     )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
+  //       "week"
+  //     )}`;
+  //     const payload = {
+  //       ...initFormData,
+  //       trackingSyncFrequency,
+  //       trackingTimeZone: timeZoneString,
+  //       integrationId,
+  //       integrationName,
+  //     };
+  //     setIsLoading(true);
+  //     axios
+  //       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
+  //       .then((response) => {
+  //         const { success, message, data } = response.data;
+  //         if (success) {
+  //           toast.success(message);
+  //           setFormData({});
+  //           setPage(5);
+  //         } else {
+  //           toast.error(message);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error(error);
+  //       })
+  //       .finally(() => {
+  //         setIsLoading(false);
+  //       });
+  //   }
+  // };
 
   const handleOnClick = (e) => {
     e.preventDefault();
-    const errors = validateMarketPlaceTrackingSync(formData);
+    const form = e.currentTarget.closest("form");
+    if (!form) {
+      return;
+    }
+    const formData = new FormData(form);
+    const errors = validateIntegratorTrackingSync(formData);
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
       const integrationId = localStorage.getItem("integratorId");
       const integrationName = localStorage.getItem("integratorName");
 
-      const { value, label } = formData.trackingTimeZone;
+      const { value, label } = initFormData.trackingTimeZone;
       const timeZoneString = `${value}`;
       const payload = {
-        ...formData,
+        ...initFormData,
         trackingSyncFrequency,
         trackingTimeZone: timeZoneString,
         integrationId,
@@ -205,7 +318,7 @@ function IntegratorPage5(props) {
     getProductData();
   }, []);
   return (
-    <form onSubmit={handleSubmit}>
+    <form name="integrator5">
       <div style={{ marginTop: "30px" }}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
@@ -266,6 +379,9 @@ function IntegratorPage5(props) {
                   <label>
                     Minute <span style={{ color: "red" }}>*</span>
                   </label>
+                  {formErrors.minute && (
+                    <p className="text-danger mt-n2">{formErrors.minute}</p>
+                  )}
                 </div>
               </div>
               <div className="col-sm-4 col-lg-2">
@@ -281,6 +397,9 @@ function IntegratorPage5(props) {
                   <label>
                     Hour <span style={{ color: "red" }}>*</span>
                   </label>
+                  {formErrors.hour && (
+                    <p className="text-danger mt-n2">{formErrors.hour}</p>
+                  )}
                 </div>
               </div>
               <div className="col-sm-4 col-lg-2">
@@ -296,6 +415,9 @@ function IntegratorPage5(props) {
                   <label>
                     Day(Month) <span style={{ color: "red" }}>*</span>
                   </label>
+                  {formErrors.day && (
+                    <p className="text-danger mt-n2">{formErrors.day}</p>
+                  )}
                 </div>
               </div>
               <div className="col-sm-4 col-lg-3">
@@ -311,6 +433,9 @@ function IntegratorPage5(props) {
                   <label>
                     Month <span style={{ color: "red" }}>*</span>
                   </label>
+                  {formErrors.month && (
+                    <p className="text-danger mt-n2">{formErrors.month}</p>
+                  )}
                 </div>
               </div>
               <div className="col-sm-4 col-lg-3">
@@ -326,6 +451,9 @@ function IntegratorPage5(props) {
                   <label>
                     Day(Week) <span style={{ color: "red" }}>*</span>
                   </label>
+                  {formErrors.week && (
+                    <p className="text-danger mt-n2">{formErrors.week}</p>
+                  )}
                 </div>
               </div>
               <small className="form-text text-muted csv-text px-3" style={{marginTop: "-20px"}}>
@@ -355,9 +483,10 @@ function IntegratorPage5(props) {
                 })}
                 placeholder="Select TimeZone"
                 value={
-                  formData.trackingTimeZone ? formData.trackingTimeZone : ""
+                  initFormData.trackingTimeZone ? initFormData.trackingTimeZone : ""
                 }
                 onChange={handleTimeZoneChange}
+                name="trackingTimeZone"
               />
               {formErrors.trackingTimeZone && (
                 <span className="text-danger">

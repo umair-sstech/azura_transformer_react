@@ -34,7 +34,7 @@ const LogModal = ({ showModal, setShowModal, selectedId }) => {
       >
         <Modal.Header closeButton>
           <Modal.Title id="example-custom-modal-styling-title">
-            Api Trace Event Details
+            API Trace Event Details
           </Modal.Title>
         </Modal.Header>
         {apiData && (

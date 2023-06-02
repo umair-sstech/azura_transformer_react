@@ -251,6 +251,7 @@ function FileUpload(props) {
                             <i
                               data-placement="top"
                               title="Edit"
+                              style={{color: "#49c5b6"}}
                               className="fa fa-solid fa-download"
                               onClick={() => downloadFile(filedata.localPath)}
                             ></i>

@@ -548,7 +548,7 @@ function SupplierSftpForm(props) {
                       Minute <span style={{ color: "red" }}>*</span>
                     </label>
                     {formErrors.minute && (
-                      <span className="text-danger">{formErrors.minute}</span>
+                      <p className="text-danger mt-n2">{formErrors.minute}</p>
                     )}
                   </div>
                 </div>
@@ -566,7 +566,7 @@ function SupplierSftpForm(props) {
                       Hour <span style={{ color: "red" }}>*</span>
                     </label>
                     {formErrors.hour && (
-                      <span className="text-danger">{formErrors.hour}</span>
+                      <p className="text-danger mt-n2">{formErrors.hour}</p>
                     )}
                   </div>
                 </div>
@@ -584,7 +584,7 @@ function SupplierSftpForm(props) {
                       Day(Month) <span style={{ color: "red" }}>*</span>
                     </label>
                     {formErrors.day && (
-                      <span className="text-danger">{formErrors.day}</span>
+                      <p className="text-danger mt-n2">{formErrors.day}</p>
                     )}
                   </div>
                 </div>
@@ -602,7 +602,7 @@ function SupplierSftpForm(props) {
                       Month <span style={{ color: "red" }}>*</span>
                     </label>
                     {formErrors.month && (
-                      <span className="text-danger">{formErrors.month}</span>
+                      <p className="text-danger mt-n2">{formErrors.month}</p>
                     )}
                   </div>
                 </div>
@@ -620,7 +620,7 @@ function SupplierSftpForm(props) {
                       Day(Week) <span style={{ color: "red" }}>*</span>
                     </label>
                     {formErrors.week && (
-                      <span className="text-danger">{formErrors.week}</span>
+                      <p className="text-danger mt-n2">{formErrors.week}</p>
                     )}
                   </div>
                 </div>
