@@ -64,7 +64,9 @@ const Parent = (props) => {
       
 
         {/* Description */}
+        <ProductContext.Provider value={productData.product?.[0]?.Plain_Description}>
         <ProductDescription />
+      </ProductContext.Provider>
 
         {/* Image */}
         <ProductImages />

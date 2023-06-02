@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import "@ckeditor/ckeditor5-build-classic/build/translations/en-gb";
 import "./Product.css"
+import { ProductContext } from "../../ProductContext/ProductContext";
 
 const ProductDescription = () => {
+  const description = useContext(ProductContext);
   return (
     <Row style={{marginBottom: "-15px"}}>
       <Col>
@@ -25,6 +27,7 @@ const ProductDescription = () => {
               <Card.Body>
               <CKEditor
               editor={ClassicEditor}
+              data={description}
             />
               </Card.Body>
             </Accordion.Collapse>
