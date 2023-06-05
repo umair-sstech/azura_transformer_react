@@ -20,10 +20,10 @@ const Parent = (props) => {
   const [productData, setProductData] = useState({});
 
   useEffect(() => {
-    if(activeKey === "parent") {
+    // if(activeKey === "parent") {
       getProductDetails();
-    }
-  }, [activeKey]);
+    // }
+  }, []);
 
   const getProductDetails = async () => {
     try {

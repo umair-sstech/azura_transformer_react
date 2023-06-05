@@ -17,15 +17,15 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Variant = (props) => {
-  const { activeKey } = props;
+  const { activeKey, setKey } = props;
   const { id } = useParams();
   const [productData, setProductData] = useState({});
 
   useEffect(() => {
-    if(activeKey === "variants") {
+    // if(activeKey === "variants") {
       getProductDetails();
-    }
-  }, [activeKey]);
+    // }
+  }, []);
 
   const getProductDetails = async () => {
     try {
@@ -117,7 +117,7 @@ const Variant = (props) => {
       {/* Right Div */}
       <ProductContext.Provider value={productData.product?.[0]}>
         <div className="right">
-          <ProductParent />
+          <ProductParent activeKey={activeKey} setKey={setKey} />
       </div>
       </ProductContext.Provider>
     </div>

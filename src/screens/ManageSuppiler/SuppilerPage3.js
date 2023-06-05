@@ -238,11 +238,17 @@ function SuppilerPage3(props) {
                 selectedOption[key] && selectedOption[key].additionalValue
                   ? selectedOption[key].additionalValue
                   : "";
+            } else {
+              imageType = radioValue || "";
             }
 
             let supplierExtract = "";
             if (option.value === "extract") {
-              supplierExtract = supplierExtractOption[index]?.[key] || "";
+              if(typeof supplierExtractOption === "object") {
+                supplierExtract = supplierExtractOption[index]?.[key] || "";
+              } else {
+                supplierExtract = supplierExtractOption;
+              }
             }
             const mappingObject = {
               supplierId: localStorage.getItem("supplierId"),
@@ -355,7 +361,11 @@ function SuppilerPage3(props) {
             }
             let supplierExtract = "";
             if (option.value === "extract") {
-              supplierExtract = supplierExtractOption[index]?.[key] || "";
+              if(typeof supplierExtractOption === "object") {
+                supplierExtract = supplierExtractOption[index]?.[key] || "";
+              } else {
+                supplierExtract = supplierExtractOption;
+              }
             }
             const mappingObject = {
               supplierId: localStorage.getItem("supplierId"),
@@ -844,7 +854,6 @@ function SuppilerPage3(props) {
                                   placeholder="Enter a value"
                                   className="additional-textbox rounded"
                                   onChange={(e) => {
-                                    e.persist(); // Persist the event object
                                     handleAdditionalValueChange(index, key, e.target.value);
                                   }}
                                 />

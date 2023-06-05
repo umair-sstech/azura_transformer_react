@@ -3,15 +3,21 @@ import { Button, Card, Image } from "react-bootstrap";
 import airConditioner from "../../../assets/images/air-conditioner.png"
 import { ProductContext } from "../../ProductContext/ProductContext";
 
-const ProductParent = () => {
-
+const ProductParent = (props) => {
+  const { activeKey, setKey } = props
   const productParent = useContext(ProductContext);
+
+  const handleClickCard = () => {
+    if(activeKey === "variants") {
+      setKey("parent")
+    }
+  }
 
   return (
     <>
       <h3 className="ml-3 product__parent__title">PRODUCT PARENT</h3>
       <Card className="product__parent__card">
-        <Card.Body>
+        <Card.Body onClick={handleClickCard} style={{cursor: "pointer"}}>
           <Card.Subtitle style={{ textAlign: "center", marginTop: "10px" }}>
             {productParent?.Parent_Title ? productParent.Parent_Title : "--"}
           </Card.Subtitle>
