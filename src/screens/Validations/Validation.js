@@ -36,7 +36,6 @@ export const validateSftpForm = (formData) => {
   const port = formData.get("port");
   const protocol = formData.get("protocol");
   const urlPath = formData.get("urlPath");
-  const syncFrequency = formData.get("syncFrequency");
   const timeZone = formData.get("timeZone");
 
   const minute = formData.get("minute");
@@ -138,9 +137,6 @@ export const validateSftpForm = (formData) => {
     errors.urlPath = "URL must be a valid URL";
   }
 
-  if (!syncFrequency) {
-    errors.syncFrequency = "Please Enter Frequency";
-  }
   if (!timeZone) {
     errors.timeZone = "Please Select TimeZone";
   }

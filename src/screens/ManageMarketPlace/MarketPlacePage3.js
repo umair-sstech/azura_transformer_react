@@ -463,14 +463,15 @@ function MarketPlacePage3(props) {
               </div>
               <small
                 className="form-text text-muted csv-text px-3"
-                style={{ marginTop: "-20px" }}
+                style={{ marginTop: "-20px", position: "relative", zIndex: "1" }}
               >
-                Learn more: &nbsp;{" "}
+                Learn more about Cronjob: &nbsp;{" "}
                 <a
                   href="https://crontab.guru/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="csv-text"
+                  style={{position: "relative", zIndex: "2"}}
                 >
                   https://crontab.guru
                 </a>

@@ -468,7 +468,7 @@ function SupplierHttpForm(props) {
                 </div>
                 <small
                   className="form-text text-muted csv-text"
-                  style={{ marginTop: "-20px" }}
+                  style={{ marginTop: "-20px", position: "relative", zIndex: "1" }}
                 >
                   Learn more about Cronjob. &nbsp;{" "}
                   <a
@@ -476,6 +476,7 @@ function SupplierHttpForm(props) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="csv-text"
+                    style={{position: "relative", zIndex: "2"}}
                   >
                     https://crontab.guru
                   </a>
