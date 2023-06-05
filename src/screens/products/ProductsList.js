@@ -225,9 +225,9 @@ function ProductsList(props) {
                           <td>{product.Brand}</td>
 
                           <td>{product.Azura_Category_Tree}</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
+                          <td>{product.Parent_Title}</td>
+                          <td>{product.Cost_Price}</td>
+                          <td>{product.Retail_Price}</td>
 
                           <td>
                             {product.updatedAt
@@ -238,16 +238,6 @@ function ProductsList(props) {
                           </td>
 
                           <>
-                            {/*<td>
-                            <Form.Check
-                              type="switch"
-                              id={`${product.id}`}
-                              checked={product.status}
-                              onChange={(e) =>
-                                activateDeactivate(e, product.id)
-                              }
-                            />
-                            </td>*/}
 
                             <td className="action-group">
                               <i
@@ -255,7 +245,6 @@ function ProductsList(props) {
                                 data-placement="top"
                                 title="Edit"
                                 className="fa fa-eye"
-                                style={{color: "#49c5b6"}}
                                 onClick={() => {
 
                                   history.push(`/product-details/${product.id}`);
