@@ -14,12 +14,15 @@ import {ProductContext} from '../../ProductContext/ProductContext';
 
 
 const Parent = (props) => {
+  const { activeKey } = props;
   const { id } = useParams();
   const [productData, setProductData] = useState({});
 
   useEffect(() => {
-    getProductDetails();
-  }, []);
+    if(activeKey === "parent") {
+      getProductDetails();
+    }
+  }, [activeKey]);
 
   const getProductDetails = async () => {
     try {
@@ -82,9 +85,11 @@ const Parent = (props) => {
       </div>
 
       {/* Right Div */}
-      <div className="right">
-        <ProductParent />
+      <ProductContext.Provider value={productData.product?.[0]}>
+        <div className="right">
+          <ProductParent />
       </div>
+      </ProductContext.Provider>
     </div>
   );
 };

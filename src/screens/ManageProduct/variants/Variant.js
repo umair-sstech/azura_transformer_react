@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import VariantTitle from "./VariantTitle";
 import VariantIdentifiers from "./VariantIdentifiers";
 import VariantDescription from "./VariantDescription";
@@ -11,8 +11,38 @@ import VariantDimension from "./VariantDimension";
 import VariantIssues from "./VariantIssues";
 import VariantAlternatives from "./VariantAlternatives";
 import VariantListingLinks from "./VariantListingLinks";
+import { ProductContext } from "../../ProductContext/ProductContext";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-const Variant = () => {
+const Variant = (props) => {
+  const { activeKey } = props;
+  const { id } = useParams();
+  const [productData, setProductData] = useState({});
+
+  useEffect(() => {
+    if(activeKey === "variants") {
+      getProductDetails();
+    }
+  }, [activeKey]);
+
+  const getProductDetails = async () => {
+    try {
+      const response = await axios.post("http://localhost:8000/product/getProductByID", { id:id });
+      const { success, message, data } = response.data;
+
+      if (success) {
+        setProductData(data);
+        toast.success(message);
+      } else {
+        toast.error(message);
+      }
+    } catch (error) {
+      console.error("Failed to retrieve product details:", error);
+    }
+  };
+
   return (
     <div className="product__container">
       {/* Left Div */}
@@ -85,9 +115,11 @@ const Variant = () => {
       </div>
 
       {/* Right Div */}
-      <div className="right">
-        <ProductParent />
+      <ProductContext.Provider value={productData.product?.[0]}>
+        <div className="right">
+          <ProductParent />
       </div>
+      </ProductContext.Provider>
     </div>
   );
 };

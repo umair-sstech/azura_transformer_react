@@ -68,7 +68,7 @@ const LogModal = ({ showModal, setShowModal, selectedId }) => {
                 <Card.Text>
                   {apiData?.requestHeaders
                     ? apiData.requestHeaders
-                    : "Loading..."}
+                    : "--"}
                 </Card.Text>
               </Card.Body>
             </Card>
@@ -77,7 +77,7 @@ const LogModal = ({ showModal, setShowModal, selectedId }) => {
             <Card className="cards__main">
               <Card.Body>
                 <Card.Text>
-                  {apiData?.requestBody ? apiData.requestBody : "Loading..."}
+                  {apiData?.requestBody ? apiData.requestBody : "--"}
                 </Card.Text>
               </Card.Body>
             </Card>
@@ -88,7 +88,7 @@ const LogModal = ({ showModal, setShowModal, selectedId }) => {
                 <Card.Text>
                   {apiData?.responseHeaders
                     ? apiData.responseHeaders
-                    : "Loading..."}
+                    : "--"}
                 </Card.Text>
               </Card.Body>
             </Card>
@@ -97,7 +97,7 @@ const LogModal = ({ showModal, setShowModal, selectedId }) => {
             <Card className="cards__main">
               <Card.Body>
                 <Card.Text>
-                  {apiData?.responseBody ? apiData.responseBody : "Loading..."}
+                  {apiData?.responseBody ? apiData.responseBody : "--"}
                 </Card.Text>
               </Card.Body>
             </Card>

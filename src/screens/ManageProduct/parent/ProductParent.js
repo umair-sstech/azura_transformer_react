@@ -1,39 +1,39 @@
-import React from "react";
-import { Button, Card, Col, Image, Row } from "react-bootstrap";
+import React, { useContext } from "react";
+import { Button, Card, Image } from "react-bootstrap";
 import airConditioner from "../../../assets/images/air-conditioner.png"
-import { useParams } from "react-router-dom";
+import { ProductContext } from "../../ProductContext/ProductContext";
 
 const ProductParent = () => {
+
+  const productParent = useContext(ProductContext);
+
   return (
     <>
       <h3 className="ml-3 product__parent__title">PRODUCT PARENT</h3>
       <Card className="product__parent__card">
         <Card.Body>
           <Card.Subtitle style={{ textAlign: "center", marginTop: "10px" }}>
-            Women's Sunglasses
+            {productParent?.Parent_Title ? productParent.Parent_Title : "--"}
           </Card.Subtitle>
           <Card.Text>
-            <div className="d-flex justify-content-around mt-2">
-              <Image src={airConditioner} alt="img" className="align-self-center" width={80} height={80} />
-              <div className="d-flex flex-column">
-                <Row>
-                  <div className="d-flex">
-                    <Col>Parent SKU</Col>
-                    <Col className="align-self-center ml-2">Value</Col>
-                  </div>
-                </Row>
-                <Row>
-                  <div className="d-flex">
-                    <Col>Brand</Col>
-                    <Col className="ml-4">Guess</Col>
-                  </div>
-                </Row>
-                <Row>
-                  <div className="d-flex">
-                    <Col>Category</Col>
-                    <Col className="ml-1">Sunglasses</Col>
-                  </div>
-                </Row>
+            <div className="d-flex px-3 justify-content-around mt-3" style={{gap: "2em"}}>
+            <Image src={productParent?.Image_Parent_1_original} alt="img" className="align-self-center" width={100} height={100} style={{objectFit: "contain"}} />
+              <div className="d-flex flex-column w-100 justify-content-center justify-content-sm-start">
+              <div className="row">
+                <div className="col-5">Parent SKU</div>
+                <div className=""> : </div>
+                <div className="col-6">{productParent?.Parent_SKU ? productParent.Parent_SKU : "--"}</div>
+              </div>
+              <div className="row">
+                <div className="col-5">Brand</div>
+                <div className=""> : </div>
+                <div className="col-6">{productParent?.Brand ? productParent.Brand : "--"}</div>
+              </div>
+              <div className="row">
+                <div className="col-5">Category</div>
+                <div className=""> : </div>
+                <div className="col-6">{productParent?.Category_1 ? productParent.Category_1 : "--"}</div>
+              </div>
               </div>
             </div>
           </Card.Text>
