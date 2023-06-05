@@ -515,9 +515,7 @@ function SuppilerPage3(props) {
           (field) => field.supplierField === "extract"
         )?.supplierExtract;
         setSupplierExtractOption(extractPrefillValue); 
-        console.log("extractValuepre-fil",extractPrefillValue)
-
-        
+        console.log("extractValuepre-fil",extractPrefillValue) 
       })
 
       .catch((error) => {

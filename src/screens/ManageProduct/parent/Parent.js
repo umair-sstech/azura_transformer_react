@@ -10,8 +10,7 @@ import ProductParent from "./ProductParent";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import {ProductContext} from '../../ProductContext/ProductContext';
-
+import { ProductContext } from "../../ProductContext/ProductContext";
 
 const Parent = (props) => {
   const { id } = useParams();
@@ -23,7 +22,10 @@ const Parent = (props) => {
 
   const getProductDetails = async () => {
     try {
-      const response = await axios.post("http://localhost:8000/product/getProductByID", { id:id });
+      const response = await axios.post(
+        "http://localhost:8000/product/getProductByID",
+        { id: id }
+      );
       const { success, message, data } = response.data;
 
       if (success) {
@@ -41,35 +43,38 @@ const Parent = (props) => {
       {/* Left Div */}
       <div className="left">
         <div className="product__header">
-              <h3>
-                PARENT SKU : <strong>{productData.product?.[0]?.Parent_SKU}</strong>
-              </h3>
-              <div className="product__header2">
-                <h3 className="text-lg-center">
-                  <strong>1/1</strong>
-                </h3>
-                <p>Variants In Stock</p>
-              </div>
-         
+          <h3>
+            PARENT SKU : <strong>{productData.product?.[0]?.Parent_SKU}</strong>
+          </h3>
+          <div className="product__header2">
+            <h3 className="text-lg-center">
+              <strong>1/1</strong>
+            </h3>
+            <p>Variants In Stock</p>
+          </div>
         </div>
 
         <ProductContext.Provider value={productData.product?.[0]?.Parent_Title}>
-        <ProductTitle />
-      </ProductContext.Provider>
+          <ProductTitle />
+        </ProductContext.Provider>
 
         {/* Identifiers */}
         <ProductContext.Provider value={productData.product?.[0]}>
-        <ProductIdentifiers />
-      </ProductContext.Provider>
-      
+          <ProductIdentifiers />
+        </ProductContext.Provider>
 
         {/* Description */}
-        <ProductContext.Provider value={productData.product?.[0]?.Plain_Description}>
-        <ProductDescription />
-      </ProductContext.Provider>
+        <ProductContext.Provider
+          value={productData.product?.[0]?.Plain_Description}
+        >
+          <ProductDescription />
+        </ProductContext.Provider>
 
         {/* Image */}
-        <ProductImages />
+        <ProductContext.Provider value={productData.product?.[0]}>
+          {" "}
+          <ProductImages />
+        </ProductContext.Provider>
 
         {/* Options */}
         <ProductOptions />
@@ -78,7 +83,9 @@ const Parent = (props) => {
         <ProductAttributes />
 
         {/* Custom Fields */}
+        <ProductContext.Provider value={{ product: productData, customFields: productData.product?.[0]?.custom_field }}>
         <CustomFields />
+      </ProductContext.Provider>
       </div>
 
       {/* Right Div */}

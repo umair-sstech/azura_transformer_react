@@ -622,7 +622,7 @@ class NavbarMenu extends React.Component {
                               <li
                                 className={activeKey === "dashboard" ? "active" : ""}
                               >
-                                <Link to="company">Company</Link>
+                                <Link to="/company">Company</Link>
                               </li>
                             ) : null}
                             {this.props.user?.data.role == "SUPER_ADMIN" ||
@@ -632,7 +632,7 @@ class NavbarMenu extends React.Component {
                                 className={activeKey === "dashboard" ? "active" : ""}
                               >
                                 <Link
-                                  to="retailer"
+                                  to="/retailer"
                                   onClick={() => {
                                     localStorage.removeItem("supplierSettingId");
                                     localStorage.removeItem("selectedSupplierName");
@@ -647,7 +647,7 @@ class NavbarMenu extends React.Component {
                               </li>
                             ) : null}
                             <li className={activeKey === "dashboard" ? "active" : ""}>
-                              <Link to="user">User</Link>
+                              <Link to="/user">User</Link>
                             </li>
                           </ul>
                         </li>
@@ -667,7 +667,7 @@ class NavbarMenu extends React.Component {
                           {this.props.user?.data.role == "SUPER_ADMIN" ? (
                             <li className={activeKey === "dashboard" ? "active" : ""}>
                               <Link
-                                to="integration"
+                                to="/integration"
                                 onClick={() => {
                                   localStorage.removeItem("supplierId");
                                   localStorage.removeItem("supplierName");
@@ -744,7 +744,7 @@ class NavbarMenu extends React.Component {
                                 localStorage.removeItem("supplierName");
                               }}
                             >
-                              <Link to="file-upload">File Upload</Link>
+                              <Link to="/file-upload">File Upload</Link>
                             </li>
                           ) : null}
                         </ul>
