@@ -88,10 +88,10 @@ const ManageProduct = (props) => {
                     onSelect={(k) => setKey(k)}
                   >
                     <Tab eventKey="parent" title="PARENT">
-                      <Parent />
+                      <Parent activeKey={key} />
                     </Tab>
                     <Tab eventKey="variants" title="VARIANTS">
-                      <Variant />
+                      <Variant activeKey={key} />
                     </Tab>
                   </Tabs>
                 </div>
