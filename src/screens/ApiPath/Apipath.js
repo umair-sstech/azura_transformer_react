@@ -17,6 +17,8 @@ UPDATE_USER_PROFILE:`${API_USER}/user/update`,
   GET_PRODUCT_CATALOG: `${PRODUCT_API_URL}/product/getStanderdProductCatalog`,
   GET_FILE_UPLOAD:`${PRODUCT_API_URL}/product/getFileList`,
   GET_PRODUCT_LIST:`${PRODUCT_API_URL}/product/getProductList`,
+  GET_PRODUCT_LIST_BY_ID:`${PRODUCT_API_URL}/product/getProductByID`,
+
 
   DATA_FILE_MAPPING: `${API_BASE_URL}/integration/createOrUpdateSupplierFields`,
   DELETE_CUSTOM_FIELD:`${API_BASE_URL}/integration/deleteCustomField`,

@@ -1,15 +1,39 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
+import { ProductContext } from "../../ProductContext/ProductContext";
 
 const ProductOptions = () => {
+  const product = useContext(ProductContext);
+  const { mainColor, sizeOnly } = product;
+  const [colorValue, setColorValue] = useState("");
+  const [sizeValue, setSizeValue] = useState("");
+
+  useEffect(() => {
+    setColorValue(mainColor);
+  }, [mainColor]);
+
+  useEffect(() => {
+    setSizeValue(sizeOnly);
+  }, [sizeOnly]);
+
+
+
+  const handleColorChange = (event) => {
+    setColorValue(event.target.value);
+  };
+
+  const handleSizeChange = (event) => {
+    setSizeValue(event.target.value);
+  };
+
   return (
-    <Row style={{marginBottom: "-15px"}}>
+    <Row style={{ marginBottom: "-15px" }}>
       <Col>
         <Accordion defaultActiveKey="5" className="accordian__main">
           <Card>
             <Card.Header>
               <Accordion.Toggle
-                style={{textDecoration: "none"}}
+                style={{ textDecoration: "none" }}
                 as="button"
                 className="btn btn-link collapsed"
                 eventKey="0"
@@ -37,17 +61,20 @@ const ProductOptions = () => {
                   ></i>
                   <input
                     type="text"
-                    placeholder="Color..."
+                    placeholder="Color"
                     name="color"
                     className="form-control ml-3"
                     style={{ flex: "1 1 0" }}
+                    disabled
                   />
                   <input
                     type="text"
-                    placeholder="Yellow"
+                    placeholder="Enter Color Name"
                     name="yellow"
                     className="form-control ml-3"
                     style={{ flex: "2 1 0" }}
+                    value={colorValue}
+                    onChange={handleColorChange}
                   />
                 </div>
                 <div className="d-flex justify-content-around align-items-center mt-3">
@@ -58,24 +85,27 @@ const ProductOptions = () => {
                   ></i>
                   <input
                     type="text"
-                    placeholder="Size..."
+                    placeholder="Size"
                     name="size"
                     className="form-control ml-3"
                     style={{ flex: "1 1 0" }}
+                    disabled
                   />
                   <input
                     type="text"
-                    placeholder="NOSIZE"
+                    placeholder="Enter Size"
                     name="nosize"
                     className="form-control ml-3"
                     style={{ flex: "2 1 0" }}
+                    value={sizeValue}
+                    onChange={handleSizeChange}
                   />
                 </div>
               </Card.Body>
             </Accordion.Collapse>
           </Card>
-          <hr/>
-          <Button className="btn ml-3 mt-2 mb-2" variant="outline-primary"><i className="fa fa-plus mr-2"></i>Add Option</Button>
+          <hr />
+          {/*<Button className="btn ml-3 mt-2 mb-2" variant="outline-primary"><i className="fa fa-plus mr-2"></i>Add Option</Button>*/}
         </Accordion>
       </Col>
     </Row>

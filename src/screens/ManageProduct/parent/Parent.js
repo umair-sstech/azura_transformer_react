@@ -11,6 +11,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ProductContext } from "../../ProductContext/ProductContext";
+import { API_PATH } from '../../ApiPath/Apipath';
+
 
 const Parent = (props) => {
   const { activeKey } = props;
@@ -26,7 +28,7 @@ const Parent = (props) => {
   const getProductDetails = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/product/getProductByID",
+        `${API_PATH.GET_PRODUCT_LIST_BY_ID}`,
         { id: id }
       );
       const { success, message, data } = response.data;
@@ -80,7 +82,14 @@ const Parent = (props) => {
         </ProductContext.Provider>
 
         {/* Options */}
-        <ProductOptions />
+        <ProductContext.Provider
+          value={{
+            mainColor: productData.product?.[0]?.Main_Color,
+            sizeOnly: productData.product?.[0]?.Size_Only,
+          }}
+        >
+          <ProductOptions />
+        </ProductContext.Provider>
 
         {/* Attributes */}
         <ProductAttributes />

@@ -43,9 +43,9 @@ const ProductImages = () => {
             </Accordion.Collapse>
           </Card>
           <hr />
-          <Button className="btn ml-3 mt-2 mb-2" variant="outline-primary">
+         { /*<Button className="btn ml-3 mt-2 mb-2" variant="outline-primary">
             <i className="fa fa-plus mr-2"></i>Add Images
-          </Button>
+                  </Button>*/}
         </Accordion>
       </Col>
     </Row>

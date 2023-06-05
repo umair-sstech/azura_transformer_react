@@ -35,7 +35,7 @@ const ProductDescription = () => {
           <hr />
           <Button className="btn ml-3 mt-2 mb-2" variant="outline-primary">
             <i className="fa fa-edit mr-2"></i>Edit
-          </Button>
+  </Button>
         </Accordion>
       </Col>
     </Row>

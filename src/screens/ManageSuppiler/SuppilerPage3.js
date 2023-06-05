@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import Select from "react-select";
 import { connect } from "react-redux";
 import { onLoading } from "../../actions";
@@ -11,6 +11,7 @@ import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
 import { Spinner } from "react-bootstrap";
 import CustomFields from "./CustomFields";
+import { debounce } from "lodash";
 
 function SuppilerPage3(props) {
   const { setPage } = props;
@@ -62,7 +63,6 @@ function SuppilerPage3(props) {
   const [selectedPreference, setSelectedPreference] = useState(null);
   const [selectedRadioPreference, setSlectedRadioPreference] = useState(null);
   const [supplierExtractOption, setSupplierExtractOption] = useState([]);
-  console.log("supplierExtractOptionect",supplierExtractOption)
   const [customFieldsData, setCustomFieldsData] = useState([]);
 
   const history = useHistory();
@@ -120,20 +120,42 @@ function SuppilerPage3(props) {
     });
   };
 
-  const handleAdditionalValueChange = (index, key, additionalValue) => {
-    setSelectedOptions((prevSelectedOptions) => {
-      const newSelectedOptions = [...prevSelectedOptions];
-      if (!newSelectedOptions[index]) {
-        newSelectedOptions[index] = {};
-      }
-      newSelectedOptions[index][key] = {
-        ...newSelectedOptions[index][key],
-        additionalValue,
-      };
+  // const handleAdditionalValueChange = (index, key, additionalValue) => {
+  //   setSelectedOptions((prevSelectedOptions) => {
+  //     const newSelectedOptions = [...prevSelectedOptions];
+  //     if (!newSelectedOptions[index]) {
+  //       newSelectedOptions[index] = {};
+  //     }
+  //     newSelectedOptions[index][key] = {
+  //       ...newSelectedOptions[index][key],
+  //       additionalValue,
+  //     };
 
-      return newSelectedOptions;
-    });
+  //     return newSelectedOptions;
+  //   });
+  // };
+
+  const handleAdditionalValueChange = (index, key, additionalValue) => {
+    debouncedUpdateAdditionalValue(index, key, additionalValue);
   };
+
+  const debouncedUpdateAdditionalValue = debounce(
+    (index, key, additionalValue) => {
+      setSelectedOptions((prevSelectedOptions) => {
+        const newSelectedOptions = [...prevSelectedOptions];
+        if (!newSelectedOptions[index]) {
+          newSelectedOptions[index] = {};
+        }
+        newSelectedOptions[index][key] = {
+          ...newSelectedOptions[index][key],
+          additionalValue,
+        };
+
+        return newSelectedOptions;
+      });
+    },
+    300 
+  );
 
   const handleRadioChange = (index, key, value) => {
     setSelectedRadio((prevSelectedRadio) => ({
@@ -821,13 +843,10 @@ function SuppilerPage3(props) {
                                   type="text"
                                   placeholder="Enter a value"
                                   className="additional-textbox rounded"
-                                  onChange={(e) =>
-                                    handleAdditionalValueChange(
-                                      index,
-                                      key,
-                                      e.target.value
-                                    )
-                                  }
+                                  onChange={(e) => {
+                                    e.persist(); // Persist the event object
+                                    handleAdditionalValueChange(index, key, e.target.value);
+                                  }}
                                 />
                               )}
                               <br />

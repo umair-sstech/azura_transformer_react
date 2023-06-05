@@ -20,8 +20,8 @@ function FileUpload(props) {
   const [dataLimit, setdataLimit] = useState(10);
   const [status, setStatus] = useState("active");
   const [type, setType] = useState("Supplier");
-  const [supplier, setSupplier] = useState("Choose Supplier");
-  console.log("supplier",supplier)
+  const [supplier, setSupplier] = useState([]);
+  const [chooseSupplierList, setChooseSupplierList] = useState([]);
   const [autoId, setAutoId] = useState(1);
   const [fileData, setFileData] = useState([]);
 
@@ -36,17 +36,21 @@ function FileUpload(props) {
 
   const getSupplierList = async () => {
     try {
-      const response = await axios.post('http://localhost:8001/integration/getIntegrationInfo', {
+      const response = await axios.post(`${API_PATH.GET_LIST}`, {
         type: 'Supplier'
       });
-      const suppliers = response.data;
+      const suppliers = response.data.data;
       setSupplier(suppliers);
+      // Extract supplier names for the dropdown
+      const supplierNames = suppliers.map((supplier) => ({
+        value: supplier.name,
+        label: supplier.name
+      }));
+      setChooseSupplierList(supplierNames);
     } catch (error) {
       console.error('Error fetching suppliers:', error);
     }
   };
-  
-
   
 
   const getFileList = async (currentPage, dataLimit, search) => {
@@ -93,7 +97,6 @@ function FileUpload(props) {
 
     getProductData();
   }, [currentPage, dataLimit, status]);
-
 
 
   const activateDeactivate = (event, supplierId) => {
@@ -146,12 +149,7 @@ function FileUpload(props) {
     { label: "All", value: "all" },
   ];
 
-  let chooseSupplierList = supplierList.map((data) => {
-    return {
-      value: data.id,
-      label: data.name,
-    };
-  });
+ 
 
   const downloadFile = async (filePath) => {
     console.log("filepath",filePath)
@@ -207,13 +205,15 @@ function FileUpload(props) {
                     style={{ minWidth: "210px" }}
                     className="supplier__dropdown"
                   >
-                    <Select
-                      options={chooseSupplierList}
-                      onChange={(data) => {
-                        setSupplier(data.value);
-                      }}
-                      defaultValue={{ label: "Select Supplier" }}
-                    />
+                  
+                  <Select
+                  options={chooseSupplierList}
+                  onChange={(data) => {
+                    setSupplier(data.value);
+                  }}
+                  defaultValue={{ label: 'Select Supplier' }}
+                />
+                
                   </div>
                 </div>
 
