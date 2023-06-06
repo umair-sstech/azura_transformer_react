@@ -20,7 +20,6 @@ const VariantImages = () => {
         variantData?.[0]?.[key]
     ).map(key => variantData[0][key]);
 
-    console.log("variantImages",variantImageUrls)
   return (
     <Row style={{marginBottom: "-15px"}}>
       <Col>
@@ -46,6 +45,8 @@ const VariantImages = () => {
                     key={index}
                     src={imageUrl}
                     alt={`Variant Image ${index + 1}`}
+                    height={100}
+                    width={100}
                     className="image-box__image-variant"
                   />
                   </div>

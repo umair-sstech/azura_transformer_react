@@ -3,7 +3,7 @@ import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
 const VariantTitle = () => {
-  const productData=useContext(ProductContext)
+  const { productData, singleVariantData } = useContext(ProductContext)
   const [title, setTitle] = useState("");
 
   const variantData =
@@ -11,7 +11,7 @@ const VariantTitle = () => {
     ? productData?.variant
     : productData?.product;
 
-  const variantTitle = variantData?.[0]?.Variant_Title;
+  const variantTitle = singleVariantData !== null ? singleVariantData?.Variant_Title : variantData?.[0]?.Variant_Title;
 
   useEffect(() => {
     setTitle(variantTitle);
@@ -20,8 +20,6 @@ const VariantTitle = () => {
   const handleChange = (event) => {
     setTitle(event.target.value);
   };
-
-
 
   return (
     <Row style={{marginBottom: "-15px"}}>

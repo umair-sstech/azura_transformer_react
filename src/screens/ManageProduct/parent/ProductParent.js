@@ -4,7 +4,7 @@ import airConditioner from "../../../assets/images/air-conditioner.png";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
 const ProductParent = (props) => {
-  const { activeKey, setKey } = props;
+  const { activeKey, setKey, variantDetails } = props;
   const productData = useContext(ProductContext);
   const { product } = productData;
 
@@ -22,7 +22,7 @@ const ProductParent = (props) => {
   return (
     <>
       <h3 className="ml-3 product__parent__title">PRODUCT PARENT</h3>
-      {product !== undefined && (
+      {product !== undefined ? (
         <Card className="product__parent__card">
           <Card.Body onClick={() => navigateToParent("parent", "variants")} style={{ cursor: "pointer" }}>
             <Card.Subtitle style={{ textAlign: "center", marginTop: "10px" }}>
@@ -65,7 +65,7 @@ const ProductParent = (props) => {
             </Card.Text>
           </Card.Body>
         </Card>
-      )}
+      ) : <h5 className="ml-3">Loading...</h5>}
 
     {/*<div className="d-flex justify-content-between align-items-center">
         <span className="ml-3">1 VARIANT</span>
@@ -75,14 +75,14 @@ const ProductParent = (props) => {
   </div>*/}
   <h3 className="ml-3 product__parent__title">PRODUCT VARIANT</h3>
       <div className="d-flex flex-column" style={{ height: "350px", overflowY: "auto" }}>
-        <div  className="product__parent">
-          {variantData?.map((variant) => (
+        <div className="product__parent">
+          {variantData?.map((variant, idx) => (
             <Card key={variant.id} className="product__parent__card">
               <Card.Body onClick={() => navigateToParent("variants", "parent")} style={{cursor: "pointer"}}>
                 <Card.Subtitle style={{ textAlign: "center", marginTop: "10px" }}>
                   {variant?.Variant_Title? variant.Variant_Title : "--"}
                 </Card.Subtitle>
-                <Card.Text>
+                <Card.Text onClick={() => variantDetails(idx)}>
                   <div className="d-flex px-3 mt-3 justify-content-around" style={{gap: "2em"}}>
                     <Image
                       src={variant.Image_Variant_1_original}

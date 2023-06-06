@@ -21,6 +21,7 @@ const Variant = (props) => {
   const { activeKey, setKey } = props;
   const { id } = useParams();
   const [productData, setProductData] = useState({});
+  const [singleVariantData, setSingleVariantData] = useState(null);
 
   const variantData =
   productData?.product?.[0]?.Preference === "PARENT"
@@ -49,17 +50,32 @@ const Variant = (props) => {
     }
   };
 
+  const variantDetails = async (idx) => {
+    try {
+      const response = await axios.post(`${API_PATH.GET_PRODUCT_LIST_BY_ID}`, { id:id });
+      const { success, message, data } = response.data;
+      if (success) {
+        setSingleVariantData(data.variant[idx])
+        toast.success(message);
+      } else {
+        toast.error(message);
+      }
+    } catch (error) {
+      console.error("Failed to retrieve product details:", error);
+    }
+  }
+
   return (
     <div className="product__container">
       {/* Left Div */}
       <div className="left">
         <div className="product__header">
           <h3>
-            VAETIANT SKU : <strong>{variantData?.[0]?.Variant_SKU}</strong>
+            VARIANT SKU : <strong>{variantData?.[0]?.Variant_SKU}</strong>
           </h3>
         </div>
 
-        <ProductContext.Provider value={productData}>
+        <ProductContext.Provider value={{productData, singleVariantData}}>
         <VariantTitle />
         </ProductContext.Provider>
        
@@ -120,7 +136,7 @@ const Variant = (props) => {
       {/* Right Div */}
       <ProductContext.Provider value={productData}>
         <div className="right">
-          <ProductParent activeKey={activeKey} setKey={setKey} />
+          <ProductParent activeKey={activeKey} setKey={setKey} variantDetails={variantDetails} />
       </div>
       </ProductContext.Provider>
     </div>
