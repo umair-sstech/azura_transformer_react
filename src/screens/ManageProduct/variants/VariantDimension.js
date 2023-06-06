@@ -4,7 +4,9 @@ import { ProductContext } from "../../ProductContext/ProductContext";
 
 const VariantDimension = () => {
   const productData = useContext(ProductContext);
-  const [identifiers, setIdentifiers] = useState({ Variant_SKU: "", UPC: "", MPN: "", EAN: "", ASIN: "",Cost_Price:"",Retail_Price:"",Suggested_Sell_Price:"" });
+  const [dimensionValue, setDimensionValue] = useState({ Dimension_Units: "", Weight_Unit: "", Length: "", Weight: "", Width: "",Height:""});
+  
+  console.log("dimension value",dimensionValue)
   const variantData =
     productData?.product?.[0]?.Preference === "PARENT"
       ? productData?.variant
@@ -12,22 +14,21 @@ const VariantDimension = () => {
 
       useEffect(() => {
         if (variantData) {
-          setIdentifiers({
-            Variant_SKU: variantData?.[0]?.Variant_SKU || "",
-            UPC: variantData?.[0]?.UPC || "",
-            MPN: variantData?.[0]?.MPN || "",
-            EAN: variantData?.[0]?.EAN || "",
-            ASIN: variantData?.[0]?.ASIN || "",
-            Cost_Price: variantData?.[0]?.Cost_Price || "",
-            Retail_Price: variantData?.[0]?.Retail_Price || "",
-            Suggested_Sell_Price: variantData?.[0]?.Suggested_Sell_Price || "",
+          setDimensionValue({
+            Dimension_Units: variantData?.[0]?.Dimension_Units || "",
+            Weight_Unit: variantData?.[0]?.Weight_Unit || "",
+            Length: variantData?.[0]?.Length || 0,
+            Weight: variantData?.[0]?.Weight || 0,
+            Width: variantData?.[0]?.Width || 0,
+            Height: variantData?.[0]?.Height || 0,
           });
         }
       }, [variantData]);  
 
       const handleChange = (event) => {
-        setIdentifiers(event.target.value);
+        setDimensionValue(event.target.value);
       };
+
   return (
     <Row style={{marginBottom: "-15px"}}>
       <Col>
@@ -48,17 +49,25 @@ const VariantDimension = () => {
                 <Row>
                   <div className="col-lg-6">
                     <label>DIMENSION UNIT</label>
-                    <select className="form-control">
-                      <option>Inch(es)</option>
-                      <option>c.m.</option>
-                    </select>
+                  <input
+                      type="text"
+                      placeholder="Enter Value"
+                      name="Dimension_Units"
+                      className="form-control"
+                      value={dimensionValue.Dimension_Units}
+                      onChange={handleChange}
+                    />
                   </div>
                   <div className="col-lg-6 mt-3 mt-lg-0">
                     <label>WEIGHT UNIT</label>
-                    <select className="form-control">
-                      <option>Pound(s)</option>
-                      <option>Kg</option>
-                    </select>
+                    <input
+                    type="text"
+                    placeholder="Enter Value"
+                    name="Weight_Unit"
+                    className="form-control"
+                    value={dimensionValue.Weight_Unit}
+                    onChange={handleChange}
+                  />
                   </div>
                 </Row>
 
@@ -66,19 +75,23 @@ const VariantDimension = () => {
                   <div className="col-lg-6 mt-2 mt-lg-0">
                     <label style={{ marginTop: "10px" }}>LENGTH</label>
                     <input
-                      type="number"
-                      placeholder=""
-                      name="length"
+                      type="text"
+                      placeholder="Enter Value"
+                      name="Length"
                       className="form-control"
+                      value={dimensionValue.Length}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="col-lg-6 mt-2 mt-lg-0">
                     <label style={{ marginTop: "10px" }}>WEIGHT</label>
                     <input
-                      type="number"
-                      placeholder="0.36"
-                      name="weight"
+                      type="text"
+                      placeholder="Enter Value"
+                      name="Weight"
                       className="form-control"
+                      value={dimensionValue.Weight}
+                      onChange={handleChange}
                     />
                   </div>
                 </Row>
@@ -87,35 +100,27 @@ const VariantDimension = () => {
                   <div className="col-lg-6 mt-2 mt-lg-0">
                     <label style={{ marginTop: "10px" }}>WIDTH</label>
                     <input
-                      type="number"
-                      placeholder=""
-                      name="width"
+                      type="text"
+                      placeholder="Enter Value"
+                      name="Width"
                       className="form-control"
+                      value={dimensionValue.Width}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="col-lg-6 mt-2 mt-lg-0">
-                    <label style={{ marginTop: "10px" }}>DIMENSIONAL WEIGHT</label>
-                    <input
-                      type="number"
-                      placeholder=""
-                      name="dimensionalWeight"
-                      disabled
-                      className="form-control"
-                    />
+                  <label style={{ marginTop: "10px" }}>HEIGHT</label>
+                  <input
+                    type="text"
+                    placeholder="Enter Value"
+                    name="Height"
+                    className="form-control"
+                    value={dimensionValue.Height}
+                    onChange={handleChange}
+                  />  
                   </div>
                 </Row>
-
-                <Row>
-                    <Col>
-                    <label style={{ marginTop: "10px" }}>HEIGHT</label>
-                    <input
-                      type="number"
-                      placeholder=""
-                      name="height"
-                      className="form-control"
-                    />  
-                    </Col>
-                </Row>
+                
               </Card.Body>
             </Accordion.Collapse>
           </Card>
