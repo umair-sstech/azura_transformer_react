@@ -1,7 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
+import { ProductContext } from "../../ProductContext/ProductContext";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import "@ckeditor/ckeditor5-build-classic/build/translations/en-gb";
+import "../parent/Product.css"
 
 const VariantDescription = () => {
+  const productData=useContext(ProductContext);
+
+const variantData =
+  productData?.product?.[0]?.Preference === "PARENT"
+    ? productData?.variant
+    : productData?.product;
+
+const description = variantData?.[0]?.Plain_Description;
+
+
   return (
     <Row style={{marginBottom: "-15px"}}>
       <Col>
@@ -19,7 +34,10 @@ const VariantDescription = () => {
             </Card.Header>
             <Accordion.Collapse eventKey="0">
               <Card.Body>
-                <p className="mt-2">This variant has no description.</p>
+              <CKEditor
+              editor={ClassicEditor}
+              data={description}
+            />
               </Card.Body>
             </Accordion.Collapse>
           </Card>

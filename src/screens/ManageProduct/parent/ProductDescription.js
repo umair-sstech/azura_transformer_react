@@ -8,6 +8,7 @@ import { ProductContext } from "../../ProductContext/ProductContext";
 
 const ProductDescription = () => {
   const description = useContext(ProductContext);
+
   return (
     <Row style={{marginBottom: "-15px"}}>
       <Col>

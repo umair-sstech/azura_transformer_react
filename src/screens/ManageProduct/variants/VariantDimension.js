@@ -1,7 +1,33 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
+import { ProductContext } from "../../ProductContext/ProductContext";
 
 const VariantDimension = () => {
+  const productData = useContext(ProductContext);
+  const [identifiers, setIdentifiers] = useState({ Variant_SKU: "", UPC: "", MPN: "", EAN: "", ASIN: "",Cost_Price:"",Retail_Price:"",Suggested_Sell_Price:"" });
+  const variantData =
+    productData?.product?.[0]?.Preference === "PARENT"
+      ? productData?.variant
+      : productData?.product;
+
+      useEffect(() => {
+        if (variantData) {
+          setIdentifiers({
+            Variant_SKU: variantData?.[0]?.Variant_SKU || "",
+            UPC: variantData?.[0]?.UPC || "",
+            MPN: variantData?.[0]?.MPN || "",
+            EAN: variantData?.[0]?.EAN || "",
+            ASIN: variantData?.[0]?.ASIN || "",
+            Cost_Price: variantData?.[0]?.Cost_Price || "",
+            Retail_Price: variantData?.[0]?.Retail_Price || "",
+            Suggested_Sell_Price: variantData?.[0]?.Suggested_Sell_Price || "",
+          });
+        }
+      }, [variantData]);  
+
+      const handleChange = (event) => {
+        setIdentifiers(event.target.value);
+      };
   return (
     <Row style={{marginBottom: "-15px"}}>
       <Col>

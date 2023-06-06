@@ -1,7 +1,34 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
+import { ProductContext } from "../../ProductContext/ProductContext";
 
 const VariantIdentifiers = () => {
+  const productData = useContext(ProductContext);
+  const [identifiers, setIdentifiers] = useState({ Variant_SKU: "", UPC: "", MPN: "", EAN: "", ASIN: "",Cost_Price:"",Retail_Price:"",Suggested_Sell_Price:"" });
+  const variantData =
+    productData?.product?.[0]?.Preference === "PARENT"
+      ? productData?.variant
+      : productData?.product;
+
+      useEffect(() => {
+        if (variantData) {
+          setIdentifiers({
+            Variant_SKU: variantData?.[0]?.Variant_SKU || "",
+            UPC: variantData?.[0]?.UPC || "",
+            MPN: variantData?.[0]?.MPN || "",
+            EAN: variantData?.[0]?.EAN || "",
+            ASIN: variantData?.[0]?.ASIN || "",
+            Cost_Price: variantData?.[0]?.Cost_Price || "",
+            Retail_Price: variantData?.[0]?.Retail_Price || "",
+            Suggested_Sell_Price: variantData?.[0]?.Suggested_Sell_Price || "",
+          });
+        }
+      }, [variantData]);  
+
+      const handleChange = (event) => {
+        setIdentifiers(event.target.value);
+      };
+  
   return (
     <Row style={{marginBottom: "-15px"}}>
       <Col>
@@ -19,12 +46,15 @@ const VariantIdentifiers = () => {
             </Card.Header>
             <Accordion.Collapse eventKey="1" className="card-body">
               <Card.Body>
-                <label>MASTER SKU</label>
+                <label>VARIANT SKU</label>
                 <input
                   type="text"
                   placeholder="SKU..."
                   name="sku"
                   className="form-control"
+                  value={identifiers.Variant_SKU}
+                  onChange={handleChange}
+
                 />
 
                 <label style={{ marginTop: "10px" }}>UPC</label>
@@ -33,6 +63,9 @@ const VariantIdentifiers = () => {
                   placeholder="UPC"
                   name="upc"
                   className="form-control"
+                  value={identifiers.UPC}
+                  onChange={handleChange}
+
                 />
 
                 <label style={{ marginTop: "10px" }}>MPN</label>
@@ -41,6 +74,9 @@ const VariantIdentifiers = () => {
                   placeholder="MPN"
                   name="mpn"
                   className="form-control"
+                  value={identifiers.MPN}
+                  onChange={handleChange}
+
                 />
 
                 <label style={{ marginTop: "10px" }}>EAN</label>
@@ -49,6 +85,9 @@ const VariantIdentifiers = () => {
                   placeholder="EAN"
                   name="ean"
                   className="form-control"
+                  value={identifiers.EAN}
+                  onChange={handleChange}
+
                 />
 
                 <label style={{ marginTop: "10px" }}>ASIN</label>
@@ -57,17 +96,11 @@ const VariantIdentifiers = () => {
                   placeholder="ASIN"
                   name="asin"
                   className="form-control"
-                />
+                  value={identifiers.ASIN}
+                  onChange={handleChange}
 
-                <label style={{ marginTop: "10px" }} className="text-uppercase">
-                  Reference Identifier
-                </label>
-                <input
-                  type="text"
-                  placeholder="Reference"
-                  name="reference"
-                  className="form-control"
                 />
+                
               </Card.Body>
             </Accordion.Collapse>
           </Card>
@@ -89,59 +122,39 @@ const VariantIdentifiers = () => {
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">
               <Card.Body>
-                <label className="text-uppercase">Default List Price</label>
+                
+                <label style={{ marginTop: "10px" }}>COAST PRICE</label>
                 <input
                   type="text"
-                  placeholder="$12.51"
-                  name="listPrice"
-                  disabled
+                  placeholder="Enter Price"
+                  name="Cost_Price"
                   className="form-control"
+                  value={identifiers.Cost_Price}
+                  onChange={handleChange}
+
                 />
 
-                <label style={{ marginTop: "10px" }}>EST. CNST</label>
+                <label style={{ marginTop: "10px" }}>RETAIL PRICE</label>
                 <input
                   type="text"
-                  placeholder="$12.51"
-                  name="estCost"
-                  disabled
+                  placeholder="Enter Price"
+                  name="Retail_Price"
                   className="form-control"
+                  value={identifiers.Retail_Price}
+                  onChange={handleChange}
+
                 />
 
-                <label style={{ marginTop: "10px" }}>MSRP</label>
+                <label style={{ marginTop: "10px" }}>SELL PRICE</label>
                 <input
                   type="text"
-                  placeholder="$100.50"
-                  name="msrp"
-                  disabled
+                  placeholder="Enter Price"
+                  name="Suggested_Sell_Price"
                   className="form-control"
+                  value={identifiers.Suggested_Sell_Price}
+                  onChange={handleChange}
                 />
 
-                <label style={{ marginTop: "10px" }}>MAP</label>
-                <input
-                  type="text"
-                  placeholder="empty"
-                  name="map"
-                  disabled
-                  className="form-control"
-                />
-
-                <label style={{ marginTop: "10px" }}>EST. SHIPPING COST</label>
-                <input
-                  type="text"
-                  placeholder="empty"
-                  name="shippingCost"
-                  disabled
-                  className="form-control"
-                />
-
-                <label style={{ marginTop: "10px" }}>EST. DROPSHIP FEE</label>
-                <input
-                  type="text"
-                  placeholder="empty"
-                  name="dropshipCost"
-                  disabled
-                  className="form-control"
-                />
               </Card.Body>
             </Accordion.Collapse>
           </Card>

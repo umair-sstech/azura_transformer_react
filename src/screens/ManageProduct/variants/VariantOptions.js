@@ -1,7 +1,31 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
+import { ProductContext } from "../../ProductContext/ProductContext";
 
 const VariantOptions = () => {
+  const productData = useContext(ProductContext);
+
+  const [optionValue, setOptionValue] = useState({ Main_Color: "", Size_Only: "" });
+ 
+  const variantData =
+    productData?.product?.[0]?.Preference === "PARENT"
+      ? productData?.variant
+      : productData?.product;
+
+
+      useEffect(() => {
+        if (variantData) {
+          setOptionValue({
+            Main_Color: variantData?.[0]?.Main_Color || "",
+            Size_Only: variantData?.[0]?.Size_Only || ""
+          });
+        }
+      }, [variantData]);  
+
+      const handleChange = (event) => {
+        setOptionValue(event.target.value);
+      };
+
   return (
     <Row style={{marginBottom: "-15px"}}>
       <Col>
@@ -13,7 +37,7 @@ const VariantOptions = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Options (2)
+                Options
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0">
@@ -21,17 +45,22 @@ const VariantOptions = () => {
                 <label className="mt-1">COLOR</label>
                 <input
                   type="text"
-                  placeholder="Sky Blue"
-                  name="color"
+                  placeholder="Enter Color"
+                  name="Main_Color"
                   className="form-control"
+                  value={optionValue.Main_Color}
+                  onChange={handleChange}
                 />
 
                 <label style={{ marginTop: "10px" }}>SIZE</label>
                 <input
                   type="text"
-                  placeholder="(US 16-18)XL"
-                  name="size"
+                  placeholder="Enter Size"
+                  name="Size_Only"
                   className="form-control"
+                  value={optionValue.Size_Only}
+                  onChange={handleChange}
+
                 />
               </Card.Body>
             </Accordion.Collapse>

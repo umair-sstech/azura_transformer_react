@@ -15,7 +15,7 @@ import { API_PATH } from '../../ApiPath/Apipath';
 
 
 const Parent = (props) => {
-  const { activeKey } = props;
+  const { activeKey, setKey } = props;
   const { id } = useParams();
   const [productData, setProductData] = useState({});
 
@@ -100,12 +100,7 @@ const Parent = (props) => {
       {/* Right Div */}
       <ProductContext.Provider value={productData}>
         <div className="right">
-        {productData.product?.[0]?.Preference === "PARENT" ? (
-          <ProductParent />
-        ) : (
-          <ProductParent />
-        )}
-        
+        <ProductParent activeKey={activeKey} setKey={setKey} />
       </div>
       </ProductContext.Provider>
     </div>

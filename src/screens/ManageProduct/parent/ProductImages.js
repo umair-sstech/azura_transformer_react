@@ -27,7 +27,7 @@ const ProductImages = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Images ({imageCount})
+                Images 
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">

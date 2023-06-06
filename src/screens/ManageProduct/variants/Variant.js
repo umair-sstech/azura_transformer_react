@@ -15,11 +15,17 @@ import { ProductContext } from "../../ProductContext/ProductContext";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API_PATH } from "../../ApiPath/Apipath";
 
 const Variant = (props) => {
   const { activeKey, setKey } = props;
   const { id } = useParams();
   const [productData, setProductData] = useState({});
+
+  const variantData =
+  productData?.product?.[0]?.Preference === "PARENT"
+    ? productData?.variant
+    : productData?.product;
 
   useEffect(() => {
     // if(activeKey === "variants") {
@@ -29,7 +35,7 @@ const Variant = (props) => {
 
   const getProductDetails = async () => {
     try {
-      const response = await axios.post("http://localhost:8000/product/getProductByID", { id:id });
+      const response = await axios.post(`${API_PATH.GET_PRODUCT_LIST_BY_ID}`, { id:id });
       const { success, message, data } = response.data;
 
       if (success) {
@@ -49,26 +55,44 @@ const Variant = (props) => {
       <div className="left">
         <div className="product__header">
           <h3>
-            MASTER SKU : <strong>GU7761-D_32F</strong>
+            VAETIANT SKU : <strong>{variantData?.[0]?.Variant_SKU}</strong>
           </h3>
         </div>
 
+        <ProductContext.Provider value={productData}>
         <VariantTitle />
+        </ProductContext.Provider>
+       
 
         {/* Identifiers */}
+        <ProductContext.Provider value={productData}>
         <VariantIdentifiers />
+        </ProductContext.Provider>
+       
 
         {/* Description */}
+        <ProductContext.Provider value={productData}>
         <VariantDescription />
+        </ProductContext.Provider>
+       
 
         {/* Images */}
+       
+        <ProductContext.Provider value={productData}>
         <VariantImages />
+        </ProductContext.Provider>
 
         {/* Options */}
+        <ProductContext.Provider value={productData}>
         <VariantOptions />
+        </ProductContext.Provider>
+       
 
         {/* Dimensions */}
+        <ProductContext.Provider value={productData}>
         <VariantDimension />
+        </ProductContext.Provider>
+  
 
         {/* CustomField */}
         <VariantCustomField />
@@ -94,7 +118,7 @@ const Variant = (props) => {
       </div>
 
       {/* Right Div */}
-      <ProductContext.Provider value={productData.product?.[0]}>
+      <ProductContext.Provider value={productData}>
         <div className="right">
           <ProductParent activeKey={activeKey} setKey={setKey} />
       </div>

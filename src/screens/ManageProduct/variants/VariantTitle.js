@@ -1,7 +1,28 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
+import { ProductContext } from "../../ProductContext/ProductContext";
 
 const VariantTitle = () => {
+  const productData=useContext(ProductContext)
+  const [title, setTitle] = useState("");
+
+  const variantData =
+  productData?.product?.[0]?.Preference === "PARENT"
+    ? productData?.variant
+    : productData?.product;
+
+  const variantTitle = variantData?.[0]?.Variant_Title;
+
+  useEffect(() => {
+    setTitle(variantTitle);
+  }, [variantTitle]);
+
+  const handleChange = (event) => {
+    setTitle(event.target.value);
+  };
+
+
+
   return (
     <Row style={{marginBottom: "-15px"}}>
       <Col>
@@ -23,6 +44,8 @@ const VariantTitle = () => {
                   placeholder="Title..."
                   name="title"
                   className="form-control mt-2"
+                  value={title ? title : ""}
+                  onChange={handleChange}
                 />
               </Card.Body>
             </Accordion.Collapse>

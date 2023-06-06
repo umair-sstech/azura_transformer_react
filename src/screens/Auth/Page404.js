@@ -28,7 +28,7 @@ class Page404 extends React.Component {
                   <div className="body">
                     <p>The page you were looking for could not be found, please <a >contact us</a> to report this issue.</p>
                     <div className="margin-top-30">
-                      <a className="btn btn-default" onClick={() => { this.props.history.push("login") }}><i className="fa fa-arrow-left"></i>&nbsp;<span >Go Back</span></a>&nbsp;
+                      <a className="btn btn-default" onClick={() => { this.props.history.push("/login") }}><i className="fa fa-arrow-left"></i>&nbsp;<span >Go Back</span></a>&nbsp;
                     </div>
                   </div>
                 </div>
