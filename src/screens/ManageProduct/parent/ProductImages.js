@@ -31,12 +31,12 @@ const ProductImages = () => {
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">
-              <Card.Body className="d-flex justify-content-center" style={{ gap: "50px" }}>
+              <Card.Body className="d-flex justify-content-center">
                 {imageKeys
                   .filter(key => product[key])
                   .map(key => (
-                    <div key={key} className="image-box">
-                      <Image className="image-box__image" src={product[key]} alt="product image" />
+                    <div key={key} className="image-box-variant">
+                      <Image className="image-box__image-variant" src={product[key]} alt="product image" />
                     </div>
                   ))}
               </Card.Body>
