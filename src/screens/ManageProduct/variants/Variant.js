@@ -115,7 +115,7 @@ const Variant = (props) => {
       </div>
 
       {/* Right Div */}
-      <ProductContext.Provider value={productData.product?.[0]}>
+      <ProductContext.Provider value={productData}>
         <div className="right">
           <ProductParent activeKey={activeKey} setKey={setKey} />
       </div>
