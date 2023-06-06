@@ -103,9 +103,14 @@ const Parent = (props) => {
       </div>
 
       {/* Right Div */}
-      <ProductContext.Provider value={productData.product?.[0]}>
+      <ProductContext.Provider value={productData}>
         <div className="right">
+        {productData.product?.[0]?.Preference === "PARENT" ? (
           <ProductParent />
+        ) : (
+          <ProductParent />
+        )}
+        
       </div>
       </ProductContext.Provider>
     </div>
