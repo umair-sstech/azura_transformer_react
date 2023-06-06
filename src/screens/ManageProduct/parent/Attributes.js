@@ -37,11 +37,6 @@ const attributes = [
     {name: "Watch_Band_Width", value: ""},
     {name: "Watch_Movement_Type", value: ""},
     {name: "Watch_Glass", value: ""},
-    // {name: "Supplier Category Tree", value: ""},
-    // {name: "Poshmark Category Tree", value: ""},
-    // {name: "Catch Category Tree", value: ""},
-    // {name: "eBay Category Tree", value: ""},
-    // {name: "Azura Category Tree", value: ""}
 ]
 
 export default attributes;

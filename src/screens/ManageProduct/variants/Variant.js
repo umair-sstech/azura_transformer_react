@@ -51,27 +51,6 @@ const Variant = (props) => {
           <h3>
             MASTER SKU : <strong>GU7761-D_32F</strong>
           </h3>
-
-          <div className="product__header2__container">
-          <div className="product__header2">
-            <h3 className="text-lg-center">
-              <strong>1</strong>
-            </h3>
-            <p>SOURCE</p>
-          </div>
-          <div className="product__header2">
-            <h3 className="text-lg-center">
-              <strong>10</strong>
-            </h3>
-            <p>CHANNELS</p>
-          </div>
-          <div className="product__header2">
-            <h3 className="text-lg-center">
-              <strong>38</strong>
-            </h3>
-            <p>QUANTITY</p>
-          </div>
-          </div>
         </div>
 
         <VariantTitle />

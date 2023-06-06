@@ -51,12 +51,7 @@ const Parent = (props) => {
           <h3>
             PARENT SKU : <strong>{productData.product?.[0]?.Parent_SKU}</strong>
           </h3>
-          <div className="product__header2">
-            <h3 className="text-lg-center">
-              <strong>1/1</strong>
-            </h3>
-            <p>Variants In Stock</p>
-          </div>
+          
         </div>
 
         <ProductContext.Provider value={productData.product?.[0]?.Parent_Title}>

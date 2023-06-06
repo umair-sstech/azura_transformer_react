@@ -6,7 +6,6 @@ import { ProductContext } from "../../ProductContext/ProductContext";
 const ProductParent = (props) => {
   const { activeKey, setKey } = props;
   const productData = useContext(ProductContext);
-  console.log("productParent", productData?.product);
 
   const variantData =
     productData?.product?.[0]?.Preference === "PARENT"
@@ -66,13 +65,13 @@ const ProductParent = (props) => {
         </Card.Body>
       </Card>
 
-      <div className="d-flex justify-content-between align-items-center">
+    {/*<div className="d-flex justify-content-between align-items-center">
         <span className="ml-3">1 VARIANT</span>
         <Button className="btn mr-3" variant="primary">
           <i className="fa fa-plus"></i>
         </Button>
-      </div>
-
+  </div>*/}
+  <h3 className="ml-3 product__parent__title">PRODUCT VARIANT</h3>
       <div className="d-flex flex-column" style={{ height: "350px", overflowY: "auto" }}>
         <div  className="product__parent">
           {variantData?.map((variant) => (
@@ -82,7 +81,7 @@ const ProductParent = (props) => {
                   <div className="d-flex justify-content-around">
                     <Image
                       src={variant.Image_Variant_1_original}
-                      alt="img1"
+                      // alt="img1"
                       className="align-self-center"
                       width={80}
                       height={80}
@@ -93,7 +92,7 @@ const ProductParent = (props) => {
                           <strong>VARIENT SKU</strong>
                         </small>
                         <div style={{ width: "inherit", textAlign: "center" }}>
-                          {variant.SKU}
+                          {variant.Variant_SKU}
                         </div>
                       </div>
                       <div className="d-flex product__info qty">
