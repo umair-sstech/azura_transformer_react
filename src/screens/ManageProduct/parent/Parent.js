@@ -92,7 +92,9 @@ const Parent = (props) => {
         </ProductContext.Provider>
 
         {/* Attributes */}
-        <ProductAttributes />
+        <ProductContext.Provider value={productData.product?.[0]}>
+          <ProductAttributes />
+        </ProductContext.Provider>
 
         {/* Custom Fields */}
         <ProductContext.Provider value={{ product: productData, customFields: productData.product?.[0]?.custom_field }}>

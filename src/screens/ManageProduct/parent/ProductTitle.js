@@ -5,7 +5,6 @@ import { ProductContext } from "../../ProductContext/ProductContext";
 const ProductTitle = () => {
   const titleValue = useContext(ProductContext);
   const [title, setTitle] = useState("");
-  console.log("title", title);
 
   useEffect(() => {
     setTitle(titleValue);

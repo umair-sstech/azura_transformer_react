@@ -1,23 +1,57 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
 import attributes from "./Attributes";
+import { ProductContext } from "../../ProductContext/ProductContext";
 
 const ProductAttributes = () => {
-
+  const product = useContext(ProductContext);
+  console.log("product--", product);
   const [attribute, setAttributes] = useState(attributes)
 
-  const addAttribute = () => {
-    setAttributes(attr => {
-      return [...attr, {
-        name: "",
-        valie: ""
-      }]
-    })
-  }
+  useEffect(() => {
+    for(const attr of attribute) {
+      findCommonAttribute(attr.name)
+    }
+  }, [attribute])
+  
+
+  // const addAttribute = () => {
+  //   setAttributes(attr => {
+  //     return [...attr, {
+  //       name: "",
+  //       valie: ""
+  //     }]
+  //   })
+  // }
+
+  const handleAttributeChange = (index, attr, value) => {
+    const updatedFields = [...attribute];
+    updatedFields[index] = { ...updatedFields[index], [attr]: value };
+    setAttributes(updatedFields);
+  };
 
   const deleteAttribute = (id) => {
     setAttributes(attr => attr.filter((_, idx) => idx !== id))
   }
+
+  const findCommonAttribute = (commonAttribute) => {
+    const commonAttr = attribute.find(attr => attr.name === commonAttribute)
+    if(commonAttr) {
+      commonAttr.value = product?.commonAttribute || ""
+    }
+    console.log("commmon--", commonAttr);
+  }
+
+  // const matchedValues = attribute.map(attr => {
+  //   const databaseValue = [product].filter(dbVal => {
+  //     console.log("dbVal--", dbVal);
+  //   })
+  //   // const databaseValue = [product].find(dbValue => dbValue.name === attr.name);
+  //   console.log(databaseValue);
+  //   // return { name: attr.name, value: databaseValue ? databaseValue.value : '' };
+  // });
+
+  // console.log("matched--", matchedValues);
 
   return (
     <Row style={{marginBottom: "-15px"}}>
@@ -63,6 +97,7 @@ const ProductAttributes = () => {
                         type="text"
                         placeholder={attr.name}
                         name={attr.name}
+                        disabled
                         className="form-control ml-3"
                         style={{ flex: "1 1 0" }}
                       />
@@ -71,8 +106,10 @@ const ProductAttributes = () => {
                         type="text"
                         placeholder={attr.value}
                         name={attr.value}
+                        // value={}
                         className="form-control ml-3"
                         style={{ flex: "2 1 0" }}
+                        onChange={(e) => handleAttributeChange(idx, attr.name, e.target.value)}
                       />
                     </div>
                   );
@@ -81,7 +118,7 @@ const ProductAttributes = () => {
             </Accordion.Collapse>
           </Card>
           <hr />
-          <Button className="btn ml-3 mt-2 mb-2" variant="outline-primary" onClick={addAttribute}><i className="fa fa-plus mr-2"></i>Add Attribute</Button>
+          {/* <Button className="btn ml-3 mt-2 mb-2" variant="outline-primary" onClick={addAttribute}><i className="fa fa-plus mr-2"></i>Add Attribute</Button> */}
         </Accordion>
       </Col>
     </Row>
