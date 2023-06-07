@@ -3,7 +3,7 @@ import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
 const VariantOptions = () => {
-  const productData = useContext(ProductContext);
+  const { productData, singleVariantData } = useContext(ProductContext);
 
   const [optionValue, setOptionValue] = useState({ Main_Color: "", Size_Only: "" });
  
@@ -12,15 +12,14 @@ const VariantOptions = () => {
       ? productData?.variant
       : productData?.product;
 
-
       useEffect(() => {
         if (variantData) {
           setOptionValue({
-            Main_Color: variantData?.[0]?.Main_Color || "",
-            Size_Only: variantData?.[0]?.Size_Only || ""
+            Main_Color: singleVariantData !== null ? singleVariantData?.Main_Color : variantData?.[0]?.Main_Color || "",
+            Size_Only: singleVariantData !== null ? singleVariantData?.Size_Only : variantData?.[0]?.Size_Only || ""
           });
         }
-      }, [variantData]);  
+      }, [variantData, singleVariantData]);  
 
       const handleChange = (event) => {
         setOptionValue(event.target.value);

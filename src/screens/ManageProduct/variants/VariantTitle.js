@@ -39,7 +39,7 @@ const VariantTitle = () => {
               <Card.Body>
                 <input
                   type="text"
-                  placeholder="Title..."
+                  placeholder="Enter Title..."
                   name="title"
                   className="form-control mt-2"
                   value={title ? title : ""}

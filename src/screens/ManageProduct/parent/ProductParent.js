@@ -1,12 +1,11 @@
 import React, { useContext } from "react";
 import { Button, Card, Image } from "react-bootstrap";
-import airConditioner from "../../../assets/images/air-conditioner.png";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
 const ProductParent = (props) => {
   const { activeKey, setKey, variantDetails } = props;
-  const productData = useContext(ProductContext);
-  const { product } = productData;
+  const { productData } = useContext(ProductContext);
+  // const { product } = productData;
 
   const variantData =
     productData?.product?.[0]?.Preference === "PARENT"
@@ -22,16 +21,16 @@ const ProductParent = (props) => {
   return (
     <>
       <h3 className="ml-3 product__parent__title">PRODUCT PARENT</h3>
-      {product !== undefined ? (
+      {Object.keys(productData).length !== 0 ? (
         <Card className="product__parent__card">
           <Card.Body onClick={() => navigateToParent("parent", "variants")} style={{ cursor: "pointer" }}>
             <Card.Subtitle style={{ textAlign: "center", marginTop: "10px" }}>
-              {product[0]?.Parent_Title ? product[0].Parent_Title : "--"}
+              {productData?.product[0]?.Parent_Title ? productData.product[0].Parent_Title : "--"}
             </Card.Subtitle>
             <Card.Text>
               <div className="d-flex px-3 justify-content-around mt-3" style={{ gap: "2em" }}>
                 <Image
-                  src={product[0]?.Image_Parent_1_original}
+                  src={productData?.product[0]?.Image_Parent_1_original}
                   alt="img"
                   className="align-self-center"
                   width={100}
@@ -43,21 +42,21 @@ const ProductParent = (props) => {
                     <div className="col-5">Parent SKU</div>
                     <div className=""> : </div>
                     <div className="col-6">
-                      {product[0]?.Parent_SKU ? product[0].Parent_SKU : "--"}
+                      {productData?.product[0]?.Parent_SKU ? productData.product[0].Parent_SKU : "--"}
                     </div>
                   </div>
                   <div className="row">
                     <div className="col-5">Brand</div>
                     <div className=""> : </div>
                     <div className="col-6">
-                      {product[0]?.Brand ? product[0].Brand : "--"}
+                      {productData?.product[0]?.Brand ? productData.product[0].Brand : "--"}
                     </div>
                   </div>
                   <div className="row">
                     <div className="col-5">Category</div>
                     <div className=""> : </div>
                     <div className="col-6">
-                      {product[0]?.Category_1 ? product[0].Category_1 : "--"}
+                      {productData?.product[0]?.Category_1 ? productData?.product[0].Category_1 : "--"}
                     </div>
                   </div>
                 </div>
@@ -65,7 +64,10 @@ const ProductParent = (props) => {
             </Card.Text>
           </Card.Body>
         </Card>
-      ) : <h5 className="ml-3">Loading...</h5>}
+      ) : <div className="loader-wrapper">
+            <i className="fa fa-refresh fa-spin"></i>
+          </div>
+      }
 
     {/*<div className="d-flex justify-content-between align-items-center">
         <span className="ml-3">1 VARIANT</span>

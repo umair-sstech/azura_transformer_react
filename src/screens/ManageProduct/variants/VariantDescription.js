@@ -7,15 +7,14 @@ import "@ckeditor/ckeditor5-build-classic/build/translations/en-gb";
 import "../parent/Product.css"
 
 const VariantDescription = () => {
-  const productData=useContext(ProductContext);
+  const {productData, singleVariantData} = useContext(ProductContext);
 
 const variantData =
   productData?.product?.[0]?.Preference === "PARENT"
     ? productData?.variant
     : productData?.product;
 
-const description = variantData?.[0]?.Plain_Description;
-
+const description = singleVariantData !== null ? singleVariantData?.Plain_Description : variantData?.[0]?.Plain_Description;
 
   return (
     <Row style={{marginBottom: "-15px"}}>

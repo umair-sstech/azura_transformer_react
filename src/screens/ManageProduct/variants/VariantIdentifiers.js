@@ -3,7 +3,7 @@ import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
 const VariantIdentifiers = () => {
-  const productData = useContext(ProductContext);
+  const{ productData, singleVariantData } = useContext(ProductContext);
   const [identifiers, setIdentifiers] = useState({ Variant_SKU: "", UPC: "", MPN: "", EAN: "", ASIN: "",Cost_Price:"",Retail_Price:"",Suggested_Sell_Price:"" });
   const variantData =
     productData?.product?.[0]?.Preference === "PARENT"
@@ -13,17 +13,17 @@ const VariantIdentifiers = () => {
       useEffect(() => {
         if (variantData) {
           setIdentifiers({
-            Variant_SKU: variantData?.[0]?.Variant_SKU || "",
-            UPC: variantData?.[0]?.UPC || "",
-            MPN: variantData?.[0]?.MPN || "",
-            EAN: variantData?.[0]?.EAN || "",
-            ASIN: variantData?.[0]?.ASIN || "",
-            Cost_Price: variantData?.[0]?.Cost_Price || "",
-            Retail_Price: variantData?.[0]?.Retail_Price || "",
-            Suggested_Sell_Price: variantData?.[0]?.Suggested_Sell_Price || "",
+            Variant_SKU: singleVariantData !== null ? singleVariantData?.Variant_SKU : variantData?.[0]?.Variant_SKU || "",
+            UPC: singleVariantData !== null ? singleVariantData?.UPC : variantData?.[0]?.UPC || "",
+            MPN: singleVariantData !== null ? singleVariantData?.MPN : variantData?.[0]?.MPN || "",
+            EAN: singleVariantData !== null ? singleVariantData?.EAN : variantData?.[0]?.EAN || "",
+            ASIN: singleVariantData !== null ? singleVariantData?.ASIN : variantData?.[0]?.ASIN || "",
+            Cost_Price: singleVariantData !== null ? singleVariantData?.Cost_Price : variantData?.[0]?.Cost_Price || "",
+            Retail_Price: singleVariantData !== null ? singleVariantData?.Retail_Price : variantData?.[0]?.Retail_Price || "",
+            Suggested_Sell_Price: singleVariantData !== null ? singleVariantData?.Suggested_Sell_Price : variantData?.[0]?.Suggested_Sell_Price || "",
           });
         }
-      }, [variantData]);  
+      }, [variantData, singleVariantData]);  
 
       const handleChange = (event) => {
         setIdentifiers(event.target.value);
@@ -49,7 +49,7 @@ const VariantIdentifiers = () => {
                 <label>VARIANT SKU</label>
                 <input
                   type="text"
-                  placeholder="SKU..."
+                  placeholder="Enter SKU"
                   name="sku"
                   className="form-control"
                   value={identifiers.Variant_SKU}
@@ -60,7 +60,7 @@ const VariantIdentifiers = () => {
                 <label style={{ marginTop: "10px" }}>UPC</label>
                 <input
                   type="text"
-                  placeholder="UPC"
+                  placeholder="Enter UPC"
                   name="upc"
                   className="form-control"
                   value={identifiers.UPC}
@@ -71,7 +71,7 @@ const VariantIdentifiers = () => {
                 <label style={{ marginTop: "10px" }}>MPN</label>
                 <input
                   type="text"
-                  placeholder="MPN"
+                  placeholder="Enter MPN"
                   name="mpn"
                   className="form-control"
                   value={identifiers.MPN}
@@ -82,7 +82,7 @@ const VariantIdentifiers = () => {
                 <label style={{ marginTop: "10px" }}>EAN</label>
                 <input
                   type="text"
-                  placeholder="EAN"
+                  placeholder="Enter EAN"
                   name="ean"
                   className="form-control"
                   value={identifiers.EAN}
@@ -93,7 +93,7 @@ const VariantIdentifiers = () => {
                 <label style={{ marginTop: "10px" }}>ASIN</label>
                 <input
                   type="text"
-                  placeholder="ASIN"
+                  placeholder="Enter ASIN"
                   name="asin"
                   className="form-control"
                   value={identifiers.ASIN}
