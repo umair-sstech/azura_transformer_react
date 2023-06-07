@@ -31,7 +31,7 @@ function SuppilerPage3(props) {
       value: "use_AI",
       label: "Use AI",
       textbox: true,
-      message: "e.g. Please generate the {value} from {Parent_Title}",
+      message: "{Parent_Title}",
     },
     {
       value: "extract",
@@ -267,7 +267,7 @@ function SuppilerPage3(props) {
       });
 
 
-      customFieldsData.forEach((customField) => {
+      {/*customFieldsData.forEach((customField) => {
         const mappingObject = {
           supplierId: localStorage.getItem("supplierId"),
           supplierName: localStorage.getItem("supplierName"),
@@ -276,7 +276,7 @@ function SuppilerPage3(props) {
           isCustomField: true,
         };
         mappingArray.push(mappingObject);
-      });
+      });*/}
 
       productRadio.forEach((product) => {
         const additionalValue = selectedRadioPreference || "";
@@ -383,7 +383,7 @@ function SuppilerPage3(props) {
         });
       });
 
-      customFieldsData.forEach((customField) => {
+      {/*customFieldsData.forEach((customField) => {
         const mappingObject = {
           supplierId: localStorage.getItem("supplierId"),
           supplierName: localStorage.getItem("supplierName"),
@@ -392,7 +392,7 @@ function SuppilerPage3(props) {
           isCustomField: true,
         };
         mappingArray.push(mappingObject);
-      });
+      });*/}
 
       productRadio.forEach((product) => {
         const additionalValue = selectedRadioPreference || "";
@@ -506,7 +506,7 @@ function SuppilerPage3(props) {
 
         const supplierMapping = supplierData.supplier_product_field;
 
-        const supplierCustomFields = supplierData.supplier_custom_field;
+        // const supplierCustomFields = supplierData.supplier_custom_field;
 
         const additionalValue = supplierMapping.find(
           (field) => field.standardField === "Preference"
@@ -525,7 +525,7 @@ function SuppilerPage3(props) {
         });
         setSelectedOptions([options]);
         setMappingData(supplierMapping);
-        setCustomFieldsData(supplierCustomFields);
+        // setCustomFieldsData(supplierCustomFields);
 
         const selectedRadioState = {};
         supplierMapping.forEach((field, index) => {
@@ -862,8 +862,8 @@ function SuppilerPage3(props) {
                               {selectedOption &&
                                 selectedOption.value === "use_AI" && (
                                   <label className="ml-3 text-success">
-                                    e.g. Please generate the "{key}" from
-                                    "Parent_Title"
+                                    e.g. Please generate the "{key}" from {selectedOption.message}
+                                    
                                   </label>
                                 )}
                               {selectedOption &&
@@ -967,10 +967,10 @@ function SuppilerPage3(props) {
               </tbody>
             )}
           </table>
-          <CustomFields
+         {/* <CustomFields
             customFieldsData={customFieldsData}
             setCustomFieldsData={setCustomFieldsData}
-          />
+              />*/}
         </div>
       </form>
     </>

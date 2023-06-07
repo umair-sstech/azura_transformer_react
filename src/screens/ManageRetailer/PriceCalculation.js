@@ -7,6 +7,9 @@ import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
 import { useHistory } from "react-router-dom";
 import { validatePriceCalculation } from "../Validations/Validation";
 import { API_PATH } from "../ApiPath/Apipath";
+import "../ManageRetailer/Retailer.css";
+
+
 
 function PriceCalculation(props) {
   const { setPage } = props;
@@ -20,6 +23,7 @@ function PriceCalculation(props) {
   const [supplierData, setSupplierData] = useState([]);
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
+  const [selectedRadioOption, setSelectedRadioOption] = useState("5");
 
   useEffect(() => {
     if (formData) {
@@ -59,6 +63,19 @@ function PriceCalculation(props) {
       console.log(error);
     }
   };
+
+
+  const handleRadioChange = (event) => {
+    setSelectedRadioOption(event.target.value);
+  };
+
+  let message;
+  if (selectedRadioOption === "decimal") {
+    message = "e.g. Price = 17.4, Output = 18";
+  } else if (selectedRadioOption === "5") {
+    message = "e.g. Price = 17, Output = 20";
+  }
+
 
   const handleSelectChange = (selectedOption, supplierId) => {
     const updatedSelectedOptions = { ...selectedOptions };
@@ -106,7 +123,8 @@ function PriceCalculation(props) {
     const errors = validatePriceCalculation(formData);
     setFormErrors(errors);
 
-    if (Object.keys(errors).length === 0) {
+
+    if (Object.keys(errors).length === 0 ) {
       console.log(initFormData);
       try {
         const retailerIntegrationId = localStorage.getItem(
@@ -124,8 +142,10 @@ function PriceCalculation(props) {
           discountValue: initFormData[supplierId]?.discountValue || "",
           discountType: "percentage",
           extraValue: "",
+          roundUp: selectedRadioOption 
         }));
 
+        console.log("payload",payload)
         if (
           selectedOptions[supplierSettingId].value === "" ||
           selectedOptions[supplierSettingId].label === "Select Price"
@@ -194,6 +214,7 @@ function PriceCalculation(props) {
       console.error("Failed to retrieve retailer integration data:", error);
     }
   };
+
   const handleOnClick = async (e) => {
     e.preventDefault();
     const form = e.currentTarget.closest("form");
@@ -354,7 +375,7 @@ function PriceCalculation(props) {
                               menuPlacement="top"
                             />
                             {formErrors.costPriceField && (
-                              <span className="text-danger">
+                              <span className="text-danger validation">
                                 {formErrors.costPriceField}
                               </span>
                             )}
@@ -379,7 +400,7 @@ function PriceCalculation(props) {
                               }
                             />
                             {formErrors && formErrors.multipleValue && (
-                              <span className="text-danger">
+                              <span className="text-danger valiadtion">
                                 {formErrors.multipleValue}
                               </span>
                             )}
@@ -404,7 +425,7 @@ function PriceCalculation(props) {
                               }
                             />
                             {formErrors && formErrors.fixedValue && (
-                              <span className="text-danger">
+                              <span className="text-danger valiadtion">
                                 {formErrors.fixedValue}
                               </span>
                             )}
@@ -429,7 +450,7 @@ function PriceCalculation(props) {
                               }
                             />
                             {formErrors && formErrors.taxValue && (
-                              <span className="text-danger">
+                              <span className="text-danger valiadtion">
                                 {formErrors.taxValue}
                               </span>
                             )}
@@ -454,13 +475,48 @@ function PriceCalculation(props) {
                               }
                             />
                             {formErrors && formErrors.discountValue && (
-                              <span className="text-danger">
+                              <span className="text-danger valiadtion">
                                 {formErrors.discountValue}
                               </span>
                             )}
                           </div>
                         </div>
-                      </div>
+                        <div className="col-lg-12 mt-3">
+                        <div className="form-group">
+                          <label htmlFor="roundupRadio">Round Up Amount</label>
+                          <div id="roundupRadio">
+                           
+                              <input
+                                type="radio"
+                                value="decimal"
+                                name="roundUp"
+                                onChange={handleRadioChange}
+                              />
+                              <label className="radio-inline text-dark px-2">Round up to Nearest Decimal Point</label>
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+                              <input
+                                type="radio"
+                                value="5"
+                                name="roundUp"
+                                onChange={handleRadioChange}
+                                checked={selectedRadioOption === "5"}
+                              />
+                            
+                              <label className="radio-inline  text-dark px-2">  Round up to Nearest Multiple of 5</label>
+                           
+                          </div>
+                        </div>
+                      </div> 
+                      <div className="col-lg-12">
+                      {message && (
+                        <label className="text-success">
+                          {message.split("\n").map((line, index) => (
+                            <div key={index}>{line}</div>
+                          ))}
+                        </label>
+                      )}
+                    </div>
+                        </div>
                     </Card.Body>
                   </Accordion.Collapse>
                 </Card>

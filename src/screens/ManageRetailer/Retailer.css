@@ -65,6 +65,13 @@
 .checkbox-size input[type="checkbox"] {
   margin-right: 9px; 
 }
+
+
+span.text-danger.valiadtion {
+  font-weight: 500;
+  font-size: 13px;
+}
+
 @media screen and (max-width: 360px) {
   .btn-lg {
     padding: 5px !important;
