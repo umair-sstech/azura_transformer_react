@@ -26,6 +26,7 @@ function SupplierPage6(props) {
   const [formData, setFormData] = useState();
   const [isChecked, setIsChecked] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  console.log("selectedoption",selectedOptions)
   const [dataFileMapping, setDataFileMapping] = useState([]);
   const [formError,setFormError]=useState({})
   const [isLoading, setIsLoading] = useState(false);
@@ -53,14 +54,21 @@ function SupplierPage6(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
   
-    const  supplierId  = localStorage.getItem("supplierId");
+    const supplierId = localStorage.getItem("supplierId");
     const isBarcodeRequired = isChecked;
-    const barcodeName = selectedOptions.join(","); 
-
+    let barcodeName = "";
+  
     if (selectedOptions.length === 0) {
       setFormError({ message: "Please select at least one option." });
       return;
     }
+  console.log("selectedOptions.length",selectedOptions.length)
+    if (selectedOptions.length === 1) {
+      barcodeName = selectedOptions[0];
+    } else {
+      barcodeName = selectedOptions.join(",");
+    }
+  
     setIsLoading(true);
     axios
       .post(`${API_PATH.BARCODE}`, {
@@ -80,9 +88,10 @@ function SupplierPage6(props) {
       .catch((error) => {
         console.error(error);
         setIsLoading(false);
-
       });
   };
+  
+  
   
   const handleOnClick=(e)=>{
     e.preventDefault();

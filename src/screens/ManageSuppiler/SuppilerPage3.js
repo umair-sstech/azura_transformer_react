@@ -39,6 +39,7 @@ function SuppilerPage3(props) {
       textbox: true,
     },
   ]);
+  
 
   const [productRadio, setProductRadio] = useState([
     {
@@ -114,6 +115,7 @@ function SuppilerPage3(props) {
           color: color,
         };
         setOptions(newOptions);
+        
         setFormErrors([]);
       }
       return newSelectedOptions;
@@ -848,7 +850,7 @@ function SuppilerPage3(props) {
                         } else {
                           additionalInfo = (
                             <>
-                              {selectedOption && selectedOption.textbox && (
+                               {selectedOption && selectedOption.textbox && (
                                 <input
                                   type="text"
                                   placeholder="Enter a value"
@@ -862,7 +864,7 @@ function SuppilerPage3(props) {
                               {selectedOption &&
                                 selectedOption.value === "use_AI" && (
                                   <label className="ml-3 text-success">
-                                    e.g. Please generate the "{key}" from {selectedOption.message}
+                                    e.g. Please generate the {key} from {selectedOption.message}
                                     
                                   </label>
                                 )}

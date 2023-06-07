@@ -68,6 +68,7 @@ function PriceCalculation(props) {
   const handleRadioChange = (event) => {
     setSelectedRadioOption(event.target.value);
   };
+  
 
   let message;
   if (selectedRadioOption === "decimal") {
@@ -202,9 +203,13 @@ function PriceCalculation(props) {
             value: supplier.costPriceField || "",
             label: supplier.costPriceField || "Select Price",
           };
+          
         });
+  
+        const roundUpValue = data[0]?.roundUp || "5";
+        setSelectedRadioOption(roundUpValue);
+        console.log("roundupValue",roundUpValue)
 
-        console.log("initialFormData", initialFormData);
         setFormData(initialFormData);
         setSelectedOptions(initialSelectedOptions);
       } else {
@@ -491,6 +496,8 @@ function PriceCalculation(props) {
                                 value="decimal"
                                 name="roundUp"
                                 onChange={handleRadioChange}
+                                checked={selectedRadioOption === "decimal"}
+
                               />
                               <label className="radio-inline text-dark px-2">Round up to Nearest Decimal Point</label>
                             &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 

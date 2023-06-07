@@ -16,28 +16,51 @@ function RetailerExportImage(props) {
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [supplierImageList, setSupplierImageList] = useState([]);
   const [selectedImageSizes, setSelectedImageSizes] = useState({});
+  console.log("selectedImageSizes", selectedImageSizes);
   const history = useHistory();
 
   useEffect(() => {
     fetchData();
   }, []);
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const id = localStorage.getItem("retailerIntegrationId");
+  //       const response = await axios.post(API_PATH.GET_RETAILER_BY_ID, {
+  //         id: id,
+  //       });
+  //       const { success, data } = response.data;
+
+  //       if (success && data.length > 0) {
+  //         const selectedSizes = data[0].supplierImageSize;
+  //         setSelectedImageSizes(selectedSizes);
+  //         console.log("selectedsize", selectedSizes); // Set the pre-filled value
+  //       }
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const retailerIntegrationId = localStorage.getItem(
-          "retailerIntegrationId"
-        );
-        const response = await axios.post(
-          `${API_PATH.GET_RETAILER_BY_ID}`,
-          { id: retailerIntegrationId }
-        );
-        const { success, data } = response.data;
-        const imageSizeMap = {};
-        data.forEach((item) => {
-          imageSizeMap[item.id] = item?.supplierImageSize?.split(",");
+        const id = localStorage.getItem("retailerIntegrationId");
+        const response = await axios.post(API_PATH.GET_RETAILER_BY_ID, {
+          id: id,
         });
-        setSelectedImageSizes(imageSizeMap);
+        const { success, data } = response.data;
+
+        if (success && data.length > 0) {
+          const selectedSizes = {};
+          data.forEach((supplier) => {
+            selectedSizes[supplier.supplierId] = supplier.supplierImageSize;
+          });
+          setSelectedImageSizes(selectedSizes);
+        }
       } catch (error) {
         console.error("Error:", error);
       }
@@ -49,10 +72,9 @@ function RetailerExportImage(props) {
   const fetchData = async () => {
     try {
       const supplierIds = localStorage.getItem("supplierSettingId");
-      const response = await axios.post(
-        `${API_PATH.GET_RETAILER_IMAGE_LIST}`,
-        { supplierId: supplierIds }
-      );
+      const response = await axios.post(`${API_PATH.GET_RETAILER_IMAGE_LIST}`, {
+        supplierId: supplierIds,
+      });
       const { success, data } = response.data;
       if (success) {
         setSupplierImageList(data);
@@ -76,10 +98,11 @@ function RetailerExportImage(props) {
       Object.entries(supplierImageList).forEach(
         ([supplierName, supplierData]) => {
           supplierData.forEach((item) => {
-            const selectedSizes = item.imageResize?.split(",")
+            const selectedSizes = item.imageResize
+              ?.split(",")
               .filter((size, index) => {
                 const checkbox = document.getElementById(
-                  `checkbox-${item.id}-${index}`
+                  `radio-${item.id}-${index}`
                 );
                 return checkbox.checked;
               })
@@ -96,13 +119,13 @@ function RetailerExportImage(props) {
         }
       );
 
-      if(requestData.length === 0) {
-        toast.error("You must select atleast one image size.")
+      if (requestData.length === 0) {
+        toast.error("You must select atleast one image size.");
         return;
       }
 
       const response = await axios.post(
-       `${API_PATH.CREATE_RETAILER_IMAGE}`,
+        `${API_PATH.CREATE_RETAILER_IMAGE}`,
         requestData
       );
       const { success, message } = response.data;
@@ -135,7 +158,7 @@ function RetailerExportImage(props) {
               .split(",")
               .filter((size, index) => {
                 const checkbox = document.getElementById(
-                  `checkbox-${item.id}-${index}`
+                  `radio-${item.id}-${index}`
                 );
                 return checkbox.checked;
               })
@@ -152,13 +175,13 @@ function RetailerExportImage(props) {
         }
       );
 
-      if(requestData.length === 0) {
-        toast.error("You must select atleast one image size.")
+      if (requestData.length === 0) {
+        toast.error("You must select atleast one image size.");
         return;
       }
 
       const response = await axios.post(
-       `${API_PATH.CREATE_RETAILER_IMAGE}`,
+        `${API_PATH.CREATE_RETAILER_IMAGE}`,
         requestData
       );
       const { success, message } = response.data;
@@ -259,23 +282,70 @@ function RetailerExportImage(props) {
                               <th>Image Size</th>
                             </tr>
                           </thead>
+                          {/* <tbody className="image-size-list">
+                          {supplierData.map((item) => (
+                            <>
+                              {item?.imageResize?.split(",").map((size, idx) => (
+                                <tr key={idx}>
+                                  <td>
+                                    <div className="checkbox-container">
+                                    <input
+                                    type="radio"
+                                    name="supplierImageSize"
+                                    id={`radio-${item.id}-${idx}`}
+                                    value={size}
+                                    checked={size === selectedImageSizes}
+                                    onChange={(e) => {
+                                      setSelectedImageSizes(e.target.value);
+                                    }}
+                                  />
+                                  
+                                      <label htmlFor={`radio-${item.id}-${idx}`}></label>
+                                    </div>
+                                  </td>
+                                  <td>{size}</td>
+                                </tr>
+                              ))}
+                            </>
+                          ))}
+                                  </tbody>*/}
+
                           <tbody className="image-size-list">
                             {supplierData.map((item) => (
                               <>
-                                {item?.imageResize?.split(",").map((size, idx) => (
-                                  <tr key={idx}>
-                                    <td>
-                                      <div className="checkbox-container">
-                                        <input
-                                          type="checkbox"
-                                          id={`checkbox-${item.id}-${idx}`}
-                                        />
-                                        <label htmlFor={`checkbox-${index}`}></label>
-                                      </div>
-                                    </td>
-                                    <td>{size}</td>
-                                  </tr>
-                                ))}
+                                {item?.imageResize
+                                  ?.split(",")
+                                  .map((size, idx) => (
+                                    <tr key={idx}>
+                                      <td>
+                                        <div className="checkbox-container">
+                                          <input
+                                            type="radio"
+                                            name={`supplierImageSize-${item.id}`}
+                                            id={`radio-${item.id}-${idx}`}
+                                            value={size}
+                                            checked={
+                                              selectedImageSizes[item.id] ===
+                                              size
+                                            }
+                                            onChange={(e) => {
+                                              const newSelectedImageSizes = {
+                                                ...selectedImageSizes,
+                                                [item.id]: e.target.value,
+                                              };
+                                              setSelectedImageSizes(
+                                                newSelectedImageSizes
+                                              );
+                                            }}
+                                          />
+                                          <label
+                                            htmlFor={`radio-${item.id}-${idx}`}
+                                          ></label>
+                                        </div>
+                                      </td>
+                                      <td>{size}</td>
+                                    </tr>
+                                  ))}
                               </>
                             ))}
                           </tbody>

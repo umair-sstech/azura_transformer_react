@@ -30,42 +30,37 @@ function FileUpload(props) {
   const history = useHistory();
 
   useEffect(() => {
-    getSupplierList()
+    getSupplierList();
   }, []);
-
 
   const getSupplierList = async () => {
     try {
       const response = await axios.post(`${API_PATH.GET_LIST}`, {
-        type: 'Supplier'
+        type: "Supplier",
       });
       const suppliers = response.data.data;
       setSupplier(suppliers);
       // Extract supplier names for the dropdown
       const supplierNames = suppliers.map((supplier) => ({
         value: supplier.name,
-        label: supplier.name
+        label: supplier.name,
       }));
       setChooseSupplierList(supplierNames);
     } catch (error) {
-      console.error('Error fetching suppliers:', error);
+      console.error("Error fetching suppliers:", error);
     }
   };
-  
 
   const getFileList = async (currentPage, dataLimit, search) => {
     props.onLoading(true);
 
     try {
-      const response = await axios.post(
-        `${API_PATH.GET_FILE_UPLOAD}`,
-        {
-          page: currentPage,
-          limit: dataLimit,
-          status: status !== "all" ? (status === "active" ? 1 : 0) : null,
-          search: search,
-        }
-      );
+      const response = await axios.post(`${API_PATH.GET_FILE_UPLOAD}`, {
+        page: currentPage,
+        limit: dataLimit,
+        status: status !== "all" ? (status === "active" ? 1 : 0) : null,
+        search: search,
+      });
 
       return response.data;
     } catch (error) {
@@ -97,7 +92,6 @@ function FileUpload(props) {
 
     getProductData();
   }, [currentPage, dataLimit, status]);
-
 
   const activateDeactivate = (event, supplierId) => {
     const status = event.target.checked;
@@ -149,26 +143,29 @@ function FileUpload(props) {
     { label: "All", value: "all" },
   ];
 
- 
-
-  const downloadFile = async (filePath) => {
-    console.log("filepath",filePath)
+  const downloadFile = async (fileUrl) => {
     try {
-      const response = await axios.get(filePath, {
-        responseType: 'blob', 
-      });
+      const response = await axios.post(
+        "http://localhost:8004/api/download-csv",
+        {
+          product: JSON.parse(fileUrl), 
+        },
+        {
+          responseType: "blob", 
+        }
+      );
 
+      const downloadLink = document.createElement("a");
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', filePath.substring(filePath.lastIndexOf('/') + 1));
-      document.body.appendChild(link);
-      link.click();
+      downloadLink.href = url;
+      downloadLink.setAttribute("download", "failData.csv");
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
 
-      link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
+      document.body.removeChild(downloadLink);
     } catch (error) {
-      console.log('error', error);
+      console.log("error", error);
     }
   };
 
@@ -183,9 +180,7 @@ function FileUpload(props) {
         <div className="container-fluid">
           <PageHeader
             HeaderText="File Upload"
-            Breadcrumb={[
-              { name: "File Upload", navigate: "#" },
-            ]}
+            Breadcrumb={[{ name: "File Upload", navigate: "#" }]}
           />
           <div className="tab-component">
             <div className="card">
@@ -205,15 +200,13 @@ function FileUpload(props) {
                     style={{ minWidth: "210px" }}
                     className="supplier__dropdown"
                   >
-                  
-                  <Select
-                  options={chooseSupplierList}
-                  onChange={(data) => {
-                    setSupplier(data.value);
-                  }}
-                  defaultValue={{ label: 'Select Supplier' }}
-                />
-                
+                    <Select
+                      options={chooseSupplierList}
+                      onChange={(data) => {
+                        setSupplier(data.value);
+                      }}
+                      defaultValue={{ label: "Select Supplier" }}
+                    />
                   </div>
                 </div>
 
@@ -233,6 +226,7 @@ function FileUpload(props) {
                         <th>File Name</th>
                         <th>Import Type</th>
                         <th>Lines</th>
+                        <th>Failed Data</th>
                         <th>Download</th>
                       </tr>
                     </thead>
@@ -246,14 +240,16 @@ function FileUpload(props) {
                           <td>{filedata.fileName}</td>
 
                           <td>{filedata.protocol}</td>
-                          <td>{filedata.rowCount}</td>
+                          <td className="text-success">{filedata.rowCount}</td>
+                          <td className="text-danger">{filedata.failCount}</td>
+
                           <td className="action-group">
                             <i
                               data-placement="top"
                               title="Edit"
-                              style={{color: "#49c5b6"}}
+                              style={{ color: "#49c5b6" }}
                               className="fa fa-solid fa-download"
-                              onClick={() => downloadFile(filedata.localPath)}
+                              onClick={() => downloadFile(filedata.failData)}
                             ></i>
                           </td>
                         </tr>
@@ -275,7 +271,6 @@ function FileUpload(props) {
                         setdataLimit(e.target.value);
                       }}
                     >
-                     
                       <option value={10}>10</option>
                       <option value={20}>20</option>
                       <option value={50}>50</option>

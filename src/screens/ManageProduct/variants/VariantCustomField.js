@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
+import { ProductContext } from "../../ProductContext/ProductContext";
 
 const VariantCustomField = () => {
   return (

@@ -6,11 +6,7 @@ import VariantImages from "./VariantImages";
 import VariantOptions from "./VariantOptions";
 import ProductParent from "../parent/ProductParent";
 import VariantCustomField from "./VariantCustomField";
-import VariantAggregateField from "./VariantAggregateField";
 import VariantDimension from "./VariantDimension";
-import VariantIssues from "./VariantIssues";
-import VariantAlternatives from "./VariantAlternatives";
-import VariantListingLinks from "./VariantListingLinks";
 import { ProductContext } from "../../ProductContext/ProductContext";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -116,25 +112,10 @@ const Variant = (props) => {
         </ProductContext.Provider>
   
         {/* CustomField */}
+      
         <VariantCustomField />
+     
 
-        {/* Aggregate Field */}
-        {/* <VariantAggregateField /> */}
-        {/* <br/> */}
-
-        {/* Inventory Links 9 */}
-
-        {/* Listing Links */}
-        {/* <VariantListingLinks /> */}
-        {/* <br/> */}
-
-        {/* Builder Issues */}
-        {/* <VariantIssues /> */}
-        {/* <br/> */}
-
-        {/* Product Alternatives */}
-        {/* <VariantAlternatives /> */}
-        {/* <br/> */}
       </div>
 
       {/* Right Div */}
