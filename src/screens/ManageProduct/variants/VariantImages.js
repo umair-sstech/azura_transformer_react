@@ -31,7 +31,10 @@ const VariantImages = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Images ({variantImageUrls.length > 0 ? variantImageUrls.length : 0})
+                <div className="d-flex justify-content-between align-items-center">
+                  <span>Images ({variantImageUrls?.length > 0 ? variantImageUrls.length : 0})</span>
+                  <i className="fa fa-angle-down arrow"></i>
+                </div>
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">

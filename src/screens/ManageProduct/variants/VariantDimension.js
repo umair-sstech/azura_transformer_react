@@ -40,7 +40,10 @@ const VariantDimension = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Dimensions
+                <div className="d-flex justify-content-between align-items-center">
+                  <span>Dimensions</span>
+                  <i className="fa fa-angle-down arrow"></i>
+                </div>
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">

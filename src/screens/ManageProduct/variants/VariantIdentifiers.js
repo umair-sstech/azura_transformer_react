@@ -41,7 +41,10 @@ const VariantIdentifiers = () => {
                 className="btn btn-link collapsed"
                 eventKey="1"
               >
-                Identifiers
+                <div className="d-flex justify-content-between align-items-center">
+                  <span>Identifiers</span>
+                  <i className="fa fa-angle-down arrow"></i>
+                </div>
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="1" className="card-body">
@@ -117,7 +120,10 @@ const VariantIdentifiers = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Prices
+                <div className="d-flex justify-content-between align-items-center">
+                  <span>Prices</span>
+                  <i className="fa fa-angle-down arrow"></i>
+                </div>
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">

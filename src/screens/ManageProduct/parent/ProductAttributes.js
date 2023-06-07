@@ -65,7 +65,10 @@ const ProductAttributes = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Attributes ({attribute.length})
+                <div className="d-flex justify-content-between align-items-center">
+                  <span>Attributes ({attribute.length})</span>
+                  <i className="fa fa-angle-down arrow"></i>
+                </div>
                 {/* <span className="ml-4">view all attribues</span> */}
               </Accordion.Toggle>
             </Card.Header>

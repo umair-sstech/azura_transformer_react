@@ -36,7 +36,10 @@ const VariantOptions = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Options
+                <div className="d-flex justify-content-between align-items-center">
+                  <span>Options</span>
+                  <i className="fa fa-angle-down arrow"></i>
+                </div>
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0">

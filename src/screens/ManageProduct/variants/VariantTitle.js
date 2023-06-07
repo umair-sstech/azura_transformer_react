@@ -35,7 +35,7 @@ const VariantTitle = () => {
                 Title
               </Accordion.Toggle>
             </Card.Header>
-            <Accordion.Collapse eventKey="0">
+            {/* <Accordion.Collapse eventKey="0"> */}
               <Card.Body>
                 <input
                   type="text"
@@ -46,7 +46,7 @@ const VariantTitle = () => {
                   onChange={handleChange}
                 />
               </Card.Body>
-            </Accordion.Collapse>
+            {/* </Accordion.Collapse> */}
           </Card>
         </Accordion>
       </Col>

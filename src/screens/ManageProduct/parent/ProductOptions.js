@@ -38,7 +38,10 @@ const ProductOptions = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Options
+                <div className="d-flex justify-content-between align-items-center">
+                  <span>Options</span>
+                  <i className="fa fa-angle-down arrow"></i>
+                </div>
                 {/* <span className="ml-4">view all options</span> */}
               </Accordion.Toggle>
             </Card.Header>
