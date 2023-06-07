@@ -33,7 +33,7 @@ const CustomFields = () => {
                 eventKey="0"
               >
                 Custom Fields 
-                <span className="ml-4">view all custom fields</span>
+                {/* <span className="ml-4">view all custom fields</span> */}
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">

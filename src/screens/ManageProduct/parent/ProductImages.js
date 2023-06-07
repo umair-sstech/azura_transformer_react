@@ -27,18 +27,20 @@ const ProductImages = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Images 
+                Images ({imageCount > 0 ? imageCount : 0})
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">
               <Card.Body className="d-flex justify-content-center">
-                {imageKeys
+                {imageCount > 0 ? imageKeys
                   .filter(key => product[key])
                   .map(key => (
                     <div key={key} className="image-box-variant">
                       <Image className="image-box__image-variant" src={product[key]} alt="product image" />
                     </div>
-                  ))}
+                  )) : (
+                    <h5>No Image to display...</h5>
+                  )}
               </Card.Body>
             </Accordion.Collapse>
           </Card>

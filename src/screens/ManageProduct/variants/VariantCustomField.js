@@ -14,7 +14,7 @@ const VariantCustomField = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Custom Fields (Custom Fields Length)
+                Custom Fields
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">

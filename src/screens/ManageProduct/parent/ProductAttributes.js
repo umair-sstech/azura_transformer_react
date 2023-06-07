@@ -5,7 +5,7 @@ import { ProductContext } from "../../ProductContext/ProductContext";
 
 const ProductAttributes = () => {
   const product = useContext(ProductContext);
-  console.log("product--", product);
+  // console.log("product--", product);
   const [attribute, setAttributes] = useState(attributes)
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const ProductAttributes = () => {
     if(commonAttr) {
       commonAttr.value = product?.commonAttribute || ""
     }
-    console.log("commmon--", commonAttr);
+    // console.log("commmon--", commonAttr);
   }
 
   // const matchedValues = attribute.map(attr => {
@@ -66,7 +66,7 @@ const ProductAttributes = () => {
                 eventKey="0"
               >
                 Attributes ({attribute.length})
-                <span className="ml-4">view all attribues</span>
+                {/* <span className="ml-4">view all attribues</span> */}
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">

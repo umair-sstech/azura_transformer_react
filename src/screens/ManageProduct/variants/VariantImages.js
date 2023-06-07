@@ -31,12 +31,12 @@ const VariantImages = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Images (Images Length)
+                Images ({variantImageUrls.length > 0 ? variantImageUrls.length : 0})
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">
               <Card.Body className="d-flex justify-content-center">
-             {variantImageUrls.map((imageUrl, index) => (
+             {variantImageUrls?.length > 0 ? variantImageUrls.map((imageUrl, index) => (
               <>
               <div className="image-box-variant">
 
@@ -51,7 +51,9 @@ const VariantImages = () => {
                   </div>
               </>
                   
-                ))}
+                )) : (
+                  <h5>No Image to display...</h5>
+                )}
               </Card.Body>
             </Accordion.Collapse>
           </Card>

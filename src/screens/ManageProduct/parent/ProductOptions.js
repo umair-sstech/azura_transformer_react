@@ -38,8 +38,8 @@ const ProductOptions = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Options (Options Length)
-                <span className="ml-4">view all options</span>
+                Options
+                {/* <span className="ml-4">view all options</span> */}
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">
