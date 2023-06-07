@@ -22,6 +22,7 @@ const Variant = (props) => {
   const { id } = useParams();
   const [productData, setProductData] = useState({});
   const [singleVariantData, setSingleVariantData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const variantData =
   productData?.product?.[0]?.Preference === "PARENT"
@@ -52,6 +53,7 @@ const Variant = (props) => {
 
   const variantDetails = async (idx) => {
     try {
+      setIsLoading(true);
       const response = await axios.post(`${API_PATH.GET_PRODUCT_LIST_BY_ID}`, { id:id });
       const { success, message, data } = response.data;
       if (success) {
@@ -61,55 +63,58 @@ const Variant = (props) => {
         toast.error(message);
       }
     } catch (error) {
+      setIsLoading(false);
       console.error("Failed to retrieve product details:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
+    <>
+    {isLoading && (
+      <div className="loader-wrapper">
+        <i className="fa fa-refresh fa-spin"></i>
+      </div>
+    )}
     <div className="product__container">
       {/* Left Div */}
       <div className="left">
         <div className="product__header">
           <h3>
-            VARIANT SKU : <strong>{variantData?.[0]?.Variant_SKU}</strong>
+            VARIANT SKU : <strong>{singleVariantData !== null ? singleVariantData.Variant_SKU :variantData?.[0]?.Variant_SKU}</strong>
           </h3>
         </div>
 
         <ProductContext.Provider value={{productData, singleVariantData}}>
         <VariantTitle />
         </ProductContext.Provider>
-       
 
         {/* Identifiers */}
-        <ProductContext.Provider value={productData}>
+        <ProductContext.Provider value={{productData, singleVariantData}}>
         <VariantIdentifiers />
         </ProductContext.Provider>
        
-
         {/* Description */}
-        <ProductContext.Provider value={productData}>
+        <ProductContext.Provider value={{productData, singleVariantData}}>
         <VariantDescription />
         </ProductContext.Provider>
-       
 
         {/* Images */}
-       
-        <ProductContext.Provider value={productData}>
+        <ProductContext.Provider value={{productData, singleVariantData}}>
         <VariantImages />
         </ProductContext.Provider>
 
         {/* Options */}
-        <ProductContext.Provider value={productData}>
+        <ProductContext.Provider value={{productData, singleVariantData}}>
         <VariantOptions />
         </ProductContext.Provider>
-       
 
         {/* Dimensions */}
-        <ProductContext.Provider value={productData}>
+        <ProductContext.Provider value={{productData, singleVariantData}}>
         <VariantDimension />
         </ProductContext.Provider>
   
-
         {/* CustomField */}
         <VariantCustomField />
 
@@ -130,16 +135,16 @@ const Variant = (props) => {
         {/* Product Alternatives */}
         {/* <VariantAlternatives /> */}
         {/* <br/> */}
-        
       </div>
 
       {/* Right Div */}
-      <ProductContext.Provider value={productData}>
+      <ProductContext.Provider value={{productData, singleVariantData}}>
         <div className="right">
           <ProductParent activeKey={activeKey} setKey={setKey} variantDetails={variantDetails} />
       </div>
       </ProductContext.Provider>
     </div>
+    </>
   );
 };
 

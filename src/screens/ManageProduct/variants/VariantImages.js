@@ -1,19 +1,18 @@
 import React, { useContext } from "react";
 import { Accordion, Button, Card, Col, Image, Row } from "react-bootstrap";
-import airConditioner from "../../../assets/images/air-conditioner.png"
 import { ProductContext } from "../../ProductContext/ProductContext";
 import "../parent/Product.css"
 
 
 const VariantImages = () => {
-  const productData=useContext(ProductContext)
+  const { productData, singleVariantData } = useContext(ProductContext)
 
   const variantData =
   productData?.product?.[0]?.Preference === "PARENT"
     ? productData?.variant
     : productData?.product;
 
-    const variantImageUrls = Object.keys(variantData?.[0] || {}).filter(
+    const variantImageUrls = Object.keys((singleVariantData !== null ? singleVariantData : variantData?.[0]) || {}).filter(
       (key) =>
         key.startsWith("Image_Variant") &&
         key.endsWith("_original") &&
@@ -32,12 +31,15 @@ const VariantImages = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Images (Images Length)
+                <div className="d-flex justify-content-between align-items-center">
+                  <span>Images ({variantImageUrls?.length > 0 ? variantImageUrls.length : 0})</span>
+                  <i className="fa fa-angle-down arrow"></i>
+                </div>
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">
               <Card.Body className="d-flex justify-content-center">
-             {variantImageUrls.map((imageUrl, index) => (
+             {variantImageUrls?.length > 0 ? variantImageUrls.map((imageUrl, index) => (
               <>
               <div className="image-box-variant">
 
@@ -52,7 +54,9 @@ const VariantImages = () => {
                   </div>
               </>
                   
-                ))}
+                )) : (
+                  <h5>No Image to display...</h5>
+                )}
               </Card.Body>
             </Accordion.Collapse>
           </Card>

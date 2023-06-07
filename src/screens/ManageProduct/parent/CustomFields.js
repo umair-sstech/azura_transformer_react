@@ -32,8 +32,11 @@ const CustomFields = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Custom Fields 
-                <span className="ml-4">view all custom fields</span>
+                <div className="d-flex justify-content-between align-items-center">
+                  <span>Custom Fields</span>
+                  <i className="fa fa-angle-down arrow"></i>
+                </div>
+                {/* <span className="ml-4">view all custom fields</span> */}
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">

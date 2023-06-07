@@ -3,10 +3,9 @@ import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
 const VariantDimension = () => {
-  const productData = useContext(ProductContext);
+  const { productData, singleVariantData } = useContext(ProductContext);
   const [dimensionValue, setDimensionValue] = useState({ Dimension_Units: "", Weight_Unit: "", Length: "", Weight: "", Width: "",Height:""});
   
-  console.log("dimension value",dimensionValue)
   const variantData =
     productData?.product?.[0]?.Preference === "PARENT"
       ? productData?.variant
@@ -15,15 +14,15 @@ const VariantDimension = () => {
       useEffect(() => {
         if (variantData) {
           setDimensionValue({
-            Dimension_Units: variantData?.[0]?.Dimension_Units || "",
-            Weight_Unit: variantData?.[0]?.Weight_Unit || "",
-            Length: variantData?.[0]?.Length || 0,
-            Weight: variantData?.[0]?.Weight || 0,
-            Width: variantData?.[0]?.Width || 0,
-            Height: variantData?.[0]?.Height || 0,
+            Dimension_Units: singleVariantData !== null ? singleVariantData?.Dimension_Units : variantData?.[0]?.Dimension_Units || "",
+            Weight_Unit: singleVariantData !== null ? singleVariantData?.Weight_Unit : variantData?.[0]?.Weight_Unit || "",
+            Length: singleVariantData !== null ? singleVariantData?.Length : variantData?.[0]?.Length || 0,
+            Weight: singleVariantData !== null ? singleVariantData?.Weight : variantData?.[0]?.Weight || 0,
+            Width: singleVariantData !== null ? singleVariantData?.Width : variantData?.[0]?.Width || 0,
+            Height: singleVariantData !== null ? singleVariantData?.Height : variantData?.[0]?.Height || 0,
           });
         }
-      }, [variantData]);  
+      }, [variantData, singleVariantData]);  
 
       const handleChange = (event) => {
         setDimensionValue(event.target.value);
@@ -41,7 +40,10 @@ const VariantDimension = () => {
                 className="btn btn-link collapsed"
                 eventKey="0"
               >
-                Dimensions
+                <div className="d-flex justify-content-between align-items-center">
+                  <span>Dimensions</span>
+                  <i className="fa fa-angle-down arrow"></i>
+                </div>
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">
