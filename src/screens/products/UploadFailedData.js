@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { connect } from "react-redux";
@@ -8,6 +8,7 @@ import Select from "react-select";
 import { Spinner } from "react-bootstrap";
 import { API_PATH } from "../ApiPath/Apipath";
 import PageHeader from "../../components/PageHeader";
+import Swal from "sweetalert2";
 
 function UploadFailedData() {
   const [isLoadingExit, setIsLoadingExit] = useState(false);
@@ -15,13 +16,29 @@ function UploadFailedData() {
   const [chooseSupplierList, setChooseSupplierList] = useState([]);
   const [fileError, setFileError] = useState("");
   const [supplierError, setSupplierError] = useState("");
-  console.log("supplierError",supplierError)
 
   const history = useHistory();
 
   useEffect(() => {
     getSupplierList();
   }, []);
+
+  const processCancel = () => {
+    Swal.fire({
+      title: "Are you sure, <br> you want to exit ? ",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setSupplier("");
+        history.push("/file-upload");
+      }
+    });
+  };
 
   const handleFileChange = () => {
     setFileError("");
@@ -52,12 +69,18 @@ function UploadFailedData() {
     if (!file) {
       setFileError("Please upload a file");
       setIsLoadingExit(false);
-      return;
+    } else {
+      setFileError("");
     }
 
-    if (!supplier.label) { // Check the value property of the supplier object
+    if (!supplier) { // Check the value property of the supplier object
       setSupplierError("Please select a supplier");
       setIsLoadingExit(false);
+    } else {
+      setSupplierError("");
+    }
+
+    if(!file || !supplier) {
       return;
     }
     const formData = new FormData();
@@ -106,17 +129,19 @@ function UploadFailedData() {
             Breadcrumb={[
               { name: "File Data List", navigate: "/file-upload" },
             ]}
+            className="page-header"
           />
         </div>
-        <div className="tab-component">
-          <div className="card mt-5">
+        <div className="tab-component p-3">
+          <div className="card">
             <div className="body">
+              <p className="supplier-onboarding">File Upload</p>
               <form
                 name="myForm"
                 encType="multipart/form-data"
                 onSubmit={handleSubmit}
               >
-                <div style={{ marginTop: "35px" }}>
+                <div style={{ marginTop: "15px" }}>
                   <div className="row">
                     <div className="col-lg-12 col-md-12 col-12 button-class">
                       <div className="d-flex">
@@ -136,6 +161,7 @@ function UploadFailedData() {
                         <button
                           className="btn btn-secondary w-auto btn-lg"
                           type="button"
+                          onClick={processCancel}
                         >
                           Exit
                         </button>
@@ -146,7 +172,7 @@ function UploadFailedData() {
                   <div className="row mt-3 mt-lg-0">
                     <div className="col-sm-6">
                       <div className="form-group">
-                        <label htmlFor="combo-box-demo">Supplier List</label>
+                        <label htmlFor="combo-box-demo">Supplier List <span style={{ color: "red" }}>*</span></label>
                         <Select
                           options={chooseSupplierList}
                           onChange={(data) => {
