@@ -9,8 +9,6 @@ import { validatePriceCalculation } from "../Validations/Validation";
 import { API_PATH } from "../ApiPath/Apipath";
 import "../ManageRetailer/Retailer.css";
 
-
-
 function PriceCalculation(props) {
   const { setPage } = props;
   const { processCancel, formData, setFormData } = useContext(FormContext);
@@ -64,7 +62,6 @@ function PriceCalculation(props) {
     }
   };
 
-
   const handleRadioChange = (event) => {
     setSelectedRadioOption(event.target.value);
   };
@@ -76,7 +73,6 @@ function PriceCalculation(props) {
   } else if (selectedRadioOption === "5") {
     message = "e.g. Price = 17, Output = 20";
   }
-
 
   const handleSelectChange = (selectedOption, supplierId) => {
     const updatedSelectedOptions = { ...selectedOptions };
@@ -124,8 +120,7 @@ function PriceCalculation(props) {
     const errors = validatePriceCalculation(formData);
     setFormErrors(errors);
 
-
-    if (Object.keys(errors).length === 0 ) {
+    if (Object.keys(errors).length === 0) {
       console.log(initFormData);
       try {
         const retailerIntegrationId = localStorage.getItem(
@@ -143,10 +138,10 @@ function PriceCalculation(props) {
           discountValue: initFormData[supplierId]?.discountValue || "",
           discountType: "percentage",
           extraValue: "",
-          roundUp: selectedRadioOption 
+          roundUp: selectedRadioOption,
         }));
 
-        console.log("payload",payload)
+        console.log("payload", payload);
         if (
           selectedOptions[supplierSettingId].value === "" ||
           selectedOptions[supplierSettingId].label === "Select Price"
@@ -180,12 +175,9 @@ function PriceCalculation(props) {
   const getRetailerIntegrationById = async () => {
     try {
       const id = localStorage.getItem("retailerIntegrationId");
-      const response = await axios.post(
-        `${API_PATH.GET_RETAILER_BY_ID}`,
-        {
-          id: id,
-        }
-      );
+      const response = await axios.post(`${API_PATH.GET_RETAILER_BY_ID}`, {
+        id: id,
+      });
       const { success, message, data } = response.data;
       if (success) {
         setSupplierData(data);
@@ -247,6 +239,7 @@ function PriceCalculation(props) {
           discountValue: initFormData[supplierId]?.discountValue || "",
           discountType: "percentage",
           extraValue: "",
+          roundUp: selectedRadioOption,
         }));
 
         if (
@@ -262,10 +255,7 @@ function PriceCalculation(props) {
 
         setIsLoadingExit(true);
         axios
-          .post(
-            `${API_PATH.CREATE_RETAILER_PRICE}`,
-            payload
-          )
+          .post(`${API_PATH.CREATE_RETAILER_PRICE}`, payload)
           .then((response) => {
             const { success, message } = response.data;
             if (success) {
@@ -332,13 +322,13 @@ function PriceCalculation(props) {
           </div>
         </div>
         <div className="row mt-3">
-          {supplierData.length === 0 ? (
+          {/* {supplierData.length === 0 ? (
             <div className="loader-wrapper w-100" style={{ marginTop: "14%" }}>
               <i className="fa fa-refresh fa-spin"></i>
             </div>
           ) : (
             ""
-          )}
+          )} */}
           <div className="col-12">
             <Accordion defaultActiveKey="0" className="accordian__main">
               {supplierData.map((supplier, index) => (
@@ -486,44 +476,48 @@ function PriceCalculation(props) {
                             )}
                           </div>
                         </div>
-                        <div className="col-lg-12 mt-3">
-                        <div className="form-group">
-                          <label htmlFor="roundupRadio">Round Up Amount</label>
-                          <div id="roundupRadio">
-                           
-                              <input
-                                type="radio"
-                                value="decimal"
-                                name="roundUp"
-                                onChange={handleRadioChange}
-                                checked={selectedRadioOption === "decimal"}
-
-                              />
-                              <label className="radio-inline text-dark px-2">Round up to Nearest Decimal Point</label>
-                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-                              <input
-                                type="radio"
-                                value="5"
-                                name="roundUp"
-                                onChange={handleRadioChange}
-                                checked={selectedRadioOption === "5"}
-                              />
-                            
-                              <label className="radio-inline  text-dark px-2">  Round up to Nearest Multiple of 5</label>
-                           
+                      </div>
+                      <label htmlFor="roundupRadio mt-3" style={{padding: "0 10px"}}>Round Up Amount</label>
+                      <div className="row px-2">
+                        <div className="col-12 mt-0">
+                          <div className="form-group">
+                            <input
+                              type="radio"
+                              value="decimal"
+                              name="roundUp"
+                              id="roundupRadio1"
+                              onChange={handleRadioChange}
+                            />
+                            <label className="radio-inline text-dark px-2">
+                              Round up to Nearest Decimal Point
+                            </label>
                           </div>
                         </div>
-                      </div> 
-                      <div className="col-lg-12">
-                      {message && (
-                        <label className="text-success">
-                          {message.split("\n").map((line, index) => (
-                            <div key={index}>{line}</div>
-                          ))}
-                        </label>
-                      )}
-                    </div>
+                        <div className="col-12 mt-0">
+                          <div className="form-group">
+                            <input
+                              type="radio"
+                              value="5"
+                              name="roundUp"
+                              id="roundupRadio2"
+                              onChange={handleRadioChange}
+                              checked={selectedRadioOption === "5"}
+                            />
+                            <label className="radio-inline text-dark px-2">
+                              Round up to Nearest Multiple of 5
+                            </label>
+                          </div>
                         </div>
+                      </div>
+                      <div className="col-lg-12">
+                        {message && (
+                          <label className="text-success">
+                            {message.split("\n").map((line, index) => (
+                              <div key={index}>{line}</div>
+                            ))}
+                          </label>
+                        )}
+                      </div>
                     </Card.Body>
                   </Accordion.Collapse>
                 </Card>
