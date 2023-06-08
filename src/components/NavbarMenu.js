@@ -562,7 +562,7 @@ class NavbarMenu extends React.Component {
                       <li className="" id="dashboardDropDown">
                         <a
                           href="#!"
-                          className=""
+                          className="d-none"
                           onClick={(e) => {
                             e.preventDefault();
                             this.activeMenutabContainer("dashboardDropDown");
