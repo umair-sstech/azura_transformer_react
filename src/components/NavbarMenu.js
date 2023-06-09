@@ -570,7 +570,7 @@ class NavbarMenu extends React.Component {
                         ></a>
                         <ul>
                           <li className="">
-                            <Link to="dashboard" className="dashboard first__link">
+                            <Link to="/dashboard" className="dashboard first__link">
                               {" "}
                               <div className="row">
                                 <div className="col-3">

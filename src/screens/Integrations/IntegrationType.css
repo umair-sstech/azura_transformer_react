@@ -34,3 +34,7 @@
   .data-table table {
     width: 100%;
   }
+
+  .customSelect {
+    z-index: 9999;
+  }

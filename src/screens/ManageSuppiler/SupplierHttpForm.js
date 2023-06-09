@@ -259,7 +259,7 @@ function SupplierHttpForm(props) {
     if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
-      const payload = { ...initFormData, settingType, supplierId, supplierName };
+      const payload = { ...initFormData, settingType, supplierId, supplierName, syncFrequency };
       setIsLoadingExit(true);
       axios
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
