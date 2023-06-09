@@ -112,8 +112,9 @@ const Variant = (props) => {
         </ProductContext.Provider>
   
         {/* CustomField */}
-      
+        <ProductContext.Provider value={{ product: productData, customFields: productData.variant?.[0]?.custom_field }}>
         <VariantCustomField />
+      </ProductContext.Provider>
      
 
       </div>

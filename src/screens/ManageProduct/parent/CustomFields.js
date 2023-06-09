@@ -52,7 +52,7 @@ const CustomFields = () => {
                 <hr />
                 {customField?.map((field, index) => (
                   <div key={index} className="d-flex justify-content-around align-items-center mb-3">
-                    <i className="fa fa-solid fa-trash fa-lg ml-2" style={{ color: "red" }}></i>
+                   { /*<i className="fa fa-solid fa-trash fa-lg ml-2" style={{ color: "red" }}></i>*/}
                     <div>
                       <input
                         type="text"

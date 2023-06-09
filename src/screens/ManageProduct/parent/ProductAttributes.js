@@ -89,13 +89,13 @@ const ProductAttributes = () => {
                       className="d-flex justify-content-around align-items-center mt-3"
                       key={idx}
                     >
-                      <i
+                  {/*    <i
                         className="fa fa-trash fa-lg ml-2"
                         role="button"
                         aria-hidden="true"
                         style={{ color: "red" }}
                         onClick={() => deleteAttribute(idx)}
-                      ></i>
+                  ></i>*/}
                       <input
                         type="text"
                         placeholder={attr.name}
