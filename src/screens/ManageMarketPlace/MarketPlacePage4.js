@@ -180,6 +180,8 @@ function MarketPlacePage4(props) {
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
+  const findDefaultTimeZone = timeZoneData.find((val) => val.text.toLowerCase().includes("sydney"))
+
   const handleTimeZoneChange = (selectedOption) => {
     const orderTimeZone = selectedOption;
     setInitFormData({ ...initFormData, orderTimeZone });
@@ -197,15 +199,14 @@ function MarketPlacePage4(props) {
       const integrationId = localStorage.getItem("marketPlaceId");
       const integrationName = localStorage.getItem("marketPlaceName");
 
-      const { value, label } = initFormData.orderTimeZone;
+      const {value, label} = initFormData.orderTimeZone || {};
+      const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
       const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
         "hour"
       )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
         "week"
       )}`;
-
-      const timeZoneString = `${value}`;
 
       const payload = {
         // ...initFormData,
@@ -249,9 +250,8 @@ function MarketPlacePage4(props) {
       const integrationId = localStorage.getItem("marketPlaceId");
       const integrationName = localStorage.getItem("marketPlaceName");
 
-      const { value, label } = initFormData.orderTimeZone;
-
-      const timeZoneString = `${value}`;
+      const {value, label} = initFormData.orderTimeZone || {};
+      const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
       const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
         "hour"
@@ -487,7 +487,14 @@ function MarketPlacePage4(props) {
                   };
                 })}
                 placeholder="Select TimeZone"
-                value={initFormData.orderTimeZone ? initFormData.orderTimeZone : ""}
+                value={
+                  initFormData.orderTimeZone
+                    ? initFormData.orderTimeZone
+                    : {
+                        value: findDefaultTimeZone.abbr,
+                        label: findDefaultTimeZone.text,
+                      }
+                }
                 onChange={handleTimeZoneChange}
                 name="orderTimeZone"
               />

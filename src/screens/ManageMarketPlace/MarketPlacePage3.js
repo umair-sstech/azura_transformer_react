@@ -185,6 +185,8 @@ function MarketPlacePage3(props) {
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
+  const findDefaultTimeZone = timeZoneData.find((val) => val.text.toLowerCase().includes("sydney"))
+
   const handleTimeZoneChange = (selectedOption) => {
     const productTimeZone = selectedOption;
     setInitFormData({ ...initFormData, productTimeZone });
@@ -202,9 +204,8 @@ function MarketPlacePage3(props) {
       const integrationId = localStorage.getItem("marketPlaceId");
       const integrationName = localStorage.getItem("marketPlaceName");
 
-      const { value, label } = initFormData.productTimeZone;
-
-      const timeZoneString = `${value}`;
+      const {value, label} = initFormData.productTimeZone || {};
+      const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
       const productSyncFrequency = `${formData.get("minute")} ${formData.get(
         "hour"
@@ -253,9 +254,8 @@ function MarketPlacePage3(props) {
       const integrationId = localStorage.getItem("marketPlaceId");
       const integrationName = localStorage.getItem("marketPlaceName");
 
-      const { value, label } = initFormData.productTimeZone;
-
-      const timeZoneString = `${value}`;
+      const {value, label} = initFormData.productTimeZone || {};
+      const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
       const productSyncFrequency = `${formData.get("minute")} ${formData.get(
         "hour"
@@ -491,7 +491,14 @@ function MarketPlacePage3(props) {
                   };
                 })}
                 placeholder="Select TimeZone"
-                value={initFormData.productTimeZone ? initFormData.productTimeZone : ""}
+                value={
+                  initFormData.productTimeZone
+                    ? initFormData.productTimeZone
+                    : {
+                        value: findDefaultTimeZone.abbr,
+                        label: findDefaultTimeZone.text,
+                      }
+                }
                 onChange={handleTimeZoneChange}
                 name="productTimeZone"
               />
