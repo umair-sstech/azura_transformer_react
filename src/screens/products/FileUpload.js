@@ -143,33 +143,39 @@ function FileUpload(props) {
     { label: "All", value: "all" },
   ];
 
-  // const downloadFile = (localPath, fileName) => {
-  //   const link = document.createElement("a");
-  //   link.href = localPath;
-  //   link.setAttribute("download", fileName);
-  //   document.body.appendChild(link);
-  //   link.click();
-  //   document.body.removeChild(link);
-  // };
-
-  const downloadFile = async (localPath, fileName) => {
-    try {
-      const response = await axios.get(localPath, {
-        responseType: 'blob',
-      });
-  
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', fileName);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error('Error downloading file:', error);
-      // Handle error
-    }
+  const localpath='http://localhost:8004/uploads/csv/original/1686218595653_BGFeed_ParentChild.csv'
+  const downloadFile = (localpath) => {
+    console.log("path",localpath)
+    const link = document.createElement("a");
+    link.href = localpath;
+    link.setAttribute("download","1686218595653_BGFeed_ParentChild.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    link.addEventListener("error", (event) => {
+      console.error("Error occurred while downloading the file.", event);
+    });
+    
   };
+
+  // const downloadFile = async (localPath, fileName) => {
+  //   try {
+  //     const response = await axios.get('http://localhost:8004/uploads/csv/original/1686218595653_BGFeed_ParentChild.csv', {
+  //       responseType: 'blob',
+  //     });
+  
+  //     const url = window.URL.createObjectURL(new Blob([response.data]));
+  //     const link = document.createElement('a');
+  //     link.href = url;
+  //     link.setAttribute('download', fileName);
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+  //   } catch (error) {
+  //     console.error('Error downloading file:', error);
+  //     // Handle error
+  //   }
+  // };
 
 
   const downloadErrorFile = async (errorCsvPath, fileName) => {
@@ -232,7 +238,16 @@ function FileUpload(props) {
                 </Link>
                   </div>
                 </div>
-
+                <div>
+              <label>data</label>
+              <i
+              data-placement="top"
+              title="Download"
+              style={{ color: "#49c5b6", cursor: "pointer" }}
+              className="fa fa-solid fa-download"
+              onClick={() => downloadFile(localpath)}
+            ></i>
+            </div>
                 <div className="data-table">
                   {props.loading ? (
                     <div className="loader-wrapper">
@@ -284,7 +299,7 @@ function FileUpload(props) {
                         title="Download"
                         style={{ color: "#49c5b6", cursor: "pointer" }}
                         className="fa fa-solid fa-download"
-                        onClick={() => downloadFile(filedata.localPath, filedata.fileName)}
+                        onClick={() => downloadFile(localpath)}
                       ></i>
                     </td>
                     <td className="action-group">

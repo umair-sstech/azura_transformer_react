@@ -90,9 +90,13 @@ function ProductExport(props) {
       requestData[0].productCount = selectedProductCounts.join(",");
 
       const isChecked = checkAnyCheckboxChecked(checkboxes)
-      if(!isChecked) {
-        toast.error("Please select atleast one value.");
-        return;
+      if(data.supplier_product.length > 0) {
+
+        if(!isChecked) {
+          toast.error("Please select atleast one value.");
+          return;
+        }
+
       }
 
       setIsLoading(true);
@@ -147,9 +151,13 @@ function ProductExport(props) {
       requestData[0].productCount = selectedProductCounts.join(",");
 
       const isChecked = checkAnyCheckboxChecked(checkboxes)
-      if(!isChecked) {
-        toast.error("Please select atleast one value.");
-        return;
+      if(data.supplier_product.length > 0) {
+
+        if(!isChecked) {
+          toast.error("Please select atleast one value.");
+          return;
+        }
+
       }
 
       setIsLoadingExit(true)

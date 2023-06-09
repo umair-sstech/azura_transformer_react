@@ -72,17 +72,23 @@ function PriceCalculation(props) {
     const newSelectedRadioOption = [...selectedRadioOption];
     newSelectedRadioOption[accDataId] = value;
     setSelectedRadioOption(newSelectedRadioOption);
-  };
+  };   
+  useEffect(() => {
+    // Set default selected radio button value for each accordion
+    const defaultValue = "5";
+    const defaultSelectedRadioOption = Array(supplierData.length).fill(defaultValue);
+    setSelectedRadioOption(defaultSelectedRadioOption);
+  }, [supplierData]);    
   
-  // let message;
-  // const radioMsg = selectedRadioOption?.map((option) => {
-  //   if (option === "decimal") {
-  //     message = "e.g. Price = 17.4, Output = 18";
-  //   } else if (option === "5") {
-  //     message = "e.g. Price = 17, Output = 20";
-  //   }
-  //   return message;
-  // })
+  let message;
+  const radioMsg = selectedRadioOption?.map((option) => {
+    if (option === "decimal") {
+      message = "e.g. Price = 17.4, Output = 18";
+    } else if (option === "5") {
+      message = "e.g. Price = 17, Output = 20";
+    }
+    return message;
+  })
 
   const handleSelectChange = (selectedOption, supplierId) => {
     const updatedSelectedOptions = { ...selectedOptions };
@@ -123,6 +129,8 @@ function PriceCalculation(props) {
     );
   };
 
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -151,12 +159,16 @@ function PriceCalculation(props) {
           roundUp: selectedRadioOption[idx],
         }));
         console.log("payload", payload);
-        if (
-          selectedOptions[supplierSettingId].value === "" ||
-          selectedOptions[supplierSettingId].label === "Select Price"
-        ) {
-          return toast.error("Please select Price.");
-        }
+     
+        const supplierIds = supplierSettingId.split(",");
+        const isPriceSelected = supplierIds.some((supplierId) =>
+        selectedOptions[supplierId]?.value === "" ||
+        selectedOptions[supplierId]?.label === "Select Price"
+      );
+      if (isPriceSelected) {
+        return toast.error("Please select Price.");
+      }
+
         const checkNegativeValue = checkAnyValueIsNegative(payload);
         if (checkNegativeValue) {
           return toast.error("Values can not be negative.");
@@ -238,7 +250,7 @@ function PriceCalculation(props) {
         );
         const supplierSettingId = localStorage.getItem("supplierSettingId");
 
-        const payload = supplierSettingId.split(",").map((supplierId) => ({
+        const payload = supplierSettingId.split(",").map((supplierId,idx) => ({
           id: retailerIntegrationId,
           supplierId,
           costPriceField: selectedOptions[supplierId]?.label || "",
@@ -248,15 +260,15 @@ function PriceCalculation(props) {
           discountValue: initFormData[supplierId]?.discountValue || "",
           discountType: "percentage",
           extraValue: "",
-          roundUp: selectedRadioOption,
+          roundUp: selectedRadioOption[idx],
         }));
 
-        if (
-          selectedOptions[supplierSettingId].value === "" ||
-          selectedOptions[supplierSettingId].label === "Select Price"
-        ) {
-          return toast.error("Please select Price.");
-        }
+        // if (
+        //   selectedOptions[supplierSettingId].value === "" ||
+        //   selectedOptions[supplierSettingId].label === "Select Price"
+        // ) {
+        //   return toast.error("Please select Price.");
+        // }
         const checkNegativeValue = checkAnyValueIsNegative(payload);
         if (checkNegativeValue) {
           return toast.error("Values can not be negative.");
@@ -408,6 +420,7 @@ function PriceCalculation(props) {
                                 {formErrors.multipleValue}
                               </span>
                             )}
+                         
                           </div>
                         </div>
                         <div className="col-sm-4 col-lg-2">
@@ -500,21 +513,27 @@ function PriceCalculation(props) {
                                 checked={selectedRadioOption[index] === option.value}
                               />
                               <label className="radio-inline text-dark px-2">
-                                { option.label }
+                                {option.label}
                               </label>
                             </div>
                           </div>
                         </div>
                       ))}
-                      {/* <div className="col-lg-12">
-                        {radioMsg.length > 0 && (
-                          <label className="text-success">
-                            {radioMsg.map((msg, idx) => (
-                              <div key={idx}>{msg}</div>
-                            ))}
-                          </label>
+                      <div className="col-lg-12">
+                        {selectedRadioOption[index] && supplier && (
+                          <div className="col-lg-12 text-success">
+                            {selectedRadioOption[index] === "decimal" ? (
+                              <div>
+                                {supplier.supplierName}e.g. Price = 17.4, Output = 18
+                              </div>
+                            ) : (
+                              <div>
+                                {supplier.supplierName}e.g. Price = 17, Output = 20
+                              </div>
+                            )}
+                          </div>
                         )}
-                      </div> */}
+                      </div>
                         {/* {radioMsg.split("\n").map((line, index) => (
                           <div key={index}>{line}</div>
                         ))} */}
