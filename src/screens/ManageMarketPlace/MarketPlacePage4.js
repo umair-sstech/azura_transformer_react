@@ -208,11 +208,12 @@ function MarketPlacePage4(props) {
       const timeZoneString = `${value}`;
 
       const payload = {
-        ...initFormData,
+        // ...initFormData,
         orderSyncFrequency,
         orderTimeZone: timeZoneString,
         integrationId,
         integrationName,
+        type:"order"
       };
       setIsLoading(true);
       axios
@@ -259,11 +260,12 @@ function MarketPlacePage4(props) {
       )}`;
 
       const payload = {
-        ...initFormData,
+        // ...initFormData,
         orderSyncFrequency,
         orderTimeZone: timeZoneString,
         integrationId,
         integrationName,
+        type:"order"
       };
       setIsLoadingExit(true);
       axios

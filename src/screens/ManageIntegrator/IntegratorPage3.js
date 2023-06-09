@@ -220,6 +220,7 @@ const handleSubmit = (e) => {
       integrationId,
       integrationName,
     };
+    console.log("paylodproduct",payload)
     setIsLoading(true);
     axios
       .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
@@ -228,7 +229,7 @@ const handleSubmit = (e) => {
         if (success) {
           toast.success(message);
           setFormData({});
-          setPage(3);
+          setPage("3");
         } else {
           toast.error(message);
         }
@@ -401,7 +402,7 @@ const handleSubmit = (e) => {
                   <input
                     className="form-control"
                     type="text"
-                  placeholder="*"
+                    placeholder="*"
                     name="minute"
                     value={productSyncFrequency.split(" ")[0] || ""}
                     onChange={handleSyncFrequency}

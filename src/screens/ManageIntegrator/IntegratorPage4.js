@@ -11,27 +11,22 @@ import { Spinner } from "react-bootstrap";
 import { validateIntegratorOrderSync } from "../Validations/Validation";
 
 function IntegratorPage4(props) {
-  const { setPage } = props;
+  const {setPage}=props
   const { processCancel, formData, setFormData } = useContext(FormContext);
-
+  
   const [initFormData, setInitFormData] = useState({
     orderSyncFrequency: "",
     orderTimeZone: "",
     type: "order",
   });
-
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
-  const [orderSyncFrequency, setOrderSyncFrequency] = useState("");
+  const [orderSyncFrequency,setOrderSyncFrequency]=useState("")
 
   const history = useHistory();
-
-  useEffect(() => {
-    getCronTimeData();
-  }, []);
 
   useEffect(() => {
     if (formData) {
@@ -42,6 +37,10 @@ function IntegratorPage4(props) {
   useEffect(() => {
     setIsFormValid(Object.keys(formErrors).length === 0);
   }, [formErrors]);
+
+  useEffect(() => {
+    getCronTimeData();
+  }, []);
 
   const getCronTimeData = () => {
     try {
@@ -63,19 +62,19 @@ function IntegratorPage4(props) {
   // const handleSyncFrequency = (selectedOption) => {
   //   setFormData({ ...formData, orderSyncFrequency: selectedOption.value });
   //   setFormErrors({ ...formErrors, orderSyncFrequency: "" });
-
   // };
 
   const handleSyncFrequency = (e) => {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
-
+  
     setInitFormData((prevState) => ({
       ...prevState,
       [name]: trimmedValue,
     }));
-
+  
     const updatedSyncFrequency = orderSyncFrequency.split(" ");
+    console.log("sync",updatedSyncFrequency)
     switch (name) {
       case "minute":
         if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
@@ -176,11 +175,12 @@ function IntegratorPage4(props) {
       default:
         break;
     }
+  
     setOrderSyncFrequency(updatedSyncFrequency.join(" "));
-  };
+  }
 
   const handleChange = (key, value) => {
-    const formData = new FormData(document.forms.integrator4);
+    const formData = new FormData(document.forms.integrator3);
     formData.set(key, value);
     const errors = validateIntegratorOrderSync(formData);
     setFormErrors(errors);
@@ -192,54 +192,58 @@ function IntegratorPage4(props) {
     setInitFormData({ ...initFormData, orderTimeZone });
     handleChange("orderTimeZone", orderTimeZone);
   };
+  
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-    const errors = validateIntegratorOrderSync(formData);
-    setFormErrors(errors);
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
+  const errors = validateIntegratorOrderSync(formData);
+  setFormErrors(errors);
 
-    if (Object.keys(errors).length === 0) {
-      const integrationId = localStorage.getItem("integratorId");
-      const integrationName = localStorage.getItem("integratorName");
+  if (Object.keys(errors).length === 0) {
+    const integrationId = localStorage.getItem("integratorId");
+    const integrationName = localStorage.getItem("integratorName");
 
-      const { value, label } = initFormData.orderTimeZone;
+    const { value, label } = initFormData.orderTimeZone;
 
-      const timeZoneString = `${value}`;
+    const timeZoneString = `${value}`;
 
-      const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
-        "hour"
-      )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
-        "week"
-      )}`;
+    const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
+      "hour"
+    )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
+      "week"
+    )}`;
 
-      const payload = {
-        ...initFormData,
-        orderSyncFrequency,
-        orderTimeZone: timeZoneString,
-        integrationId,
-        integrationName,
-      };
-      setIsLoading(true);
-      axios
-        .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
-        .then((response) => {
-          const { success, message, data } = response.data;
-          if (success) {
-            toast.success(message);
-            setFormData({});
-            setPage(4);
-          } else {
-            toast.error(message);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          setIsLoading(false);
-        });
-    }
-  };
+    const payload = {
+      // ...initFormData,
+      orderSyncFrequency,
+      orderTimeZone: timeZoneString,
+      integrationId,
+      integrationName,
+      type:"order"
+    };
+    setIsLoading(true);
+    axios
+      .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
+      .then((response) => {
+        const { success, message, data } = response.data;
+        if (success) {
+          toast.success(message);
+          setFormData({});
+          setPage("4");
+        } else {
+          toast.error(message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setIsLoading(false);
+      });
+  }
+};
+
+  
   const handleOnClick = (e) => {
     e.preventDefault();
     const form = e.currentTarget.closest("form");
@@ -251,53 +255,57 @@ function IntegratorPage4(props) {
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      const integrationId = localStorage.getItem("integratorId");
-      const integrationName = localStorage.getItem("integratorName");
+    const integrationId = localStorage.getItem("integratorId");
+    const integrationName = localStorage.getItem("integratorName");
 
-      const { value, label } = initFormData.orderTimeZone;
+    const { value, label } = initFormData.orderTimeZone;
 
-      const timeZoneString = `${value}`;
+    const timeZoneString = `${value}`;
 
-      const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
-        "hour"
-      )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
-        "week"
-      )}`;
+    const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
+      "hour"
+    )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
+      "week"
+    )}`;
 
-      const payload = {
-        ...initFormData,
-        orderSyncFrequency,
-        orderTimeZone: timeZoneString,
-        integrationId,
-        integrationName,
-      };
-      setIsLoadingExit(true);
-      axios
-        .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
-        .then((response) => {
-          const { success, message, data } = response.data;
-          if (success) {
-            toast.success(message);
-            setFormData({});
-            history.push("/integrator");
-            localStorage.removeItem("integratorId");
-            localStorage.removeItem("integratorName");
-          } else {
-            toast.error(message);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          setIsLoadingExit(false);
-        });
-    }
+    const payload = {
+      // ...initFormData,
+      orderSyncFrequency,
+      orderTimeZone: timeZoneString,
+      integrationId,
+      integrationName,
+      type:"order"
+
+    };
+    setIsLoadingExit(true)
+    axios
+      .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
+      .then((response) => {
+        const { success, message, data } = response.data;
+        if (success) {
+          toast.success(message);
+          setFormData({});
+          history.push("/integrator");
+          localStorage.removeItem("integratorId");
+          localStorage.removeItem("integratorName");
+        } else {
+          toast.error(message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setIsLoadingExit(false)
+      });
   };
+}
 
   const getProductData = () => {
     const integrationId = localStorage.getItem("integratorId");
 
     axios
-      .get(`${API_PATH.GET_SYNC_SETTING}?integrationId=${integrationId}`)
+      .get(
+        `${API_PATH.GET_SYNC_SETTING}?integrationId=${integrationId}`
+      )
       .then((response) => {
         const { success, message, data } = response.data;
         if (success) {
@@ -314,20 +322,19 @@ function IntegratorPage4(props) {
           const { orderSyncFrequency } = data;
 
           setOrderSyncFrequency(orderSyncFrequency);
-        } else {
         }
       })
       .catch((error) => {
         console.error(error);
       });
   };
-
+  
   useEffect(() => {
     getProductData();
   }, []);
 
   return (
-    <form onSubmit={handleSubmit} name="integrator4">
+    <form onSubmit={handleSubmit} name="integrator3">
       <div style={{ marginTop: "30px" }}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
@@ -336,26 +343,26 @@ function IntegratorPage4(props) {
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
-                {isLoading ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : (
-                  "Save & Next"
-                )}
+               {isLoading ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Next"
+              )}
               </button>
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="button"
                 onClick={handleOnClick}
               >
-                {isLoadingExit ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : (
-                  "Save & Exit"
-                )}
+              {isLoadingExit ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Exit"
+              )}
               </button>
 
               <button
@@ -369,119 +376,136 @@ function IntegratorPage4(props) {
           </div>
         </div>
         <div className="row mt-3 mt-sm-0">
-          <div className="col-12">
-            <label>
-              Sync Frequency <span style={{ color: "red" }}>*</span>
-            </label>
-            <div className="row">
+         {/* <div className="col-12">
+            <div className="form-group">
+              <label>
+                Sync Frequency <span style={{ color: "red" }}>*</span>
+              </label>
+              <Select
+                placeholder="Select Frequency"
+                options={syncFrequencyOptions}
+                value={syncFrequencyOptions.find(
+                  (option) => option.value === formData.orderSyncFrequency
+                )}
+                onChange={handleSyncFrequency}
+              />
+              {formErrors.orderSyncFrequency && (
+                <span className="text-danger">
+                  {formErrors.orderSyncFrequency}
+                </span>
+              )}
+            </div>
+              </div>*/}
+              <div className="col-12">
+              <label>Sync Frequency <span style={{ color: "red" }}>*</span></label>
+              <div className="row">
+             
               <div className="col-sm-4 col-lg-2">
-                <div className="form-group">
+              <div className="form-group">
+               
                   <input
                     className="form-control"
                     type="text"
-                    placeholder="*"
+                  placeholder="*"
                     name="minute"
-                    value={orderSyncFrequency?.split(" ")[0] || ""}
+                    value={orderSyncFrequency.split(" ")[0] || ""}
                     onChange={handleSyncFrequency}
                   />
                   <label>
-                    Minute <span style={{ color: "red" }}>*</span>
-                  </label>
-                  {formErrors.minute && (
+                  Minute <span style={{ color: "red" }}>*</span>
+                 </label>
+                 {formErrors.minute && (
                     <p className="text-danger mt-n2">{formErrors.minute}</p>
                   )}
-                </div>
+              </div>
               </div>
               <div className="col-sm-4 col-lg-2">
-                <div className="form-group">
+              <div className="form-group">
+              
                   <input
                     className="form-control"
                     type="text"
-                    placeholder="*"
+                  placeholder="*"
                     name="hour"
-                    value={orderSyncFrequency?.split(" ")[1] || ""}
+                    value={orderSyncFrequency.split(" ")[1] || ""}
                     onChange={handleSyncFrequency}
                   />
                   <label>
-                    Hour <span style={{ color: "red" }}>*</span>
+                   Hour <span style={{ color: "red" }}>*</span>
                   </label>
                   {formErrors.hour && (
                     <p className="text-danger mt-n2">{formErrors.hour}</p>
                   )}
-                </div>
+              </div>
               </div>
               <div className="col-sm-4 col-lg-2">
-                <div className="form-group">
+              <div className="form-group">
+              
                   <input
                     className="form-control"
                     type="text"
-                    placeholder="*"
+                  placeholder="*"
                     name="day"
-                    value={orderSyncFrequency?.split(" ")[2] || ""}
+                    value={orderSyncFrequency.split(" ")[2] || ""}
+  
                     onChange={handleSyncFrequency}
                   />
                   <label>
-                    Day(Month) <span style={{ color: "red" }}>*</span>
+                   Day(Month) <span style={{ color: "red" }}>*</span>
                   </label>
                   {formErrors.day && (
                     <p className="text-danger mt-n2">{formErrors.day}</p>
                   )}
-                </div>
+              </div>
               </div>
               <div className="col-sm-4 col-lg-3">
-                <div className="form-group">
+              <div className="form-group">
+               
                   <input
                     className="form-control"
                     type="text"
-                    placeholder="*"
+                  placeholder="*"
                     name="month"
-                    value={orderSyncFrequency?.split(" ")[3] || ""}
+                    value={orderSyncFrequency.split(" ")[3] || ""}
+  
                     onChange={handleSyncFrequency}
                   />
                   <label>
-                    Month <span style={{ color: "red" }}>*</span>
+                   Month <span style={{ color: "red" }}>*</span>
                   </label>
                   {formErrors.month && (
                     <p className="text-danger mt-n2">{formErrors.month}</p>
                   )}
-                </div>
+              </div>
               </div>
               <div className="col-sm-4 col-lg-3">
-                <div className="form-group">
+              <div className="form-group">
+               
                   <input
                     className="form-control"
                     type="text"
-                    placeholder="*"
+                  placeholder="*"
                     name="week"
-                    value={orderSyncFrequency?.split(" ")[4] || ""}
+                    value={orderSyncFrequency.split(" ")[4] || ""}
+  
                     onChange={handleSyncFrequency}
                   />
                   <label>
-                    Day(Week) <span style={{ color: "red" }}>*</span>
+                   Day(Week) <span style={{ color: "red" }}>*</span>
                   </label>
                   {formErrors.week && (
                     <p className="text-danger mt-n2">{formErrors.week}</p>
                   )}
-                </div>
               </div>
-              <small
-                className="form-text text-muted csv-text px-3"
-                style={{ marginTop: "-20px", position: "relative", zIndex: "1" }}
-              >
-                Learn more about Cornjob: &nbsp;{" "}
-                <a
-                  href="https://crontab.guru/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="csv-text"
-                  style={{position: "relative", zIndex: "2"}}
-                >
-                  https://crontab.guru
-                </a>
-              </small>
-            </div>
-          </div>
-          <div className="col-12 mt-3">
+              </div>
+              <small className="form-text text-muted csv-text px-3" style={{marginTop: "-20px", position: "relative", zIndex: "1"}}>
+              Learn more about Cronjob: &nbsp; <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="csv-text" style={{position: "relative", zIndex: "2"}}>
+              https://crontab.guru
+            </a>
+            </small>
+              </div>
+              </div>
+            <div className="col-12 mt-3">
             <div className="form-group">
               <label>
                 TimeZone <span style={{ color: "red" }}>*</span>
@@ -494,9 +518,7 @@ function IntegratorPage4(props) {
                   };
                 })}
                 placeholder="Select TimeZone"
-                value={
-                  initFormData.orderTimeZone ? initFormData.orderTimeZone : ""
-                }
+                value={initFormData.orderTimeZone ? initFormData.orderTimeZone : ""}
                 onChange={handleTimeZoneChange}
                 name="orderTimeZone"
               />

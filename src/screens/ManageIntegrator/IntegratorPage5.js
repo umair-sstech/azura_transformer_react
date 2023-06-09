@@ -256,12 +256,14 @@ function IntegratorPage5(props) {
       const { value, label } = initFormData.trackingTimeZone;
       const timeZoneString = `${value}`;
       const payload = {
-        ...initFormData,
+        // ...initFormData,
         trackingSyncFrequency,
         trackingTimeZone: timeZoneString,
         integrationId,
         integrationName,
+        type:"tracking"
       };
+      console.log("payloadTracking",payload)
       setIsLoadingExit(true);
       axios
         .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)

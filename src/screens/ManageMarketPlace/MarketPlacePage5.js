@@ -210,11 +210,12 @@ function MarketPlacePage5(props) {
         "week"
       )}`;
       const payload = {
-        ...initFormData,
+        // ...initFormData,
         trackingSyncFrequency,
         trackingTimeZone: timeZoneString,
         integrationId,
         integrationName,
+        type:"order"
       };
       setIsLoading(true);
       axios
@@ -255,11 +256,13 @@ function MarketPlacePage5(props) {
       const { value, label } = initFormData.trackingTimeZone;
       const timeZoneString = `${value}`;
       const payload = {
-        ...initFormData,
+        // ...initFormData,
         trackingSyncFrequency,
         trackingTimeZone: timeZoneString,
         integrationId,
         integrationName,
+        type:"order"
+
       };
       setIsLoadingExit(true);
       axios
