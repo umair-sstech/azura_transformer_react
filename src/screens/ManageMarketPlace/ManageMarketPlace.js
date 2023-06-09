@@ -173,12 +173,12 @@ function ManageMarketPlace(props) {
                             setPage={setPage}
                           />
                         ),
-                        6: (
-                          <MarketPlacePage6
-                            onButtonClick={nextPage}
-                            setPage={setPage}
-                          />
-                        ),
+                        // 6: (
+                        //   <MarketPlacePage6
+                        //     onButtonClick={nextPage}
+                        //     setPage={setPage}
+                        //   />
+                        // ),
                        
                       }[page]
                     }

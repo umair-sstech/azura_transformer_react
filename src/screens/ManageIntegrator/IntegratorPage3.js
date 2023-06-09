@@ -9,11 +9,10 @@ import { Spinner } from "react-bootstrap";
 import { FormContext } from "./ManageIntegrator";
 import { validateIntegratorProductSync } from "../Validations/Validation";
 
-
 function IntegratoePage3(props) {
-  const {setPage}=props
+  const { setPage } = props;
   const { processCancel, formData, setFormData } = useContext(FormContext);
-  
+
   const [initFormData, setInitFormData] = useState({
     productSyncFrequency: "",
     productTimeZone: "",
@@ -24,7 +23,7 @@ function IntegratoePage3(props) {
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
-  const [productSyncFrequency,setProductSyncFrequency]=useState("")
+  const [productSyncFrequency, setProductSyncFrequency] = useState("");
 
   const history = useHistory();
 
@@ -67,12 +66,12 @@ function IntegratoePage3(props) {
   const handleSyncFrequency = (e) => {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
-  
+
     setInitFormData((prevState) => ({
       ...prevState,
       [name]: trimmedValue,
     }));
-  
+
     const updatedSyncFrequency = productSyncFrequency.split(" ");
     switch (name) {
       case "minute":
@@ -174,9 +173,9 @@ function IntegratoePage3(props) {
       default:
         break;
     }
-  
+
     setProductSyncFrequency(updatedSyncFrequency.join(" "));
-  }
+  };
 
   const handleChange = (key, value) => {
     const formData = new FormData(document.forms.integrator3);
@@ -186,62 +185,65 @@ function IntegratoePage3(props) {
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
+  const findDefaultTimeZone = timeZoneData.find((val) =>
+    val.text.toLowerCase().includes("sydney")
+  );
+
   const handleTimeZoneChange = (selectedOption) => {
     const productTimeZone = selectedOption;
     setInitFormData({ ...initFormData, productTimeZone });
     handleChange("productTimeZone", productTimeZone);
   };
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-  const form = e.target;
-  const formData = new FormData(form);
-  const errors = validateIntegratorProductSync(formData);
-  setFormErrors(errors);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const errors = validateIntegratorProductSync(formData);
+    setFormErrors(errors);
 
-  if (Object.keys(errors).length === 0) {
-    const integrationId = localStorage.getItem("integratorId");
-    const integrationName = localStorage.getItem("integratorName");
+    if (Object.keys(errors).length === 0) {
+      const integrationId = localStorage.getItem("integratorId");
+      const integrationName = localStorage.getItem("integratorName");
 
-    const { value, label } = initFormData.productTimeZone;
+      const { value, label } = initFormData.productTimeZone || {};
+      const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
-    const timeZoneString = `${value}`;
+      const productSyncFrequency = `${formData.get("minute")} ${formData.get(
+        "hour"
+      )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
+        "week"
+      )}`;
 
-    const productSyncFrequency = `${formData.get("minute")} ${formData.get(
-      "hour"
-    )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
-      "week"
-    )}`;
+      const payload = {
+        // ...initFormData,
+        productSyncFrequency,
+        productTimeZone: timeZoneString,
+        integrationId,
+        integrationName,
+        type: "product"
+      };
+      console.log("paylodproduct", payload);
+      setIsLoading(true);
+      axios
+        .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
+        .then((response) => {
+          const { success, message, data } = response.data;
+          if (success) {
+            toast.success(message);
+            setFormData({});
+            setPage("3");
+          } else {
+            toast.error(message);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsLoading(false);
+        });
+    }
+  };
 
-    const payload = {
-      ...initFormData,
-      productSyncFrequency,
-      productTimeZone: timeZoneString,
-      integrationId,
-      integrationName,
-    };
-    console.log("paylodproduct",payload)
-    setIsLoading(true);
-    axios
-      .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
-      .then((response) => {
-        const { success, message, data } = response.data;
-        if (success) {
-          toast.success(message);
-          setFormData({});
-          setPage("3");
-        } else {
-          toast.error(message);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setIsLoading(false);
-      });
-  }
-};
-
-  
   const handleOnClick = (e) => {
     e.preventDefault();
     const form = e.currentTarget.closest("form");
@@ -253,55 +255,53 @@ const handleSubmit = (e) => {
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-    const integrationId = localStorage.getItem("integratorId");
-    const integrationName = localStorage.getItem("integratorName");
+      const integrationId = localStorage.getItem("integratorId");
+      const integrationName = localStorage.getItem("integratorName");
 
-    const { value, label } = initFormData.productTimeZone;
+      const { value, label } = initFormData.productTimeZone || {};
+      const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
-    const timeZoneString = `${value}`;
+      const productSyncFrequency = `${formData.get("minute")} ${formData.get(
+        "hour"
+      )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
+        "week"
+      )}`;
 
-    const productSyncFrequency = `${formData.get("minute")} ${formData.get(
-      "hour"
-    )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
-      "week"
-    )}`;
-
-    const payload = {
-      ...initFormData,
-      productSyncFrequency,
-      productTimeZone: timeZoneString,
-      integrationId,
-      integrationName,
-    };
-    setIsLoadingExit(true)
-    axios
-      .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
-      .then((response) => {
-        const { success, message, data } = response.data;
-        if (success) {
-          toast.success(message);
-          setFormData({});
-          history.push("/integrator");
-          localStorage.removeItem("integratorId");
-          localStorage.removeItem("integratorName");
-        } else {
-          toast.error(message);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setIsLoadingExit(false)
-      });
+      const payload = {
+        // ...initFormData,
+        productSyncFrequency,
+        productTimeZone: timeZoneString,
+        integrationId,
+        integrationName,
+        type: "product"
+      };
+      setIsLoadingExit(true);
+      axios
+        .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
+        .then((response) => {
+          const { success, message, data } = response.data;
+          if (success) {
+            toast.success(message);
+            setFormData({});
+            history.push("/integrator");
+            localStorage.removeItem("integratorId");
+            localStorage.removeItem("integratorName");
+          } else {
+            toast.error(message);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsLoadingExit(false);
+        });
+    }
   };
-}
 
   const getProductData = () => {
     const integrationId = localStorage.getItem("integratorId");
 
     axios
-      .get(
-        `${API_PATH.GET_SYNC_SETTING}?integrationId=${integrationId}`
-      )
+      .get(`${API_PATH.GET_SYNC_SETTING}?integrationId=${integrationId}`)
       .then((response) => {
         const { success, message, data } = response.data;
         if (success) {
@@ -324,7 +324,7 @@ const handleSubmit = (e) => {
         console.error(error);
       });
   };
-  
+
   useEffect(() => {
     getProductData();
   }, []);
@@ -339,26 +339,26 @@ const handleSubmit = (e) => {
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
-               {isLoading ? (
-                <>
-                  <Spinner animation="border" size="sm" /> Please wait...
-                </>
-              ) : (
-                "Save & Next"
-              )}
+                {isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Next"
+                )}
               </button>
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="button"
                 onClick={handleOnClick}
               >
-              {isLoadingExit ? (
-                <>
-                  <Spinner animation="border" size="sm" /> Please wait...
-                </>
-              ) : (
-                "Save & Exit"
-              )}
+                {isLoadingExit ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  "Save & Exit"
+                )}
               </button>
 
               <button
@@ -372,7 +372,7 @@ const handleSubmit = (e) => {
           </div>
         </div>
         <div className="row mt-3 mt-sm-0">
-         {/* <div className="col-12">
+          {/* <div className="col-12">
             <div className="form-group">
               <label>
                 Sync Frequency <span style={{ color: "red" }}>*</span>
@@ -392,13 +392,13 @@ const handleSubmit = (e) => {
               )}
             </div>
               </div>*/}
-              <div className="col-12">
-              <label>Sync Frequency <span style={{ color: "red" }}>*</span></label>
-              <div className="row">
-             
+          <div className="col-12">
+            <label>
+              Sync Frequency <span style={{ color: "red" }}>*</span>
+            </label>
+            <div className="row">
               <div className="col-sm-4 col-lg-2">
-              <div className="form-group">
-               
+                <div className="form-group">
                   <input
                     className="form-control"
                     type="text"
@@ -408,100 +408,107 @@ const handleSubmit = (e) => {
                     onChange={handleSyncFrequency}
                   />
                   <label>
-                  Minute <span style={{ color: "red" }}>*</span>
-                 </label>
-                 {formErrors.minute && (
+                    Minute <span style={{ color: "red" }}>*</span>
+                  </label>
+                  {formErrors.minute && (
                     <p className="text-danger mt-n2">{formErrors.minute}</p>
                   )}
-              </div>
+                </div>
               </div>
               <div className="col-sm-4 col-lg-2">
-              <div className="form-group">
-              
+                <div className="form-group">
                   <input
                     className="form-control"
                     type="text"
-                  placeholder="*"
+                    placeholder="*"
                     name="hour"
                     value={productSyncFrequency.split(" ")[1] || ""}
                     onChange={handleSyncFrequency}
                   />
                   <label>
-                   Hour <span style={{ color: "red" }}>*</span>
+                    Hour <span style={{ color: "red" }}>*</span>
                   </label>
                   {formErrors.hour && (
                     <p className="text-danger mt-n2">{formErrors.hour}</p>
                   )}
-              </div>
+                </div>
               </div>
               <div className="col-sm-4 col-lg-2">
-              <div className="form-group">
-              
+                <div className="form-group">
                   <input
                     className="form-control"
                     type="text"
-                  placeholder="*"
+                    placeholder="*"
                     name="day"
                     value={productSyncFrequency.split(" ")[2] || ""}
-  
                     onChange={handleSyncFrequency}
                   />
                   <label>
-                   Day(Month) <span style={{ color: "red" }}>*</span>
+                    Day(Month) <span style={{ color: "red" }}>*</span>
                   </label>
                   {formErrors.day && (
                     <p className="text-danger mt-n2">{formErrors.day}</p>
                   )}
-              </div>
+                </div>
               </div>
               <div className="col-sm-4 col-lg-3">
-              <div className="form-group">
-               
+                <div className="form-group">
                   <input
                     className="form-control"
                     type="text"
-                  placeholder="*"
+                    placeholder="*"
                     name="month"
                     value={productSyncFrequency.split(" ")[3] || ""}
-  
                     onChange={handleSyncFrequency}
                   />
                   <label>
-                   Month <span style={{ color: "red" }}>*</span>
+                    Month <span style={{ color: "red" }}>*</span>
                   </label>
                   {formErrors.month && (
                     <p className="text-danger mt-n2">{formErrors.month}</p>
                   )}
-              </div>
+                </div>
               </div>
               <div className="col-sm-4 col-lg-3">
-              <div className="form-group">
-               
+                <div className="form-group">
                   <input
                     className="form-control"
                     type="text"
-                  placeholder="*"
+                    placeholder="*"
                     name="week"
                     value={productSyncFrequency.split(" ")[4] || ""}
-  
                     onChange={handleSyncFrequency}
                   />
                   <label>
-                   Day(Week) <span style={{ color: "red" }}>*</span>
+                    Day(Week) <span style={{ color: "red" }}>*</span>
                   </label>
                   {formErrors.week && (
                     <p className="text-danger mt-n2">{formErrors.week}</p>
                   )}
+                </div>
               </div>
-              </div>
-              <small className="form-text text-muted csv-text px-3" style={{marginTop: "-20px", position: "relative", zIndex: "1"}}>
-              Learn more about Cronjob: &nbsp; <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="csv-text" style={{position: "relative", zIndex: "2"}}>
-              https://crontab.guru
-            </a>
-            </small>
-              </div>
-              </div>
-            <div className="col-12 mt-3">
+              <small
+                className="form-text text-muted csv-text px-3"
+                style={{
+                  marginTop: "-20px",
+                  position: "relative",
+                  zIndex: "1",
+                }}
+              >
+                Learn more about Cronjob: &nbsp;{" "}
+                <a
+                  href="https://crontab.guru/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="csv-text"
+                  style={{ position: "relative", zIndex: "2" }}
+                >
+                  https://crontab.guru
+                </a>
+              </small>
+            </div>
+          </div>
+          <div className="col-12 mt-3">
             <div className="form-group">
               <label>
                 TimeZone <span style={{ color: "red" }}>*</span>
@@ -514,12 +521,21 @@ const handleSubmit = (e) => {
                   };
                 })}
                 placeholder="Select TimeZone"
-                value={initFormData.productTimeZone ? initFormData.productTimeZone : ""}
+                value={
+                  initFormData.productTimeZone
+                    ? initFormData.productTimeZone
+                    : {
+                        value: findDefaultTimeZone.abbr,
+                        label: findDefaultTimeZone.text,
+                      }
+                }
                 onChange={handleTimeZoneChange}
                 name="productTimeZone"
               />
               {formErrors.productTimeZone && (
-                <span className="text-danger">{formErrors.productTimeZone}</span>
+                <span className="text-danger">
+                  {formErrors.productTimeZone}
+                </span>
               )}
             </div>
           </div>
@@ -529,4 +545,4 @@ const handleSubmit = (e) => {
   );
 }
 
-export default IntegratoePage3
+export default IntegratoePage3;

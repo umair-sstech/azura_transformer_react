@@ -186,6 +186,8 @@ function IntegratorPage4(props) {
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   };
+  const findDefaultTimeZone = timeZoneData.find((val) => val.text.toLowerCase().includes("sydney"))
+
 
   const handleTimeZoneChange = (selectedOption) => {
     const orderTimeZone = selectedOption;
@@ -205,9 +207,8 @@ const handleSubmit = (e) => {
     const integrationId = localStorage.getItem("integratorId");
     const integrationName = localStorage.getItem("integratorName");
 
-    const { value, label } = initFormData.orderTimeZone;
-
-    const timeZoneString = `${value}`;
+    const {value, label} = initFormData.orderTimeZone || {};
+    const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
     const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
       "hour"
@@ -258,9 +259,8 @@ const handleSubmit = (e) => {
     const integrationId = localStorage.getItem("integratorId");
     const integrationName = localStorage.getItem("integratorName");
 
-    const { value, label } = initFormData.orderTimeZone;
-
-    const timeZoneString = `${value}`;
+    const {value, label} = initFormData.orderTimeZone || {};
+    const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
     const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
       "hour"
@@ -518,7 +518,14 @@ const handleSubmit = (e) => {
                   };
                 })}
                 placeholder="Select TimeZone"
-                value={initFormData.orderTimeZone ? initFormData.orderTimeZone : ""}
+                value={
+                  initFormData.orderTimeZone
+                    ? initFormData.orderTimeZone
+                    : {
+                        value: findDefaultTimeZone.abbr,
+                        label: findDefaultTimeZone.text,
+                      }
+                }
                 onChange={handleTimeZoneChange}
                 name="orderTimeZone"
               />

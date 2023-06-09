@@ -163,9 +163,9 @@ function SupplierPage6(props) {
           setFormData(supplierData);
           console.log("object,", supplierData);
   
-          const barcodeName = supplierData.barcodeName || "";
-          const preselectedOptions = barcodeName.split(",");
-          setSelectedOptions(preselectedOptions);
+          const barcodeName = supplierData.barcodeName;
+          // const preselectedOptions = (barcodeName !== null && barcodeName.split(","));
+          setSelectedOptions(barcodeName !== null ? barcodeName.split(",") : []);
   
           const isBarcodeRequired = supplierData.isBarcodeRequired || false;
           console.log("isbarcodeRequired",isBarcodeRequired)
