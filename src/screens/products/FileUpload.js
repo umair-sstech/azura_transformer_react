@@ -41,9 +41,10 @@ function FileUpload(props) {
       const suppliers = response.data.data;
       setSupplier(suppliers);
       const supplierNames = suppliers.map((supplier) => ({
-        value: supplier.name,
+        value: supplier.id,
         label: supplier.name,
       }));
+      console.log("supplierName",supplierNames)
       setChooseSupplierList(supplierNames);
     } catch (error) {
       console.error("Error fetching suppliers:", error);
@@ -51,6 +52,7 @@ function FileUpload(props) {
   };
 
   const getFileList = async (currentPage, dataLimit, search, supplierId) => {
+    console.log("supplierId",supplierId)
     props.onLoading(true);
   
     try {
@@ -72,6 +74,7 @@ function FileUpload(props) {
   useEffect(() => {
     const getProductData = async () => {
       const response = await getFileList(currentPage, dataLimit, null, supplier.value);
+      console.log(" supplier.value", supplier.value)
       console.log("response",response)
       if (response) {
         let totalPage = Math.ceil(response.totalRecord / response.limit);
@@ -168,7 +171,7 @@ function FileUpload(props) {
                   <Select
                   options={chooseSupplierList}
                   onChange={(data) => {
-                    setSupplier(data.value);
+                    setSupplier(data);
                   }}
                   defaultValue={{ label: "Select Supplier" }}
                 />

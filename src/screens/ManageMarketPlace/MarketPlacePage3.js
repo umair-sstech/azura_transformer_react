@@ -214,11 +214,13 @@ function MarketPlacePage3(props) {
       )}`;
 
       const payload = {
-        ...initFormData,
+        // ...initFormData,
         productSyncFrequency,
         productTimeZone: timeZoneString,
         integrationId,
         integrationName,
+         type: "product",
+
       };
       setIsLoading(true);
       axios
@@ -264,11 +266,13 @@ function MarketPlacePage3(props) {
       )}`;
 
       const payload = {
-        ...initFormData,
+        // ...initFormData,
         productSyncFrequency,
         productTimeZone: timeZoneString,
         integrationId,
         integrationName,
+        type: "product",
+
       };
       setIsLoadingExit(true);
       axios
