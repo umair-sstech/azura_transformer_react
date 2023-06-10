@@ -99,6 +99,29 @@ function IntegrationType(props) {
     fetchSupplierInfo();
   }, [currentPage, dataLimit, status]);
 
+  const getIntegrationTypes = (id) => {
+    const type = supplierList.filter((data) => data.id === id)
+    return type;
+  }
+
+  const redirectToIntegration = (id) => {
+    const arr = getIntegrationTypes(id)
+    const type = arr[0].type;
+    if(type === "Supplier") {
+      localStorage.setItem("supplierId",arr[0].id);
+      localStorage.setItem("supplierName",arr[0].name);
+      history.push("/manage-supplier")
+    } else if(type === "Integrator") {
+      localStorage.setItem("integratorId",arr[0].id);
+      localStorage.setItem("integratorName",arr[0].name);
+      history.push("/manage-integrator")
+    } else {
+      localStorage.setItem("marketPlaceId",arr[0].id);
+      localStorage.setItem("marketPlaceName",arr[0].name);
+      history.push("/manage-marketPlace")
+    }
+  }
+
   const activateDeactivate = (event, supplierId) => {
     const status = event.target.checked;
     Swal.fire({
@@ -180,7 +203,7 @@ function IntegrationType(props) {
                     onChange={handleChange}
                     options={options}
                     isDisabled={false}
-                    className="select-option"
+                    className="select-option customSelect"
                   />
                 </div>
 
@@ -211,6 +234,7 @@ function IntegrationType(props) {
                         <th>Last Update(UTC)</th>
                         <>
                           <th>Status</th>
+                          <th>Action</th>
                         </>
                       </tr>
                     </thead>
@@ -246,6 +270,9 @@ function IntegrationType(props) {
                                   activateDeactivate(e, supplier.id)
                                 }
                               />
+                            </td>
+                            <td className='action-group'>
+                              <i data-placement="top" title="Edit" className="fa fa-edit edit" onClick={() => redirectToIntegration(supplier.id)}></i>
                             </td>
                           </>
                         </tr>

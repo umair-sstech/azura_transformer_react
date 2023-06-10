@@ -57,11 +57,11 @@ const ProductOptions = () => {
                 </div>
                 <hr />
                 <div className="d-flex justify-content-around align-items-center">
-                  <i
+                 { /*<i
                     className="fa fa-trash fa-lg ml-2"
                     aria-hidden="true"
                     style={{ color: "red" }}
-                  ></i>
+  ></i>*/}
                   <input
                     type="text"
                     placeholder="Color"
@@ -81,11 +81,11 @@ const ProductOptions = () => {
                   />
                 </div>
                 <div className="d-flex justify-content-around align-items-center mt-3">
-                  <i
+                  {/*<i
                     className="fa fa-trash fa-lg ml-2"
                     aria-hidden="true"
                     style={{ color: "red" }}
-                  ></i>
+></i>*/}
                   <input
                     type="text"
                     placeholder="Size"

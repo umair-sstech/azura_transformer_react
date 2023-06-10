@@ -15,7 +15,6 @@ function ProductExport(props) {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
-  const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
   const history = useHistory();
 
@@ -53,7 +52,6 @@ function ProductExport(props) {
     });
   };
 
-  
   const checkAnyCheckboxChecked = (checkboxes) => {
     return Object.values(checkboxes).some(box => box.checked)
   }
@@ -90,9 +88,13 @@ function ProductExport(props) {
       requestData[0].productCount = selectedProductCounts.join(",");
 
       const isChecked = checkAnyCheckboxChecked(checkboxes)
-      if(!isChecked) {
-        toast.error("Please select atleast one value.");
-        return;
+      if(data.supplier_product.length > 0) {
+
+        if(!isChecked) {
+          toast.error("Please select atleast one value.");
+          return;
+        }
+
       }
 
       setIsLoading(true);
@@ -113,8 +115,6 @@ function ProductExport(props) {
       setIsLoading(false);
     }
   };
-
-
 
   const handleOnClick = async (e) => {
     e.preventDefault();
@@ -147,9 +147,13 @@ function ProductExport(props) {
       requestData[0].productCount = selectedProductCounts.join(",");
 
       const isChecked = checkAnyCheckboxChecked(checkboxes)
-      if(!isChecked) {
-        toast.error("Please select atleast one value.");
-        return;
+      if(data.supplier_product.length > 0) {
+
+        if(!isChecked) {
+          toast.error("Please select atleast one value.");
+          return;
+        }
+
       }
 
       setIsLoadingExit(true)
@@ -249,14 +253,13 @@ function ProductExport(props) {
                   <input
                   type="checkbox"
                 />
-                
 
                   </td>
                   <td style={{ width: "6%" }}>{product.supplierId}</td>
                   <td style={{ width: "30%" }}>
-                    {product.supplierData} 
+                    {product.supplierData}
                   </td>
-                  <td>{product.Azura_Category_Tree}</td>  
+                  <td>{product.Azura_Category_Tree}</td>
                   <td>{product.product_count}</td>
                 </tr>
               ))}

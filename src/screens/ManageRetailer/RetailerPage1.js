@@ -52,7 +52,8 @@ function RetailerPage1(props) {
     }
   };
 
- 
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -65,7 +66,7 @@ function RetailerPage1(props) {
     const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
 
     const payload = {
-      id: retailerIntegrationId ? retailerIntegrationId : "", // Check if "id" exists and use it for update, otherwise leave it empty for create
+      id: retailerIntegrationId ? retailerIntegrationId : "", 
       userId,
       userName,
       retailerId,
@@ -128,6 +129,9 @@ function RetailerPage1(props) {
       console.error("Failed to retrieve retailer integration data:", error);
     }
   };
+
+
+  
 
   const handleOnClick = async (e) => {
     e.preventDefault()

@@ -186,6 +186,8 @@ function IntegratorPage5(props) {
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
+  const findDefaultTimeZone = timeZoneData.find((val) => val.text.toLowerCase().includes("sydney"))
+
   const handleTimeZoneChange = (selectedOption) => {
     const trackingTimeZone = selectedOption;
     setInitFormData({ ...initFormData, trackingTimeZone });
@@ -216,6 +218,7 @@ function IntegratorPage5(props) {
   //       trackingTimeZone: timeZoneString,
   //       integrationId,
   //       integrationName,
+  //       type: "tracking" 
   //     };
   //     setIsLoading(true);
   //     axios
@@ -253,15 +256,18 @@ function IntegratorPage5(props) {
       const integrationId = localStorage.getItem("integratorId");
       const integrationName = localStorage.getItem("integratorName");
 
-      const { value, label } = initFormData.trackingTimeZone;
-      const timeZoneString = `${value}`;
+      const {value, label} = initFormData.trackingTimeZone || {};
+      const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
+
       const payload = {
-        ...initFormData,
+        // ...initFormData,
         trackingSyncFrequency,
         trackingTimeZone: timeZoneString,
         integrationId,
         integrationName,
+        type:"tracking"
       };
+      console.log("payloadTracking",payload)
       setIsLoadingExit(true);
       axios
         .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
@@ -484,7 +490,12 @@ function IntegratorPage5(props) {
                 })}
                 placeholder="Select TimeZone"
                 value={
-                  initFormData.trackingTimeZone ? initFormData.trackingTimeZone : ""
+                  initFormData.trackingTimeZone
+                    ? initFormData.trackingTimeZone
+                    : {
+                        value: findDefaultTimeZone.abbr,
+                        label: findDefaultTimeZone.text,
+                      }
                 }
                 onChange={handleTimeZoneChange}
                 name="trackingTimeZone"

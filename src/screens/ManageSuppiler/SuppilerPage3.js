@@ -412,7 +412,7 @@ function SuppilerPage3(props) {
         mappingArray.push(mappingObject);
       });
 
-      setIsLoading(true);
+      setIsLoadingExit(true);
       try {
         const response = await axios.post(
           `${API_PATH.DATA_FILE_MAPPING}`,
@@ -430,7 +430,7 @@ function SuppilerPage3(props) {
       } catch (error) {
         console.error(error);
       } finally {
-        setIsLoading(false);
+        setIsLoadingExit(false);
       }
     }
   };

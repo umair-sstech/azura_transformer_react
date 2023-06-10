@@ -8,7 +8,7 @@ const stepNames = [
   "Product Sync Settings",
   "Order Sync Settings",
   "Tracking Settings",
-  "Extra Settings",
+  // "Extra Settings",
 ];
 
 const styles = {
@@ -26,7 +26,7 @@ const styles = {
 
 const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
   const totalSteps = stepNames.length;
-  const stepPercentage = ((page - 1) / (totalSteps - 1)) * 120;
+  const stepPercentage = ((page - 1) / (totalSteps - 1)) * 110;
 
   return (
     <div>

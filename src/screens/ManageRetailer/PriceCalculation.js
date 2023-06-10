@@ -9,6 +9,11 @@ import { validatePriceCalculation } from "../Validations/Validation";
 import { API_PATH } from "../ApiPath/Apipath";
 import "../ManageRetailer/Retailer.css";
 
+const radioBtns = [
+  { label: "Round up to Nearest Decimal Point", value: "decimal" },
+  { label: "Round up to Nearest Multiple of 5", value: "5" }
+]
+
 function PriceCalculation(props) {
   const { setPage } = props;
   const { processCancel, formData, setFormData } = useContext(FormContext);
@@ -21,7 +26,7 @@ function PriceCalculation(props) {
   const [supplierData, setSupplierData] = useState([]);
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
-  const [selectedRadioOption, setSelectedRadioOption] = useState("5");
+  const [selectedRadioOption, setSelectedRadioOption] = useState(["5"]);
 
   useEffect(() => {
     if (formData) {
@@ -62,17 +67,28 @@ function PriceCalculation(props) {
     }
   };
 
-  const handleRadioChange = (event) => {
-    setSelectedRadioOption(event.target.value);
-  };
+  const handleRadioChange = (event, accDataId) => {
+    const { value } = event.target;
+    const newSelectedRadioOption = [...selectedRadioOption];
+    newSelectedRadioOption[accDataId] = value;
+    setSelectedRadioOption(newSelectedRadioOption);
+  };   
+  useEffect(() => {
+    // Set default selected radio button value for each accordion
+    const defaultValue = "5";
+    const defaultSelectedRadioOption = Array(supplierData.length).fill(defaultValue);
+    setSelectedRadioOption(defaultSelectedRadioOption);
+  }, [supplierData]);    
   
-
   let message;
-  if (selectedRadioOption === "decimal") {
-    message = "e.g. Price = 17.4, Output = 18";
-  } else if (selectedRadioOption === "5") {
-    message = "e.g. Price = 17, Output = 20";
-  }
+  const radioMsg = selectedRadioOption?.map((option) => {
+    if (option === "decimal") {
+      message = "e.g. Price = 17.4, Output = 18";
+    } else if (option === "5") {
+      message = "e.g. Price = 17, Output = 20";
+    }
+    return message;
+  })
 
   const handleSelectChange = (selectedOption, supplierId) => {
     const updatedSelectedOptions = { ...selectedOptions };
@@ -113,6 +129,8 @@ function PriceCalculation(props) {
     );
   };
 
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -128,7 +146,7 @@ function PriceCalculation(props) {
         );
         const supplierSettingId = localStorage.getItem("supplierSettingId");
 
-        const payload = supplierSettingId.split(",").map((supplierId) => ({
+        const payload = supplierSettingId.split(",").map((supplierId, idx) => ({
           id: retailerIntegrationId,
           supplierId,
           costPriceField: selectedOptions[supplierId]?.label || "",
@@ -138,16 +156,19 @@ function PriceCalculation(props) {
           discountValue: initFormData[supplierId]?.discountValue || "",
           discountType: "percentage",
           extraValue: "",
-          roundUp: selectedRadioOption,
+          roundUp: selectedRadioOption[idx],
         }));
-
         console.log("payload", payload);
-        if (
-          selectedOptions[supplierSettingId].value === "" ||
-          selectedOptions[supplierSettingId].label === "Select Price"
-        ) {
-          return toast.error("Please select Price.");
-        }
+     
+        const supplierIds = supplierSettingId.split(",");
+        const isPriceSelected = supplierIds.some((supplierId) =>
+        selectedOptions[supplierId]?.value === "" ||
+        selectedOptions[supplierId]?.label === "Select Price"
+      );
+      if (isPriceSelected) {
+        return toast.error("Please select Price.");
+      }
+
         const checkNegativeValue = checkAnyValueIsNegative(payload);
         if (checkNegativeValue) {
           return toast.error("Values can not be negative.");
@@ -198,9 +219,9 @@ function PriceCalculation(props) {
           
         });
   
-        const roundUpValue = data[0]?.roundUp || "5";
-        setSelectedRadioOption(roundUpValue);
-        console.log("roundupValue",roundUpValue)
+        // const roundUpValue = data[0]?.roundUp || "5";
+        // setSelectedRadioOption(roundUpValue);
+        // console.log("roundupValue",roundUpValue)
 
         setFormData(initialFormData);
         setSelectedOptions(initialSelectedOptions);
@@ -229,7 +250,7 @@ function PriceCalculation(props) {
         );
         const supplierSettingId = localStorage.getItem("supplierSettingId");
 
-        const payload = supplierSettingId.split(",").map((supplierId) => ({
+        const payload = supplierSettingId.split(",").map((supplierId,idx) => ({
           id: retailerIntegrationId,
           supplierId,
           costPriceField: selectedOptions[supplierId]?.label || "",
@@ -239,15 +260,15 @@ function PriceCalculation(props) {
           discountValue: initFormData[supplierId]?.discountValue || "",
           discountType: "percentage",
           extraValue: "",
-          roundUp: selectedRadioOption,
+          roundUp: selectedRadioOption[idx],
         }));
 
-        if (
-          selectedOptions[supplierSettingId].value === "" ||
-          selectedOptions[supplierSettingId].label === "Select Price"
-        ) {
-          return toast.error("Please select Price.");
-        }
+        // if (
+        //   selectedOptions[supplierSettingId].value === "" ||
+        //   selectedOptions[supplierSettingId].label === "Select Price"
+        // ) {
+        //   return toast.error("Please select Price.");
+        // }
         const checkNegativeValue = checkAnyValueIsNegative(payload);
         if (checkNegativeValue) {
           return toast.error("Values can not be negative.");
@@ -399,6 +420,7 @@ function PriceCalculation(props) {
                                 {formErrors.multipleValue}
                               </span>
                             )}
+                         
                           </div>
                         </div>
                         <div className="col-sm-4 col-lg-2">
@@ -478,46 +500,43 @@ function PriceCalculation(props) {
                         </div>
                       </div>
                       <label htmlFor="roundupRadio mt-3" style={{padding: "0 10px"}}>Round Up Amount</label>
-                      <div className="row px-2">
-                        <div className="col-12 mt-0">
-                          <div className="form-group">
-                            <input
-                              type="radio"
-                              value="decimal"
-                              name="roundUp"
-                              id="roundupRadio1"
-                              onChange={handleRadioChange}
-                            />
-                            <label className="radio-inline text-dark px-2">
-                              Round up to Nearest Decimal Point
-                            </label>
+                      {radioBtns.map((option, idx) => (
+                        <div className="row px-2" key={idx}>
+                          <div className="col-12 mt-0">
+                            <div className="form-group">
+                              <input
+                                type="radio"
+                                value={option.value}
+                                name={`roundUp-${index}`}
+                                id={`roundupRadio-${index}-${idx}`}
+                                onChange={(e) => handleRadioChange(e, index)}
+                                checked={selectedRadioOption[index] === option.value}
+                              />
+                              <label className="radio-inline text-dark px-2">
+                                {option.label}
+                              </label>
+                            </div>
                           </div>
                         </div>
-                        <div className="col-12 mt-0">
-                          <div className="form-group">
-                            <input
-                              type="radio"
-                              value="5"
-                              name="roundUp"
-                              id="roundupRadio2"
-                              onChange={handleRadioChange}
-                              checked={selectedRadioOption === "5"}
-                            />
-                            <label className="radio-inline text-dark px-2">
-                              Round up to Nearest Multiple of 5
-                            </label>
-                          </div>
-                        </div>
-                      </div>
+                      ))}
                       <div className="col-lg-12">
-                        {message && (
-                          <label className="text-success">
-                            {message.split("\n").map((line, index) => (
-                              <div key={index}>{line}</div>
-                            ))}
-                          </label>
+                        {selectedRadioOption[index] && supplier && (
+                          <div className="col-lg-12 text-success">
+                            {selectedRadioOption[index] === "decimal" ? (
+                              <div>
+                                {supplier.supplierName}e.g. Price = 17.4, Output = 18
+                              </div>
+                            ) : (
+                              <div>
+                                {supplier.supplierName}e.g. Price = 17, Output = 20
+                              </div>
+                            )}
+                          </div>
                         )}
                       </div>
+                        {/* {radioMsg.split("\n").map((line, index) => (
+                          <div key={index}>{line}</div>
+                        ))} */}
                     </Card.Body>
                   </Accordion.Collapse>
                 </Card>
