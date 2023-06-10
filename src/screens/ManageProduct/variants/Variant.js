@@ -17,23 +17,52 @@ const Variant = (props) => {
   const { activeKey, setKey } = props;
   const { id } = useParams();
   const [productData, setProductData] = useState({});
+  console.log("productData");
   const [singleVariantData, setSingleVariantData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [identifiers, setIdentifiers] = useState({
+    Variant_SKU: "",
+    UPC: "",
+    MPN: "",
+    EAN: "",
+    ASIN: "",
+    Cost_Price: "",
+    Retail_Price: "",
+    Suggested_Sell_Price: "",
+  });
+  const [optionValue, setOptionValue] = useState({
+    Main_Color: "",
+    Size_Only: "",
+  });
+  const [dimensionValue, setDimensionValue] = useState({
+    Dimension_Units: "",
+    Weight_Unit: "",
+    Length: "",
+    Weight: "",
+    Width: "",
+    Height: "",
+  });
+  const [customField, setCustomFields] = useState([]);
+
 
   const variantData =
-  productData?.product?.[0]?.Preference === "PARENT"
-    ? productData?.variant
-    : productData?.product;
+    productData?.product?.[0]?.Preference === "PARENT"
+      ? productData?.variant
+      : productData?.product;
 
   useEffect(() => {
     // if(activeKey === "variants") {
-      getProductDetails();
+    getProductDetails();
     // }
   }, []);
 
   const getProductDetails = async () => {
     try {
-      const response = await axios.post(`${API_PATH.GET_PRODUCT_LIST_BY_ID}`, { id:id });
+      const response = await axios.post(`${API_PATH.GET_PRODUCT_LIST_BY_ID}`, {
+        id: id,
+      });
       const { success, message, data } = response.data;
 
       if (success) {
@@ -50,10 +79,12 @@ const Variant = (props) => {
   const variantDetails = async (idx) => {
     try {
       setIsLoading(true);
-      const response = await axios.post(`${API_PATH.GET_PRODUCT_LIST_BY_ID}`, { id:id });
+      const response = await axios.post(`${API_PATH.GET_PRODUCT_LIST_BY_ID}`, {
+        id: id,
+      });
       const { success, message, data } = response.data;
       if (success) {
-        setSingleVariantData(data.variant[idx])
+        setSingleVariantData(data.variant[idx]);
         toast.success(message);
       } else {
         toast.error(message);
@@ -64,68 +95,126 @@ const Variant = (props) => {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post(
+        `${API_PATH.UPDATE_PRODUCT_DATA}`,
+        {
+          productId: productData?.variant?.[0]?.id,
+          supplierId: "2",
+          type: "VARIANT",
+          Variant_Title: title,
+          Plain_Description: description,
+          ...identifiers,
+          ...optionValue,
+          ...dimensionValue,
+          custom_fields: customField
+
+        }
+      );
+      const { success, message } = response.data;
+      if (success) {
+        toast.success(message);
+      } else {
+        toast.error(message);
+      }
+    } catch (error) {
+      console.error("Failed to submit title:", error);
+    }
+  };
 
   return (
     <>
-    {isLoading && (
-      <div className="loader-wrapper">
-        <i className="fa fa-refresh fa-spin"></i>
-      </div>
-    )}
-    <div className="product__container">
-      {/* Left Div */}
-      <div className="left">
-        <div className="product__header">
-          <h3>
-            VARIANT SKU : <strong>{singleVariantData !== null ? singleVariantData.Variant_SKU :variantData?.[0]?.Variant_SKU}</strong>
-          </h3>
+      {isLoading && (
+        <div className="loader-wrapper">
+          <i className="fa fa-refresh fa-spin"></i>
+        </div>
+      )}
+      <div className="product__container">
+        {/* Left Div */}
+        <div className="left">
+          <div className="product__header">
+            <h3>
+              VARIANT SKU :{" "}
+              <strong>
+                {singleVariantData !== null
+                  ? singleVariantData.Variant_SKU
+                  : variantData?.[0]?.Variant_SKU}
+              </strong>
+            </h3>
+            <div>
+              <button
+                className="btn btn-primary w-auto"
+                type="submit"
+                onClick={handleSubmit}
+              >
+                Save Variant Product
+              </button>
+            </div>
+          </div>
+
+          <ProductContext.Provider value={{ productData, singleVariantData }}>
+            <VariantTitle title={title} setTitle={setTitle} />
+          </ProductContext.Provider>
+
+          {/* Identifiers */}
+          <ProductContext.Provider value={{ productData, singleVariantData }}>
+            <VariantIdentifiers
+              identifiers={identifiers}
+              setIdentifiers={setIdentifiers}
+            />
+          </ProductContext.Provider>
+
+          {/* Description */}
+          <ProductContext.Provider value={{ productData, singleVariantData }}>
+            <VariantDescription
+              description={description}
+              setDescription={setDescription}
+            />
+          </ProductContext.Provider>
+
+          {/* Images */}
+          <ProductContext.Provider value={{ productData, singleVariantData }}>
+            <VariantImages />
+          </ProductContext.Provider>
+
+          {/* Options */}
+          <ProductContext.Provider value={{ productData, singleVariantData }}>
+            <VariantOptions
+              optionValue={optionValue}
+              setOptionValue={setOptionValue}
+            />
+          </ProductContext.Provider>
+
+          {/* Dimensions */}
+          <ProductContext.Provider value={{ productData, singleVariantData }}>
+            <VariantDimension dimensionValue={dimensionValue} setDimensionValue={setDimensionValue}/>
+          </ProductContext.Provider>
+
+          {/* CustomField */}
+          <ProductContext.Provider
+            value={{
+              product: productData,
+              customFields: productData.variant?.[0]?.custom_field,
+            }}
+          >
+            <VariantCustomField customField={customField} setCustomFields={setCustomFields}/>
+          </ProductContext.Provider>
         </div>
 
-        <ProductContext.Provider value={{productData, singleVariantData}}>
-        <VariantTitle />
+        {/* Right Div */}
+        <ProductContext.Provider value={{ productData, singleVariantData }}>
+          <div className="right">
+            <ProductParent
+              activeKey={activeKey}
+              setKey={setKey}
+              variantDetails={variantDetails}
+            />
+          </div>
         </ProductContext.Provider>
-
-        {/* Identifiers */}
-        <ProductContext.Provider value={{productData, singleVariantData}}>
-        <VariantIdentifiers />
-        </ProductContext.Provider>
-       
-        {/* Description */}
-        <ProductContext.Provider value={{productData, singleVariantData}}>
-        <VariantDescription />
-        </ProductContext.Provider>
-
-        {/* Images */}
-        <ProductContext.Provider value={{productData, singleVariantData}}>
-        <VariantImages />
-        </ProductContext.Provider>
-
-        {/* Options */}
-        <ProductContext.Provider value={{productData, singleVariantData}}>
-        <VariantOptions />
-        </ProductContext.Provider>
-
-        {/* Dimensions */}
-        <ProductContext.Provider value={{productData, singleVariantData}}>
-        <VariantDimension />
-        </ProductContext.Provider>
-  
-        {/* CustomField */}
-        <ProductContext.Provider value={{ product: productData, customFields: productData.variant?.[0]?.custom_field }}>
-        <VariantCustomField />
-      </ProductContext.Provider>
-     
-
       </div>
-
-      {/* Right Div */}
-      <ProductContext.Provider value={{productData, singleVariantData}}>
-        <div className="right">
-          <ProductParent activeKey={activeKey} setKey={setKey} variantDetails={variantDetails} />
-      </div>
-      </ProductContext.Provider>
-    </div>
     </>
   );
 };

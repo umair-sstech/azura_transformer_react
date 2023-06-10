@@ -6,7 +6,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import "@ckeditor/ckeditor5-build-classic/build/translations/en-gb";
 import "../parent/Product.css"
 
-const VariantDescription = () => {
+const VariantDescription = (props) => {
   const {productData, singleVariantData} = useContext(ProductContext);
 
 const variantData =
@@ -39,6 +39,10 @@ const description = singleVariantData !== null ? singleVariantData?.Plain_Descri
               <CKEditor
               editor={ClassicEditor}
               data={description}
+              onChange={(event, editor) => {
+                const data = editor.getData();
+                props.setDescription(data); // Call the callback function from the Parent component
+              }}
             />
               </Card.Body>
             </Accordion.Collapse>

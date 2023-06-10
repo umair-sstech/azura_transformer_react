@@ -2,35 +2,58 @@ import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
-const VariantIdentifiers = () => {
-  const{ productData, singleVariantData } = useContext(ProductContext);
-  const [identifiers, setIdentifiers] = useState({ Variant_SKU: "", UPC: "", MPN: "", EAN: "", ASIN: "",Cost_Price:"",Retail_Price:"",Suggested_Sell_Price:"" });
+const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
+  const { productData, singleVariantData } = useContext(ProductContext);
   const variantData =
     productData?.product?.[0]?.Preference === "PARENT"
       ? productData?.variant
       : productData?.product;
 
-      useEffect(() => {
-        if (variantData) {
-          setIdentifiers({
-            Variant_SKU: singleVariantData !== null ? singleVariantData?.Variant_SKU : variantData?.[0]?.Variant_SKU || "",
-            UPC: singleVariantData !== null ? singleVariantData?.UPC : variantData?.[0]?.UPC || "",
-            MPN: singleVariantData !== null ? singleVariantData?.MPN : variantData?.[0]?.MPN || "",
-            EAN: singleVariantData !== null ? singleVariantData?.EAN : variantData?.[0]?.EAN || "",
-            ASIN: singleVariantData !== null ? singleVariantData?.ASIN : variantData?.[0]?.ASIN || "",
-            Cost_Price: singleVariantData !== null ? singleVariantData?.Cost_Price : variantData?.[0]?.Cost_Price || "",
-            Retail_Price: singleVariantData !== null ? singleVariantData?.Retail_Price : variantData?.[0]?.Retail_Price || "",
-            Suggested_Sell_Price: singleVariantData !== null ? singleVariantData?.Suggested_Sell_Price : variantData?.[0]?.Suggested_Sell_Price || "",
-          });
-        }
-      }, [variantData, singleVariantData]);  
+  useEffect(() => {
+    if (variantData) {
+      setIdentifiers({
+        Variant_SKU:
+          singleVariantData !== null
+            ? singleVariantData?.Variant_SKU
+            : variantData?.[0]?.Variant_SKU || "",
+        UPC:
+          singleVariantData !== null
+            ? singleVariantData?.UPC
+            : variantData?.[0]?.UPC || "",
+        MPN:
+          singleVariantData !== null
+            ? singleVariantData?.MPN
+            : variantData?.[0]?.MPN || "",
+        EAN:
+          singleVariantData !== null
+            ? singleVariantData?.EAN
+            : variantData?.[0]?.EAN || "",
+        ASIN:
+          singleVariantData !== null
+            ? singleVariantData?.ASIN
+            : variantData?.[0]?.ASIN || "",
+        Cost_Price:
+          singleVariantData !== null
+            ? singleVariantData?.Cost_Price
+            : variantData?.[0]?.Cost_Price || "",
+        Retail_Price:
+          singleVariantData !== null
+            ? singleVariantData?.Retail_Price
+            : variantData?.[0]?.Retail_Price || "",
+        Suggested_Sell_Price:
+          singleVariantData !== null
+            ? singleVariantData?.Suggested_Sell_Price
+            : variantData?.[0]?.Suggested_Sell_Price || "",
+      });
+    }
+  }, [variantData, singleVariantData]);
 
-      const handleChange = (event) => {
-        setIdentifiers(event.target.value);
-      };
-  
+  const handleChange = (event) => {
+    setIdentifiers({ ...identifiers, [event.target.name]: event.target.value });
+  };
+
   return (
-    <Row style={{marginBottom: "-15px"}}>
+    <Row style={{ marginBottom: "-15px" }}>
       <Col>
         <Accordion defaultActiveKey="0" className="accordian__main">
           <Card>
@@ -53,57 +76,51 @@ const VariantIdentifiers = () => {
                 <input
                   type="text"
                   placeholder="Enter SKU"
-                  name="sku"
+                  name="Variant_SKU"
                   className="form-control"
                   value={identifiers.Variant_SKU}
                   onChange={handleChange}
-
                 />
 
                 <label style={{ marginTop: "10px" }}>UPC</label>
                 <input
                   type="text"
                   placeholder="Enter UPC"
-                  name="upc"
+                  name="UPC"
                   className="form-control"
                   value={identifiers.UPC}
                   onChange={handleChange}
-
                 />
 
                 <label style={{ marginTop: "10px" }}>MPN</label>
                 <input
                   type="text"
                   placeholder="Enter MPN"
-                  name="mpn"
+                  name="MPN"
                   className="form-control"
                   value={identifiers.MPN}
                   onChange={handleChange}
-
                 />
 
                 <label style={{ marginTop: "10px" }}>EAN</label>
                 <input
                   type="text"
                   placeholder="Enter EAN"
-                  name="ean"
+                  name="EAN"
                   className="form-control"
                   value={identifiers.EAN}
                   onChange={handleChange}
-
                 />
 
                 <label style={{ marginTop: "10px" }}>ASIN</label>
                 <input
                   type="text"
                   placeholder="Enter ASIN"
-                  name="asin"
+                  name="ASIN"
                   className="form-control"
                   value={identifiers.ASIN}
                   onChange={handleChange}
-
                 />
-                
               </Card.Body>
             </Accordion.Collapse>
           </Card>
@@ -128,7 +145,6 @@ const VariantIdentifiers = () => {
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">
               <Card.Body>
-                
                 <label style={{ marginTop: "10px" }}>COAST PRICE</label>
                 <input
                   type="text"
@@ -137,7 +153,6 @@ const VariantIdentifiers = () => {
                   className="form-control"
                   value={identifiers.Cost_Price}
                   onChange={handleChange}
-
                 />
 
                 <label style={{ marginTop: "10px" }}>RETAIL PRICE</label>
@@ -148,7 +163,6 @@ const VariantIdentifiers = () => {
                   className="form-control"
                   value={identifiers.Retail_Price}
                   onChange={handleChange}
-
                 />
 
                 <label style={{ marginTop: "10px" }}>SELL PRICE</label>
@@ -160,7 +174,6 @@ const VariantIdentifiers = () => {
                   value={identifiers.Suggested_Sell_Price}
                   onChange={handleChange}
                 />
-
               </Card.Body>
             </Accordion.Collapse>
           </Card>

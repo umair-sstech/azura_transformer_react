@@ -2,9 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
-const VariantDimension = () => {
+const VariantDimension = ({dimensionValue, setDimensionValue}) => {
   const { productData, singleVariantData } = useContext(ProductContext);
-  const [dimensionValue, setDimensionValue] = useState({ Dimension_Units: "", Weight_Unit: "", Length: "", Weight: "", Width: "",Height:""});
   
   const variantData =
     productData?.product?.[0]?.Preference === "PARENT"
@@ -24,8 +23,9 @@ const VariantDimension = () => {
         }
       }, [variantData, singleVariantData]);  
 
+ 
       const handleChange = (event) => {
-        setDimensionValue(event.target.value);
+        setDimensionValue({ ...dimensionValue, [event.target.name]: event.target.value });
       };
 
   return (

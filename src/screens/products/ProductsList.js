@@ -15,7 +15,6 @@ import "./ProductsList.css";
 
 function ProductsList(props) {
   const [productList, setProductList] = useState([]);
-  console.log("productList",productList)
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(10);
@@ -32,22 +31,16 @@ function ProductsList(props) {
     // getProductList()
   }, []);
 
-
   const getProductList = async (currentPage, dataLimit, search) => {
     props.onLoading(true);
 
     try {
-
-      const response = await axios.post(
-
-        `${API_PATH.GET_PRODUCT_LIST}`,
-        {
-          page: currentPage,
-          limit: dataLimit,
-          status: status !== "all" ? (status === "active" ? 1 : 0) : null,
-          search: search,
-        }
-      );
+      const response = await axios.post(`${API_PATH.GET_PRODUCT_LIST}`, {
+        page: currentPage,
+        limit: dataLimit,
+        status: status !== "all" ? (status === "active" ? 1 : 0) : null,
+        search: search,
+      });
 
       return response.data;
     } catch (error) {
@@ -82,7 +75,7 @@ function ProductsList(props) {
     };
 
     getProductData();
-  }, [currentPage, dataLimit, status,search]);
+  }, [currentPage, dataLimit, status, search]);
 
   const activateDeactivate = (event, supplierId) => {
     const status = event.target.checked;
@@ -135,10 +128,10 @@ function ProductsList(props) {
   ];
 
   const handleSearch = (event) => {
-  const { value } = event.target;
-  setSearch(value);
-  setCurrentPage(1); // Reset the current page when a new search is performed
-};
+    const { value } = event.target;
+    setSearch(value);
+    setCurrentPage(1); // Reset the current page when a new search is performed
+  };
   return (
     <div
       style={{ flex: 1 }}
@@ -150,9 +143,7 @@ function ProductsList(props) {
         <div className="container-fluid">
           <PageHeader
             HeaderText="Products List"
-            Breadcrumb={[
-              { name: "Products List", navigate: "#" },
-            ]}
+            Breadcrumb={[{ name: "Products List", navigate: "#" }]}
           />
           <div className="tab-component">
             <div className="card">
@@ -190,6 +181,7 @@ function ProductsList(props) {
                     <thead>
                       <tr>
                         <th>#</th>
+                        <th>Unique Id</th>
                         <th>Supplier Name</th>
                         <th>Logo</th>
                         <th>Grand Parent SKU</th>
@@ -202,16 +194,21 @@ function ProductsList(props) {
                         <th>Retail Price</th>
                         <th>Last Update(UTC)</th>
                         <th>Action</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody>
                       {productList?.map((product, idx) => (
                         <tr key={product.id}>
                           <td>{startIndex + idx}</td>
+                          <td>{product.uniqueId}</td>
                           <td>{product.Supplier}</td>
                           <td>
                             {product.Image_Parent_1_original ? (
-                              <img src={product.Image_Parent_1_original} className="list-logo" />
+                              <img
+                                src={product.Image_Parent_1_original}
+                                className="list-logo"
+                              />
                             ) : (
                               <div className="list-logo placeholder">N/A</div>
                             )}
@@ -238,18 +235,25 @@ function ProductsList(props) {
                           </td>
 
                           <>
-
                             <td className="action-group">
                               <i
-                              style={{color:"#49c5b6"}}
+                                style={{ color: "#49c5b6" }}
                                 data-placement="top"
                                 title="Edit"
                                 className="fa fa-eye"
                                 onClick={() => {
-
-                                  history.push(`/product-details/${product.id}`);
+                                  history.push(
+                                    `/product-details/${product.id}`
+                                  );
                                 }}
                               ></i>
+                            </td>
+                            <td>
+                              {product.isEnhanced === 1 ? (
+                                <label className="text-success">Done</label>
+                              ) : (
+                                <label className="text-danger">Pending</label>
+                              )}
                             </td>
                           </>
                         </tr>
@@ -271,7 +275,6 @@ function ProductsList(props) {
                         setdataLimit(e.target.value);
                       }}
                     >
-                    
                       <option value={10}>10</option>
                       <option value={20}>20</option>
                       <option value={50}>50</option>

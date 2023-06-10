@@ -1,28 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
-import attributes from "./Attributes";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
-const ProductAttributes = () => {
+const ProductAttributes = ({attribute,setAttributes}) => {
   const product = useContext(ProductContext);
-  // console.log("product--", product);
-  const [attribute, setAttributes] = useState(attributes)
 
-  useEffect(() => {
-    for(const attr of attribute) {
-      findCommonAttribute(attr.name)
-    }
-  }, [attribute])
-  
-
-  // const addAttribute = () => {
-  //   setAttributes(attr => {
-  //     return [...attr, {
-  //       name: "",
-  //       valie: ""
-  //     }]
-  //   })
-  // }
 
   const handleAttributeChange = (index, attr, value) => {
     const updatedFields = [...attribute];
@@ -34,24 +16,6 @@ const ProductAttributes = () => {
     setAttributes(attr => attr.filter((_, idx) => idx !== id))
   }
 
-  const findCommonAttribute = (commonAttribute) => {
-    const commonAttr = attribute.find(attr => attr.name === commonAttribute)
-    if(commonAttr) {
-      commonAttr.value = product?.commonAttribute || ""
-    }
-    // console.log("commmon--", commonAttr);
-  }
-
-  // const matchedValues = attribute.map(attr => {
-  //   const databaseValue = [product].filter(dbVal => {
-  //     console.log("dbVal--", dbVal);
-  //   })
-  //   // const databaseValue = [product].find(dbValue => dbValue.name === attr.name);
-  //   console.log(databaseValue);
-  //   // return { name: attr.name, value: databaseValue ? databaseValue.value : '' };
-  // });
-
-  // console.log("matched--", matchedValues);
 
   return (
     <Row style={{marginBottom: "-15px"}}>
@@ -66,10 +30,9 @@ const ProductAttributes = () => {
                 eventKey="0"
               >
                 <div className="d-flex justify-content-between align-items-center">
-                  <span>Attributes ({attribute.length})</span>
+                  <span>Attributes </span>
                   <i className="fa fa-angle-down arrow"></i>
                 </div>
-                {/* <span className="ml-4">view all attribues</span> */}
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">
@@ -106,14 +69,15 @@ const ProductAttributes = () => {
                       />
                       <span className="ml-3"> = </span>
                       <input
-                        type="text"
-                        placeholder={attr.value}
-                        name={attr.value}
-                        // value={}
-                        className="form-control ml-3"
-                        style={{ flex: "2 1 0" }}
-                        onChange={(e) => handleAttributeChange(idx, attr.name, e.target.value)}
-                      />
+                      type="text"
+                      placeholder={attr.name}
+                      name={attr.name}
+                      className="form-control ml-3"
+                      style={{ flex: "1 1 0" }}
+                      value={attr.value}
+                      onChange={(e) => handleAttributeChange(idx, "value", e.target.value)}
+                    />
+                    
                     </div>
                   );
                 })}

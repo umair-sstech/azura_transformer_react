@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
-const VariantTitle = () => {
+const VariantTitle = (props) => {
   const { productData, singleVariantData } = useContext(ProductContext)
   const [title, setTitle] = useState("");
 
@@ -18,7 +18,9 @@ const VariantTitle = () => {
   }, [variantTitle]);
 
   const handleChange = (event) => {
-    setTitle(event.target.value);
+    const newTitle = event.target.value;
+    setTitle(newTitle);
+    props.setTitle(newTitle); // Pass the new title to the parent component
   };
 
   return (

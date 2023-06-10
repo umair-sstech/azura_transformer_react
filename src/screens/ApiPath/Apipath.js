@@ -35,6 +35,9 @@ FETCH_USER_PROFILE_DETAILS:`${API_USER}/user`,
   GET_PRODUCT_LIST:`${PRODUCT_API_URL}/product/getProductList`,
   GET_PRODUCT_LIST_BY_ID:`${PRODUCT_API_URL}/product/getProductByID`,
   FILE_UPLOAD:`${FILE_UPLOAD}/api/uploadcsv`,
+  UPDATE_PRODUCT_DATA:`${PRODUCT_API_URL}/product/updateProductById`,
+  DELETE_PRODUCT_DATA:`${PRODUCT_API_URL}/product/deleteProductVariantCustomField`,
+
 
   GET_API_LOG: `${API_LOG}/apiLog/getAPILogs`,
   GET_API_LOG_DETAILS:`${API_LOG}/apiLog/getAPIDetails`,

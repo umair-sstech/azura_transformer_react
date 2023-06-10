@@ -2,15 +2,14 @@ import React, { useState, useEffect, useContext } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from '../../ProductContext/ProductContext';
 
-const ProductIdentifiers = () => {
+const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
   const product = useContext(ProductContext);
-  const [identifiers, setIdentifiers] = useState({ Parent_SKU: "", brand: "", Category_1: "", Category_2: "", Category_3: "" });
 
   useEffect(() => {
     if (product) {
       setIdentifiers({
         Parent_SKU: product?.Parent_SKU || "",
-        brand: product?.Brand || "",
+        Brand: product?.Brand || "",
         Category_1: product?.Category_1 || "",
         Category_2: product?.Category_2 || "",
         Category_3: product?.Category_3 || ""
@@ -19,9 +18,12 @@ const ProductIdentifiers = () => {
   }, [product]);
 
   const handleChange = (event) => {
-    setIdentifiers(event.target.value);
-  };
-
+    const { name, value } = event.target;
+    setIdentifiers((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
+  }
   return (
     <Row style={{ marginBottom: "-15px" }}>
       <Col>
@@ -55,10 +57,10 @@ const ProductIdentifiers = () => {
                 <input
                   type="text"
                   placeholder="Brand..."
-                  name="brand"
+                  name="Brand"
                   className="form-control"
                   onChange={handleChange}
-                  value={identifiers.brand}
+                  value={identifiers.Brand}
                 />
               </Card.Body>
             </Accordion.Collapse>

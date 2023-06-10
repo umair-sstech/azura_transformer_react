@@ -12,7 +12,7 @@ const ProductTitle = (props) => {
 
   const handleChange = (event) => {
     setTitle(event.target.value);
-    // props.setTitle(event.target.value); 
+    props.setTitle(event.target.value); 
   };
 
   return (

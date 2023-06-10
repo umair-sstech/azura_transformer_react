@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
+import Swal from "sweetalert2";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { API_PATH } from "../../ApiPath/Apipath";
 
-const VariantCustomField = () => {
+const VariantCustomField = ({ customField, setCustomFields }) => {
   const { customFields } = useContext(ProductContext);
-  const [customField, setCustomFields] = useState([]);
   console.log("customField",customField)
 
   useEffect(() => {
@@ -20,6 +23,46 @@ const VariantCustomField = () => {
   const handleAddField = () => {
     setCustomFields([...customField, {}]);
   };
+  const deleteCustomField = (id) => {
+    console.log("id",id)
+    const requestBody = {
+      id: id
+    };
+    axios
+      .post(`${API_PATH.DELETE_PRODUCT_DATA}`, requestBody)
+      .then(response => {
+        const {success,message,data}=response.data
+        if(success){
+
+          toast.success(message);
+        }else{
+          toast.error(message)
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        toast.error("Failed to delete data");
+      });
+  };
+
+  const removeCustomField = (id) => {
+    Swal.fire({
+      title: "Are you sure, <br> you want to delete ? ",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    }).then((result) => {
+        if (result.isConfirmed) {
+          deleteCustomField(id);
+          setCustomFields(customField.filter(field => field.id !== id));
+            
+          }
+    });
+  };
+
 
   return (
     <Row style={{marginBottom: "-15px"}}>
@@ -52,7 +95,7 @@ const VariantCustomField = () => {
                 <hr />
                 {customField?.map((field, index) => (
                   <div key={index} className="d-flex justify-content-around align-items-center mb-3">
-                  {  /*<i className="fa fa-solid fa-trash fa-lg ml-2" style={{ color: "red" }}></i>*/}
+                 <i className="fa fa-solid fa-trash fa-lg ml-2" style={{ color: "red" }} onClick={() => removeCustomField(field.id)}></i>
                     <div>
                       <input
                         type="text"

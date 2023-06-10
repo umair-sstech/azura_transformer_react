@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
-const ProductOptions = () => {
+const ProductOptions = (props) => {
   const product = useContext(ProductContext);
   const { mainColor, sizeOnly } = product;
   const [colorValue, setColorValue] = useState("");
@@ -16,14 +16,16 @@ const ProductOptions = () => {
     setSizeValue(sizeOnly);
   }, [sizeOnly]);
 
-
-
   const handleColorChange = (event) => {
     setColorValue(event.target.value);
+    props.setColorValue(event.target.value); 
+
   };
 
   const handleSizeChange = (event) => {
     setSizeValue(event.target.value);
+    props.setSizeValue(event.target.value); 
+
   };
 
   return (

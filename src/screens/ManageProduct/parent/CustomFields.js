@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
+import { toast } from "react-toastify";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { API_PATH } from "../../ApiPath/Apipath";
 
-const CustomFields = () => {
+const CustomFields = ({ customField, setCustomFields }) => {
   const { customFields } = useContext(ProductContext);
-  const [customField, setCustomFields] = useState([]);
 
   useEffect(() => {
     setCustomFields(customFields || []);
@@ -18,6 +21,47 @@ const CustomFields = () => {
 
   const handleAddField = () => {
     setCustomFields([...customField, {}]);
+  };
+
+  const deleteCustomField = (id) => {
+    console.log("id", id);
+    const requestBody = {
+      id: id,
+    };
+    axios
+      .post(
+        `${API_PATH.DELETE_PRODUCT_DATA}`,
+        requestBody
+      )
+      .then((response) => {
+        const { success, message, data } = response.data;
+        if (success) {
+          toast.success(message);
+        } else {
+          toast.error(message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Failed to delete data");
+      });
+  };
+
+  const removeCustomField = (id) => {
+    Swal.fire({
+      title: "Are you sure, <br> you want to delete ? ",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteCustomField(id);
+        setCustomFields(customField.filter((field) => field.id !== id));
+      }
+    });
   };
 
   return (
@@ -51,8 +95,15 @@ const CustomFields = () => {
                 </div>
                 <hr />
                 {customField?.map((field, index) => (
-                  <div key={index} className="d-flex justify-content-around align-items-center mb-3">
-                   { /*<i className="fa fa-solid fa-trash fa-lg ml-2" style={{ color: "red" }}></i>*/}
+                  <div
+                    key={index}
+                    className="d-flex justify-content-around align-items-center mb-3"
+                  >
+                    <i
+                      className="fa fa-solid fa-trash fa-lg ml-2"
+                      style={{ color: "red" }}
+                      onClick={() => removeCustomField(field.id)}
+                    ></i>
                     <div>
                       <input
                         type="text"
@@ -60,7 +111,13 @@ const CustomFields = () => {
                         name={`source_${index}`}
                         className="form-control"
                         value={field.customFieldName || ""}
-                        onChange={(e) => handleCustomFieldChange(index, "customFieldName", e.target.value)}
+                        onChange={(e) =>
+                          handleCustomFieldChange(
+                            index,
+                            "customFieldName",
+                            e.target.value
+                          )
+                        }
                       />
                     </div>
                     <span className="ml-3">=</span>
@@ -71,7 +128,13 @@ const CustomFields = () => {
                         name={`brands_distribution_${index}`}
                         className="form-control"
                         value={field.customValue || ""}
-                        onChange={(e) => handleCustomFieldChange(index, "customValue", e.target.value)}
+                        onChange={(e) =>
+                          handleCustomFieldChange(
+                            index,
+                            "customValue",
+                            e.target.value
+                          )
+                        }
                       />
                     </div>
                   </div>
@@ -81,7 +144,11 @@ const CustomFields = () => {
             </Accordion.Collapse>
           </Card>
           <hr />
-          <Button className="btn ml-3 mt-2 mb-2" variant="outline-primary" onClick={handleAddField}>
+          <Button
+            className="btn ml-3 mt-2 mb-2"
+            variant="outline-primary"
+            onClick={handleAddField}
+          >
             <i className="fa fa-plus mr-2"></i>Add Custom Field
           </Button>
         </Accordion>

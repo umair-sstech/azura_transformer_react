@@ -2,10 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
-const VariantOptions = () => {
+const VariantOptions = ({optionValue, setOptionValue}) => {
   const { productData, singleVariantData } = useContext(ProductContext);
 
-  const [optionValue, setOptionValue] = useState({ Main_Color: "", Size_Only: "" });
  
   const variantData =
     productData?.product?.[0]?.Preference === "PARENT"
@@ -21,9 +20,11 @@ const VariantOptions = () => {
         }
       }, [variantData, singleVariantData]);  
 
+
       const handleChange = (event) => {
-        setOptionValue(event.target.value);
+        setOptionValue({ ...optionValue, [event.target.name]: event.target.value });
       };
+    
 
   return (
     <Row style={{marginBottom: "-15px"}}>

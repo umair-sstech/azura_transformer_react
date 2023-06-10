@@ -12,6 +12,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { ProductContext } from "../../ProductContext/ProductContext";
 import { API_PATH } from "../../ApiPath/Apipath";
+import attributes from "./Attributes";
+
 
 const Parent = (props) => {
   const { activeKey, setKey } = props;
@@ -21,16 +23,21 @@ const Parent = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-
-  // useEffect(() => {
-  //   // if(activeKey === "parent") {
-  //     getProductDetails();
-  //   // }
-  // }, []);
+  const [identifiers, setIdentifiers] = useState({
+    Parent_SKU: "",
+    Brand: "",
+    Category_1: "",
+    Category_2: "",
+    Category_3: "",
+  });
+  const [colorValue, setColorValue] = useState("");
+  const [sizeValue, setSizeValue] = useState("");
+  const [customField, setCustomFields] = useState([]);
+  const [attribute, setAttributes] = useState(attributes)
 
   useEffect(() => {
     getProductDetails();
-  }, [activeKey, id]);
+  },[]);
 
   const getProductDetails = async () => {
     try {
@@ -74,23 +81,24 @@ const Parent = (props) => {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/product/updateProductById",
+       `${API_PATH.UPDATE_PRODUCT_DATA}`,
         {
           productId: id,
           supplierId: "2",
           type: "PARENT",
           Parent_Title: title,
           Plain_Description: description,
-          Parent_SKU: productData.product?.[0]?.Parent_SKU,
-          Brand: productData.product?.[0]?.Brand,
-          Category_1: productData.product?.[0]?.Category_1,
-          Category_2: productData.product?.[0]?.Category_2,
-          Category_3: productData.product?.[0]?.Category_3,
+          ...identifiers,
+          Main_Color: colorValue,
+          Size_Only: sizeValue,
+          custom_fields: customField
         }
       );
       const { success, message } = response.data;
       if (success) {
+        variantDetails(activeKey);
         toast.success(message);
+    
       } else {
         toast.error(message);
       }
@@ -124,7 +132,10 @@ const Parent = (props) => {
 
         {/* Identifiers */}
         <ProductContext.Provider value={productData.product?.[0]}>
-          <ProductIdentifiers />
+          <ProductIdentifiers
+            identifiers={identifiers}
+            setIdentifiers={setIdentifiers}
+          />
         </ProductContext.Provider>
 
         {/* Description */}
@@ -150,12 +161,17 @@ const Parent = (props) => {
             sizeOnly: productData.product?.[0]?.Size_Only,
           }}
         >
-          <ProductOptions />
+          <ProductOptions
+            colorValue={colorValue}
+            setColorValue={setColorValue}
+            sizeValue={sizeValue}
+            setSizeValue={setSizeValue}
+          />
         </ProductContext.Provider>
 
         {/* Attributes */}
         <ProductContext.Provider value={productData.product?.[0]}>
-          <ProductAttributes />
+          <ProductAttributes attribute={attribute} setAttributes={setAttributes}/>
         </ProductContext.Provider>
 
         {/* Custom Fields */}
@@ -165,18 +181,18 @@ const Parent = (props) => {
             customFields: productData.product?.[0]?.custom_field,
           }}
         >
-          <CustomFields />
+          <CustomFields customField={customField} setCustomFields={setCustomFields}/>
         </ProductContext.Provider>
       </div>
 
       {/* Right Div */}
       <ProductContext.Provider value={{ productData, singleVariantData }}>
         <div className="right">
-          <ProductParent
-            activeKey={activeKey}
-            setKey={setKey}
-            variantDetails={variantDetails}
-          />
+        <ProductParent
+        activeKey={activeKey}
+        setKey={setKey}
+        variantDetails={activeKey} // Pass activeKey to variantDetails
+      />
         </div>
       </ProductContext.Provider>
     </div>
