@@ -45,7 +45,7 @@ const Profile = (props) => {
   
   const fetchUserData = async () => {
     try {
-      const response = await axios.get(`http://localhost:2704/user/${userId}`);
+      const response = await axios.get(`${API_PATH.FETCH_USER_PROFILE_DETAILS}/${userId}`);
       const userData = response.data.data;
       setFormData(userData);
     } catch (error) {

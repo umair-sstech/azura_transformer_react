@@ -93,7 +93,7 @@ function UploadFailedData() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8004/api/uploadcsv",
+        `${API_PATH.FILE_UPLOAD}`,
         formData,
         {
           headers: {
