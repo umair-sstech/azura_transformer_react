@@ -248,6 +248,10 @@ function SupplierSftpForm(props) {
   //   setFormErrors({...formErrors, syncFrequency: ""})
   // };
 
+  const findDefaultTimeZone = timeZoneData.find((val) =>
+    val.text.toLowerCase().includes("sydney")
+  );
+
   const handleTimeZoneChange = (selectedOption) => {
     const timeZone = selectedOption;
     setInitFormData({ ...initFormData, timeZone });
@@ -265,6 +269,9 @@ function SupplierSftpForm(props) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
 
+      const { value, label } = initFormData.timeZone || {};
+      const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
+
       const syncFrequency = `${formData.get("minute")} ${formData.get(
         "hour"
       )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
@@ -274,7 +281,7 @@ function SupplierSftpForm(props) {
       const payload = {
         ...initFormData,
         settingType,
-        timeZone: initFormData?.timeZone?.value,
+        timeZone: timeZoneString,
         supplierId,
         supplierName,
         syncFrequency,
@@ -314,6 +321,8 @@ function SupplierSftpForm(props) {
     if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
+      const { value, label } = initFormData.timeZone || {};
+      const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
       const syncFrequency = `${formData.get("minute")} ${formData.get(
         "hour"
       )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
@@ -322,7 +331,7 @@ function SupplierSftpForm(props) {
 
       const payload = {
         ...initFormData,
-        timeZone: initFormData.timeZone?.value,
+        timeZone: timeZoneString,
         settingType,
         supplierId,
         supplierName,
@@ -383,7 +392,7 @@ function SupplierSftpForm(props) {
                       <Spinner animation="border" size="sm" /> Please wait...
                     </>
                   ) : (
-                    "Save & Next"
+                    "Save & Exit"
                   )}
                 </button>
                 <button
@@ -675,7 +684,14 @@ function SupplierSftpForm(props) {
                   placeholder="Select TimeZone"
                   name="timeZone"
                   onChange={handleTimeZoneChange}
-                  value={initFormData.timeZone ? initFormData.timeZone : ""}
+                  value={
+                    initFormData.timeZone
+                      ? initFormData.timeZone
+                      : {
+                          value: findDefaultTimeZone.abbr,
+                          label: findDefaultTimeZone.text,
+                        }
+                  }
                 />
 
                 {formErrors.timeZone && (

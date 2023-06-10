@@ -562,7 +562,7 @@ class NavbarMenu extends React.Component {
                       <li className="" id="dashboardDropDown">
                         <a
                           href="#!"
-                          className=""
+                          className="d-none"
                           onClick={(e) => {
                             e.preventDefault();
                             this.activeMenutabContainer("dashboardDropDown");
@@ -570,7 +570,7 @@ class NavbarMenu extends React.Component {
                         ></a>
                         <ul>
                           <li className="">
-                            <Link to="dashboard" className="dashboard first__link">
+                            <Link to="/dashboard" className="dashboard first__link">
                               {" "}
                               <div className="row">
                                 <div className="col-3">
