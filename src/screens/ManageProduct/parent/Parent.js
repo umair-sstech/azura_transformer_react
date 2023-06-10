@@ -13,6 +13,9 @@ import { toast } from "react-toastify";
 import { ProductContext } from "../../ProductContext/ProductContext";
 import { API_PATH } from "../../ApiPath/Apipath";
 import attributes from "./Attributes";
+import { faL } from "@fortawesome/free-solid-svg-icons";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { Spinner } from "react-bootstrap";
 
 
 const Parent = (props) => {
@@ -34,6 +37,8 @@ const Parent = (props) => {
   const [sizeValue, setSizeValue] = useState("");
   const [customField, setCustomFields] = useState([]);
   const [attribute, setAttributes] = useState(attributes)
+  const history=useHistory()
+
 
   useEffect(() => {
     getProductDetails();
@@ -79,6 +84,7 @@ const Parent = (props) => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true)
     try {
       const response = await axios.post(
        `${API_PATH.UPDATE_PRODUCT_DATA}`,
@@ -94,16 +100,19 @@ const Parent = (props) => {
           custom_fields: customField
         }
       );
+    
       const { success, message } = response.data;
       if (success) {
         variantDetails(activeKey);
         toast.success(message);
+        history.push("/products")
     
       } else {
         toast.error(message);
       }
     } catch (error) {
       console.error("Failed to submit title:", error);
+      setIsLoading(false)
     }
   };
 
@@ -116,13 +125,20 @@ const Parent = (props) => {
             PARENT SKU : <strong>{productData.product?.[0]?.Parent_SKU}</strong>
           </h3>
           <div>
-            <button
-              className="btn btn-primary w-auto"
-              type="submit"
-              onClick={handleSubmit}
-            >
-              Save Parent Product
-            </button>
+          <button
+          className="btn btn-primary w-auto"
+          type="submit"
+          onClick={handleSubmit}
+                >
+                {isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  " Save Parent Product"
+                )}
+                </button>
+           
           </div>
         </div>
 

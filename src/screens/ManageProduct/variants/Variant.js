@@ -12,14 +12,16 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { API_PATH } from "../../ApiPath/Apipath";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { Spinner } from "react-bootstrap";
 
 const Variant = (props) => {
   const { activeKey, setKey } = props;
   const { id } = useParams();
   const [productData, setProductData] = useState({});
-  console.log("productData");
   const [singleVariantData, setSingleVariantData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isExitLoading, setIsExitLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [identifiers, setIdentifiers] = useState({
@@ -45,6 +47,8 @@ const Variant = (props) => {
     Height: "",
   });
   const [customField, setCustomFields] = useState([]);
+  const history=useHistory()
+
 
 
   const variantData =
@@ -98,6 +102,7 @@ const Variant = (props) => {
   };
 
   const handleSubmit = async () => {
+    setIsExitLoading(true)
     try {
       const response = await axios.post(
         `${API_PATH.UPDATE_PRODUCT_DATA}`,
@@ -122,6 +127,7 @@ const Variant = (props) => {
       }
     } catch (error) {
       console.error("Failed to submit title:", error);
+      setIsExitLoading(false)
     }
   };
 
@@ -145,14 +151,21 @@ const Variant = (props) => {
               </strong>
             </h3>
             <div>
-              <button
-                className="btn btn-primary w-auto"
-                type="submit"
-                onClick={handleSubmit}
-              >
-                Save Variant Product
-              </button>
-            </div>
+          <button
+          className="btn btn-primary w-auto"
+          type="submit"
+          onClick={handleSubmit}
+                >
+                {isExitLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" /> Please wait...
+                  </>
+                ) : (
+                  " Save Variant Product"
+                )}
+                </button>
+           
+          </div>
           </div>
 
           <ProductContext.Provider value={{ productData, singleVariantData }}>
