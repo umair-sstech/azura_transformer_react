@@ -55,7 +55,7 @@ function IntegrationType(props) {
 
     try {
       const response = await axios.post(
-        "http://localhost:8001/integration/getIntegrationInfo",
+    `${API_PATH.GET_LIST}`,
         {
           page: currentPage,
           limit: dataLimit,

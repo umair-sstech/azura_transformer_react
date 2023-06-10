@@ -98,7 +98,7 @@ function FileUpload(props) {
   }, [currentPage, dataLimit, status, supplier]);
   
 
-  const localpath='http://localhost:8004/uploads/csv/original/1686218595653_BGFeed_ParentChild.csv'
+  // const localpath='http://localhost:8004/uploads/csv/original/1686218595653_BGFeed_ParentChild.csv'
 
   const downloadFile = (errorCsvPath, fileName) => {
     console.log("path",errorCsvPath, fileName)

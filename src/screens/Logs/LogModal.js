@@ -4,6 +4,7 @@ import "./LogModal.css";
 import { Card } from "react-bootstrap";
 import axios from "axios";
 import moment from "moment";
+import { API_PATH } from "../ApiPath/Apipath";
 
 const LogModal = ({ showModal, setShowModal, selectedId }) => {
   const [apiData, setApiData] = useState({});
@@ -11,7 +12,7 @@ const LogModal = ({ showModal, setShowModal, selectedId }) => {
   const fetchApiLogData = async () => {
     if (showModal) {
       const response = await axios.get(
-        `http://localhost:9000/apiLog/getAPIDetails?id=${selectedId}`
+        `${API_PATH.GET_API_LOG_DETAILS}?id=${selectedId}`
       );
       if (response.status === 200) {
         setApiData(response.data.apiLog);
