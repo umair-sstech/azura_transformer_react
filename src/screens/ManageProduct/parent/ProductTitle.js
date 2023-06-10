@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
-const ProductTitle = () => {
+const ProductTitle = (props) => {
   const titleValue = useContext(ProductContext);
   const [title, setTitle] = useState("");
 
@@ -12,6 +12,7 @@ const ProductTitle = () => {
 
   const handleChange = (event) => {
     setTitle(event.target.value);
+    // props.setTitle(event.target.value); 
   };
 
   return (

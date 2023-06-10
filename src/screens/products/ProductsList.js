@@ -186,7 +186,7 @@ function ProductsList(props) {
                       <i className="fa fa-refresh fa-spin"></i>
                     </div>
                   ) : null}
-                  <table className="w-100 table-responsive-lg">
+                  <table className="table-responsive">
                     <thead>
                       <tr>
                         <th>#</th>

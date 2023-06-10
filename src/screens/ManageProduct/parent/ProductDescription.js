@@ -3,14 +3,14 @@ import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import "@ckeditor/ckeditor5-build-classic/build/translations/en-gb";
-import "./Product.css"
+import "./Product.css";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
-const ProductDescription = () => {
+const ProductDescription = (props) => {
   const description = useContext(ProductContext);
 
   return (
-    <Row style={{marginBottom: "-15px"}}>
+    <Row style={{ marginBottom: "-15px" }}>
       <Col>
         <Accordion defaultActiveKey="3" className="accordian__main">
           <Card>
@@ -29,10 +29,14 @@ const ProductDescription = () => {
             </Card.Header>
             <Accordion.Collapse eventKey="0">
               <Card.Body>
-              <CKEditor
-              editor={ClassicEditor}
-              data={description}
-            />
+                <CKEditor
+                  editor={ClassicEditor}
+                  data={description}
+                  onChange={(event, editor) => {
+                    const data = editor.getData();
+                    props.setDescription(data); // Call the callback function from the Parent component
+                  }}
+                />
               </Card.Body>
             </Accordion.Collapse>
           </Card>

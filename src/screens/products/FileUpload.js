@@ -44,7 +44,7 @@ function FileUpload(props) {
         value: supplier.id,
         label: supplier.name,
       }));
-      console.log("supplierName",supplierNames)
+      console.log("supplierName", supplierNames);
       setChooseSupplierList(supplierNames);
     } catch (error) {
       console.error("Error fetching suppliers:", error);
@@ -52,9 +52,9 @@ function FileUpload(props) {
   };
 
   const getFileList = async (currentPage, dataLimit, search, supplierId) => {
-    console.log("supplierId",supplierId)
+    console.log("supplierId", supplierId);
     props.onLoading(true);
-  
+
     try {
       const response = await axios.post(`${API_PATH.GET_FILE_UPLOAD}`, {
         page: currentPage,
@@ -63,19 +63,24 @@ function FileUpload(props) {
         search: search,
         supplierId: supplierId,
       });
-  
+
       return response.data;
     } catch (error) {
       console.log("error", error);
       return null;
     }
   };
-  
+
   useEffect(() => {
     const getProductData = async () => {
-      const response = await getFileList(currentPage, dataLimit, null, supplier.value);
-      console.log(" supplier.value", supplier.value)
-      console.log("response",response)
+      const response = await getFileList(
+        currentPage,
+        dataLimit,
+        null,
+        supplier.value
+      );
+      console.log(" supplier.value", supplier.value);
+      console.log("response", response);
       if (response) {
         let totalPage = Math.ceil(response.totalRecord / response.limit);
         setTotalPages(totalPage);
@@ -93,40 +98,32 @@ function FileUpload(props) {
         props.onLoading(false);
       }
     };
-  
+
     getProductData();
   }, [currentPage, dataLimit, status, supplier]);
-  
 
-  // const localpath='http://localhost:8004/uploads/csv/original/1686218595653_BGFeed_ParentChild.csv'
-
-  const downloadFile = (errorCsvPath, fileName) => {
-    console.log("path",errorCsvPath, fileName)
+  const downloadFile = (localPath, fileName) => {
     const link = document.createElement("a");
-    link.href = errorCsvPath
-    link.setAttribute("download",fileName);
+    link.href = localPath;
+    link.setAttribute("download", fileName);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     link.addEventListener("error", (event) => {
       console.error("Error occurred while downloading the file.", event);
     });
-    
   };
 
-
-  const downloadErrorFile = (localPath, fileName) => {
-    console.log("path",localPath, fileName)
+  const downloadErrorFile = (errorCsvPath, fileName) => {
     const link = document.createElement("a");
-    link.href = localPath
-    link.setAttribute("download",fileName);
+    link.href = errorCsvPath;
+    link.setAttribute("download", fileName);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     link.addEventListener("error", (event) => {
       console.error("Error occurred while downloading the file.", event);
     });
-    
   };
 
   // const downloadFile = async (localPath, fileName) => {
@@ -134,7 +131,7 @@ function FileUpload(props) {
   //     const response = await axios.get('http://localhost:8004/uploads/csv/original/1686218595653_BGFeed_ParentChild.csv', {
   //       responseType: 'blob',
   //     });
-  
+
   //     const url = window.URL.createObjectURL(new Blob([response.data]));
   //     const link = document.createElement('a');
   //     link.href = url;
@@ -147,8 +144,6 @@ function FileUpload(props) {
   //     // Handle error
   //   }
   // };
-
-  
 
   return (
     <div
@@ -168,21 +163,21 @@ function FileUpload(props) {
               <div className="body">
                 <div className="mb-3 top__header">
                   <div style={{ minWidth: "210px" }}>
-                  <Select
-                  options={chooseSupplierList}
-                  onChange={(data) => {
-                    setSupplier(data);
-                  }}
-                  defaultValue={{ label: "Select Supplier" }}
-                />
+                    <Select
+                      options={chooseSupplierList}
+                      onChange={(data) => {
+                        setSupplier(data);
+                      }}
+                      defaultValue={{ label: "Select Supplier" }}
+                    />
                   </div>
                   <div
                     style={{ minWidth: "145px" }}
                     className="supplier__dropdown"
                   >
-                  <Link className="link-btn" to={`/upload-failed-data`}>
-                 Upload Failed Data
-                </Link>
+                    <Link className="link-btn" to={`/upload-failed-data`}>
+                      Upload Failed Data
+                    </Link>
                   </div>
                 </div>
                 <div className="data-table">
@@ -196,14 +191,13 @@ function FileUpload(props) {
                       <tr>
                         <th>#</th>
                         <th>Supplier Name</th>
-
-                        <th>Import Date /Time UTC</th>
+                        <th>Import Time(UTC)</th>
                         <th>File Name</th>
                         <th>Import Type</th>
-                        <th>Lines</th>
+                        <th>Total Count</th>
+                        <th>Failed Count</th>
+                        <th>Original File</th>
                         <th>Failed Data</th>
-                        <th>Download</th>
-                        <th>Download Failed Data</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -219,36 +213,36 @@ function FileUpload(props) {
                           <td className="text-success">{filedata.rowCount}</td>
                           <td className="text-danger">{filedata.failCount}</td>
 
-                         {/* <td className="action-group">
-                          <a
-                            href={filedata.localPath}
-                            download={filedata.fileName}
-                            data-placement="top"
-                            title="Download"
-                            style={{ color: "#49c5b6" }}
-                            className="fa fa-solid fa-download"
-                          ></a>
-                      </td>*/}
+                          <td className="action-group">
+                          {filedata.localPath !== null && (
+                            <i
+                              data-placement="top"
+                              title="Download"
+                              style={{ color: "#49c5b6", cursor: "pointer" }}
+                              className="fa fa-solid fa-download"
+                              onClick={() => downloadFile(filedata.localPath, filedata.fileName)}
+                            ></i>
+                          )}
+                          
+                          </td>
+                          <td className="action-group">
 
-                      <td className="action-group">
-                      <i
-                        data-placement="top"
-                        title="Download"
-                        style={{ color: "#49c5b6", cursor: "pointer" }}
-                        className="fa fa-solid fa-download"
-                        onClick={() => downloadFile(filedata.localPath, filedata.fileName)}
-                      ></i>
-                    </td>
-                    <td className="action-group">
-                    <i
-                      data-placement="top"
-                      title="Download1"
-                      style={{ color: "#49c5b6", cursor: "pointer" }}
-                      className="fa fa-solid fa-download"
-                      onClick={() => downloadErrorFile(filedata.errorCsvPath, filedata.fileName)}
-                    ></i>
-                  </td>
-                  
+                          {filedata.errorCsvPath !== null && (
+                            <i
+                            data-placement="top"
+                            title="Download1"
+                            style={{ color: "#49c5b6", cursor: "pointer" }}
+                            className="fa fa-solid fa-download"
+                            onClick={() =>
+                              downloadErrorFile(
+                                filedata.errorCsvPath,
+                                filedata.fileName
+                              )
+                            }
+                          ></i>
+                          )}
+                           
+                          </td>
                         </tr>
                       ))}
                     </tbody>
