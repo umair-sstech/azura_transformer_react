@@ -70,7 +70,7 @@ function SupplierPage5(props) {
               <Form.Group controlId="exampleForm.SelectCustom" className="d-flex align-items-center justify-content-between" style={{gap: "20px"}}>
                 <Form.Label>Type</Form.Label>
                 <Form.Control as="select" value={selectedValue} onChange={e => setSelectedValue(e.target.value)}>
-                  {selectedValue === null && (
+                  {selectedValue === null || (
                     <option value="" key="">Select..</option>
                   )}
                   {options.map((item, idx) => (

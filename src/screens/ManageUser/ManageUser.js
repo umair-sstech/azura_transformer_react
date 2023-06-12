@@ -27,7 +27,6 @@ const ManageUser = (props) => {
     retailer: "",
     company: "",
   });
-console.log("initgormdata",initFormData)
   const [error, setError] = useState(false);
 
   const [updateUserId, setUpdateUserId] = useState("");
@@ -279,7 +278,7 @@ console.log("initgormdata",initFormData)
                               name="name"
                               onBlur={handleBlur}
                               onChange={handleChange}
-                              value={values.name?values.name:""}
+                              value={values.name}
                               placeholder="Enter User Name"
                             />
                             {errors.name && touched.name ? (
