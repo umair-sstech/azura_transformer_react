@@ -137,8 +137,8 @@ const Parent = (props) => {
 
         <ProductContext.Provider
           value={
-            productData.product?.[0]?.AI_TITLE
-              ? productData.product?.[0]?.AI_TITLE
+            productData.product?.[0]?.AI_TITLE.replace(/"/g, "")
+              ? productData.product?.[0]?.AI_TITLE.replace(/"/g, "")
               : productData.product?.[0]?.Variant_Title
           }
         >
@@ -212,7 +212,8 @@ const Parent = (props) => {
           <ProductParent
             activeKey={activeKey}
             setKey={setKey}
-            variantDetails={activeKey} // Pass activeKey to variantDetails
+            variantDetails={variantDetails}
+            // Pass activeKey to variantDetails
           />
         </div>
       </ProductContext.Provider>
