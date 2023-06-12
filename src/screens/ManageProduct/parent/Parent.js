@@ -16,7 +16,6 @@ import attributes from "./Attributes";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Spinner } from "react-bootstrap";
 
-
 const Parent = (props) => {
   const { activeKey, setKey } = props;
   const { id } = useParams();
@@ -35,13 +34,12 @@ const Parent = (props) => {
   const [colorValue, setColorValue] = useState("");
   const [sizeValue, setSizeValue] = useState("");
   const [customField, setCustomFields] = useState([]);
-  const [attribute, setAttributes] = useState(attributes)
-  const history=useHistory()
-
+  const [attribute, setAttributes] = useState(attributes);
+  const history = useHistory();
 
   useEffect(() => {
     getProductDetails();
-  },[]);
+  }, []);
 
   const getProductDetails = async () => {
     try {
@@ -83,36 +81,32 @@ const Parent = (props) => {
   };
 
   const handleSubmit = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const supplierId=productData.product?.[0]?.supplierId
-      const response = await axios.post(
-       `${API_PATH.UPDATE_PRODUCT_DATA}`,
-        {
-          productId: id,
-          supplierId: supplierId,
-          type: "PARENT",
-          Parent_Title: title,
-          Plain_Description: description,
-          ...identifiers,
-          Main_Color: colorValue,
-          Size_Only: sizeValue,
-          custom_fields: customField
-        }
-      );
-    
+      const supplierId = productData.product?.[0]?.supplierId;
+      const response = await axios.post(`${API_PATH.UPDATE_PRODUCT_DATA}`, {
+        productId: id,
+        supplierId: supplierId,
+        type: "PARENT",
+        Parent_Title: title,
+        Plain_Description: description,
+        ...identifiers,
+        Main_Color: colorValue,
+        Size_Only: sizeValue,
+        custom_fields: customField,
+      });
+
       const { success, message } = response.data;
       if (success) {
         variantDetails(activeKey);
         toast.success(message);
-        history.push("/products")
-    
+        history.push("/products");
       } else {
         toast.error(message);
       }
     } catch (error) {
       console.error("Failed to submit title:", error);
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
@@ -125,24 +119,29 @@ const Parent = (props) => {
             PARENT SKU : <strong>{productData.product?.[0]?.Parent_SKU}</strong>
           </h3>
           <div>
-          <button
-          className="btn btn-primary w-auto"
-          type="submit"
-          onClick={handleSubmit}
-                >
-                {isLoading ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : (
-                  " Save Parent Product"
-                )}
-                </button>
-           
+            <button
+              className="btn btn-primary w-auto"
+              type="submit"
+              onClick={handleSubmit}
+            >
+              {isLoading ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                " Save Parent Product"
+              )}
+            </button>
           </div>
         </div>
 
-        <ProductContext.Provider value={productData.product?.[0]?.AI_TITLE.replace(/"/g, "")}>
+        <ProductContext.Provider
+          value={
+            productData.product?.[0]?.AI_TITLE
+              ? productData.product?.[0]?.AI_TITLE
+              : productData.product?.[0]?.Variant_Title
+          }
+        >
           <ProductTitle title={title} setTitle={setTitle} />
         </ProductContext.Provider>
 
@@ -187,7 +186,10 @@ const Parent = (props) => {
 
         {/* Attributes */}
         <ProductContext.Provider value={productData.product?.[0]}>
-          <ProductAttributes attribute={attribute} setAttributes={setAttributes}/>
+          <ProductAttributes
+            attribute={attribute}
+            setAttributes={setAttributes}
+          />
         </ProductContext.Provider>
 
         {/* Custom Fields */}
@@ -197,18 +199,21 @@ const Parent = (props) => {
             customFields: productData.product?.[0]?.custom_field,
           }}
         >
-          <CustomFields customField={customField} setCustomFields={setCustomFields}/>
+          <CustomFields
+            customField={customField}
+            setCustomFields={setCustomFields}
+          />
         </ProductContext.Provider>
       </div>
 
       {/* Right Div */}
       <ProductContext.Provider value={{ productData, singleVariantData }}>
         <div className="right">
-        <ProductParent
-        activeKey={activeKey}
-        setKey={setKey}
-        variantDetails={activeKey} // Pass activeKey to variantDetails
-      />
+          <ProductParent
+            activeKey={activeKey}
+            setKey={setKey}
+            variantDetails={activeKey} // Pass activeKey to variantDetails
+          />
         </div>
       </ProductContext.Provider>
     </div>

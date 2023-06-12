@@ -15,7 +15,7 @@ import "./ProductsList.css";
 
 function ProductsList(props) {
   const [productList, setProductList] = useState([]);
-  console.log("productlist",productList)
+  console.log("productlist", productList);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(10);
@@ -223,7 +223,11 @@ function ProductsList(props) {
                           <td>{product.Brand}</td>
 
                           <td>{product.Azura_Category_Tree}</td>
-                          <td>{product.AI_TITLE.replace(/"/g, "")}</td>
+                          <td>
+                            {product.AI_TITLE.replace(/"/g, "")
+                              ? product.AI_TITLE.replace(/"/g, "")
+                              : product.Variant_Title}
+                          </td>
                           <td>{product.Cost_Price}</td>
                           <td>{product.Retail_Price}</td>
 
@@ -236,13 +240,13 @@ function ProductsList(props) {
                           </td>
 
                           <>
-                          <td>
-                          {product.isEnhanced === 1 ? (
-                            <label className="text-success">Done</label>
-                          ) : (
-                            <label className="text-danger">Pending</label>
-                          )}
-                        </td>
+                            <td>
+                              {product.isEnhanced === 1 ? (
+                                <label className="text-success">Done</label>
+                              ) : (
+                                <label className="text-danger">Pending</label>
+                              )}
+                            </td>
                             <td className="action-group">
                               <i
                                 style={{ color: "#49c5b6" }}
@@ -256,7 +260,6 @@ function ProductsList(props) {
                                 }}
                               ></i>
                             </td>
-                           
                           </>
                         </tr>
                       ))}
