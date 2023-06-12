@@ -28,4 +28,9 @@
     object-fit: cover; 
     padding: 14px;
   }
-  
+  i.fa.fa-angle-down.arrow.color-arrow{
+    color:#49c5b6
+  }
+  input.form-control::placeholder{
+    opacity: 0.6;
+  }

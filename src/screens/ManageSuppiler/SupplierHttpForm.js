@@ -378,7 +378,7 @@ function SupplierHttpForm(props) {
                   <div className="col-sm-4 col-lg-2">
                     <div className="form-group">
                       <input
-                        className="form-control"
+                        className="form-control placeholder-color"
                         type="text"
                         placeholder="*"
                         name="minute"
@@ -396,7 +396,7 @@ function SupplierHttpForm(props) {
                   <div className="col-sm-4 col-lg-2">
                     <div className="form-group">
                       <input
-                        className="form-control"
+                        className="form-control placeholder-color"
                         type="text"
                         placeholder="*"
                         name="hour"
@@ -414,7 +414,7 @@ function SupplierHttpForm(props) {
                   <div className="col-sm-4 col-lg-2">
                     <div className="form-group">
                       <input
-                        className="form-control"
+                        className="form-control placeholder-color"
                         type="text"
                         placeholder="*"
                         name="day"
@@ -431,8 +431,8 @@ function SupplierHttpForm(props) {
                   </div>
                   <div className="col-sm-4 col-lg-3">
                     <div className="form-group">
-                      <input
-                        className="form-control"
+                      <input 
+                        className="form-control placeholder-color"
                         type="text"
                         placeholder="*"
                         name="month"
@@ -450,7 +450,7 @@ function SupplierHttpForm(props) {
                   <div className="col-sm-4 col-lg-3">
                     <div className="form-group">
                       <input
-                        className="form-control"
+                        className="form-control placeholder-color"
                         type="text"
                         placeholder="*"
                         name="week"

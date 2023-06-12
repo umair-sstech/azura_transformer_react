@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
+import "../parent/Product.css"
+
 
 const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
   const { productData, singleVariantData } = useContext(ProductContext);
@@ -66,7 +68,7 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
               >
                 <div className="d-flex justify-content-between align-items-center">
                   <span>Identifiers</span>
-                  <i className="fa fa-angle-down arrow"></i>
+                  <i className="fa fa-angle-down arrow color-arrow"></i>
                 </div>
               </Accordion.Toggle>
             </Card.Header>
@@ -139,7 +141,7 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
               >
                 <div className="d-flex justify-content-between align-items-center">
                   <span>Prices</span>
-                  <i className="fa fa-angle-down arrow"></i>
+                  <i className="fa fa-angle-down arrow color-arrow"></i>
                 </div>
               </Accordion.Toggle>
             </Card.Header>

@@ -23,7 +23,7 @@ const ProductDescription = (props) => {
               >
                 <div className="d-flex justify-content-between align-items-center">
                   <span>Description</span>
-                  <i className="fa fa-angle-down arrow"></i>
+                  <i className="fa fa-angle-down arrow color-arrow"></i>
                 </div>
               </Accordion.Toggle>
             </Card.Header>

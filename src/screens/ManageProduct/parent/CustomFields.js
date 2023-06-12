@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { API_PATH } from "../../ApiPath/Apipath";
+import "./Product.css";
 
 const CustomFields = ({ customField, setCustomFields }) => {
   const { customFields } = useContext(ProductContext);
@@ -29,10 +30,7 @@ const CustomFields = ({ customField, setCustomFields }) => {
       id: id,
     };
     axios
-      .post(
-        `${API_PATH.DELETE_PRODUCT_DATA}`,
-        requestBody
-      )
+      .post(`${API_PATH.DELETE_PRODUCT_DATA}`, requestBody)
       .then((response) => {
         const { success, message, data } = response.data;
         if (success) {
@@ -78,7 +76,7 @@ const CustomFields = ({ customField, setCustomFields }) => {
               >
                 <div className="d-flex justify-content-between align-items-center">
                   <span>Custom Fields</span>
-                  <i className="fa fa-angle-down arrow"></i>
+                  <i className="fa fa-angle-down arrow color-arrow"></i>
                 </div>
                 {/* <span className="ml-4">view all custom fields</span> */}
               </Accordion.Toggle>
@@ -107,7 +105,7 @@ const CustomFields = ({ customField, setCustomFields }) => {
                     <div>
                       <input
                         type="text"
-                        placeholder="Source..."
+                        placeholder="Field Name"
                         name={`source_${index}`}
                         className="form-control"
                         value={field.customFieldName || ""}
@@ -124,7 +122,7 @@ const CustomFields = ({ customField, setCustomFields }) => {
                     <div>
                       <input
                         type="text"
-                        placeholder="Brands Distribution"
+                        placeholder="Field Value"
                         name={`brands_distribution_${index}`}
                         className="form-control"
                         value={field.customValue || ""}
@@ -139,18 +137,20 @@ const CustomFields = ({ customField, setCustomFields }) => {
                     </div>
                   </div>
                 ))}
-                <Row></Row>
+                <Row>
+                  {" "}
+                  <Button
+                    className="btn ml-3 mt-2 mb-2"
+                    variant="outline-primary"
+                    onClick={handleAddField}
+                  >
+                    <i className="fa fa-plus mr-2"></i>Add Custom Field
+                  </Button>
+                </Row>
               </Card.Body>
             </Accordion.Collapse>
           </Card>
           <hr />
-          <Button
-            className="btn ml-3 mt-2 mb-2"
-            variant="outline-primary"
-            onClick={handleAddField}
-          >
-            <i className="fa fa-plus mr-2"></i>Add Custom Field
-          </Button>
         </Accordion>
       </Col>
     </Row>

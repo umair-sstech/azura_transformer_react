@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import Swal from "sweetalert2";
 import axios from "axios";
 import Select from "react-select";
 import { toast } from "react-toastify";
@@ -9,6 +8,8 @@ import { API_PATH } from "../ApiPath/Apipath";
 import { FormContext } from "./ManageIntegrator";
 import { Spinner } from "react-bootstrap";
 import { validateIntegratorOrderSync } from "../Validations/Validation";
+import "./Integrator.css";
+
 
 function IntegratorPage4(props) {
   const {setPage}=props
@@ -404,7 +405,7 @@ const handleSubmit = (e) => {
               <div className="form-group">
                
                   <input
-                    className="form-control"
+                    className="form-control  placeholder-color"
                     type="text"
                   placeholder="*"
                     name="minute"
@@ -423,7 +424,7 @@ const handleSubmit = (e) => {
               <div className="form-group">
               
                   <input
-                    className="form-control"
+                    className="form-control  placeholder-color"
                     type="text"
                   placeholder="*"
                     name="hour"
@@ -442,7 +443,7 @@ const handleSubmit = (e) => {
               <div className="form-group">
               
                   <input
-                    className="form-control"
+                    className="form-control  placeholder-color"
                     type="text"
                   placeholder="*"
                     name="day"
@@ -462,7 +463,7 @@ const handleSubmit = (e) => {
               <div className="form-group">
                
                   <input
-                    className="form-control"
+                    className="form-control  placeholder-color"
                     type="text"
                   placeholder="*"
                     name="month"
@@ -482,7 +483,7 @@ const handleSubmit = (e) => {
               <div className="form-group">
                
                   <input
-                    className="form-control"
+                    className="form-control  placeholder-color"
                     type="text"
                   placeholder="*"
                     name="week"

@@ -26,6 +26,7 @@ const Profile = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const { updateUserProfileName } = useContext(UserContext);
+  console.log("object")
 
   const history = useHistory();
 
@@ -47,6 +48,7 @@ const Profile = (props) => {
     try {
       const response = await axios.get(`${API_PATH.FETCH_USER_PROFILE_DETAILS}/${userId}`);
       const userData = response.data.data;
+      console.log("userdata",userData)
       setFormData(userData);
     } catch (error) {
       console.error(error);
@@ -105,7 +107,7 @@ const Profile = (props) => {
       );
   
       if (response.status === 200) {
-        updateUserProfileName(response.data.data.name);
+      
         toast.success("Profile updated successfully");
         console.log(response.data);
       } else {
@@ -206,8 +208,8 @@ const Profile = (props) => {
                       </div>
                     </div>
 
-                    <div className='row mt-3 mt-lg-0'>
-                      <div className='col-sm-6'>
+                <div className='row mt-3 mt-lg-0'>
+                     { /*<div className='col-sm-6'>
                         <div className="form-group">
                           <label>
                             {" "}
@@ -221,7 +223,7 @@ const Profile = (props) => {
                             onChange={handleLogoChange}
                           />
                         </div>
-                      </div>
+                            </div>*/}
                       <div className='col-sm-6'>
                         <div className="form-group">
                           <label>
@@ -262,7 +264,7 @@ const Profile = (props) => {
                     <div className='col-sm-6'>
                     <div className="form-group">
                       <label>
-                        Password <span style={{ color: "red" }}>*</span>
+                        Password 
                       </label>
                       <input
                         className="form-control"
@@ -272,37 +274,36 @@ const Profile = (props) => {
                         defaultValue={formData && formData.password ? formData.password : ""}
                         onChange={(e) => handleNameChange(e, "password")}
                       />
-                      {formErrors.password && (
-                        <span className="text-danger">{formErrors.password}</span>
-                      )}
+                      
                     </div>
                   </div>
+                  <div className='col-sm-6'>
+                  <div className="form-group">
+                    <label>
+                      Country <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <Select
+                    options={countryList?.map((data) => ({
+                      value: data.name,
+                      label: data.name,
+                    }))}
+                    name='country'
+                    placeholder="Select Country"
+                    value={formData.country ? { value: formData.country, label: formData.country } : null}
+                    onChange={handleSelect}
+                  />
+                  
+                    {formErrors.country &&
+                      <span className="error" style={{ color: "red" }}>
+                        {formErrors.country}
+                      </span>
+                    }
+                  </div>
+                </div>
                     </div>
 
                     <div className='row'>
-                      <div className='col-12'>
-                        <div className="form-group">
-                          <label>
-                            Country <span style={{ color: "red" }}>*</span>
-                          </label>
-                          <Select
-                          options={countryList?.map((data) => ({
-                            value: data.name,
-                            label: data.name,
-                          }))}
-                          name='country'
-                          placeholder="Select Country"
-                          value={formData.country ? { value: formData.country, label: formData.country } : null}
-                          onChange={handleSelect}
-                        />
-                        
-                          {formErrors.country &&
-                            <span className="error" style={{ color: "red" }}>
-                              {formErrors.country}
-                            </span>
-                          }
-                        </div>
-                      </div>
+                    
                     </div>
                   </form>
 

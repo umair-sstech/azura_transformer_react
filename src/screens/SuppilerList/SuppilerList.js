@@ -199,11 +199,13 @@ function SuppilerList(props) {
 
                           <td>{supplier.prefixName}</td>
                           <td>
-                            {supplier.updatedAt
+                            {supplier.updated
                               ? moment(supplier.updated_on).format(
                                 "MM/DD/YYYY hh:mm a"
                               )
-                              : "N/A"}
+                              : moment(supplier.created_on).format(
+                                "MM/DD/YYYY hh:mm a"
+                              )}
                           </td>
 
                           <>

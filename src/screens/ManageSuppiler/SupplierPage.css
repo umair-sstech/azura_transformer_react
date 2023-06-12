@@ -155,3 +155,7 @@ th {
     display: block;
   }
 }
+input.form-control.placeholder-color::placeholder {
+  color: rgb(189, 189, 189); 
+  font-size: 15px;
+}

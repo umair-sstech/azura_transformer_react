@@ -25,7 +25,7 @@ const ProductParent = (props) => {
         <Card className="product__parent__card">
           <Card.Body onClick={() => navigateToParent("parent", "variants")} style={{ cursor: "pointer" }}>
             <Card.Subtitle style={{ textAlign: "center", marginTop: "10px" }}>
-              {productData?.product[0]?.Parent_Title ? productData.product[0].Parent_Title : "--"}
+              {productData?.product[0]?.AI_TITLE.replace(/"/g, "") ? productData.product[0].AI_TITLE.replace(/"/g, "") : "--"}
             </Card.Subtitle>
             <Card.Text>
               <div className="d-flex px-3 justify-content-around mt-3" style={{ gap: "2em" }}>

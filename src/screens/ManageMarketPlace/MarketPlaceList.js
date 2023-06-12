@@ -198,12 +198,14 @@ function MarketPlaceList(props) {
 
                           <td>{market_place.prefixName}</td>
                           <td>
-                            {market_place.updatedAt
-                              ? moment(market_place.updated_on).format(
-                                "MM/DD/YYYY hh:mm a"
-                              )
-                              : "N/A"}
-                          </td>
+                          {market_place.updated
+                            ? moment(market_place.updated_on).format(
+                              "MM/DD/YYYY hh:mm a"
+                            )
+                            : moment(market_place.created_on).format(
+                              "MM/DD/YYYY hh:mm a"
+                            )}
+                        </td>
 
                           <>
                             <td>

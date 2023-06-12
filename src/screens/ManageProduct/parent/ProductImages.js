@@ -29,7 +29,7 @@ const ProductImages = () => {
               >
                 <div className="d-flex justify-content-between align-items-center">
                   <span>Images ({imageCount > 0 ? imageCount : 0})</span>
-                  <i className="fa fa-angle-down arrow"></i>
+                  <i className="fa fa-angle-down arrow color-arrow"></i>
                 </div>
               </Accordion.Toggle>
             </Card.Header>

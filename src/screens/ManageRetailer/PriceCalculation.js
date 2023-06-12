@@ -80,15 +80,7 @@ function PriceCalculation(props) {
     setSelectedRadioOption(defaultSelectedRadioOption);
   }, [supplierData]);    
   
-  let message;
-  const radioMsg = selectedRadioOption?.map((option) => {
-    if (option === "decimal") {
-      message = "e.g. Price = 17.4, Output = 18";
-    } else if (option === "5") {
-      message = "e.g. Price = 17, Output = 20";
-    }
-    return message;
-  })
+
 
   const handleSelectChange = (selectedOption, supplierId) => {
     const updatedSelectedOptions = { ...selectedOptions };
@@ -128,8 +120,6 @@ function PriceCalculation(props) {
         val.discountValue < 0
     );
   };
-
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -216,15 +206,13 @@ function PriceCalculation(props) {
             value: supplier.costPriceField || "",
             label: supplier.costPriceField || "Select Price",
           };
-          
+       
         });
-  
-        // const roundUpValue = data[0]?.roundUp || "5";
-        // setSelectedRadioOption(roundUpValue);
-        // console.log("roundupValue",roundUpValue)
-
         setFormData(initialFormData);
         setSelectedOptions(initialSelectedOptions);
+        const selectedOptions = data.map((supplier) => supplier.roundUp);
+        setSelectedRadioOption(selectedOptions);
+
       } else {
         toast.error(message);
       }

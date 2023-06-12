@@ -200,12 +200,14 @@ function IntegratorList(props) {
 
                           <td>{integrator.prefixName}</td>
                           <td>
-                            {integrator.updatedAt
-                              ? moment(integrator.updated_on).format(
-                                "MM/DD/YYYY hh:mm a"
-                              )
-                              : "N/A"}
-                          </td>
+                          {integrator.updated
+                            ? moment(integrator.updated_on).format(
+                              "MM/DD/YYYY hh:mm a"
+                            )
+                            : moment(integrator.created_on).format(
+                              "MM/DD/YYYY hh:mm a"
+                            )}
+                        </td>
 
                           <>
                             <td>

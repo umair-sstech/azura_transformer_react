@@ -5,6 +5,8 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { API_PATH } from "../../ApiPath/Apipath";
+import "../parent/Product.css"
+
 
 const VariantCustomField = ({ customField, setCustomFields }) => {
   const { customFields } = useContext(ProductContext);
@@ -78,7 +80,7 @@ const VariantCustomField = ({ customField, setCustomFields }) => {
               >
                 <div className="d-flex justify-content-between align-items-center">
                   <span>Custom Fields</span>
-                  <i className="fa fa-angle-down arrow"></i>
+                  <i className="fa fa-angle-down arrow color-arrow"></i>
                 </div>
               </Accordion.Toggle>
             </Card.Header>

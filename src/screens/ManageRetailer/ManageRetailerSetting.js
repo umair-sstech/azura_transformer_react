@@ -125,7 +125,7 @@ function ManageRetailerSetting(props) {
               isRetailerAdded ? "Integration Edit" : "Add Integration Setting"
             }
             Breadcrumb={[
-              { name: "Manage", navigate: "#" },
+              { name: "Integration Setting List", navigate: "/setting-retailer-list",items: ["retailerIntegrationId","supplierSettingId", "selectedSupplierName","marketPlaceSettingId","marketPlaceSettingName"] },
               { name: "Integration Setting", navigate: "#" },
             ]}
           />

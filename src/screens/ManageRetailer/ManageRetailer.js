@@ -1,134 +1,168 @@
-import React, { createContext, useEffect, useState } from 'react';
-import moment from 'moment';
-import PageHeader from '../../components/PageHeader';
-import { Tab, Tabs } from 'react-bootstrap';
-import axios from "axios"
-import { toast } from 'react-toastify';
-import { useHistory } from "react-router-dom"
-import RetailerInfo from './RetailerInfo';
-import RetailerSocialInfo from './RetailerSocialInfo';
-import RetailerGeneralInfo from './RetailerGeneralInfo';
-import RetailerIntegration from './RetailerIntegration';
-import RetailerChangeLog from './RetailerChangeLog';
-import { connect } from 'react-redux';
-import { onUpdateFormLoading } from '../../actions';
+import React, { createContext, useEffect, useState } from "react";
+import moment from "moment";
+import PageHeader from "../../components/PageHeader";
+import { Tab, Tabs } from "react-bootstrap";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
+import RetailerInfo from "./RetailerInfo";
+import RetailerSocialInfo from "./RetailerSocialInfo";
+import RetailerGeneralInfo from "./RetailerGeneralInfo";
+import RetailerIntegration from "./RetailerIntegration";
+import RetailerChangeLog from "./RetailerChangeLog";
+import { connect } from "react-redux";
+import { onUpdateFormLoading } from "../../actions";
 
 export const FormContext = createContext();
 
-const ManageRetailer = (props) =>
-{
-    const [activeStepIndex, setActiveStepIndex] = useState(0);
-    const [formData, setFormData] = useState();
-    const [logoData, setLogoData] = useState();
-    const [isRetailerAdded, setIsRetailerAdded] = useState('');
-    const [createdDate, setCreatedDate] = useState("");
+const ManageRetailer = (props) => {
+  const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [formData, setFormData] = useState();
+  const [logoData, setLogoData] = useState();
+  const [isRetailerAdded, setIsRetailerAdded] = useState("");
+  const [createdDate, setCreatedDate] = useState("");
 
-    const history = useHistory()
+  const history = useHistory();
 
-
-    useEffect(() => {
-        const id = localStorage.getItem("newlyAddedRetailer")
-        if (id) {
-            props.onUpdateFormLoading(true)
-            setIsRetailerAdded(id)
-            axios.get(`${process.env.REACT_APP_RETAILER_SERVICE}/retailer-by-Id/${id}`)
-                .then(res => {
-                    const data = res.data.retailerData
-                    setFormData(data)
-                    props.onUpdateFormLoading(false)
-                    setCreatedDate(data.created_on)
-                })
-                .catch(e => {
-                    toast.error(e.response.data.message || "Something went wrong")
-                    setFormData()
-                    setIsRetailerAdded('')
-                    localStorage.removeItem("newlyAddedRetailer")
-                    props.onUpdateFormLoading(false)
-                })
-        }
-    }, []);
-
-    useEffect(() => () => {
-        setFormData()
-        setLogoData()
-        setIsRetailerAdded('')
-        localStorage.removeItem("newlyAddedRetailer")
-    }, []);
-
-    const processCancel = () => {
-        setFormData()
-        setLogoData()
-        setIsRetailerAdded('')
-        localStorage.removeItem("newlyAddedRetailer")
-        history.push('/retailer')
+  useEffect(() => {
+    const id = localStorage.getItem("newlyAddedRetailer");
+    if (id) {
+      props.onUpdateFormLoading(true);
+      setIsRetailerAdded(id);
+      axios
+        .get(`${process.env.REACT_APP_RETAILER_SERVICE}/retailer-by-Id/${id}`)
+        .then((res) => {
+          const data = res.data.retailerData;
+          setFormData(data);
+          props.onUpdateFormLoading(false);
+          setCreatedDate(data.created_on);
+        })
+        .catch((e) => {
+          toast.error(e.response.data.message || "Something went wrong");
+          setFormData();
+          setIsRetailerAdded("");
+          localStorage.removeItem("newlyAddedRetailer");
+          props.onUpdateFormLoading(false);
+        });
     }
+  }, []);
 
+  useEffect(
+    () => () => {
+      setFormData();
+      setLogoData();
+      setIsRetailerAdded("");
+      localStorage.removeItem("newlyAddedRetailer");
+    },
+    []
+  );
 
-    return (
-        <div
-            style={{ flex: 1 }}
-            onClick={() => {
-                document.body.classList.remove("offcanvas-active");
-            }}
-        >
-            <div>
+  const processCancel = () => {
+    setFormData();
+    setLogoData();
+    setIsRetailerAdded("");
+    localStorage.removeItem("newlyAddedRetailer");
+    history.push("/retailer");
+  };
 
-                <div className="container-fluid">
-                    <PageHeader
-                        HeaderText={isRetailerAdded ? "Retailer Edit" : "Retailer Add"}
-                        Breadcrumb={[
-                            { name: "Manage", navigate: "#" },
-                            { name: "Retailer List", navigate: "/retailer" },
-                            { name: isRetailerAdded ? "Retailer Edit" : "Retailer Add", navigate: "#" },
-                        ]}
-                    />
-                    <div className='tab-component'>
-                        <div className='card'>
-                            <div className='body'>
-                                {props.updateFormLoading ? <div className='loader-wrapper' >
-                                    <i className="fa fa-refresh fa-spin"></i>
-                                </div> : null}
-                                {createdDate ? <div className='date-wrapper' style={{ textAlign: "right" }}>
-                                    <span>Created on: {moment(createdDate).format("MM/DD/YYYY hh:mm a")}</span>
-                                </div> : null}
-                                <FormContext.Provider value={{
-                                    setIsRetailerAdded,
-                                    isRetailerAdded,
-                                    activeStepIndex,
-                                    setActiveStepIndex,
-                                    formData,
-                                    setFormData,
-                                    setLogoData,
-                                    logoData,
-                                    processCancel
-                                }}>
-                                    <Tabs defaultActiveKey="profile">
-                                        <Tab eventKey="profile" title="Profile">
-                                            <RetailerInfo />
-                                        </Tab>
-                                        <Tab eventKey="mediaSocial" title="Media / Social" disabled={isRetailerAdded ? false : true}>
-                                            <RetailerSocialInfo />
-                                        </Tab>
-                                        <Tab eventKey="general" title="General" disabled={isRetailerAdded ? false : true}>
-                                            <RetailerGeneralInfo />
-                                        </Tab>
-                                        <Tab eventKey="integration" title="Integration" disabled={isRetailerAdded ? false : true}>
-                                            <RetailerIntegration />
-                                        </Tab>
-                                        <Tab eventKey="changeLog" title="Change Log" disabled={isRetailerAdded ? false : true}>
-                                            <RetailerChangeLog />
-                                        </Tab>
-                                    </Tabs>
-                                </FormContext.Provider>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  return (
+    <div
+      style={{ flex: 1 }}
+      onClick={() => {
+        document.body.classList.remove("offcanvas-active");
+      }}
+    >
+      <div>
+        <div className="container-fluid">
+          <PageHeader
+            HeaderText={isRetailerAdded ? "Retailer Edit" : "Retailer Add"}
+            Breadcrumb={[
+              { name: "Manage", navigate: "#" },
+              {
+                name: "Retailer List",
+                navigate: "/retailer",
+                items: ["newlyAddedRetailer"],
+              },
+              {
+                name: isRetailerAdded ? "Retailer Edit" : "Retailer Add",
+                navigate: "#",
+              },
+            ]}
+          />
+          <div className="tab-component">
+            <div className="card">
+              <div className="body">
+                {props.updateFormLoading ? (
+                  <div className="loader-wrapper">
+                    <i className="fa fa-refresh fa-spin"></i>
+                  </div>
+                ) : null}
+                {createdDate ? (
+                  <div className="date-wrapper" style={{ textAlign: "right" }}>
+                    <span>
+                      Created on:{" "}
+                      {moment(createdDate).format("MM/DD/YYYY hh:mm a")}
+                    </span>
+                  </div>
+                ) : null}
+                <FormContext.Provider
+                  value={{
+                    setIsRetailerAdded,
+                    isRetailerAdded,
+                    activeStepIndex,
+                    setActiveStepIndex,
+                    formData,
+                    setFormData,
+                    setLogoData,
+                    logoData,
+                    processCancel,
+                  }}
+                >
+                  <Tabs defaultActiveKey="profile">
+                    <Tab eventKey="profile" title="Profile">
+                      <RetailerInfo />
+                    </Tab>
+                    <Tab
+                      eventKey="mediaSocial"
+                      title="Media / Social"
+                      disabled={isRetailerAdded ? false : true}
+                    >
+                      <RetailerSocialInfo />
+                    </Tab>
+                    <Tab
+                      eventKey="general"
+                      title="General"
+                      disabled={isRetailerAdded ? false : true}
+                    >
+                      <RetailerGeneralInfo />
+                    </Tab>
+                    <Tab
+                      eventKey="integration"
+                      title="Integration"
+                      disabled={isRetailerAdded ? false : true}
+                    >
+                      <RetailerIntegration />
+                    </Tab>
+                    <Tab
+                      eventKey="changeLog"
+                      title="Change Log"
+                      disabled={isRetailerAdded ? false : true}
+                    >
+                      <RetailerChangeLog />
+                    </Tab>
+                  </Tabs>
+                </FormContext.Provider>
+              </div>
             </div>
+          </div>
         </div>
-    );
-}
+      </div>
+    </div>
+  );
+};
 const mapStateToProps = ({ LoadingReducer }) => ({
-    updateFormLoading: LoadingReducer.updateFormLoading
+  updateFormLoading: LoadingReducer.updateFormLoading,
 });
-export default connect(mapStateToProps, { onUpdateFormLoading })(ManageRetailer);
+export default connect(mapStateToProps, { onUpdateFormLoading })(
+  ManageRetailer
+);

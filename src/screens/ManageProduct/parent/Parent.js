@@ -13,7 +13,6 @@ import { toast } from "react-toastify";
 import { ProductContext } from "../../ProductContext/ProductContext";
 import { API_PATH } from "../../ApiPath/Apipath";
 import attributes from "./Attributes";
-import { faL } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Spinner } from "react-bootstrap";
 
@@ -86,11 +85,12 @@ const Parent = (props) => {
   const handleSubmit = async () => {
     setIsLoading(true)
     try {
+      const supplierId=productData.product?.[0]?.supplierId
       const response = await axios.post(
        `${API_PATH.UPDATE_PRODUCT_DATA}`,
         {
           productId: id,
-          supplierId: "2",
+          supplierId: supplierId,
           type: "PARENT",
           Parent_Title: title,
           Plain_Description: description,
@@ -142,7 +142,7 @@ const Parent = (props) => {
           </div>
         </div>
 
-        <ProductContext.Provider value={productData.product?.[0]?.Parent_Title}>
+        <ProductContext.Provider value={productData.product?.[0]?.AI_TITLE.replace(/"/g, "")}>
           <ProductTitle title={title} setTitle={setTitle} />
         </ProductContext.Provider>
 
@@ -156,7 +156,7 @@ const Parent = (props) => {
 
         {/* Description */}
         <ProductContext.Provider
-          value={productData.product?.[0]?.Plain_Description}
+          value={productData.product?.[0]?.AI_Description}
         >
           <ProductDescription
             description={description}

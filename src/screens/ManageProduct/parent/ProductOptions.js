@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
+import "./Product.css"
+
 
 const ProductOptions = (props) => {
   const product = useContext(ProductContext);
@@ -42,7 +44,7 @@ const ProductOptions = (props) => {
               >
                 <div className="d-flex justify-content-between align-items-center">
                   <span>Options</span>
-                  <i className="fa fa-angle-down arrow"></i>
+                  <i className="fa fa-angle-down arrow color-arrow"></i>
                 </div>
                 {/* <span className="ml-4">view all options</span> */}
               </Accordion.Toggle>

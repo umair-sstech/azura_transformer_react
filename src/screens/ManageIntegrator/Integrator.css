@@ -49,4 +49,7 @@ button.accordion.btn {
   table tbody tr {
     padding: 0;
   }
-  
+  input.form-control.placeholder-color::placeholder {
+    color: rgb(189, 189, 189); 
+    font-size: 15px;
+  }

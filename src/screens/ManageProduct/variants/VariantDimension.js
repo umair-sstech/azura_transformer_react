@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
+import "../parent/Product.css"
+
 
 const VariantDimension = ({dimensionValue, setDimensionValue}) => {
   const { productData, singleVariantData } = useContext(ProductContext);
@@ -42,7 +44,7 @@ const VariantDimension = ({dimensionValue, setDimensionValue}) => {
               >
                 <div className="d-flex justify-content-between align-items-center">
                   <span>Dimensions</span>
-                  <i className="fa fa-angle-down arrow"></i>
+                  <i className="fa fa-angle-down arrow color-arrow"></i>
                 </div>
               </Accordion.Toggle>
             </Card.Header>

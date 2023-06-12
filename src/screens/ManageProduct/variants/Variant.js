@@ -49,8 +49,6 @@ const Variant = (props) => {
   const [customField, setCustomFields] = useState([]);
   const history=useHistory()
 
-
-
   const variantData =
     productData?.product?.[0]?.Preference === "PARENT"
       ? productData?.variant
@@ -104,11 +102,12 @@ const Variant = (props) => {
   const handleSubmit = async () => {
     setIsExitLoading(true)
     try {
+      const supplierId=productData.product?.[0]?.supplierId
       const response = await axios.post(
         `${API_PATH.UPDATE_PRODUCT_DATA}`,
         {
           productId: productData?.variant?.[0]?.id,
-          supplierId: "2",
+          supplierId:supplierId ,
           type: "VARIANT",
           Variant_Title: title,
           Plain_Description: description,
@@ -122,6 +121,8 @@ const Variant = (props) => {
       const { success, message } = response.data;
       if (success) {
         toast.success(message);
+        history.push("/products")
+
       } else {
         toast.error(message);
       }

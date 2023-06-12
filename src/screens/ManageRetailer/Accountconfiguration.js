@@ -4,12 +4,10 @@ import { FormContext } from "./ManageRetailerSetting";
 import { validateRetailerAccount } from "../Validations/Validation";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 import { API_PATH } from "../ApiPath/Apipath";
 
-
 function Accountconfiguration(props) {
-
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const { processCancel, formData, setFormData } = useContext(FormContext);
@@ -22,7 +20,7 @@ function Accountconfiguration(props) {
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const history=useHistory()
+  const history = useHistory();
 
   useEffect(() => {
     if (formData) {
@@ -38,7 +36,7 @@ function Accountconfiguration(props) {
     getAccountConfigurationData();
   }, []);
 
-  const marketPlaceSettingName = localStorage.getItem("marketPlaceSettingName")
+  const marketPlaceSettingName = localStorage.getItem("marketPlaceSettingName");
 
   const handleChange = (key, value) => {
     const formData = new FormData(document.forms.accountForm);
@@ -52,7 +50,7 @@ function Accountconfiguration(props) {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
 
-    setInitFormData(prevState => ({
+    setInitFormData((prevState) => ({
       ...prevState,
       [name]: trimmedValue,
     }));
@@ -67,10 +65,7 @@ function Accountconfiguration(props) {
     };
 
     axios
-      .post(
-        `${API_PATH.GET_ACCOUNT}`,
-        payload
-      )
+      .post(`${API_PATH.GET_ACCOUNT}`, payload)
       .then((response) => {
         const { success, data } = response.data;
         if (success && data.length > 0) {
@@ -96,10 +91,12 @@ function Accountconfiguration(props) {
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      console.log(initFormData)
+      console.log(initFormData);
       setIsLoading(true);
 
-      const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+      const retailerIntegrationId = localStorage.getItem(
+        "retailerIntegrationId"
+      );
       const marketPlaceSettingId = localStorage.getItem("marketPlaceSettingId");
 
       const payload = {
@@ -112,14 +109,11 @@ function Accountconfiguration(props) {
 
       console.log("payload", payload);
       axios
-        .post(
-          `${API_PATH.CREAT_ACCOUNT_CONFIGURATION}`,
-          payload
-        )
+        .post(`${API_PATH.CREAT_ACCOUNT_CONFIGURATION}`, payload)
         .then((response) => {
           const { success, message } = response.data;
           if (success) {
-            setIsLoading(false)
+            setIsLoading(false);
             localStorage.removeItem("supplierSettingId");
             localStorage.removeItem("selectedSupplierName");
             localStorage.removeItem("retailerIntegrationId");
@@ -134,7 +128,7 @@ function Accountconfiguration(props) {
           setIsLoading(false);
         });
     }
-  }
+  };
 
   return (
     <>
@@ -155,7 +149,11 @@ function Accountconfiguration(props) {
                 )}
               </button>
 
-              <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={processCancel}>
+              <button
+                className="btn btn-secondary w-auto btn-lg"
+                type="button"
+                onClick={processCancel}
+              >
                 Exit
               </button>
             </div>
@@ -163,7 +161,9 @@ function Accountconfiguration(props) {
         </div>
         <div className="col-row mt-3 mt-sm-0">
           <div className="col-6">
-            <label style={{ color: "#49c5b6" }}>Selected Account:{marketPlaceSettingName}</label>
+            <label style={{ color: "#49c5b6" }}>
+              Selected Account: {marketPlaceSettingName}
+            </label>
           </div>
           <div className="row">
             <div className="col-sm-6">
@@ -177,7 +177,11 @@ function Accountconfiguration(props) {
                   name="storeName"
                   onChange={handleInputChange}
                   placeholder="Enter Channel"
-                  defaultValue={initFormData && initFormData.storeName ? initFormData.storeName : ""}
+                  defaultValue={
+                    initFormData && initFormData.storeName
+                      ? initFormData.storeName
+                      : ""
+                  }
                 />
                 {formErrors && formErrors.storeName && (
                   <span className="text-danger">{formErrors.storeName}</span>
@@ -195,7 +199,11 @@ function Accountconfiguration(props) {
                   name="endpointURL"
                   onChange={handleInputChange}
                   placeholder="Enter API Endpoint"
-                  defaultValue={initFormData && initFormData.endpointURL ? initFormData.endpointURL : ""}
+                  defaultValue={
+                    initFormData && initFormData.endpointURL
+                      ? initFormData.endpointURL
+                      : ""
+                  }
                 />
                 {formErrors && formErrors.endpointURL && (
                   <span className="text-danger">{formErrors.endpointURL}</span>
@@ -213,16 +221,22 @@ function Accountconfiguration(props) {
                   name="authorizationToken"
                   onChange={handleInputChange}
                   placeholder="Enter token"
-                  defaultValue={initFormData && initFormData.authorizationToken ? initFormData.authorizationToken : ""}
+                  defaultValue={
+                    initFormData && initFormData.authorizationToken
+                      ? initFormData.authorizationToken
+                      : ""
+                  }
                 />
                 {formErrors && formErrors.authorizationToken && (
-                  <span className="text-danger">{formErrors.authorizationToken}</span>
+                  <span className="text-danger">
+                    {formErrors.authorizationToken}
+                  </span>
                 )}
               </div>
             </div>
           </div>
         </div>
-      </form >
+      </form>
     </>
   );
 }

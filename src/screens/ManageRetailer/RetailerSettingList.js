@@ -137,7 +137,7 @@ function RetailerSettingList(props) {
           <PageHeader
             HeaderText="Retailer Setting List"
             Breadcrumb={[
-              { name: "Retailer", navigate: "/retailer" },
+              { name: "Retailer", navigate: "/retailer", items: ["newlyAddedRetailer"] },
               { name: "Retailer Setting List", navigate: "#" },
             ]}
           />
@@ -189,12 +189,14 @@ function RetailerSettingList(props) {
                           <td>{retailer.marketPlaceNames}</td>
                           
                           <td>
-                            {retailer.updatedAt
-                              ? moment(retailer.updated_on).format(
-                                  "MM/DD/YYYY hh:mm a"
-                                )
-                              : "N/A"}
-                          </td>
+                          {retailer.updated
+                            ? moment(retailer.updated_on).format(
+                              "MM/DD/YYYY hh:mm a"
+                            )
+                            : moment(retailer.created_on).format(
+                              "MM/DD/YYYY hh:mm a"
+                            )}
+                        </td>
 
                           <>
                           <td>
