@@ -6,7 +6,8 @@ import { toast } from "react-toastify";
 import { FormContext } from "../ManageRetailer/ManageRetailerSetting";
 import { useHistory } from "react-router-dom";
 import { API_PATH } from "../ApiPath/Apipath";
-
+import { onLoading } from "../../actions"
+import { connect } from 'react-redux';
 
 function CurrencyConversion(props) {
   const { setPage } = props;
@@ -49,27 +50,30 @@ function CurrencyConversion(props) {
     }
 
   };
+
+  const setDefaultCurrency = currencyList?.find((data) => data?.label?.includes("USD"))
+
   const handleSelectChange = (selectedOptions) => {
     setSelectedCurrency(selectedOptions);
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    if (selectedCurrency.value === null) {
+    e.preventDefault();
+    if (selectedCurrency?.value === null) {
       return toast.error("Please select a currency")
     }
 
-    setIsLoading(true);
-
+    
     const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
     const currencyId = currencyList.find((currency) => currency?.value === selectedCurrency)?.value;
     console.log("valuecurrency", currencyId)
 
     const payload = {
       id: retailerIntegrationId,
-      currencyId: selectedCurrency?.value
+      currencyId: selectedCurrency !== null ? selectedCurrency?.value : setDefaultCurrency?.value
     };
     console.log("payload", payload)
+    setIsLoading(true);
     axios
       .post(`${API_PATH.CREAT_CURRENCY}`, payload)
       .then((response) => {
@@ -97,8 +101,8 @@ function CurrencyConversion(props) {
 
       if (success && data.length > 0) {
         const selectedCurrencyOption = {
-          value: data[0].currencyId,
-          label: data[0].currencyNames,
+          value: data[0].currencyId === null ? "645b88c21dc294747c33338e" : data[0].currencyId,
+          label: data[0].currencyNames === undefined ? "USD" : data[0].currencyNames ,
         };
         console.log("selectedCurrencyOption", selectedCurrencyOption)
         setSelectedCurrency(selectedCurrencyOption);
@@ -121,7 +125,7 @@ function CurrencyConversion(props) {
 
     const payload = {
       id: retailerIntegrationId,
-      currencyId: selectedCurrency?.value
+      currencyId: selectedCurrency !== null ? selectedCurrency?.value : setDefaultCurrency?.value
     };
     axios
       .post(`${API_PATH.CREAT_CURRENCY}`, payload)
@@ -183,6 +187,11 @@ function CurrencyConversion(props) {
             </div>
           </div>
         </div>
+        {props.loading && (
+          <div className='loader-wrapper' >
+            <i className="fa fa-refresh fa-spin"></i>
+          </div>
+        )}
         <div className="row mt-3 mt-sm-0">
           <div className="col-sm-6">
             <label>Select Currency</label>
@@ -190,7 +199,7 @@ function CurrencyConversion(props) {
               options={currencyList}
               placeholder="Select Currency"
               onChange={handleSelectChange}
-              value={selectedCurrency}
+              value={selectedCurrency ? selectedCurrency : setDefaultCurrency}
             />
 
           </div>
@@ -199,4 +208,9 @@ function CurrencyConversion(props) {
     </>
   );
 }
-export default CurrencyConversion;
+
+const mapStateToProps = ({ LoadingReducer }) => ({
+  loading: LoadingReducer.isLoading,
+});
+
+export default connect(mapStateToProps, { onLoading })(CurrencyConversion);
