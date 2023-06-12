@@ -58,11 +58,10 @@ function SupplierPage6(props) {
     const isBarcodeRequired = isChecked;
     let barcodeName = "";
   
-    if (selectedOptions.length === 0) {
-      setFormError({ message: "Please select at least one option." });
-      return;
-    }
-  console.log("selectedOptions.length",selectedOptions.length)
+    // if (selectedOptions.length === 0) {
+    //   setFormError({ message: "Please select at least one option." });
+    //   return;
+    // }
     if (selectedOptions.length === 1) {
       barcodeName = selectedOptions[0];
     } else {
@@ -100,10 +99,10 @@ function SupplierPage6(props) {
     const isBarcodeRequired = isChecked;
     const barcodeName = selectedOptions.join(","); 
 
-    if (selectedOptions.length === 0) {
-      setFormError({ message: "Please select at least one option." });
-      return;
-    }
+    // if (selectedOptions.length === 0) {
+    //   setFormError({ message: "Please select at least one option." });
+    //   return;
+    // }
     setIsLoadingExit(true);
     axios
       .post(`${API_PATH.BARCODE}`, {
@@ -180,6 +179,38 @@ function SupplierPage6(props) {
   return (
     <>
       <form onSubmit={handleSubmit}>
+      <div className="row">
+      <div className="col-lg-12 col-md-12 col-12 button-class">
+        <div className="d-flex">
+          <button className="btn btn-primary w-auto btn-lg mr-2" type="submit">
+            {isLoading ? (
+              <>
+                <Spinner animation="border" size="sm" /> Please wait...
+              </>
+            ) : (
+              "Save & Next"
+            )}
+          </button>
+          <button className="btn btn-primary w-auto btn-lg mr-2" type="submit" onClick={handleOnClick}>
+            {isLoadingExit ? (
+              <>
+                <Spinner animation="border" size="sm" /> Please wait...
+              </>
+            ) : (
+              "Save & Exit"
+            )}
+          </button>
+
+          <button
+            className="btn btn-secondary w-auto btn-lg"
+            type="button"
+            onClick={processCancel}
+          >
+            Exit
+          </button>
+        </div>
+      </div>
+    </div>
       <div className="row mt-3 mt-md-0">
       <div className="col-12">
         <div className="form-group">
@@ -197,46 +228,12 @@ function SupplierPage6(props) {
         </div>
       </div>
     </div>
-  
-
     {isChecked && (
       <>
-        <div className="row">
-          <div className="col-lg-12 col-md-12 col-12 button-class">
-            <div className="d-flex">
-              <button className="btn btn-primary w-auto btn-lg mr-2" type="submit">
-                {isLoading ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : (
-                  "Save & Next"
-                )}
-              </button>
-              <button className="btn btn-primary w-auto btn-lg mr-2" type="submit" onClick={handleOnClick}>
-                {isLoadingExit ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : (
-                  "Save & Exit"
-                )}
-              </button>
-    
-              <button
-                className="btn btn-secondary w-auto btn-lg"
-                type="button"
-                onClick={processCancel}
-              >
-                Exit
-              </button>
-            </div>
-          </div>
-        </div>
-   
+       
         <div className="row">
           <div className="col-12">
-          {formError && <span className="text-danger">{formError.message}</span>}
+         {/* {formError && <span className="text-danger">{formError.message}</span>}*/}
             <table className="w-50 barcode-table table-responsive-sm">
               <thead>
                 <tr>
@@ -280,8 +277,6 @@ function SupplierPage6(props) {
         </div>
       </>
     )}
-    
-    
         
       </form>
     </>

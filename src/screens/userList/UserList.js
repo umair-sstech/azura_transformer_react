@@ -153,6 +153,7 @@ const UserList = (props) => {
                                         </thead>
                                         <tbody>
                                             {userList.map((data, idx) => {
+                                                console.log("dataid",data._id)
                                                 return (<tr key={data._id}>
                                                     <td>{startIndex + idx}</td>
                                                     <td>{data.user_code || "N/A"}</td>

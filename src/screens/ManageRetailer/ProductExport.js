@@ -13,14 +13,47 @@ function ProductExport(props) {
   const { setPage } = props;
   const { processCancel } = useContext(FormContext);
   const [data, setData] = useState(null);
+  const [productData, setProductData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
+  const [selectedCheckbox, setSelectedCheckbox] = useState([]);
 
   const history = useHistory();
 
   useEffect(() => {
     getCategoryData();
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const id = localStorage.getItem("retailerIntegrationId");
+      const response = await axios.post(API_PATH.GET_RETAILER_BY_ID, {
+        id: id,
+      });
+      const { success, data } = response.data;
+  
+      if (success && data.length > 0) {
+        const selectedDataFromApi = data
+          .filter((val) => val.categoryId !== null) 
+          .map((val) => ({
+            productCount: val.productCount,
+            supplierId: val.supplierId,
+            categoryId: val.categoryId,
+            supplierNames: val.supplierNames,
+          }));
+        setProductData(selectedDataFromApi);
+        const selectedSupplierIds = selectedDataFromApi.map(
+          (item) => item.categoryId
+        );
+        setSelectedCheckbox(selectedSupplierIds);
+        console.log("selectedSupplierIds", selectedSupplierIds);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  
 
   const getCategoryData = async () => {
     const supplierIds = localStorage.getItem("supplierSettingId");
@@ -31,7 +64,6 @@ function ProductExport(props) {
           { supplierId: supplierIds }
         );
         const { success, data } = response.data;
-        console.log('data',data.supplier_list)
         if (success) {
           setData(data);
         } else {
@@ -52,6 +84,17 @@ function ProductExport(props) {
     });
   };
 
+  const handleCheckboxChange1 = (event) => {
+    const { value, checked } = event.target;
+    const id = value;
+
+    if (checked) {
+      setSelectedCheckbox([...selectedCheckbox, id]);
+    } else {
+      setSelectedCheckbox(selectedCheckbox.filter((rowId) => rowId !== id));
+    }
+  }
+
   const checkAnyCheckboxChecked = (checkboxes) => {
     return Object.values(checkboxes).some(box => box.checked)
   }
@@ -69,6 +112,7 @@ function ProductExport(props) {
         supplierId,
         categoryId: "",
         productCount: "",
+        checked: false,
       }));
 
       console.log("requestData", requestData);
@@ -84,9 +128,15 @@ function ProductExport(props) {
           selectedProductCounts.push(product.product_count);
         }
       });
-      requestData[0].categoryId = selectedCategories.join(",");
-      requestData[0].productCount = selectedProductCounts.join(",");
 
+      selectedCheckbox.forEach((val, idx) => {
+        if(val === requestData[idx]?.supplierId) {
+          requestData[idx].categoryId = selectedCategories.join(",");
+          requestData[idx].productCount = selectedProductCounts.join(",");
+          requestData[idx].checked = true;
+        }
+      })
+      
       const isChecked = checkAnyCheckboxChecked(checkboxes)
       if(data.supplier_product.length > 0) {
 
@@ -143,8 +193,13 @@ function ProductExport(props) {
           selectedProductCounts.push(product.product_count);
         }
       });
-      requestData[0].categoryId = selectedCategories.join(",");
-      requestData[0].productCount = selectedProductCounts.join(",");
+
+      selectedCheckbox.forEach((val, idx) => {
+        if(val === requestData[idx]?.supplierId) {
+          requestData[idx].categoryId = selectedCategories.join(",");
+          requestData[idx].productCount = selectedProductCounts.join(",");
+        }
+      });
 
       const isChecked = checkAnyCheckboxChecked(checkboxes)
       if(data.supplier_product.length > 0) {
@@ -178,10 +233,7 @@ function ProductExport(props) {
     }
   };
 
-  useEffect(() => {
-    // getRetailerIntegrationData();
-  }, []);
-
+  
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -248,10 +300,14 @@ function ProductExport(props) {
             <tbody>
             {data &&
               data.supplier_product.map((product, index) => (
-                <tr key={product.supplierId}>
+                <tr key={index}>
                   <td style={{ width: "5%" }}>
                   <input
                   type="checkbox"
+                  value={product.categoryId}
+                  checked={selectedCheckbox.includes(parseInt(product.categoryId))}
+
+                  onChange={handleCheckboxChange1}
                 />
 
                   </td>

@@ -94,8 +94,7 @@ const ManageUserPermission = (props) =>
                     <PageHeader
                         HeaderText="User Permission"
                         Breadcrumb={[
-                            { name: "Manage", navigate: "" },
-                            { name: "User List", navigate: "" },
+                            { name: "User List", navigate: "/user" },
                             { name: "User Permission", navigate: "" },
                         ]}
                     />

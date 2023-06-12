@@ -27,10 +27,11 @@ const ManageUser = (props) => {
     retailer: "",
     company: "",
   });
-
+console.log("initgormdata",initFormData)
   const [error, setError] = useState(false);
 
   const [updateUserId, setUpdateUserId] = useState("");
+  console.log("userId",updateUserId)
 
   const roleList = [
     {
@@ -160,11 +161,11 @@ const ManageUser = (props) => {
       <div>
         <div className="container-fluid">
           <PageHeader
-            HeaderText={"User Add"}
+          HeaderText={updateUserId ? "User Update" : "User Add"}
+
             Breadcrumb={[
-              { name: "Manage", navigate: "#" },
               { name: "User List", navigate: "/user" },
-              { name: "User Add", navigate: "#" },
+              { name: updateUserId ? "User Update" : "User Add", navigate: "#" },
             ]}
           />
           <div className="tab-component">
@@ -206,7 +207,7 @@ const ManageUser = (props) => {
                         });
                         } else {
                             const reqBody = {
-                              name: data.name,
+                        name: data.name,
                         email: data.email,
                         country: data.country.value,
                         password: data.password,
@@ -278,7 +279,7 @@ const ManageUser = (props) => {
                               name="name"
                               onBlur={handleBlur}
                               onChange={handleChange}
-                              value={values.name}
+                              value={values.name?values.name:""}
                               placeholder="Enter User Name"
                             />
                             {errors.name && touched.name ? (

@@ -30,6 +30,8 @@ function SupplierPage2(props) {
   });
   const [csvName, setCsvName] = useState("");
   const [fileError, setFileError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingExit, setIsLoadingExit] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -93,6 +95,7 @@ function SupplierPage2(props) {
 
       const supplierId = localStorage.getItem("supplierId");
       formData.set("supplier_id", supplierId);
+      setIsLoading(true);
 
       try {
         const response = await axios.post(`${API_PATH.ADD_CSV_DATA}`, formData);
@@ -108,6 +111,8 @@ function SupplierPage2(props) {
         }
       } catch (error) {
         console.error(error);
+      setIsLoading(false);
+
       }
     }
   };
@@ -120,16 +125,15 @@ function SupplierPage2(props) {
       const form = e.target.closest("form");
       const formData = new FormData(form);
       formData.append("supplier_id", initFormData.id);
+      setIsLoadingExit(true)
       try {
         const response = await axios.post(`${API_PATH.ADD_CSV_DATA}`, formData);
-        const { success, message } = response.data;
+        const { success, message,data } = response.data;
         if (success) {
-          // const { csvPath, csvName, csvJSON } = response.data.data;
           setFormData({
             ...formData,
-            // csvPath, csvName, csvJSON
           });
-          // toast.success("data.....");
+          toast.success(message)
           history.push("/supplier");
           localStorage.removeItem("supplierId");
           localStorage.removeItem("supplierName");
@@ -138,6 +142,7 @@ function SupplierPage2(props) {
         }
       } catch (error) {
         console.error(error);
+        setIsLoadingExit(false)
       }
     }
   };
@@ -166,19 +171,31 @@ function SupplierPage2(props) {
           <div className="row">
             <div className="col-lg-12 col-md-12 col-12 button-class">
               <div className="d-flex">
-                <button
-                  className="btn btn-primary w-auto btn-lg mr-2"
-                  type="submit"
-                >
-                  Save & Next
-                </button>
-                <button
-                  className="btn btn-primary w-auto btn-lg mr-2"
-                  type="submit"
-                  onClick={handleOnClick}
-                >
-                  Save & Exit
-                </button>
+              <button
+              className="btn btn-primary w-auto btn-lg mr-2"
+              type="submit"
+            >
+              {isLoading ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Next"
+              )}
+            </button>
+            <button
+              className="btn btn-primary w-auto btn-lg mr-2"
+              type="submit"
+              onClick={handleOnClick}
+            >
+              {isLoadingExit ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Please wait...
+                </>
+              ) : (
+                "Save & Exit"
+              )}
+            </button>
                 <button
                   className="btn btn-secondary w-auto btn-lg"
                   type="button"

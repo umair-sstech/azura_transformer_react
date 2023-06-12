@@ -11,7 +11,7 @@ function SuppilerPage4(props) {
   const { setPage } = props;
   const { processCancel, setFormData } = useContext(FormContext);
   const history = useHistory();
-  const imageSize = ["762x1100", "1200x1600", "1000x1000", "1600x2000"];
+  const imageSize = ["762x1100", "1200x1600", "1000x1000", "1600x2000","1500x1500"];
   useEffect(() => {
     getSupplierDataById();
   }, []);
