@@ -224,7 +224,7 @@ function ProductsList(props) {
 
                           <td>{product.Azura_Category_Tree}</td>
                           <td>
-                            {product.AI_TITLE.replace(/"/g, "")
+                            {product.AI_TITLE != null
                               ? product.AI_TITLE.replace(/"/g, "")
                               : product.Variant_Title}
                           </td>
