@@ -50,7 +50,20 @@ function ManageRetailerSetting(props) {
     }
   }, []);
 
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
 
+    // Add the event listener for beforeunload
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      // Remove the event listener when the component unmounts
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   const processCancel = () => {
     Swal.fire({
@@ -67,6 +80,8 @@ function ManageRetailerSetting(props) {
         localStorage.removeItem("supplierSettingId");
         localStorage.removeItem("selectedSupplierName");
         localStorage.removeItem("retailerIntegrationId")
+        localStorage.removeItem("currentPage");
+
        
       }
     });
@@ -111,6 +126,16 @@ function ManageRetailerSetting(props) {
       setActiveStepIndex(0);
     }
   };
+  useEffect(() => {
+    const storedPage = localStorage.getItem("currentPage");
+    if (storedPage) {
+      setPage(Number(storedPage));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("currentPage", page);
+  }, [page]);
   return (
     <div
       style={{ flex: 1 }}
@@ -125,7 +150,7 @@ function ManageRetailerSetting(props) {
               isRetailerAdded ? "Integration Edit" : "Add Integration Setting"
             }
             Breadcrumb={[
-              { name: "Integration Setting List", navigate: "/setting-retailer-list",items: ["retailerIntegrationId","supplierSettingId", "selectedSupplierName","marketPlaceSettingId","marketPlaceSettingName"] },
+              { name: "Integration Setting List", navigate: "/setting-retailer-list",items: ["retailerIntegrationId","supplierSettingId", "selectedSupplierName","marketPlaceSettingId","marketPlaceSettingName","currentPage"] },
               { name: "Integration Setting", navigate: "#" },
             ]}
           />

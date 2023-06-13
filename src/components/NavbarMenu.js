@@ -29,7 +29,7 @@ import Avatar3 from "../assets/images/xs/avatar3.jpg";
 import "./NavbarMenu.css";
 import { onSystemLoading } from "../actions";
 import { withRouter } from "react-router-dom";
-import { UserContext } from '../context/UserContext';
+import { UserContext } from "../context/UserContext";
 
 const LogOut = ({ propData }) => {
   const history = useHistory();
@@ -49,6 +49,7 @@ const LogOut = ({ propData }) => {
         localStorage.removeItem("company");
         localStorage.removeItem("retailer");
         localStorage.removeItem("newlyAddedRetailer");
+        localStorage.removeItem("currentPage");
 
         localStorage.removeItem("role");
         propData.onLoggedin(false);
@@ -246,10 +247,8 @@ class NavbarMenu extends React.Component {
 
     return (
       <UserContext.Consumer>
-
         {(userContext) => {
-
-          const {userName} = userContext
+          const { userName } = userContext;
 
           return (
             <div>
@@ -352,10 +351,12 @@ class NavbarMenu extends React.Component {
                                   </div>
                                   <div className="media-body">
                                     <p className="text">
-                                      Campaign <strong>Holiday Sale</strong> is nearly
-                                      reach budget limit.
+                                      Campaign <strong>Holiday Sale</strong> is
+                                      nearly reach budget limit.
                                     </p>
-                                    <span className="timestamp">10:00 AM Today</span>
+                                    <span className="timestamp">
+                                      10:00 AM Today
+                                    </span>
                                   </div>
                                 </div>
                               </a>
@@ -368,10 +369,12 @@ class NavbarMenu extends React.Component {
                                   </div>
                                   <div className="media-body">
                                     <p className="text">
-                                      Your New Campaign <strong>Holiday Sale</strong>{" "}
-                                      is approved.
+                                      Your New Campaign{" "}
+                                      <strong>Holiday Sale</strong> is approved.
                                     </p>
-                                    <span className="timestamp">11:30 AM Today</span>
+                                    <span className="timestamp">
+                                      11:30 AM Today
+                                    </span>
                                   </div>
                                 </div>
                               </a>
@@ -384,10 +387,12 @@ class NavbarMenu extends React.Component {
                                   </div>
                                   <div className="media-body">
                                     <p className="text">
-                                      Website visits from Twitter is 27% higher than
-                                      last week.
+                                      Website visits from Twitter is 27% higher
+                                      than last week.
                                     </p>
-                                    <span className="timestamp">04:00 PM Today</span>
+                                    <span className="timestamp">
+                                      04:00 PM Today
+                                    </span>
                                   </div>
                                 </div>
                               </a>
@@ -413,7 +418,9 @@ class NavbarMenu extends React.Component {
                           </ul>
                         </li>
                         <li
-                          className={toggleEqualizer ? "show dropdown" : "dropdown"}
+                          className={
+                            toggleEqualizer ? "show dropdown" : "dropdown"
+                          }
                         >
                           {/* <a
                         href="#!"
@@ -447,7 +454,8 @@ class NavbarMenu extends React.Component {
                             </li>
                             <li>
                               <a>
-                                <i className="icon-lock"></i> <span>Privacy</span>
+                                <i className="icon-lock"></i>{" "}
+                                <span>Privacy</span>
                               </a>
                             </li>
                             <li>
@@ -465,12 +473,14 @@ class NavbarMenu extends React.Component {
                             </li>
                             <li>
                               <a>
-                                <i className="icon-printer"></i> <span>Invoices</span>
+                                <i className="icon-printer"></i>{" "}
+                                <span>Invoices</span>
                               </a>
                             </li>
                             <li>
                               <a>
-                                <i className="icon-refresh"></i> <span>Renewals</span>
+                                <i className="icon-refresh"></i>{" "}
+                                <span>Renewals</span>
                               </a>
                             </li>
                           </ul>
@@ -509,9 +519,12 @@ class NavbarMenu extends React.Component {
                       <Dropdown.Menu className="dropdown-menu-right account">
                         {/* <Dropdown.Item> */}
                         {this.props.user?.data.role === "SUPER_ADMIN" ? (
-                          <Dropdown.Item onClick={() => history.push(`/profile`)}>
+                          <Dropdown.Item
+                            onClick={() => history.push(`/profile`)}
+                          >
                             {/* <Link to="profile"> */}
-                            <i className="icon-user"></i> <span>My Profile</span>
+                            <i className="icon-user"></i>{" "}
+                            <span>My Profile</span>
                             {/* </Link> */}
                           </Dropdown.Item>
                         ) : null}
@@ -570,7 +583,10 @@ class NavbarMenu extends React.Component {
                         ></a>
                         <ul>
                           <li className="">
-                            <Link to="/dashboard" className="dashboard first__link">
+                            <Link
+                              to="/dashboard"
+                              className="dashboard first__link"
+                            >
                               {" "}
                               <div className="row">
                                 <div className="col-3">
@@ -580,7 +596,13 @@ class NavbarMenu extends React.Component {
                                   ></i>
                                 </div>
                                 <div>
-                                  <span style={{ margin: "-37px", color: "#17191c" }} className="dashboard">
+                                  <span
+                                    style={{
+                                      margin: "-37px",
+                                      color: "#17191c",
+                                    }}
+                                    className="dashboard"
+                                  >
                                     Dashboard
                                   </span>
                                 </div>
@@ -593,7 +615,9 @@ class NavbarMenu extends React.Component {
                       {this.props.user?.data.role !== "RETAILER_USER" ? (
                         <li
                           className={
-                            this.manageDropdown.includes(this.props.location.pathname)
+                            this.manageDropdown.includes(
+                              this.props.location.pathname
+                            )
                               ? "active"
                               : null
                           }
@@ -607,7 +631,8 @@ class NavbarMenu extends React.Component {
                               this.activeMenutabContainer("dataInsertDropDown");
                             }}
                           >
-                            <i className="fa fa-building-o"></i> <span>Manage</span>
+                            <i className="fa fa-building-o"></i>{" "}
+                            <span>Manage</span>
                           </a>
                           <ul
                             className={
@@ -620,33 +645,54 @@ class NavbarMenu extends React.Component {
                           >
                             {this.props.user?.data.role == "SUPER_ADMIN" ? (
                               <li
-                                className={activeKey === "dashboard" ? "active" : ""}
+                                className={
+                                  activeKey === "dashboard" ? "active" : ""
+                                }
                               >
                                 <Link to="/company">Company</Link>
                               </li>
                             ) : null}
                             {this.props.user?.data.role == "SUPER_ADMIN" ||
-                              this.props.user?.data.role == "COMPANY_ADMIN" ||
-                              this.props.user?.data.role == "RETAILER_ADMIN" ? (
+                            this.props.user?.data.role == "COMPANY_ADMIN" ||
+                            this.props.user?.data.role == "RETAILER_ADMIN" ? (
                               <li
-                                className={activeKey === "dashboard" ? "active" : ""}
+                                className={
+                                  activeKey === "dashboard" ? "active" : ""
+                                }
                               >
                                 <Link
                                   to="/retailer"
                                   onClick={() => {
-                                    localStorage.removeItem("supplierSettingId");
-                                    localStorage.removeItem("selectedSupplierName");
-                                    localStorage.removeItem("marketPlaceSettingId");
-                                    localStorage.removeItem("marketPlaceSettingName");
-                                    localStorage.removeItem("retailerIntegrationId");
-                                    localStorage.removeItem("newlyAddedRetailer");
+                                    localStorage.removeItem(
+                                      "supplierSettingId"
+                                    );
+                                    localStorage.removeItem(
+                                      "selectedSupplierName"
+                                    );
+                                    localStorage.removeItem(
+                                      "marketPlaceSettingId"
+                                    );
+                                    localStorage.removeItem(
+                                      "marketPlaceSettingName"
+                                    );
+                                    localStorage.removeItem(
+                                      "retailerIntegrationId"
+                                    );
+                                    localStorage.removeItem(
+                                      "newlyAddedRetailer"
+                                    );
+                                    localStorage.removeItem("currentPage");
                                   }}
                                 >
                                   Retailer
                                 </Link>
                               </li>
                             ) : null}
-                            <li className={activeKey === "dashboard" ? "active" : ""}>
+                            <li
+                              className={
+                                activeKey === "dashboard" ? "active" : ""
+                              }
+                            >
                               <Link to="/user">User</Link>
                             </li>
                           </ul>
@@ -661,11 +707,16 @@ class NavbarMenu extends React.Component {
                             this.activeMenutabContainer("dataInsertDropDown1");
                           }}
                         >
-                          <i className="fa fa-gear"></i> <span>Integration</span>
+                          <i className="fa fa-gear"></i>{" "}
+                          <span>Integration</span>
                         </a>
                         <ul className="collapse">
                           {this.props.user?.data.role == "SUPER_ADMIN" ? (
-                            <li className={activeKey === "dashboard" ? "active" : ""}>
+                            <li
+                              className={
+                                activeKey === "dashboard" ? "active" : ""
+                              }
+                            >
                               <Link
                                 to="/integration"
                                 onClick={() => {
@@ -676,6 +727,7 @@ class NavbarMenu extends React.Component {
                                   localStorage.removeItem("marketPlaceName");
                                   localStorage.removeItem("integratorId");
                                   localStorage.removeItem("integratorName");
+                                  localStorage.removeItem("currentPage");
                                 }}
                               >
                                 Manage Integration
@@ -732,13 +784,19 @@ class NavbarMenu extends React.Component {
                         </a>
                         <ul className="collapse">
                           {this.props.user?.data.role === "SUPER_ADMIN" ? (
-                            <li className={activeKey === "dashboard" ? "active" : ""}>
+                            <li
+                              className={
+                                activeKey === "dashboard" ? "active" : ""
+                              }
+                            >
                               <Link to="/products">Products List</Link>
                             </li>
                           ) : null}
                           {this.props.user?.data.role === "SUPER_ADMIN" ? (
                             <li
-                              className={activeKey === "dashboard" ? "active" : ""}
+                              className={
+                                activeKey === "dashboard" ? "active" : ""
+                              }
                               onClick={() => {
                                 localStorage.removeItem("supplierId");
                                 localStorage.removeItem("supplierName");
@@ -779,7 +837,11 @@ class NavbarMenu extends React.Component {
                           <i className="fa fa-history"></i> <span>Logs</span>
                         </a>
                         <ul className="collapse">
-                          <li className={activeKey === "dashboard" ? "active" : ""}>
+                          <li
+                            className={
+                              activeKey === "dashboard" ? "active" : ""
+                            }
+                          >
                             <Link to="/apilogs">API Logs</Link>
                           </li>
                           {/* <li className={activeKey === "dashboard" ? "active" : ""}>
@@ -1578,7 +1640,9 @@ class NavbarMenu extends React.Component {
                                   />
                                   <div className="media-body">
                                     <span className="name">Chris Fox</span>
-                                    <span className="message">Designer, Blogger</span>
+                                    <span className="message">
+                                      Designer, Blogger
+                                    </span>
                                     <span className="badge badge-outline status"></span>
                                   </div>
                                 </div>
@@ -1594,7 +1658,9 @@ class NavbarMenu extends React.Component {
                                   />
                                   <div className="media-body">
                                     <span className="name">Joge Lucky</span>
-                                    <span className="message">Java Developer</span>
+                                    <span className="message">
+                                      Java Developer
+                                    </span>
                                     <span className="badge badge-outline status"></span>
                                   </div>
                                 </div>
@@ -1610,7 +1676,9 @@ class NavbarMenu extends React.Component {
                                   />
                                   <div className="media-body">
                                     <span className="name">Isabella</span>
-                                    <span className="message">CEO, Thememakker</span>
+                                    <span className="message">
+                                      CEO, Thememakker
+                                    </span>
                                     <span className="badge badge-outline status"></span>
                                   </div>
                                 </div>
@@ -1625,7 +1693,9 @@ class NavbarMenu extends React.Component {
                                     alt=""
                                   />
                                   <div className="media-body">
-                                    <span className="name">Folisise Chosielie</span>
+                                    <span className="name">
+                                      Folisise Chosielie
+                                    </span>
                                     <span className="message">
                                       Art director, Movie Cut
                                     </span>
@@ -1717,7 +1787,9 @@ class NavbarMenu extends React.Component {
                             </li>
                             <li
                               data-theme="blue"
-                              className={themeColor === "theme-blue" ? "active" : ""}
+                              className={
+                                themeColor === "theme-blue" ? "active" : ""
+                              }
                             >
                               <div
                                 className="blue"
@@ -1733,7 +1805,9 @@ class NavbarMenu extends React.Component {
                             <li
                               data-theme="cyan"
                               // className="active"
-                              className={themeColor === "theme-cyan" ? "active" : ""}
+                              className={
+                                themeColor === "theme-cyan" ? "active" : ""
+                              }
                             >
                               <div
                                 className="cyan"
@@ -1748,7 +1822,9 @@ class NavbarMenu extends React.Component {
                             </li>
                             <li
                               data-theme="green"
-                              className={themeColor === "theme-green" ? "active" : ""}
+                              className={
+                                themeColor === "theme-green" ? "active" : ""
+                              }
                             >
                               <div
                                 className="green"
@@ -1780,7 +1856,9 @@ class NavbarMenu extends React.Component {
                             </li>
                             <li
                               data-theme="blush"
-                              className={themeColor === "theme-blush" ? "active" : ""}
+                              className={
+                                themeColor === "theme-blush" ? "active" : ""
+                              }
                             >
                               <div
                                 className="blush"
@@ -1963,8 +2041,7 @@ class NavbarMenu extends React.Component {
           );
         }}
       </UserContext.Consumer>
-    )
-
+    );
   }
 }
 

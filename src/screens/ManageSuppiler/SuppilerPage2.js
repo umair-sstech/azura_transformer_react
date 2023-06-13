@@ -79,7 +79,7 @@ function SupplierPage2(props) {
     const form = event.target;
     const formData = new FormData(form);
     const fileInput = document.querySelector('input[type="file"]');
-    console.log("fileInput--", fileInput.files)
+    console.log("fileInput--", fileInput.files);
     const { csvfile } = formData;
     if (csvName && !formData.update) {
       setPage("3");
@@ -90,9 +90,8 @@ function SupplierPage2(props) {
     }
     // if ((initFormData.csvName == null && initFormData.csvPath == null) && fileInput.files.length === 0) {
     //   setFileError("Please select a file to upload.");
-    // } 
+    // }
     else {
-
       const supplierId = localStorage.getItem("supplierId");
       formData.set("supplier_id", supplierId);
       setIsLoading(true);
@@ -111,38 +110,48 @@ function SupplierPage2(props) {
         }
       } catch (error) {
         console.error(error);
-      setIsLoading(false);
-
+        setIsLoading(false);
       }
     }
   };
 
   const handleOnClick = async (e) => {
     const fileInput = document.querySelector('input[type="file"]');
-    if (fileInput.files.length === 0) {
+    const { csvfile } = formData;
+
+    if (csvName && !formData.update) {
+      history.push("/supplier");
+      localStorage.removeItem("supplierId");
+      localStorage.removeItem("supplierName");
+      localStorage.removeItem("currentPage")
+
+    }
+
+    if (fileInput.files.length === 0 && !csvfile) {
       setFileError("Please select a file to upload.");
     } else {
       const form = e.target.closest("form");
       const formData = new FormData(form);
       formData.append("supplier_id", initFormData.id);
-      setIsLoadingExit(true)
+      setIsLoadingExit(true);
       try {
         const response = await axios.post(`${API_PATH.ADD_CSV_DATA}`, formData);
-        const { success, message,data } = response.data;
+        const { success, message, data } = response.data;
         if (success) {
           setFormData({
             ...formData,
           });
-          toast.success(message)
+          toast.success(message);
           history.push("/supplier");
           localStorage.removeItem("supplierId");
           localStorage.removeItem("supplierName");
+          localStorage.removeItem("currentPage");
         } else {
           toast.error(message);
         }
       } catch (error) {
         console.error(error);
-        setIsLoadingExit(false)
+        setIsLoadingExit(false);
       }
     }
   };
@@ -171,31 +180,31 @@ function SupplierPage2(props) {
           <div className="row">
             <div className="col-lg-12 col-md-12 col-12 button-class">
               <div className="d-flex">
-              <button
-              className="btn btn-primary w-auto btn-lg mr-2"
-              type="submit"
-            >
-              {isLoading ? (
-                <>
-                  <Spinner animation="border" size="sm" /> Please wait...
-                </>
-              ) : (
-                "Save & Next"
-              )}
-            </button>
-            <button
-              className="btn btn-primary w-auto btn-lg mr-2"
-              type="submit"
-              onClick={handleOnClick}
-            >
-              {isLoadingExit ? (
-                <>
-                  <Spinner animation="border" size="sm" /> Please wait...
-                </>
-              ) : (
-                "Save & Exit"
-              )}
-            </button>
+                <button
+                  className="btn btn-primary w-auto btn-lg mr-2"
+                  type="submit"
+                >
+                  {isLoading ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Please wait...
+                    </>
+                  ) : (
+                    "Save & Next"
+                  )}
+                </button>
+                <button
+                  className="btn btn-primary w-auto btn-lg mr-2"
+                  type="submit"
+                  onClick={handleOnClick}
+                >
+                  {isLoadingExit ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Please wait...
+                    </>
+                  ) : (
+                    "Save & Exit"
+                  )}
+                </button>
                 <button
                   className="btn btn-secondary w-auto btn-lg"
                   type="button"
@@ -207,8 +216,9 @@ function SupplierPage2(props) {
             </div>
           </div>
           <div className="alert alert-primary col-12 mt-3" role="alert">
-              <strong>INFO:</strong> <br/>Please upload the supplier CSV file that contains the header
-            </div>
+            <strong>INFO:</strong> <br />
+            Please upload the supplier CSV file that contains the header
+          </div>
           <div className="row">
             <div className="col-6">
               <div className="form-group">

@@ -281,6 +281,8 @@ function IntegratorPage5(props) {
             history.push("/integrator");
             localStorage.removeItem("integratorId");
             localStorage.removeItem("integratorName");
+          localStorage.removeItem("currentPage");
+
           } else {
             toast.error(message);
           }

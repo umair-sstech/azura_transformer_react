@@ -452,7 +452,7 @@ export const validateProfile = (formData) => {
   const name = formData.get("name");
   const country = formData.get("country");
   const email = formData.get("email");
-  const password = formData.get("password");
+  // const password = formData.get("password");
 
   if (!name) {
     errors.name = "Name is required";
@@ -470,13 +470,13 @@ export const validateProfile = (formData) => {
     errors.email = "Email is not valid";
   }
 
-  if (!password) {
-    errors.password = "Password is required";
-  } else if (password.trim().length === 0) {
-    errors.password = "Password can not be whitespace only";
-  } else if (password.length < 6) {
-    errors.password = "Password must be at least 6 characters";
-  }
+  // if (!password) {
+  //   errors.password = "Password is required";
+  // } else if (password.trim().length === 0) {
+  //   errors.password = "Password can not be whitespace only";
+  // } else if (password.length < 6) {
+  //   errors.password = "Password must be at least 6 characters";
+  // }
 
   if (!country) {
     errors.country = "Country is required";

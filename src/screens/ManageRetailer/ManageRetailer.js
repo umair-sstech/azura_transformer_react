@@ -81,7 +81,7 @@ const ManageRetailer = (props) => {
               {
                 name: "Retailer List",
                 navigate: "/retailer",
-                items: ["newlyAddedRetailer"],
+                items: ["newlyAddedRetailer","currentPage"],
               },
               {
                 name: isRetailerAdded ? "Retailer Edit" : "Retailer Add",

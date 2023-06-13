@@ -52,7 +52,6 @@ function RetailerPage1(props) {
     }
   };
 
-
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -131,8 +130,6 @@ function RetailerPage1(props) {
   };
 
 
-  
-
   const handleOnClick = async (e) => {
     e.preventDefault()
 
@@ -172,6 +169,8 @@ function RetailerPage1(props) {
         localStorage.removeItem("supplierSettingId");
         localStorage.removeItem("selectedSupplierName");
         localStorage.removeItem("retailerIntegrationId");
+        localStorage.removeItem("currentPage");
+
         toast.success(message);
         history.push("/setting-retailer-list")
       } else {

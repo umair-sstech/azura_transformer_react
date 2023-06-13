@@ -139,6 +139,8 @@ function SuppilerPage4(props) {
           toast.success(message);
           localStorage.removeItem("supplierId");
           localStorage.removeItem("supplierName");
+        localStorage.removeItem("currentPage")
+
           history.push("/supplier");
         } else {
           toast.error(message);

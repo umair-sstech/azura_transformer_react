@@ -270,6 +270,8 @@ function SupplierHttpForm(props) {
             toast.success(message);
             localStorage.removeItem("supplierId");
             localStorage.removeItem("supplierName");
+        localStorage.removeItem("currentPage")
+
           } else {
             toast.error(message);
           }

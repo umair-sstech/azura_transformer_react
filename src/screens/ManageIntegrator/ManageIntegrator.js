@@ -22,7 +22,7 @@ function ManageIntegrator(props) {
   const [logoData, setLogoData] = useState();
   const [isIntegrator, setIsIntegrator] = useState("");
   const [page, setPage] = useState("1");
-  
+
   useEffect(
     () => () => {
       setFormData();
@@ -31,6 +31,20 @@ function ManageIntegrator(props) {
     },
     []
   );
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+
+    // Add the event listener for beforeunload
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      // Remove the event listener when the component unmounts
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   const processCancel = () => {
     Swal.fire({
@@ -45,7 +59,8 @@ function ManageIntegrator(props) {
       if (result.isConfirmed) {
         history.push("/integrator");
         localStorage.removeItem("integratorId");
-        localStorage.removeItem("integratorName")
+        localStorage.removeItem("integratorName");
+        localStorage.removeItem("currentPage");
       }
     });
   };
@@ -80,6 +95,16 @@ function ManageIntegrator(props) {
       setActiveStepIndex(0);
     }
   };
+  useEffect(() => {
+    const storedPage = localStorage.getItem("currentPage");
+    if (storedPage) {
+      setPage(Number(storedPage));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("currentPage", page);
+  }, [page]);
 
   const history = useHistory();
   return (
@@ -93,16 +118,20 @@ function ManageIntegrator(props) {
         <div>
           <div className="container-fluid">
             <PageHeader
-              HeaderText={
-                isIntegrator ? "Integrator Update" : "Integrator Add"
-              }
+              HeaderText={isIntegrator ? "Integrator Update" : "Integrator Add"}
               Breadcrumb={[
-                { name: "Integration", navigate: "/integration", items: ["integratorId", "integratorName"] },
-                { name: "Integrator List", navigate: "/integrator", items: ["integratorId", "integratorName"] },
                 {
-                  name: isIntegrator
-                    ? "Integrator Update"
-                    : "Integrator Add",
+                  name: "Integration",
+                  navigate: "/integration",
+                  items: ["integratorId", "integratorName", "currentPage"],
+                },
+                {
+                  name: "Integrator List",
+                  navigate: "/integrator",
+                  items: ["integratorId", "integratorName", "currentPage"],
+                },
+                {
+                  name: isIntegrator ? "Integrator Update" : "Integrator Add",
                   navigate: "#",
                 },
               ]}

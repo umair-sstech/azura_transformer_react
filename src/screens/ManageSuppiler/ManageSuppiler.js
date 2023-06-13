@@ -35,6 +35,20 @@ function ManageSuppiler(props) {
     },
     []
   );
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+
+    // Add the event listener for beforeunload
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      // Remove the event listener when the component unmounts
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   const processCancel = () => {
     Swal.fire({
@@ -53,6 +67,7 @@ function ManageSuppiler(props) {
         history.push("/supplier");
         localStorage.removeItem("supplierId");
         localStorage.removeItem("supplierName");
+        localStorage.removeItem("currentPage")
       }
     });
   };
@@ -96,6 +111,16 @@ function ManageSuppiler(props) {
       setActiveStepIndex(0);
     }
   };
+  useEffect(() => {
+    const storedPage = localStorage.getItem("currentPage");
+    if (storedPage) {
+      setPage(Number(storedPage));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("currentPage", page);
+  }, [page])
 
   return (
     <>
@@ -110,8 +135,8 @@ function ManageSuppiler(props) {
             <PageHeader
               HeaderText={isSuppilerAdded ? "Supplier Update" : "Supplier Add"}
               Breadcrumb={[
-                { name: "Integration", navigate: "/integration", items: ["supplierId", "supplierName"] },
-                { name: "Supplier List", navigate: "/supplier", items: ["supplierId", "supplierName"] },
+                { name: "Integration", navigate: "/integration", items: ["supplierId", "supplierName","currentPage"] },
+                { name: "Supplier List", navigate: "/supplier", items: ["supplierId", "supplierName","currentPage"] },
                 {
                   name: isSuppilerAdded ? "Supplier Update" : "Supplier Add",
                   navigate: "#",

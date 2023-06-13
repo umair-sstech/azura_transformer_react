@@ -15,7 +15,7 @@ import { debounce } from "lodash";
 
 function SuppilerPage3(props) {
   const { setPage } = props;
-  const { setFormData } = useContext(FormContext);
+  const { setFormData,processCancel } = useContext(FormContext);
 
   const [options, setOptions] = useState([
     {
@@ -425,6 +425,8 @@ function SuppilerPage3(props) {
           toast.success(message);
           localStorage.removeItem("supplierId");
           localStorage.removeItem("supplierName");
+          localStorage.removeItem("currentPage");
+
           history.push("/supplier");
         } else {
           toast.error(message);
@@ -437,23 +439,7 @@ function SuppilerPage3(props) {
     }
   };
 
-  const handleCancel = () => {
-    Swal.fire({
-      title: "Are you sure, <br> you want to exit ? ",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        history.push("/supplier");
-        localStorage.removeItem("supplierId");
-        localStorage.removeItem("supplierName");
-      }
-    });
-  };
+
 
   const validateForm = () => {
     const errors = [];
@@ -595,7 +581,7 @@ function SuppilerPage3(props) {
               <button
                 className="btn btn-secondary w-auto btn-lg"
                 type="button"
-                onClick={handleCancel}
+                onClick={processCancel}
               >
                 Exit
               </button>

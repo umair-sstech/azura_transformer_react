@@ -201,6 +201,8 @@ function SuppilerInfo(props) {
            history.push("/supplier");
            localStorage.removeItem("supplierId");
            localStorage.removeItem("supplierName")
+        localStorage.removeItem("currentPage")
+
             toast.success(message);
           } else {
             toast.error(message);

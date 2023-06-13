@@ -63,7 +63,6 @@ function CurrencyConversion(props) {
       return toast.error("Please select a currency")
     }
 
-    
     const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
     const currencyId = currencyList.find((currency) => currency?.value === selectedCurrency)?.value;
     console.log("valuecurrency", currencyId)
@@ -135,6 +134,8 @@ function CurrencyConversion(props) {
           localStorage.removeItem("supplierSettingId");
           localStorage.removeItem("selectedSupplierName");
           localStorage.removeItem("retailerIntegrationId");
+        localStorage.removeItem("currentPage");
+
           toast.success(message);
           history.push("/setting-retailer-list")
         } else {

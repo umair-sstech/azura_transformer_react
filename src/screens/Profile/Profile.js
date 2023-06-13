@@ -1,32 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import PageHeader from '../../components/PageHeader';
-import Select from 'react-select';
-import countryList from '../../Data/countryList';
-import { Spinner } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
+import PageHeader from "../../components/PageHeader";
+import Select from "react-select";
+import countryList from "../../Data/countryList";
+import { Spinner } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
-import { validateProfile } from '../Validations/Validation';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { API_PATH } from '../ApiPath/Apipath';
-import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext';
+import { validateProfile } from "../Validations/Validation";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { API_PATH } from "../ApiPath/Apipath";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 
 const Profile = (props) => {
-
   const [formData, setFormData] = useState({
     name: "",
     logo: "",
     country: "",
-    email:"",
-    password:""
+    email: "",
+    password: "",
   });
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const { updateUserProfileName } = useContext(UserContext);
-  console.log("object")
+  console.log("object");
 
   const history = useHistory();
 
@@ -36,25 +34,26 @@ const Profile = (props) => {
     }
   }, [props]);
 
-  const userId = localStorage.getItem('_id');
+  const userId = localStorage.getItem("_id");
 
   useEffect(() => {
     if (userId) {
       fetchUserData();
     }
   }, [userId]);
-  
+
   const fetchUserData = async () => {
     try {
-      const response = await axios.get(`${API_PATH.FETCH_USER_PROFILE_DETAILS}/${userId}`);
+      const response = await axios.get(
+        `${API_PATH.FETCH_USER_PROFILE_DETAILS}/${userId}`
+      );
       const userData = response.data.data;
-      console.log("userdata",userData)
+      console.log("userdata", userData);
       setFormData(userData);
     } catch (error) {
       console.error(error);
     }
   };
-  
 
   const handleChange = (key, value) => {
     const newFormData = new FormData(document.forms.myForm);
@@ -62,7 +61,7 @@ const Profile = (props) => {
     const errors = validateProfile(newFormData);
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
-  }
+  };
 
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
@@ -79,7 +78,6 @@ const Profile = (props) => {
     }));
     handleChange(key, value);
   };
-  
 
   const handleSelect = (selectedOption) => {
     const selectedCountry = selectedOption.value;
@@ -89,39 +87,35 @@ const Profile = (props) => {
     }));
     handleChange("country", selectedCountry);
   };
-  
 
   const updateProfile = async () => {
     try {
-      setIsLoading(true);
+      setIsLoadingExit(true);
   
       const formDataToUpdate = {
+        userId: userId,
         name: formData.name,
         country: formData.country,
-        email:formData.email,
-        password:formData.password
+        email: formData.email,
+        password: formData.password,
       };
   
-      const response = await axios.post(
-`${API_PATH.UPDATE_USER_PROFILE}`,        formDataToUpdate
-      );
+      const response = await axios.post(`${API_PATH.UPDATE_USER_PROFILE}`, formDataToUpdate);
   
       if (response.status === 200) {
-      
-        toast.success("Profile updated successfully");
-        console.log(response.data);
+        updateUserProfileName(response.data.data.name);
+        toast.success("Profile Updated successfully");
       } else {
         console.log(response.data);
       }
     } catch (error) {
       console.error(error);
     } finally {
-      setIsLoading(false);
+      setIsLoadingExit(false);
     }
   };
 
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     const form = e.target;
     const newFormData = new FormData(form);
@@ -129,10 +123,10 @@ const Profile = (props) => {
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      updateProfile();
-      history.push("/dashboard")
+     await updateProfile();
+      history.push("/dashboard");
     }
-  }
+  };
 
   const goToDashboard = () => {
     Swal.fire({
@@ -150,7 +144,7 @@ const Profile = (props) => {
         history.push("/dashboard");
       }
     });
-  }
+  };
 
   return (
     <>
@@ -164,34 +158,30 @@ const Profile = (props) => {
           <div className="container-fluid">
             <PageHeader
               HeaderText="Manage Profile"
-              Breadcrumb={[
-                { name: "Manage Profile", navigate: "#" },
-              ]}
+              Breadcrumb={[{ name: "Manage Profile", navigate: "#" }]}
               style={{ position: "sticky", top: 0, zIndex: 999 }}
             />
             <div className="tab-component">
               <div className="card">
                 <div className="body">
-
                   {props.loading ? (
                     <div className="loader-wrapper">
                       <i className="fa fa-refresh fa-spin"></i>
                     </div>
                   ) : null}
 
-                  <form onSubmit={handleSubmit} name='myForm'>
-
+                  <form onSubmit={handleSubmit} name="myForm">
                     <div className="row">
                       <div className="col-lg-12 col-md-12 col-12 button-class">
                         <div className="d-flex">
-
                           <button
                             className="btn btn-primary w-auto btn-lg mr-2"
                             type="submit"
                           >
                             {isLoadingExit ? (
                               <>
-                                <Spinner animation="border" size="sm" /> Please wait...
+                                <Spinner animation="border" size="sm" /> Please
+                                wait...
                               </>
                             ) : (
                               "Save & Exit"
@@ -208,8 +198,8 @@ const Profile = (props) => {
                       </div>
                     </div>
 
-                <div className='row mt-3 mt-lg-0'>
-                     { /*<div className='col-sm-6'>
+                    <div className="row mt-3 mt-lg-0">
+                      {/*<div className='col-sm-6'>
                         <div className="form-group">
                           <label>
                             {" "}
@@ -224,7 +214,7 @@ const Profile = (props) => {
                           />
                         </div>
                             </div>*/}
-                      <div className='col-sm-6'>
+                      <div className="col-sm-6">
                         <div className="form-group">
                           <label>
                             Profile Name <span style={{ color: "red" }}>*</span>
@@ -234,79 +224,92 @@ const Profile = (props) => {
                             type="text"
                             name="name"
                             placeholder="Profile Name"
-                            defaultValue={formData && formData.name ? formData.name : ""}
+                            defaultValue={
+                              formData && formData.name ? formData.name : ""
+                            }
                             onChange={(e) => handleNameChange(e, "name")}
                           />
                           {formErrors.name && (
-                            <span className="text-danger">{formErrors.name}</span>
+                            <span className="text-danger">
+                              {formErrors.name}
+                            </span>
                           )}
                         </div>
                       </div>
 
-                      <div className='col-sm-6'>
-                      <div className="form-group">
-                        <label>
-                          Email <span style={{ color: "red" }}>*</span>
-                        </label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          name="email"
-                          placeholder="Profile Name"
-                          defaultValue={formData && formData.email ? formData.email : ""}
-                          onChange={(e) => handleNameChange(e, "email")}
-                        />
-                        {formErrors.email && (
-                          <span className="text-danger">{formErrors.email}</span>
-                        )}
+                      <div className="col-sm-6">
+                        <div className="form-group">
+                          <label>
+                            Email <span style={{ color: "red" }}>*</span>
+                          </label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            name="email"
+                            placeholder="Profile Name"
+                            defaultValue={
+                              formData && formData.email ? formData.email : ""
+                            }
+                            onChange={(e) => handleNameChange(e, "email")}
+                          />
+                          {formErrors.email && (
+                            <span className="text-danger">
+                              {formErrors.email}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                     { /*<div className="col-sm-6">
+                        <div className="form-group">
+                          <label>Password</label>
+                          <input
+                            className="form-control"
+                            type="password"
+                            name="password"
+                            placeholder="password"
+                            defaultValue={
+                              formData && formData.password
+                                ? formData.password
+                                : ""
+                            }
+                            onChange={(e) => handleNameChange(e, "password")}
+                          />
+                        </div>
+                          </div>*/}
+                      <div className="col-12">
+                        <div className="form-group">
+                          <label>
+                            Country <span style={{ color: "red" }}>*</span>
+                          </label>
+                          <Select
+                            options={countryList?.map((data) => ({
+                              value: data.name,
+                              label: data.name,
+                            }))}
+                            name="country"
+                            placeholder="Select Country"
+                            value={
+                              formData.country
+                                ? {
+                                    value: formData.country,
+                                    label: formData.country,
+                                  }
+                                : null
+                            }
+                            onChange={handleSelect}
+                          />
+
+                          {formErrors.country && (
+                            <span className="error" style={{ color: "red" }}>
+                              {formErrors.country}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
-                    <div className='col-sm-6'>
-                    <div className="form-group">
-                      <label>
-                        Password 
-                      </label>
-                      <input
-                        className="form-control"
-                        type="password"
-                        name="password"
-                        placeholder="password"
-                        defaultValue={formData && formData.password ? formData.password : ""}
-                        onChange={(e) => handleNameChange(e, "password")}
-                      />
-                      
-                    </div>
-                  </div>
-                  <div className='col-sm-6'>
-                  <div className="form-group">
-                    <label>
-                      Country <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <Select
-                    options={countryList?.map((data) => ({
-                      value: data.name,
-                      label: data.name,
-                    }))}
-                    name='country'
-                    placeholder="Select Country"
-                    value={formData.country ? { value: formData.country, label: formData.country } : null}
-                    onChange={handleSelect}
-                  />
-                  
-                    {formErrors.country &&
-                      <span className="error" style={{ color: "red" }}>
-                        {formErrors.country}
-                      </span>
-                    }
-                  </div>
-                </div>
-                    </div>
 
-                    <div className='row'>
-                    
-                    </div>
+                    <div className="row"></div>
                   </form>
-
                 </div>
               </div>
             </div>
@@ -315,6 +318,6 @@ const Profile = (props) => {
       </div>
     </>
   );
-}
+};
 
 export default Profile;

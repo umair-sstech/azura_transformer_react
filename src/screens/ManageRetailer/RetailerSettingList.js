@@ -136,8 +136,9 @@ function RetailerSettingList(props) {
         <div className="container-fluid">
           <PageHeader
             HeaderText="Retailer Setting List"
+
             Breadcrumb={[
-              { name: "Retailer", navigate: "/retailer", items: ["newlyAddedRetailer"] },
+              { name: "Retailer", navigate: "/retailer", items: ["newlyAddedRetailer","currentPage"] },
               { name: "Retailer Setting List", navigate: "#" },
             ]}
           />
