@@ -206,6 +206,9 @@ function SupplierPage2(props) {
               </div>
             </div>
           </div>
+          <div className="alert alert-primary col-12 mt-3" role="alert">
+              <strong>INFO:</strong> <br/>Please upload the supplier CSV file that contains the header
+            </div>
           <div className="row">
             <div className="col-6">
               <div className="form-group">
@@ -221,7 +224,7 @@ function SupplierPage2(props) {
                 />
                 {fileError && <p style={{ color: "red" }}>{fileError}</p>}
                 <small className="form-text text-muted csv-text">
-                  Allowed file types: CSV.
+                  Allowed file types: CSV(max 10MB)
                 </small>
               </div>
             </div>

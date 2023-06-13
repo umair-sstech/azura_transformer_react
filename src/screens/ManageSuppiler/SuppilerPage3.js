@@ -39,7 +39,6 @@ function SuppilerPage3(props) {
       textbox: true,
     },
   ]);
-  
 
   const [productRadio, setProductRadio] = useState([
     {
@@ -115,7 +114,7 @@ function SuppilerPage3(props) {
           color: color,
         };
         setOptions(newOptions);
-        
+
         setFormErrors([]);
       }
       return newSelectedOptions;
@@ -156,7 +155,7 @@ function SuppilerPage3(props) {
         return newSelectedOptions;
       });
     },
-    300 
+    300
   );
 
   const handleRadioChange = (index, key, value) => {
@@ -246,7 +245,7 @@ function SuppilerPage3(props) {
 
             let supplierExtract = "";
             if (option.value === "extract") {
-              if(typeof supplierExtractOption === "object") {
+              if (typeof supplierExtractOption === "object") {
                 supplierExtract = supplierExtractOption[index]?.[key] || "";
               } else {
                 supplierExtract = supplierExtractOption;
@@ -268,8 +267,8 @@ function SuppilerPage3(props) {
         });
       });
 
-
-      {/*customFieldsData.forEach((customField) => {
+      {
+        /*customFieldsData.forEach((customField) => {
         const mappingObject = {
           supplierId: localStorage.getItem("supplierId"),
           supplierName: localStorage.getItem("supplierName"),
@@ -278,7 +277,8 @@ function SuppilerPage3(props) {
           isCustomField: true,
         };
         mappingArray.push(mappingObject);
-      });*/}
+      });*/
+      }
 
       productRadio.forEach((product) => {
         const additionalValue = selectedRadioPreference || "";
@@ -363,7 +363,7 @@ function SuppilerPage3(props) {
             }
             let supplierExtract = "";
             if (option.value === "extract") {
-              if(typeof supplierExtractOption === "object") {
+              if (typeof supplierExtractOption === "object") {
                 supplierExtract = supplierExtractOption[index]?.[key] || "";
               } else {
                 supplierExtract = supplierExtractOption;
@@ -385,7 +385,8 @@ function SuppilerPage3(props) {
         });
       });
 
-      {/*customFieldsData.forEach((customField) => {
+      {
+        /*customFieldsData.forEach((customField) => {
         const mappingObject = {
           supplierId: localStorage.getItem("supplierId"),
           supplierName: localStorage.getItem("supplierName"),
@@ -394,7 +395,8 @@ function SuppilerPage3(props) {
           isCustomField: true,
         };
         mappingArray.push(mappingObject);
-      });*/}
+      });*/
+      }
 
       productRadio.forEach((product) => {
         const additionalValue = selectedRadioPreference || "";
@@ -548,8 +550,8 @@ function SuppilerPage3(props) {
         const extractPrefillValue = supplierMapping.find(
           (field) => field.supplierField === "extract"
         )?.supplierExtract;
-        setSupplierExtractOption(extractPrefillValue); 
-        console.log("extractValuepre-fil",extractPrefillValue) 
+        setSupplierExtractOption(extractPrefillValue);
+        console.log("extractValuepre-fil", extractPrefillValue);
       })
 
       .catch((error) => {
@@ -606,7 +608,12 @@ function SuppilerPage3(props) {
               <span className="text-danger"> {error}</span>
             </div>
           ))}
-          <div className="row mt-3 mt-lg-0">
+          <div className="mt-3 mt-lg-0">
+            <div className="alert alert-primary col-12 mt-3" role="alert">
+              <strong>INFO:</strong> <br/>Please ensure to select the appropriate field mapping based on the
+              supplier field. <br/>If a value is not available, please set it to the
+              do nothing or leave it blank.
+            </div>
             <div className="col-12">
               <label>
                 What is the standard format used by the supplier for sharing the
@@ -640,7 +647,9 @@ function SuppilerPage3(props) {
                 <div>
                   <Select
                     options={csvOption}
-                    value={csvOption.find(option => option.value === selectedPreference)}
+                    value={csvOption.find(
+                      (option) => option.value === selectedPreference
+                    )}
                     onChange={(selectedOption) =>
                       setSelectedPreference(selectedOption)
                     }
@@ -850,13 +859,17 @@ function SuppilerPage3(props) {
                         } else {
                           additionalInfo = (
                             <>
-                               {selectedOption && selectedOption.textbox && (
+                              {selectedOption && selectedOption.textbox && (
                                 <input
                                   type="text"
                                   placeholder="Enter a value"
                                   className="additional-textbox rounded"
                                   onChange={(e) => {
-                                    handleAdditionalValueChange(index, key, e.target.value);
+                                    handleAdditionalValueChange(
+                                      index,
+                                      key,
+                                      e.target.value
+                                    );
                                   }}
                                 />
                               )}
@@ -864,8 +877,8 @@ function SuppilerPage3(props) {
                               {selectedOption &&
                                 selectedOption.value === "use_AI" && (
                                   <label className="ml-3 text-success">
-                                    e.g. Please generate the {key} from {selectedOption.message}
-                                    
+                                    e.g. Please generate the {key} from{" "}
+                                    {selectedOption.message}
                                   </label>
                                 )}
                               {selectedOption &&
@@ -917,15 +930,16 @@ function SuppilerPage3(props) {
                                   <div className="select-container">
                                     <Select
                                       options={csvOption}
-                                      value={csvOption.find(option => option.value === supplierExtractOption)} // Use [0] to access the value from the array
-
+                                      value={csvOption.find(
+                                        (option) =>
+                                          option.value === supplierExtractOption
+                                      )} // Use [0] to access the value from the array
                                       onChange={(selectedOption) =>
                                         handleProductExtractChange(
                                           index,
                                           key,
                                           selectedOption
                                         )
-                                       
                                       }
                                       isSearchable={true}
                                       className="select"
@@ -969,7 +983,7 @@ function SuppilerPage3(props) {
               </tbody>
             )}
           </table>
-         {/* <CustomFields
+          {/* <CustomFields
             customFieldsData={customFieldsData}
             setCustomFieldsData={setCustomFieldsData}
               />*/}
