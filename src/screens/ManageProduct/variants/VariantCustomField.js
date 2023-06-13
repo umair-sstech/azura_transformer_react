@@ -121,14 +121,14 @@ const VariantCustomField = ({ customField, setCustomFields }) => {
                     </div>
                   </div>
                 ))}
-                <Row></Row>
+                <Row><Button className="btn ml-3 mt-2 mb-2" variant="outline-primary" onClick={handleAddField}>
+                <i className="fa fa-plus mr-2"></i>Add Custom Field
+              </Button></Row>
               </Card.Body>
             </Accordion.Collapse>
           </Card>
           <hr />
-          <Button className="btn ml-3 mt-2 mb-2" variant="outline-primary" onClick={handleAddField}>
-            <i className="fa fa-plus mr-2"></i>Add Custom Field
-          </Button>
+          
         </Accordion>
       </Col>
     </Row>

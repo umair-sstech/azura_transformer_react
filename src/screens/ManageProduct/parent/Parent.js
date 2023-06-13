@@ -101,7 +101,7 @@ const Parent = (props) => {
       if (success) {
         variantDetails(activeKey);
         toast.success(message);
-        history.push("/products");
+        // history.push("/products");
       } else {
         toast.error(message);
       }

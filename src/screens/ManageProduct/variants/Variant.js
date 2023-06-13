@@ -121,7 +121,7 @@ const Variant = (props) => {
       const { success, message } = response.data;
       if (success) {
         toast.success(message);
-        history.push("/products")
+        // history.push("/products")
 
       } else {
         toast.error(message);
