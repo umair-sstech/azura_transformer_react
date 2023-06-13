@@ -36,7 +36,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
                 style={{ textDecoration: "none" }}
                 as="button"
                 className="btn btn-link collapsed"
-                eventKey="1"
+                eventKey="0"
               >
                 <div className="d-flex justify-content-between align-items-center">
                   <span>Identifiers</span>
@@ -44,7 +44,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
                 </div>
               </Accordion.Toggle>
             </Card.Header>
-            <Accordion.Collapse eventKey="1" className="card-body">
+            {/*<Accordion.Collapse eventKey="1" className="card-body">*/}
               <Card.Body>
                 <label>SKU</label>
                 <input
@@ -65,13 +65,13 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
                   value={identifiers.Brand}
                 />
               </Card.Body>
-            </Accordion.Collapse>
+  {/*</Accordion.Collapse>*/}
           </Card>
         </Accordion>
       </Col>
 
       <Col>
-        <Accordion defaultActiveKey="2" className="accordian__main">
+        <Accordion defaultActiveKey="0" className="accordian__main">
           <Card>
             <Card.Header>
               <Accordion.Toggle
@@ -86,7 +86,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
                 </div>
               </Accordion.Toggle>
             </Card.Header>
-            <Accordion.Collapse eventKey="0" className="card-body">
+          {/*  <Accordion.Collapse eventKey="0" className="card-body">*/}
               <Card.Body>
                 <label>CATEGORY 1</label>
                 <input
@@ -116,7 +116,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
                   value={identifiers.Category_3}
                 />
               </Card.Body>
-            </Accordion.Collapse>
+            {/*</Accordion.Collapse>*/}
           </Card>
         </Accordion>
       </Col>

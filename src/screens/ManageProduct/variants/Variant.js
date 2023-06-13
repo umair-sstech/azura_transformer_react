@@ -106,7 +106,7 @@ const Variant = (props) => {
       const response = await axios.post(
         `${API_PATH.UPDATE_PRODUCT_DATA}`,
         {
-          productId: productData?.variant?.[0]?.id,
+          productId: productData?.variant?.[0]?.id || id,
           supplierId:supplierId ,
           type: "VARIANT",
           Variant_Title: title,

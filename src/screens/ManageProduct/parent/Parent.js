@@ -93,6 +93,7 @@ const Parent = (props) => {
         ...identifiers,
         Main_Color: colorValue,
         Size_Only: sizeValue,
+        ...attribute,
         custom_fields: customField,
       });
 
