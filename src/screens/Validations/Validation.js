@@ -36,7 +36,7 @@ export const validateSftpForm = (formData) => {
   const port = formData.get("port");
   const protocol = formData.get("protocol");
   const urlPath = formData.get("urlPath");
-  const timeZone = formData.get("timeZone");
+  // const timeZone = formData.get("timeZone");
 
   const minute = formData.get("minute");
   const hour = formData.get("hour");
@@ -137,9 +137,9 @@ export const validateSftpForm = (formData) => {
     errors.urlPath = "URL must be a valid URL";
   }
 
-  if (!timeZone) {
-    errors.timeZone = "Please Select TimeZone";
-  }
+  // if (!timeZone) {
+  //   errors.timeZone = "Please Select TimeZone";
+  // }
 
   return errors;
 };
@@ -225,7 +225,7 @@ export const validateMarketPlaceProductSync = (formData) => {
   const day = formData.get("day");
   const month = formData.get("month");
   const week = formData.get("week");
-  const productTimeZone = formData.get("productTimeZone");
+  // const productTimeZone = formData.get("productTimeZone");
 
   if (!minute) {
     errors.minute = "Minute is required";
@@ -267,9 +267,9 @@ export const validateMarketPlaceProductSync = (formData) => {
     errors.week = "Please Enter Week between 100 characters";
   }
 
-  if (!productTimeZone) {
-    errors.productTimeZone = "Please Select TimeZone";
-  }
+  // if (!productTimeZone) {
+  //   errors.productTimeZone = "Please Select TimeZone";
+  // }
   return errors;
 };
 
@@ -280,7 +280,7 @@ export const validateMarketPlaceOrderSync = (formData) => {
   const day = formData.get("day");
   const month = formData.get("month");
   const week = formData.get("week");
-  const orderTimeZone = formData.get("orderTimeZone");
+  // const orderTimeZone = formData.get("orderTimeZone");
 
   if (!minute) {
     errors.minute = "Minute is required";
@@ -322,9 +322,9 @@ export const validateMarketPlaceOrderSync = (formData) => {
     errors.week = "Please Enter Week between 100 characters";
   }
 
-  if (!orderTimeZone) {
-    errors.orderTimeZone = "Please Select TimeZone";
-  }
+  // if (!orderTimeZone) {
+  //   errors.orderTimeZone = "Please Select TimeZone";
+  // }
   return errors;
 };
 
@@ -335,7 +335,7 @@ export const validateMarketPlaceTrackingSync = (formData) => {
   const day = formData.get("day");
   const month = formData.get("month");
   const week = formData.get("week");
-  const trackingTimeZone = formData.get("trackingTimeZone");
+  // const trackingTimeZone = formData.get("trackingTimeZone");
 
   if (!minute) {
     errors.minute = "Minute is required";
@@ -377,9 +377,9 @@ export const validateMarketPlaceTrackingSync = (formData) => {
     errors.week = "Please Enter Week between 100 characters";
   }
 
-  if (!trackingTimeZone) {
-    errors.trackingTimeZone = "Please Select TimeZone";
-  }
+  // if (!trackingTimeZone) {
+  //   errors.trackingTimeZone = "Please Select TimeZone";
+  // }
   return errors;
 };
 
@@ -493,7 +493,7 @@ export const validateIntegratorProductSync = (formData) => {
   const day = formData.get("day");
   const month = formData.get("month");
   const week = formData.get("week");
-  const productTimeZone = formData.get("productTimeZone");
+  // const productTimeZone = formData.get("productTimeZone");
 
   if (!minute) {
     errors.minute = "Minute is required";
@@ -535,9 +535,9 @@ export const validateIntegratorProductSync = (formData) => {
     errors.week = "Please Enter Week between 100 characters";
   }
   
-  if (!productTimeZone) {
-    errors.productTimeZone = "Please Select TimeZone";
-  }
+  // if (!productTimeZone) {
+  //   errors.productTimeZone = "Please Select TimeZone";
+  // }
   return errors;
 };
 
@@ -548,7 +548,7 @@ export const validateIntegratorOrderSync = (formData) => {
   const day = formData.get("day");
   const month = formData.get("month");
   const week = formData.get("week");
-  const orderTimeZone = formData.get("orderTimeZone");
+  // const orderTimeZone = formData.get("orderTimeZone");
 
   if (!minute) {
     errors.minute = "Minute is required";
@@ -590,9 +590,9 @@ export const validateIntegratorOrderSync = (formData) => {
     errors.week = "Please Enter Week between 100 characters";
   }
 
-  if (!orderTimeZone) {
-    errors.orderTimeZone = "Please Select TimeZone";
-  }
+  // if (!orderTimeZone) {
+  //   errors.orderTimeZone = "Please Select TimeZone";
+  // }
   return errors;
 };
 
@@ -603,7 +603,7 @@ export const validateIntegratorTrackingSync = (formData) => {
   const day = formData.get("day");
   const month = formData.get("month");
   const week = formData.get("week");
-  const trackingTimeZone = formData.get("trackingTimeZone");
+  // const trackingTimeZone = formData.get("trackingTimeZone");
 
   if (!minute) {
     errors.minute = "Minute is required";
@@ -645,8 +645,8 @@ export const validateIntegratorTrackingSync = (formData) => {
     errors.week = "Please Enter Week between 100 characters";
   }
 
-  if (!trackingTimeZone) {
-    errors.trackingTimeZone = "Please Select TimeZone";
-  }
+  // if (!trackingTimeZone) {
+  //   errors.trackingTimeZone = "Please Select TimeZone";
+  // }
   return errors;
 };

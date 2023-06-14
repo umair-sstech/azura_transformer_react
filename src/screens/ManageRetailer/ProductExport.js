@@ -306,8 +306,8 @@ function ProductExport(props) {
                   <td style={{ width: "5%" }}>
                   <input
                   type="checkbox"
-                  value={product.categoryId}
-                  checked={selectedCheckbox.includes(parseInt(product.categoryId))}
+                  value={product.supplierId}
+                  // checked={selectedCheckbox.includes(parseInt(product.categoryId))}
 
                   onChange={handleCheckboxChange1}
                 />

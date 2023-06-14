@@ -24,6 +24,8 @@ const Parent = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [bulletDescription, setBulletDescription] = useState("");
+
   const [identifiers, setIdentifiers] = useState({
     Parent_SKU: "",
     Brand: "",
@@ -89,14 +91,14 @@ const Parent = (props) => {
         supplierId: supplierId,
         type: "PARENT",
         Parent_Title: title,
-        Plain_Description: description,
+        AI_Description: description,
+        AI_Bullet_Description: bulletDescription,
         ...identifiers,
         Main_Color: colorValue,
         Size_Only: sizeValue,
         ...attribute,
         custom_fields: customField,
       });
-
       const { success, message } = response.data;
       if (success) {
         variantDetails(activeKey);
@@ -156,15 +158,23 @@ const Parent = (props) => {
 
         {/* Description */}
         <ProductContext.Provider
-          value={
-            productData.product?.[0]?.AI_Description != null
-              ? productData.product?.[0]?.AI_Description
-              : productData.product?.[0]?.Plain_Description
-          }
+          value={{
+            aiDesc:
+              productData.product?.[0]?.AI_Description != null
+                ? productData.product?.[0]?.AI_Description
+                : productData.product?.[0]?.Plain_Description,
+            aiDescBullet: productData.product?.[0]?.AI_Bullet_Description
+              != null
+              ? productData.product?.[0]?.AI_Bullet_Description
+
+              : productData.product?.[0]?.Plain_Description,
+          }}
         >
           <ProductDescription
             description={description}
             setDescription={setDescription}
+            bulletDescription={bulletDescription}
+            setBulletDescription={setBulletDescription}
           />
         </ProductContext.Provider>
 
@@ -218,7 +228,7 @@ const Parent = (props) => {
             activeKey={activeKey}
             setKey={setKey}
             variantDetails={variantDetails}
-            // Pass activeKey to variantDetails
+          // Pass activeKey to variantDetails
           />
         </div>
       </ProductContext.Provider>

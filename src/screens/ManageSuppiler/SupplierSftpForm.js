@@ -27,7 +27,7 @@ function SupplierSftpForm(props) {
     protocol: "",
     urlPath: "",
     syncFrequency: "",
-    timeZone: "",
+    // timeZone: "",
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -56,18 +56,18 @@ function SupplierSftpForm(props) {
         .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
         .then((response) => {
           const supplierData = response.data.data;
-          let timeZone = timeZoneData.find(
-            (tz) => tz.abbr == supplierData.timeZone
-          );
+          // let timeZone = timeZoneData.find(
+          //   (tz) => tz.abbr == supplierData.timeZone
+          // );
 
           setFormData({
             ...supplierData,
             protocol: supplierData.protocol,
             syncFrequency: supplierData.syncFrequency,
-            timeZone: {
-              value: timeZone.abbr,
-              label: timeZone.text,
-            },
+            // timeZone: {
+            //   value: timeZone.abbr,
+            //   label: timeZone.text,
+            // },
           });
           const { syncFrequency } = supplierData;
 
@@ -248,15 +248,15 @@ function SupplierSftpForm(props) {
   //   setFormErrors({...formErrors, syncFrequency: ""})
   // };
 
-  const findDefaultTimeZone = timeZoneData.find((val) =>
-    val.text.toLowerCase().includes("sydney")
-  );
+  // const findDefaultTimeZone = timeZoneData.find((val) =>
+  //   val.text.toLowerCase().includes("sydney")
+  // );
 
-  const handleTimeZoneChange = (selectedOption) => {
-    const timeZone = selectedOption;
-    setInitFormData({ ...initFormData, timeZone });
-    handleChange("timeZone", timeZone);
-  };
+  // const handleTimeZoneChange = (selectedOption) => {
+  //   const timeZone = selectedOption;
+  //   setInitFormData({ ...initFormData, timeZone });
+  //   handleChange("timeZone", timeZone);
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -269,8 +269,8 @@ function SupplierSftpForm(props) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
 
-      const { value, label } = initFormData.timeZone || {};
-      const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
+      // const { value, label } = initFormData.timeZone || {};
+      // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
       const syncFrequency = `${formData.get("minute")} ${formData.get(
         "hour"
@@ -281,7 +281,7 @@ function SupplierSftpForm(props) {
       const payload = {
         ...initFormData,
         settingType,
-        timeZone: timeZoneString,
+        // timeZone: timeZoneString,
         supplierId,
         supplierName,
         syncFrequency,
@@ -321,8 +321,8 @@ function SupplierSftpForm(props) {
     if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
-      const { value, label } = initFormData.timeZone || {};
-      const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
+      // const { value, label } = initFormData.timeZone || {};
+      // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
       const syncFrequency = `${formData.get("minute")} ${formData.get(
         "hour"
       )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
@@ -331,7 +331,7 @@ function SupplierSftpForm(props) {
 
       const payload = {
         ...initFormData,
-        timeZone: timeZoneString,
+        // timeZone: timeZoneString,
         settingType,
         supplierId,
         supplierName,
@@ -674,7 +674,7 @@ function SupplierSftpForm(props) {
                 )}
                 </div>*/}
             </div>
-            <div className="col-12 mt-3">
+            {/* <div className="col-12 mt-3">
               <div className="form-group">
                 <label>
                   TimeZone <span style={{ color: "red" }}>*</span>
@@ -703,7 +703,7 @@ function SupplierSftpForm(props) {
                   <span className="text-danger">{formErrors.timeZone}</span>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </form>

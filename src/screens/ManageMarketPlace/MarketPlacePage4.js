@@ -15,7 +15,7 @@ function MarketPlacePage4(props) {
 
   const [initFormData, setInitFormData] = useState({
     orderSyncFrequency: "",
-    orderTimeZone: "",
+    // orderTimeZone: "",
     type: "order",
   });
   const [formErrors, setFormErrors] = useState({});
@@ -180,13 +180,13 @@ function MarketPlacePage4(props) {
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
-  const findDefaultTimeZone = timeZoneData.find((val) => val.text.toLowerCase().includes("sydney"))
+  // const findDefaultTimeZone = timeZoneData.find((val) => val.text.toLowerCase().includes("sydney"))
 
-  const handleTimeZoneChange = (selectedOption) => {
-    const orderTimeZone = selectedOption;
-    setInitFormData({ ...initFormData, orderTimeZone });
-    handleChange("orderTimeZone", orderTimeZone);
-  };
+  // const handleTimeZoneChange = (selectedOption) => {
+  //   const orderTimeZone = selectedOption;
+  //   setInitFormData({ ...initFormData, orderTimeZone });
+  //   handleChange("orderTimeZone", orderTimeZone);
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -199,8 +199,8 @@ function MarketPlacePage4(props) {
       const integrationId = localStorage.getItem("marketPlaceId");
       const integrationName = localStorage.getItem("marketPlaceName");
 
-      const {value, label} = initFormData.orderTimeZone || {};
-      const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
+      // const {value, label} = initFormData.orderTimeZone || {};
+      // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
       const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
         "hour"
@@ -211,7 +211,7 @@ function MarketPlacePage4(props) {
       const payload = {
         // ...initFormData,
         orderSyncFrequency,
-        orderTimeZone: timeZoneString,
+        // orderTimeZone: timeZoneString,
         integrationId,
         integrationName,
         type:"order"
@@ -250,8 +250,8 @@ function MarketPlacePage4(props) {
       const integrationId = localStorage.getItem("marketPlaceId");
       const integrationName = localStorage.getItem("marketPlaceName");
 
-      const {value, label} = initFormData.orderTimeZone || {};
-      const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
+      // const {value, label} = initFormData.orderTimeZone || {};
+      // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
       const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
         "hour"
@@ -262,7 +262,7 @@ function MarketPlacePage4(props) {
       const payload = {
         // ...initFormData,
         orderSyncFrequency,
-        orderTimeZone: timeZoneString,
+        // orderTimeZone: timeZoneString,
         integrationId,
         integrationName,
         type:"order"
@@ -301,10 +301,10 @@ function MarketPlacePage4(props) {
             (tz) => tz.abbr == data.orderTimeZone
           );
           setFormData({
-            orderTimeZone: {
-              value: orderTimeZone.abbr,
-              label: orderTimeZone.text,
-            },
+            // orderTimeZone: {
+            //   value: orderTimeZone.abbr,
+            //   label: orderTimeZone.text,
+            // },
             type: "order",
           });
           const { orderSyncFrequency } = data;
@@ -474,7 +474,7 @@ function MarketPlacePage4(props) {
               </small>
             </div>
           </div>
-          <div className="col-12 mt-3">
+          {/* <div className="col-12 mt-3">
             <div className="form-group">
               <label>
                 TimeZone <span style={{ color: "red" }}>*</span>
@@ -502,7 +502,7 @@ function MarketPlacePage4(props) {
                 <span className="text-danger">{formErrors.orderTimeZone}</span>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </form>

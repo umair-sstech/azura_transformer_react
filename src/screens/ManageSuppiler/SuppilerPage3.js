@@ -9,13 +9,13 @@ import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
-import { Spinner } from "react-bootstrap";
+import { Form, Spinner } from "react-bootstrap";
 import CustomFields from "./CustomFields";
 import { debounce } from "lodash";
 
 function SuppilerPage3(props) {
   const { setPage } = props;
-  const { setFormData,processCancel } = useContext(FormContext);
+  const { setFormData, processCancel } = useContext(FormContext);
 
   const [options, setOptions] = useState([
     {
@@ -62,7 +62,6 @@ function SuppilerPage3(props) {
   const [csvOption, setCsvOption] = useState([]);
   const [selectedPreference, setSelectedPreference] = useState(null);
   const [selectedRadioPreference, setSlectedRadioPreference] = useState(null);
-  const [supplierExtractOption, setSupplierExtractOption] = useState([]);
   const [customFieldsData, setCustomFieldsData] = useState([]);
 
   const history = useHistory();
@@ -169,14 +168,13 @@ function SuppilerPage3(props) {
     setAdditionalTextValue("");
   };
 
-  const handleProductExtractChange = (index, key, selectedOption) => {
-    const updatedSupplierExtractOption = [...supplierExtractOption];
-    updatedSupplierExtractOption[index] = {
-      ...updatedSupplierExtractOption[index],
-      [key]: selectedOption.value,
-    };
-    setSupplierExtractOption(updatedSupplierExtractOption);
-  };
+  const handleExtractChange = (index = 0, key, value) => {
+    const updatedState = [...selectedOptions]
+    updatedState[index][key].supplierExtract = value;
+    setSelectedOptions(updatedState)
+  }
+
+
 
   const handleProductRadioChange = (value) => {
     setSlectedRadioPreference(value);
@@ -216,7 +214,7 @@ function SuppilerPage3(props) {
               mappingData.find((item) => item.standardField === key) || {};
             const radioValue =
               selectedRadio[`${index}-${key}`] &&
-              selectedRadio[`${index}-${key}`].value
+                selectedRadio[`${index}-${key}`].value
                 ? selectedRadio[`${index}-${key}`].value
                 : mapping.imageType || null;
             const isRadioUnchanged =
@@ -234,7 +232,12 @@ function SuppilerPage3(props) {
               if (selectedRadio[`${index}-${key}`].showTextbox) {
                 imageList = additionalTextValue;
               }
-            } else if (option.textbox) {
+            }
+            else if (
+              option.value === "hardcode_value" ||
+              option.value === "use_AI" ||
+              option.value === "extract"
+            ) {
               additionalValue =
                 selectedOption[key] && selectedOption[key].additionalValue
                   ? selectedOption[key].additionalValue
@@ -245,10 +248,13 @@ function SuppilerPage3(props) {
 
             let supplierExtract = "";
             if (option.value === "extract") {
-              if (typeof supplierExtractOption === "object") {
-                supplierExtract = supplierExtractOption[index]?.[key] || "";
+              if (
+                typeof selectedOptions === "object" &&
+                selectedOptions !== null
+              ) {
+                supplierExtract = selectedOptions[index]?.[key]?.supplierExtract;
               } else {
-                supplierExtract = supplierExtractOption;
+                supplierExtract = selectedOptions;
               }
             }
             const mappingObject = {
@@ -292,7 +298,6 @@ function SuppilerPage3(props) {
           supplierField: selectedPreference ? selectedPreference.value : "",
           additionalValue: additionalValueString,
         };
-
         mappingArray.push(mappingObject);
       });
 
@@ -304,7 +309,6 @@ function SuppilerPage3(props) {
         );
         const { success, message, data } = response.data;
         if (success) {
-          console.log("reposne", response);
           toast.success(message);
           setPage("4");
         } else {
@@ -337,7 +341,7 @@ function SuppilerPage3(props) {
               mappingData.find((item) => item.standardField === key) || {};
             const radioValue =
               selectedRadio[`${index}-${key}`] &&
-              selectedRadio[`${index}-${key}`].value
+                selectedRadio[`${index}-${key}`].value
                 ? selectedRadio[`${index}-${key}`].value
                 : mapping.imageType || null;
             const isRadioUnchanged =
@@ -355,7 +359,12 @@ function SuppilerPage3(props) {
               if (selectedRadio[`${index}-${key}`].showTextbox) {
                 imageList = additionalTextValue;
               }
-            } else if (option.textbox) {
+            }
+            else if (
+              option.value === "hardcode_value" ||
+              option.value === "use_AI" ||
+              option.value === "extract"
+            ) {
               additionalValue =
                 selectedOption[key] && selectedOption[key].additionalValue
                   ? selectedOption[key].additionalValue
@@ -363,10 +372,13 @@ function SuppilerPage3(props) {
             }
             let supplierExtract = "";
             if (option.value === "extract") {
-              if (typeof supplierExtractOption === "object") {
-                supplierExtract = supplierExtractOption[index]?.[key] || "";
+              if (
+                typeof selectedOptions === "object" &&
+                selectedOptions !== null
+              ) {
+                supplierExtract = selectedOptions[index]?.[key]?.supplierExtract;
               } else {
-                supplierExtract = supplierExtractOption;
+                supplierExtract = selectedOptions;
               }
             }
             const mappingObject = {
@@ -440,7 +452,6 @@ function SuppilerPage3(props) {
   };
 
 
-
   const validateForm = () => {
     const errors = [];
     let isValid = true;
@@ -506,11 +517,20 @@ function SuppilerPage3(props) {
 
         const options = {};
         supplierMapping.forEach((field) => {
-          const { standardField, supplierField, imageType } = field;
+          const {
+            standardField,
+            supplierField,
+            imageType,
+            additionalValue,
+            supplierExtract,
+          } = field;
+
           options[standardField] = {
             label: supplierField,
             value: supplierField,
             imageType: imageType,
+            additionalValue: additionalValue !== "" ? additionalValue : "",
+            supplierExtract: supplierExtract !== "" ? supplierExtract : "",
           };
         });
         setSelectedOptions([options]);
@@ -531,13 +551,6 @@ function SuppilerPage3(props) {
           (field) => field.standardField === "Preference"
         )?.supplierField;
         setSelectedPreference(additionalPrefillValue);
-        console.log("supplierField", additionalPrefillValue);
-
-        const extractPrefillValue = supplierMapping.find(
-          (field) => field.supplierField === "extract"
-        )?.supplierExtract;
-        setSupplierExtractOption(extractPrefillValue);
-        console.log("extractValuepre-fil", extractPrefillValue);
       })
 
       .catch((error) => {
@@ -596,9 +609,11 @@ function SuppilerPage3(props) {
           ))}
           <div className="mt-3 mt-lg-0">
             <div className="alert alert-primary col-12 mt-3" role="alert">
-              <strong>INFO:</strong> <br/>Please ensure to select the appropriate field mapping based on the
-              supplier field. <br/>If a value is not available, please set it to the
-              do nothing or leave it blank.
+              <strong>INFO:</strong> <br />
+              Please ensure to select the appropriate field mapping based on the
+              supplier field. <br />
+              If a value is not available, please set it to the do nothing or
+              leave it blank.
             </div>
             <div className="col-12">
               <label>
@@ -687,12 +702,12 @@ function SuppilerPage3(props) {
                           ) || {};
                         const radioValue =
                           selectedRadio[`${index}-${key}`] &&
-                          selectedRadio[`${index}-${key}`].value
+                            selectedRadio[`${index}-${key}`].value
                             ? selectedRadio[`${index}-${key}`].value
                             : mapping.imageType || null;
                         const showTextbox =
                           selectedRadio[`${index}-${key}`] &&
-                          selectedRadio[`${index}-${key}`].showTextbox
+                            selectedRadio[`${index}-${key}`].showTextbox
                             ? selectedRadio[`${index}-${key}`].showTextbox
                             : false;
                         let additionalInfo = null;
@@ -845,7 +860,7 @@ function SuppilerPage3(props) {
                         } else {
                           additionalInfo = (
                             <>
-                              {selectedOption && selectedOption.textbox && (
+                              {selectedOption && selectedOption.textbox ? (
                                 <input
                                   type="text"
                                   placeholder="Enter a value"
@@ -858,6 +873,61 @@ function SuppilerPage3(props) {
                                     );
                                   }}
                                 />
+                              ) : selectedOption?.value === "use_AI" ? (
+                                <>
+                                  <input
+                                    type="text"
+                                    placeholder="Has value"
+                                    value={
+                                      selectedOptions[index]?.[key]
+                                        ?.additionalValue
+                                    }
+                                    className="additional-textbox rounded"
+                                    onChange={(e) => {
+                                      handleAdditionalValueChange(
+                                        index,
+                                        key,
+                                        e.target.value
+                                      );
+                                    }}
+                                  />
+                                </>
+                              ) : selectedOption?.value === "hardcode_value" ? (
+                                <input
+                                  type="text"
+                                  placeholder="Has value"
+                                  value={
+                                    selectedOptions[index]?.[key]
+                                      ?.additionalValue
+                                  }
+                                  className="additional-textbox rounded"
+                                  onChange={(e) => {
+                                    handleAdditionalValueChange(
+                                      index,
+                                      key,
+                                      e.target.value
+                                    );
+                                  }}
+                                />
+                              ) : selectedOption?.value === "extract" ? (
+                                <input
+                                  type="text"
+                                  placeholder="Has value"
+                                  value={
+                                    selectedOptions[index]?.[key]
+                                      ?.additionalValue
+                                  }
+                                  className="additional-textbox rounded"
+                                  onChange={(e) => {
+                                    handleAdditionalValueChange(
+                                      index,
+                                      key,
+                                      e.target.value
+                                    );
+                                  }}
+                                />
+                              ) : (
+                                <></>
                               )}
                               <br />
                               {selectedOption &&
@@ -911,32 +981,32 @@ function SuppilerPage3(props) {
                             <td>{additionalInfo}</td>
                             <td>
                               {selectedOption &&
-                              selectedOption.value === "extract" ? (
+                                selectedOption.value === "extract" ? (
                                 <>
                                   <div className="select-container">
-                                    <Select
-                                      options={csvOption}
-                                      value={csvOption.find(
-                                        (option) =>
-                                          option.value === supplierExtractOption
-                                      )} // Use [0] to access the value from the array
-                                      onChange={(selectedOption) =>
-                                        handleProductExtractChange(
-                                          index,
-                                          key,
-                                          selectedOption
-                                        )
-                                      }
-                                      isSearchable={true}
-                                      className="select"
-                                      styles={{
-                                        option: (styles) => {
-                                          return {
-                                            ...styles,
-                                          };
-                                        },
-                                      }}
-                                    />
+
+                                    <Form>
+                                      <Form.Group controlId="exampleForm.SelectCustom">
+                                        <Form.Control
+                                          as="select"
+                                          value={
+                                            selectedOptions[index]?.[key]
+                                              ?.supplierExtract
+                                          }
+                                          onChange={(e) => handleExtractChange(index, key, e.target.value)}
+                                        >
+
+                                          {csvOption.map((item, idx) => (
+                                            <option
+                                              key={idx}
+                                              value={item.value}
+                                            >
+                                              {item.label}
+                                            </option>
+                                          ))}
+                                        </Form.Control>
+                                      </Form.Group>
+                                    </Form>
                                   </div>
                                   <label className="ml-3 text-success">
                                     Note: Please select the field from where you

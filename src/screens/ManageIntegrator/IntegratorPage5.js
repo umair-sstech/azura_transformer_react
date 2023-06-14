@@ -17,7 +17,7 @@ function IntegratorPage5(props) {
   const { processCancel, formData, setFormData } = useContext(FormContext);
   const [initFormData, setInitFormData] = useState({
     trackingSyncFrequency: "",
-    trackingTimeZone: "",
+    // trackingTimeZone: "",
     type: "tracking",
   });
   const [formErrors, setFormErrors] = useState({});
@@ -188,13 +188,13 @@ function IntegratorPage5(props) {
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
-  const findDefaultTimeZone = timeZoneData.find((val) => val.text.toLowerCase().includes("sydney"))
+  // const findDefaultTimeZone = timeZoneData.find((val) => val.text.toLowerCase().includes("sydney"))
 
-  const handleTimeZoneChange = (selectedOption) => {
-    const trackingTimeZone = selectedOption;
-    setInitFormData({ ...initFormData, trackingTimeZone });
-    handleChange("trackingTimeZone", trackingTimeZone);
-  };
+  // const handleTimeZoneChange = (selectedOption) => {
+  //   const trackingTimeZone = selectedOption;
+  //   setInitFormData({ ...initFormData, trackingTimeZone });
+  //   handleChange("trackingTimeZone", trackingTimeZone);
+  // };
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -258,13 +258,13 @@ function IntegratorPage5(props) {
       const integrationId = localStorage.getItem("integratorId");
       const integrationName = localStorage.getItem("integratorName");
 
-      const {value, label} = initFormData.trackingTimeZone || {};
-      const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
+      // const {value, label} = initFormData.trackingTimeZone || {};
+      // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
       const payload = {
         // ...initFormData,
         trackingSyncFrequency,
-        trackingTimeZone: timeZoneString,
+        // trackingTimeZone: timeZoneString,
         integrationId,
         integrationName,
         type:"tracking"
@@ -307,10 +307,10 @@ function IntegratorPage5(props) {
             (tz) => tz.abbr == data.trackingTimeZone
           );
           setFormData({
-            trackingTimeZone: {
-              value: trackingTimeZone.abbr,
-              label: trackingTimeZone.text,
-            },
+            // trackingTimeZone: {
+            //   value: trackingTimeZone.abbr,
+            //   label: trackingTimeZone.text,
+            // },
             type: "tracking",
           });
           const { trackingSyncFrequency } = data;
@@ -480,7 +480,7 @@ function IntegratorPage5(props) {
               </small>
             </div>
           </div>
-          <div className="col-12 mt-3">
+          {/* <div className="col-12 mt-3">
             <div className="form-group">
               <label>
                 TimeZone <span style={{ color: "red" }}>*</span>
@@ -510,7 +510,7 @@ function IntegratorPage5(props) {
                 </span>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </form>

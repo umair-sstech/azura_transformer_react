@@ -17,7 +17,7 @@ function IntegratorPage4(props) {
   
   const [initFormData, setInitFormData] = useState({
     orderSyncFrequency: "",
-    orderTimeZone: "",
+    // orderTimeZone: "",
     type: "order",
   });
   const [formErrors, setFormErrors] = useState({});
@@ -187,14 +187,14 @@ function IntegratorPage4(props) {
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   };
-  const findDefaultTimeZone = timeZoneData.find((val) => val.text.toLowerCase().includes("sydney"))
+  // const findDefaultTimeZone = timeZoneData.find((val) => val.text.toLowerCase().includes("sydney"))
 
 
-  const handleTimeZoneChange = (selectedOption) => {
-    const orderTimeZone = selectedOption;
-    setInitFormData({ ...initFormData, orderTimeZone });
-    handleChange("orderTimeZone", orderTimeZone);
-  };
+  // const handleTimeZoneChange = (selectedOption) => {
+  //   const orderTimeZone = selectedOption;
+  //   setInitFormData({ ...initFormData, orderTimeZone });
+  //   handleChange("orderTimeZone", orderTimeZone);
+  // };
   
 
 const handleSubmit = (e) => {
@@ -208,8 +208,8 @@ const handleSubmit = (e) => {
     const integrationId = localStorage.getItem("integratorId");
     const integrationName = localStorage.getItem("integratorName");
 
-    const {value, label} = initFormData.orderTimeZone || {};
-    const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
+    // const {value, label} = initFormData.orderTimeZone || {};
+    // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
     const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
       "hour"
@@ -220,7 +220,7 @@ const handleSubmit = (e) => {
     const payload = {
       // ...initFormData,
       orderSyncFrequency,
-      orderTimeZone: timeZoneString,
+      // orderTimeZone: timeZoneString,
       integrationId,
       integrationName,
       type:"order"
@@ -260,8 +260,8 @@ const handleSubmit = (e) => {
     const integrationId = localStorage.getItem("integratorId");
     const integrationName = localStorage.getItem("integratorName");
 
-    const {value, label} = initFormData.orderTimeZone || {};
-    const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
+    // const {value, label} = initFormData.orderTimeZone || {};
+    // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
     const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
       "hour"
@@ -272,7 +272,7 @@ const handleSubmit = (e) => {
     const payload = {
       // ...initFormData,
       orderSyncFrequency,
-      orderTimeZone: timeZoneString,
+      // orderTimeZone: timeZoneString,
       integrationId,
       integrationName,
       type:"order"
@@ -316,10 +316,10 @@ const handleSubmit = (e) => {
             (tz) => tz.abbr == data.orderTimeZone
           );
           setFormData({
-            orderTimeZone: {
-              value: orderTimeZone.abbr,
-              label: orderTimeZone.text,
-            },
+            // orderTimeZone: {
+            //   value: orderTimeZone.abbr,
+            //   label: orderTimeZone.text,
+            // },
             type: "order",
           });
           const { orderSyncFrequency } = data;
@@ -508,7 +508,7 @@ const handleSubmit = (e) => {
             </small>
               </div>
               </div>
-            <div className="col-12 mt-3">
+            {/* <div className="col-12 mt-3">
             <div className="form-group">
               <label>
                 TimeZone <span style={{ color: "red" }}>*</span>
@@ -536,7 +536,7 @@ const handleSubmit = (e) => {
                 <span className="text-danger">{formErrors.orderTimeZone}</span>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </form>
