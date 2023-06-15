@@ -782,14 +782,13 @@ function SuppilerPage3(props) {
                               </div>
                               {showTextbox && (
                                 <>
-                                  <input
-                                    type="text"
+                                  <textarea
                                     placeholder="Enter a value"
                                     className="additional-textbox rounded"
                                     onChange={(e) =>
                                       setAdditionalTextValue(e.target.value)
                                     }
-                                  />
+                                  ></textarea>
                                   <small>
                                     Please enter the image/photo column
                                     name(same as csv name)
@@ -861,8 +860,7 @@ function SuppilerPage3(props) {
                           additionalInfo = (
                             <>
                               {selectedOption && selectedOption.textbox ? (
-                                <input
-                                  type="text"
+                                <textarea
                                   placeholder="Enter a value"
                                   className="additional-textbox rounded"
                                   onChange={(e) => {
@@ -872,12 +870,11 @@ function SuppilerPage3(props) {
                                       e.target.value
                                     );
                                   }}
-                                />
+                                ></textarea>
                               ) : selectedOption?.value === "use_AI" ? (
                                 <>
-                                  <input
-                                    type="text"
-                                    placeholder="Has value"
+                                  <textarea
+                                    placeholder="Enter a value"
                                     value={
                                       selectedOptions[index]?.[key]
                                         ?.additionalValue
@@ -890,12 +887,11 @@ function SuppilerPage3(props) {
                                         e.target.value
                                       );
                                     }}
-                                  />
+                                  ></textarea>
                                 </>
                               ) : selectedOption?.value === "hardcode_value" ? (
-                                <input
-                                  type="text"
-                                  placeholder="Has value"
+                                <textarea
+                                  placeholder="Enter a value"
                                   value={
                                     selectedOptions[index]?.[key]
                                       ?.additionalValue
@@ -908,11 +904,10 @@ function SuppilerPage3(props) {
                                       e.target.value
                                     );
                                   }}
-                                />
+                                ></textarea>
                               ) : selectedOption?.value === "extract" ? (
-                                <input
-                                  type="text"
-                                  placeholder="Has value"
+                                <textarea
+                                  placeholder="Enter a value"
                                   value={
                                     selectedOptions[index]?.[key]
                                       ?.additionalValue
@@ -925,7 +920,7 @@ function SuppilerPage3(props) {
                                       e.target.value
                                     );
                                   }}
-                                />
+                                ></textarea>
                               ) : (
                                 <></>
                               )}
