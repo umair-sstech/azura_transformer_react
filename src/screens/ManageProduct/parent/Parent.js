@@ -90,7 +90,7 @@ const Parent = (props) => {
         productId: id,
         supplierId: supplierId,
         type: "PARENT",
-        Parent_Title: title,
+        AI_title: title,
         AI_Description: description,
         AI_Bullet_Description: bulletDescription,
         ...identifiers,
