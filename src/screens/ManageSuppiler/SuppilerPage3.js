@@ -990,7 +990,7 @@ function SuppilerPage3(props) {
                                           }
                                           onChange={(e) => handleExtractChange(index, key, e.target.value)}
                                         >
-
+                                          <option value={``} style={{fontWeight: "bold"}}>Select Any field</option>
                                           {csvOption.map((item, idx) => (
                                             <option
                                               key={idx}
