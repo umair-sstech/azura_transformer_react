@@ -24,6 +24,7 @@ const Variant = (props) => {
   const [isExitLoading, setIsExitLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [bulletDescription, setBulletDescription] = useState("");
   const [identifiers, setIdentifiers] = useState({
     Variant_SKU: "",
     UPC: "",
@@ -109,8 +110,9 @@ const Variant = (props) => {
           productId: productData?.variant?.[0]?.id || id,
           supplierId:supplierId ,
           type: "VARIANT",
-          Variant_Title: title,
-          Plain_Description: description,
+          AI_title: title,
+          AI_Description: description,
+          AI_Bullet_Description: bulletDescription,
           ...identifiers,
           ...optionValue,
           ...dimensionValue,
@@ -186,6 +188,8 @@ const Variant = (props) => {
             <VariantDescription
               description={description}
               setDescription={setDescription}
+              bulletDescription={bulletDescription}
+              setBulletDescription={setBulletDescription}
             />
           </ProductContext.Provider>
 

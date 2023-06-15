@@ -184,7 +184,7 @@ function ProductsList(props) {
                         <th>#</th>
                         <th>Unique Id</th>
                         <th>Supplier Name</th>
-                        <th>Logo</th>
+                        <th>Product Image</th>
                         <th>Grand Parent SKU</th>
                         <th>Parent SKU</th>
                         <th>Variant SKU</th>
@@ -194,7 +194,7 @@ function ProductsList(props) {
                         <th>Cost Price</th>
                         <th>Retail Price</th>
                         <th>Last Update(UTC)</th>
-                        <th>Is Enhance</th>
+                        <th>Is Enhanced</th>
                         <th>Action</th>
                       </tr>
                     </thead>

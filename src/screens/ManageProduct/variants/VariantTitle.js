@@ -11,7 +11,14 @@ const VariantTitle = (props) => {
     ? productData?.variant
     : productData?.product;
 
-  const variantTitle = singleVariantData !== null ? singleVariantData?.Variant_Title : variantData?.[0]?.Variant_Title;
+  // const variantTitle = singleVariantData !== null ? singleVariantData?.Variant_Title : variantData?.[0]?.Variant_Title;
+
+  const variantTitle = singleVariantData !== null
+  ? singleVariantData?.AI_Title !== null
+    ? singleVariantData?.AI_Title
+    : singleVariantData?.Variant_Title
+  : variantData?.[0]?.Variant_Title;
+
 
   useEffect(() => {
     setTitle(variantTitle);
