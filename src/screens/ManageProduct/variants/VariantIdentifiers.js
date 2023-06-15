@@ -72,7 +72,7 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
                 </div>
               </Accordion.Toggle>
             </Card.Header>
-            <Accordion.Collapse eventKey="1" className="card-body">
+          {/*  <Accordion.Collapse eventKey="1" className="card-body">*/}
               <Card.Body>
                 <label>VARIANT SKU</label>
                 <input
@@ -124,13 +124,13 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
                   onChange={handleChange}
                 />
               </Card.Body>
-            </Accordion.Collapse>
+           {/* </Accordion.Collapse>*/}
           </Card>
         </Accordion>
       </Col>
 
       <Col>
-        <Accordion defaultActiveKey="2" className="accordian__main">
+        <Accordion defaultActiveKey="0" className="accordian__main">
           <Card>
             <Card.Header>
               <Accordion.Toggle
@@ -145,7 +145,7 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
                 </div>
               </Accordion.Toggle>
             </Card.Header>
-            <Accordion.Collapse eventKey="0" className="card-body">
+           { /*<Accordion.Collapse eventKey="0" className="card-body">*/}
               <Card.Body>
                 <label style={{ marginTop: "10px" }}>COAST PRICE</label>
                 <input
@@ -177,7 +177,7 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
                   onChange={handleChange}
                 />
               </Card.Body>
-            </Accordion.Collapse>
+           {/* </Accordion.Collapse>*/}
           </Card>
         </Accordion>
       </Col>

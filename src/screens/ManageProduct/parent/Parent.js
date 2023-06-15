@@ -90,7 +90,7 @@ const Parent = (props) => {
         productId: id,
         supplierId: supplierId,
         type: "PARENT",
-        AI_title: title,
+        AI_TITLE: title,
         AI_Description: description,
         AI_Bullet_Description: bulletDescription,
         ...identifiers,
@@ -112,6 +112,47 @@ const Parent = (props) => {
       setIsLoading(false);
     }
   };
+
+  // const handleSubmit = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     const supplierId = productData.product?.[0]?.supplierId;
+  //     const payload = {
+  //       productId: id,
+  //       supplierId: supplierId,
+  //       type: "PARENT",
+  //       AI_Description: description,
+  //       AI_Bullet_Description: bulletDescription,
+  //       ...identifiers,
+  //       Main_Color: colorValue,
+  //       Size_Only: sizeValue,
+  //       ...attribute,
+  //       custom_fields: customField,
+  //     };
+      
+  //     if (title !== null) {
+  //       payload.AI_TITLE = title;
+  //     } else {
+  //       payload.Parent_Title = title;
+  //     }
+  //     console.log("payload",payload)
+  //     // return false
+  //     const response = await axios.post(`${API_PATH.UPDATE_PRODUCT_DATA}`, payload);
+      
+  //     const { success, message } = response.data;
+  //     if (success) {
+  //       variantDetails(activeKey);
+  //       toast.success(message);
+  //       // history.push("/products");
+  //     } else {
+  //       toast.error(message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to submit title:", error);
+  //     setIsLoading(false);
+  //   }
+  // };
+  
 
   return (
     <div className="product__container">

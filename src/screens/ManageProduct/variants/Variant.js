@@ -110,7 +110,7 @@ const Variant = (props) => {
           productId: productData?.variant?.[0]?.id || id,
           supplierId:supplierId ,
           type: "VARIANT",
-          AI_title: title,
+          AI_TITLE: title,
           AI_Description: description,
           AI_Bullet_Description: bulletDescription,
           ...identifiers,
@@ -123,6 +123,8 @@ const Variant = (props) => {
       const { success, message } = response.data;
       if (success) {
         toast.success(message);
+      setIsExitLoading(false)
+
         // history.push("/products")
 
       } else {

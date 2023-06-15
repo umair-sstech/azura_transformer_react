@@ -82,7 +82,7 @@ const ProductParent = (props) => {
             <Card key={variant.id} className="product__parent__card">
               <Card.Body onClick={() => navigateToParent("variants", "parent")} style={{cursor: "pointer"}}>
                 <Card.Subtitle style={{ textAlign: "center", marginTop: "10px" }}>
-                  {variant?.Variant_Title? variant.Variant_Title : "--"}
+                  {variant?.AI_TITLE? variant.AI_TITLE.replace(/"/g, "") :variant.Variant_Title}
                 </Card.Subtitle>
                 <Card.Text onClick={() => variantDetails(idx)}>
                   <div className="d-flex px-3 mt-3 justify-content-around" style={{gap: "2em"}}>
