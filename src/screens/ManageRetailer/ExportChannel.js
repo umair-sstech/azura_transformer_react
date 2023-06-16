@@ -41,6 +41,11 @@ function ExportChannel(props) {
               value: data[channelName],
               label: channelName,
             }));
+            const staticOption = {
+              value: 'export_csv',
+              label: 'Export Csv',
+            };
+            options.unshift(staticOption);
             setChannel(options);
           } else {
             toast.error(message);
@@ -91,6 +96,13 @@ function ExportChannel(props) {
       return;
     }
     setIsLoading(true);
+    if (selectedOptions.value === 'export_csv') {
+      localStorage.setItem("marketPlaceSettingId", selectedOptions.value);
+      localStorage.setItem("marketPlaceSettingName", selectedOptions.label);
+      setPage(7);
+      setIsLoading(false);
+      return;
+    }
   
     axios.post(`${API_PATH.CREATE_RETAILER_MARKETPLACE}`, payload)
       .then(response => {
