@@ -23,7 +23,7 @@ function Accountconfiguration(props) {
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [selectedValue, setSelectedValue] = useState(null);
-  console.log("selectedvalue",selectedValue)
+  console.log("selectedvalue", selectedValue)
 
   const history = useHistory();
 
@@ -97,7 +97,6 @@ function Accountconfiguration(props) {
 
     if (Object.keys(errors).length === 0) {
       console.log(initFormData);
-      setIsLoading(true);
 
       const retailerIntegrationId = localStorage.getItem(
         "retailerIntegrationId"
@@ -113,6 +112,7 @@ function Accountconfiguration(props) {
       };
 
       console.log("payload", payload);
+      setIsLoading(true);
       axios
         .post(`${API_PATH.CREAT_ACCOUNT_CONFIGURATION}`, payload)
         .then((response) => {
@@ -157,7 +157,7 @@ function Accountconfiguration(props) {
                 value={selectedValue}
                 onChange={(e) => setSelectedValue(e.target.value)}
               >
-                {selectedValue === null || (
+                {selectedValue === null && (
                   <option value="" key="">
                     Select..
                   </option>
@@ -167,7 +167,7 @@ function Accountconfiguration(props) {
                     {item.label}
                   </option>
                 ))}
-               
+
               </Form.Control>
             </Form.Group>
           </Form>
