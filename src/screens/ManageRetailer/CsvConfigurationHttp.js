@@ -1,19 +1,72 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
+import { FormContext } from "./ManageRetailerSetting";
+import { validateHttpBucket } from "../Validations/Validation";
 
-function CsvConfiguration() {
+function CsvConfiguration(props) {
   
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({});
+  const { processCancel, formData, setFormData } = useContext(FormContext);
+  // const [formData, setFormData] = useState({});
+  const [initFormData, setInitFormData] = useState({
+    bucketName: "",
+    secretKey: "",
+    password: "",
+  });
+  const [formErrors, setFormErrors] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
+
   const marketPlaceSettingName = localStorage.getItem("marketPlaceSettingName");
 
+  useEffect(() => {
+    if (formData) {
+      setInitFormData(formData);
+    }
+  }, [props]);
+
+  useEffect(() => {
+    setIsFormValid(Object.keys(formErrors).length === 0);
+  }, [formErrors]);
+
+  const handleChange = (key, val) => {
+    const formData = new FormData(document.forms.httpBucketForm);
+    formData.set(key, val);
+    const errors = validateHttpBucket(formData);
+    setFormErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
+  }
 
   const handleInputChange = (e) => {
-    setFormData(e.target.value);
+    const { name, value, type } = e.target;
+    const trimmedValue = type === "text" ? value.trim() : value;
+
+    setInitFormData((prevState) => ({
+      ...prevState,
+      [name]: trimmedValue,
+    }));
+    handleChange(name, value);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const errors = validateHttpBucket(formData);
+    setFormErrors(errors);
+    
+    if (Object.keys(errors).length === 0) {
+
+      const payload = {
+        ...initFormData,
+      };
+
+      console.log("payload--", payload);
+    }
+  }
+
   return (
     <div>
-      <form name="accountForm">
+      <form name="httpBucketForm" onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
@@ -33,6 +86,7 @@ function CsvConfiguration() {
               <button
                 className="btn btn-secondary w-auto btn-lg"
                 type="button"
+                onClick={processCancel}
               >
                 Exit
               </button>
@@ -56,8 +110,14 @@ function CsvConfiguration() {
                   type="text"
                   name="bucketName"
                   onChange={handleInputChange}
-                  placeholder="Enter Channel"
+                  placeholder="Bucket Name"
+                  defaultValue={
+                    initFormData && initFormData.bucketName ? initFormData.bucketName : ""
+                  }
                 />
+                {formErrors.bucketName && (
+                  <span className="text-danger">{formErrors.bucketName}</span>
+                )}
               </div>
             </div>
             <div className="col-sm-6">
@@ -70,8 +130,14 @@ function CsvConfiguration() {
                   type="text"
                   name="secretKey"
                   onChange={handleInputChange}
-                  placeholder="Enter API Endpoint"
+                  placeholder="Enter SecretKey / UserName"
+                  defaultValue={
+                    initFormData && initFormData.secretKey ? initFormData.secretKey : ""
+                  }
                 />
+                {formErrors.secretKey && (
+                  <span className="text-danger">{formErrors.secretKey}</span>
+                )}
               </div>
             </div>
             <div className="col-sm-6">
@@ -81,11 +147,17 @@ function CsvConfiguration() {
               </label>
               <input
                 className="form-control"
-                type="text"
-                name="secretKey"
+                type="password"
+                name="password"
                 onChange={handleInputChange}
-                placeholder="Enter API Endpoint"
+                placeholder="Enter Password"
+                defaultValue={
+                  initFormData && initFormData.password ? initFormData.password : ""
+                }
               />
+              {formErrors.password && (
+                  <span className="text-danger">{formErrors.password}</span>
+              )}
             </div>
           </div>
           </div>

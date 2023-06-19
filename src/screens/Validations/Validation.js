@@ -459,7 +459,7 @@ export const validateProfile = (formData) => {
   } else if (name.trim().length === 0) {
     errors.name = "Name can not be whitespace only";
   } else if (name.length > 25) {
-    errors.name = "Name must be less than or equal to 15 characters";
+    errors.name = "Name must be less than or equal to 25 characters";
   }
 
   if (!email) {
@@ -648,5 +648,118 @@ export const validateIntegratorTrackingSync = (formData) => {
   // if (!trackingTimeZone) {
   //   errors.trackingTimeZone = "Please Select TimeZone";
   // }
+  return errors;
+};
+
+export const validateHttpBucket = (formData) => {
+  const errors = {};
+  const bucketName = formData.get("bucketName");
+  const secretKey = formData.get("secretKey");
+  const password = formData.get("password");
+
+  if(!bucketName) {
+    errors.bucketName = "Bucket Name is Required.";
+  } else if (bucketName.trim().length === 0) {
+    errors.bucketName = "Bucket name can not be whitespace only";
+  }
+
+  if(!secretKey) {
+    errors.secretKey = "UserName is Required." ;
+  } else if (secretKey.trim().length === 0) {
+    errors.secretKey = "User name can not be whitespace only";
+  }
+
+  if(!password) {
+    errors.password = "Password is required.";
+  } else if (password.trim().length === 0) {
+    errors.password = "Password can not be whitespace only";
+  } else if (password.length > 50) {
+    errors.password = "Password must be less than 50 characters."
+  }
+  
+  return errors;
+};
+
+export const validateSftpFtp = (formData) => {
+  const errors = {};
+  const hostName = formData.get("hostName");
+  const userName = formData.get("userName");
+  const password = formData.get("password");
+  const port = formData.get("port");
+  const protocol = formData.get("protocol");
+  const minute = formData.get("minute");
+  const hour = formData.get("hour");
+  const day = formData.get("day");
+  const month = formData.get("month");
+  const week = formData.get("week");
+
+  if(!hostName) {
+    errors.hostName = "Host Name is Required.";
+  } else if (hostName.trim().length === 0) {
+    errors.hostName = "Host name can not be whitespace only";
+  }
+
+  if(!userName) {
+    errors.userName = "UserName is Required." ;
+  } else if (userName.trim().length === 0) {
+    errors.userName = "User name can not be whitespace only";
+  }
+
+  if(!password) {
+    errors.password = "Password is required.";
+  } else if (password.trim().length === 0) {
+    errors.password = "Password can not be whitespace only";
+  } else if (password.length > 50) {
+    errors.password = "Password must be less than 50 characters"
+  }
+
+  if (!minute) {
+    errors.minute = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(minute)) {
+    errors.minute = "Minute must contain only digits or '*'";
+  } else if(minute.length > 100) {
+    errors.minute = "Please Enter Minute between 100 characters";
+  }
+
+  if (!hour) {
+    errors.hour = "Hour is required";
+  } else if(!/^[0-9*]+$/.test(hour)) {
+    errors.hour = "Hour must contain only digits or '*'";
+  } else if(hour.length > 100) {
+    errors.hour = "Please Enter Hour between 100 characters";
+  }
+
+  if (!day) {
+    errors.day = "Day(Month) is required";
+  } else if(!/^[0-9*]+$/.test(day)) {
+    errors.day = "Day must contain only digits or '*'";
+  } else if(day.length > 100) {
+    errors.day = "Please Enter Day between 100 characters";
+  }
+
+  if (!month) {
+    errors.month = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(month)) {
+    errors.month = "Month must contain only digits or '*'";
+  } else if(month.length > 100) {
+    errors.month = "Please Enter Month between 100 characters";
+  }
+
+  if (!week) {
+    errors.week = "Day(Week) is required";
+  } else if(!/^[0-9*]+$/.test(week)) {
+    errors.week = "Week must contain only digits or '*'";
+  } else if(week.length > 100) {
+    errors.week = "Please Enter Week between 100 characters";
+  }
+
+  if (!protocol) {
+    errors.protocol = "Protocol is required";
+  }
+
+  if(!port) {
+    errors.port = 'Port number is Required';
+  }
+  
   return errors;
 };
