@@ -143,7 +143,7 @@ function Accountconfiguration(props) {
 
   return (
     <>
-      {marketPlaceSettingName === "Export Csv" ? (
+      {marketPlaceSettingName === "ExportCsv" ? (
         <div className="col-row mt-3 mt-sm-0">
           <Form>
             <Form.Group

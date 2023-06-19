@@ -92,18 +92,10 @@ function ExportChannel(props) {
       marketPlaceId: selectedOptions.value
     };
     if(!payload.marketPlaceId) {
-      toast.error("Must select atlease one account.")
+      toast.error("Must select atleast one account.")
       return;
     }
     setIsLoading(true);
-    if (selectedOptions.value === 'export_csv') {
-      localStorage.setItem("marketPlaceSettingId", selectedOptions.value);
-      localStorage.setItem("marketPlaceSettingName", selectedOptions.label);
-      setPage(7);
-      setIsLoading(false);
-      return;
-    }
-  
     axios.post(`${API_PATH.CREATE_RETAILER_MARKETPLACE}`, payload)
       .then(response => {
         const { success, message } = response.data;
