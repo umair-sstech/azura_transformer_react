@@ -23,7 +23,7 @@ function Accountconfiguration(props) {
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [selectedValue, setSelectedValue] = useState(null);
-  console.log("selectedvalue", selectedValue)
+  console.log("selectedvalue", selectedValue);
 
   const history = useHistory();
 
@@ -141,9 +141,27 @@ function Accountconfiguration(props) {
     { value: "SFTP", label: "SFTP / FTP" },
   ];
 
+  const handleSftpSubmit = () => {
+    // localStorage.removeItem("supplierSettingId");
+    // localStorage.removeItem("selectedSupplierName");
+    // localStorage.removeItem("retailerIntegrationId");
+    // localStorage.removeItem("currentPage");
+
+    // history.push("/setting-retailer-list");
+  };
+
+  const handleHttpSubmit = () => {
+    console.log("sucess....")
+    // localStorage.removeItem("supplierSettingId");
+    // localStorage.removeItem("selectedSupplierName");
+    // localStorage.removeItem("retailerIntegrationId");
+    // localStorage.removeItem("currentPage");
+    // history.push("/setting-retailer-list");
+  };
+
   return (
     <>
-      {marketPlaceSettingName === "ExportCsv" ? (
+      {marketPlaceSettingName === "ExportCSV" ? (
         <div className="col-row mt-3 mt-sm-0">
           <Form>
             <Form.Group
@@ -167,13 +185,22 @@ function Accountconfiguration(props) {
                     {item.label}
                   </option>
                 ))}
-
               </Form.Control>
             </Form.Group>
           </Form>
           <div className="row"></div>
-          {selectedValue === "HTTP" && <CsvConfiguration />}
-          {selectedValue === "SFTP" && <CsvConfigurationSftp />}
+          {selectedValue === "HTTP" && (
+            <CsvConfiguration
+              onSubmit={handleHttpSubmit}
+              settingType={selectedValue}
+            />
+          )}
+          {selectedValue === "SFTP" && (
+            <CsvConfigurationSftp
+              onSubmit={handleSftpSubmit}
+              settingType={selectedValue}
+            />
+          )}
         </div>
       ) : (
         <form onSubmit={handleSubmit} name="accountForm">

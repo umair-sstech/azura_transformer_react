@@ -41,11 +41,7 @@ function ExportChannel(props) {
               value: data[channelName],
               label: channelName,
             }));
-            const staticOption = {
-              value: 'export_csv',
-              label: 'Export Csv',
-            };
-            options.unshift(staticOption);
+           console.log("options---->",options)
             setChannel(options);
           } else {
             toast.error(message);
@@ -91,6 +87,8 @@ function ExportChannel(props) {
       id: retailerIntegrationId,
       marketPlaceId: selectedOptions.value
     };
+    console.log("payload",payload)
+    
     if(!payload.marketPlaceId) {
       toast.error("Must select atleast one account.")
       return;
