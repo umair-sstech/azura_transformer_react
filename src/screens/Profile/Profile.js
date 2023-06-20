@@ -24,7 +24,6 @@ const Profile = (props) => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const { updateUserProfileName } = useContext(UserContext);
-  console.log("object");
 
   const history = useHistory();
 
@@ -48,7 +47,6 @@ const Profile = (props) => {
         `${API_PATH.FETCH_USER_PROFILE_DETAILS}/${userId}`
       );
       const userData = response.data.data;
-      console.log("userdata", userData);
       setFormData(userData);
     } catch (error) {
       console.error(error);

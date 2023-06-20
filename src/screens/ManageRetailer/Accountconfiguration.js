@@ -23,7 +23,6 @@ function Accountconfiguration(props) {
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [selectedValue, setSelectedValue] = useState(null);
-  console.log("selectedvalue", selectedValue);
 
   const history = useHistory();
 
@@ -117,7 +116,6 @@ function Accountconfiguration(props) {
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      console.log(initFormData);
 
       const retailerIntegrationId = localStorage.getItem(
         "retailerIntegrationId"
@@ -131,8 +129,6 @@ function Accountconfiguration(props) {
         endpointURL: initFormData.endpointURL,
         authorizationToken: initFormData.authorizationToken,
       };
-
-      console.log("payload", payload);
       setIsLoading(true);
       axios
         .post(`${API_PATH.CREAT_ACCOUNT_CONFIGURATION}`, payload)
@@ -143,6 +139,8 @@ function Accountconfiguration(props) {
             localStorage.removeItem("supplierSettingId");
             localStorage.removeItem("selectedSupplierName");
             localStorage.removeItem("retailerIntegrationId");
+            localStorage.removeItem("marketPlaceSettingId");
+            localStorage.removeItem("marketPlaceSettingName");
             localStorage.removeItem("currentPage");
 
             toast.success(message);
@@ -166,8 +164,9 @@ function Accountconfiguration(props) {
     localStorage.removeItem("supplierSettingId");
     localStorage.removeItem("selectedSupplierName");
     localStorage.removeItem("retailerIntegrationId");
+    localStorage.removeItem("marketPlaceSettingId");
+    localStorage.removeItem("marketPlaceSettingName");
     localStorage.removeItem("currentPage");
-
     history.push("/setting-retailer-list");
   };
 
@@ -175,6 +174,8 @@ function Accountconfiguration(props) {
     localStorage.removeItem("supplierSettingId");
     localStorage.removeItem("selectedSupplierName");
     localStorage.removeItem("retailerIntegrationId");
+    localStorage.removeItem("marketPlaceSettingId");
+    localStorage.removeItem("marketPlaceSettingName");
     localStorage.removeItem("currentPage");
     history.push("/setting-retailer-list");
   };

@@ -62,7 +62,6 @@ function IntegrationType(props) {
           status: status !== "all" ? (status === "active" ? 1 : 0) : null,
         }
       );
-      console.log("response", response.data);
       return response.data;
     } catch (error) {
       console.log("error", error);
@@ -76,7 +75,6 @@ function IntegrationType(props) {
       const response = await getSupplierInfo(currentPage, dataLimit);
       if (response) {
         let totalPage = Math.ceil(response.totlaRecord / response.limit);
-        console.log("totalpge", totalPage);
         setTotalPages(totalPage);
         if (status === "deactive") {
           setSupplierList(
@@ -140,7 +138,6 @@ function IntegrationType(props) {
             status: status,
           })
           .then((res) => {
-            console.log("response", res.data);
             toast.success(res.data.message);
 
             const index = supplierList.findIndex(

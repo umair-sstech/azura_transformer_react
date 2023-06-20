@@ -25,7 +25,6 @@ const CustomFields = ({ customField, setCustomFields }) => {
   };
 
   const deleteCustomField = (id) => {
-    console.log("id", id);
     const requestBody = {
       id: id,
     };

@@ -292,7 +292,6 @@ function SupplierSftpForm(props) {
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
         .then((response) => {
           const { success, message } = response.data;
-          console.log("response", response);
           if (success) {
             toast.success(message);
             onSubmit();

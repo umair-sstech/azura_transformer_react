@@ -41,7 +41,6 @@ function ExportChannel(props) {
               value: data[channelName],
               label: channelName,
             }));
-           console.log("options---->",options)
             setChannel(options);
           } else {
             toast.error(message);
@@ -67,7 +66,6 @@ function ExportChannel(props) {
               value: data[0].marketPlaceId,
               label: data[0].marketPlaceNames[0],
             };
-            console.log("selectedMarketPlaceOption",selectedMarketPlaceOption)
             setSelectedOptions(selectedMarketPlaceOption);
           }
         })
@@ -87,7 +85,6 @@ function ExportChannel(props) {
       id: retailerIntegrationId,
       marketPlaceId: selectedOptions.value
     };
-    console.log("payload",payload)
     
     if(!payload.marketPlaceId) {
       toast.error("Must select atleast one account.")

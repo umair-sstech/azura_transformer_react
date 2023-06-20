@@ -10,7 +10,6 @@ import "../parent/Product.css"
 
 const VariantCustomField = ({ customField, setCustomFields }) => {
   const { customFields } = useContext(ProductContext);
-  console.log("customField",customField)
 
   useEffect(() => {
     setCustomFields(customFields || []);
@@ -26,7 +25,6 @@ const VariantCustomField = ({ customField, setCustomFields }) => {
     setCustomFields([...customField, {}]);
   };
   const deleteCustomField = (id) => {
-    console.log("id",id)
     const requestBody = {
       id: id
     };

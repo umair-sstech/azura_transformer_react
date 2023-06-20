@@ -129,7 +129,6 @@ function PriceCalculation(props) {
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      console.log(initFormData);
       try {
         const retailerIntegrationId = localStorage.getItem(
           "retailerIntegrationId"
@@ -148,7 +147,6 @@ function PriceCalculation(props) {
           extraValue: "",
           roundUp: selectedRadioOption[idx],
         }));
-        console.log("payload", payload);
      
         const supplierIds = supplierSettingId.split(",");
         const isPriceSelected = supplierIds.some((supplierId) =>

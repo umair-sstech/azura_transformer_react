@@ -30,7 +30,6 @@ const ManageUser = (props) => {
   const [error, setError] = useState(false);
 
   const [updateUserId, setUpdateUserId] = useState("");
-  console.log("userId",updateUserId)
 
   const roleList = [
     {

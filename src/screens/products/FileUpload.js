@@ -44,7 +44,6 @@ function FileUpload(props) {
         value: supplier.id,
         label: supplier.name,
       }));
-      console.log("supplierName", supplierNames);
       setChooseSupplierList(supplierNames);
     } catch (error) {
       console.error("Error fetching suppliers:", error);
@@ -52,7 +51,6 @@ function FileUpload(props) {
   };
 
   const getFileList = async (currentPage, dataLimit, search, supplierId) => {
-    console.log("supplierId", supplierId);
     props.onLoading(true);
 
     try {
@@ -79,8 +77,6 @@ function FileUpload(props) {
         null,
         supplier.value
       );
-      console.log(" supplier.value", supplier.value);
-      console.log("response", response);
       if (response) {
         let totalPage = Math.ceil(response.totalRecord / response.limit);
         setTotalPages(totalPage);

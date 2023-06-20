@@ -87,9 +87,6 @@ function UploadFailedData() {
     formData.append("file", file);
     formData.append("supplierId", supplier.value);
     formData.append("supplierName", supplier.label);
-    console.log("formData file:", formData.get("file"));
-    console.log("formData supplierId:", formData.get("supplierId"));
-    console.log("formData supplierName:", formData.get("supplierName"));
 
     try {
       const response = await axios.post(

@@ -104,7 +104,6 @@ function CustomFields(props) {
                           )}
                       
                       ></i>
-                      {console.log("object",field)}
                       <input
                         type="text"
                         placeholder="Enter Custom Field"

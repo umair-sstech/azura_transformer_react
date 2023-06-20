@@ -26,7 +26,6 @@ function SupplierPage6(props) {
   const [formData, setFormData] = useState();
   const [isChecked, setIsChecked] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
-  console.log("selectedoption",selectedOptions)
   const [dataFileMapping, setDataFileMapping] = useState([]);
   const [formError,setFormError]=useState({})
   const [isLoading, setIsLoading] = useState(false);
@@ -162,14 +161,12 @@ function SupplierPage6(props) {
         .then((response) => {
           const supplierData = response.data.data;
           setFormData(supplierData);
-          console.log("object,", supplierData);
   
           const barcodeName = supplierData.barcodeName;
           // const preselectedOptions = (barcodeName !== null && barcodeName.split(","));
           setSelectedOptions(barcodeName !== null ? barcodeName.split(",") : []);
   
           const isBarcodeRequired = supplierData.isBarcodeRequired || false;
-          console.log("isbarcodeRequired",isBarcodeRequired)
           setIsChecked(isBarcodeRequired);
         })
         .catch((error) => {

@@ -23,7 +23,6 @@ function CsvConfiguration(props) {
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [productSyncFrequency, setProductSyncFrequency] = useState("");
-  console.log("productSyncFrequency", productSyncFrequency);
 
   const history = useHistory();
 
@@ -194,7 +193,6 @@ function CsvConfiguration(props) {
         const { success, data } = response.data;
         if (success && data.length > 0) {
           const retailerIntegration = data[0];
-          console.log("retailerIntegrationInfo", retailerIntegration);
           const { productSyncFrequency } = retailerIntegration;
 
           setProductSyncFrequency(productSyncFrequency);
@@ -250,9 +248,7 @@ function CsvConfiguration(props) {
           if (success) {
             toast.success(message);
             onSubmit();
-            localStorage.removeItem("supplierId");
-            localStorage.removeItem("supplierName");
-            localStorage.removeItem("currentPage")
+           
           } else {
             toast.error(message);
           }

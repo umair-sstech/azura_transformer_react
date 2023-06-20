@@ -31,7 +31,6 @@ function CurrencyConversion(props) {
         .get(`${API_PATH.GET_CURRENCY}`)
         .then((response) => {
           const { success, message, data } = response.data;
-          console.log("data", data)
           if (success) {
             const options = Object.keys(data).map((currency) => ({
               value: data[currency],
@@ -65,13 +64,11 @@ function CurrencyConversion(props) {
 
     const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
     const currencyId = currencyList.find((currency) => currency?.value === selectedCurrency)?.value;
-    console.log("valuecurrency", currencyId)
 
     const payload = {
       id: retailerIntegrationId,
       currencyId: selectedCurrency !== null ? selectedCurrency?.value : setDefaultCurrency?.value
     };
-    console.log("payload", payload)
     setIsLoading(true);
     axios
       .post(`${API_PATH.CREAT_CURRENCY}`, payload)
@@ -103,7 +100,6 @@ function CurrencyConversion(props) {
           value: data[0].currencyId === null ? "645b88c21dc294747c33338e" : data[0].currencyId,
           label: data[0].currencyNames === undefined ? "USD" : data[0].currencyNames ,
         };
-        console.log("selectedCurrencyOption", selectedCurrencyOption)
         setSelectedCurrency(selectedCurrencyOption);
       }
     } catch (error) {

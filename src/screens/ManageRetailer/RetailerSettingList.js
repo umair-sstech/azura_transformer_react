@@ -47,10 +47,8 @@ function RetailerSettingList(props) {
   useEffect(() => {
     const fetchSupplierInfo = async () => {
       const response = await getSupplierInfo(currentPage, dataLimit);
-      console.log("responsedata",response.totalRecord)
       if (response) {
         let totalPage = Math.ceil(response.totalRecord / response.limit);
-        console.log("totalPage",totalPage)
         setTotalPages(totalPage);
         if (status === "deactive") {
           setRetailerSetting(

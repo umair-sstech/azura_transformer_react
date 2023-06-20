@@ -86,14 +86,12 @@ function SuppilerList(props) {
     }).then((result) => {
       if (result.isConfirmed) {
         props.onLoading(true);
-        console.log("API_PATH",JSON.stringify(API_PATH))
         axios
           .post(`${API_PATH.CHANGE_SUPPLIER_STATUS}`, {
             supplierId: supplierId,
             status: status,
           })
           .then((res) => {
-            console.log("response",res.data)
             toast.success(res.data.message);
 
             const index = supplierList.findIndex(

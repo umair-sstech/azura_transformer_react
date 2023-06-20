@@ -15,7 +15,6 @@ import "./ProductsList.css";
 
 function ProductsList(props) {
   const [productList, setProductList] = useState([]);
-  console.log("productlist", productList);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(10);

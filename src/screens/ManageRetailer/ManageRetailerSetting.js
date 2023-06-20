@@ -78,9 +78,11 @@ function ManageRetailerSetting(props) {
       if (result.isConfirmed) {
         history.push("/setting-retailer-list");
         localStorage.removeItem("supplierSettingId");
-        localStorage.removeItem("selectedSupplierName");
-        localStorage.removeItem("retailerIntegrationId")
-        localStorage.removeItem("currentPage");
+            localStorage.removeItem("selectedSupplierName");
+            localStorage.removeItem("retailerIntegrationId");
+            localStorage.removeItem("marketPlaceSettingId");
+            localStorage.removeItem("marketPlaceSettingName");
+            localStorage.removeItem("currentPage");
 
        
       }

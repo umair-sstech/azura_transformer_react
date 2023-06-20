@@ -222,6 +222,7 @@ function CsvConfigurationSftp(props) {
         console.error(error);
       });
   };
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -249,7 +250,7 @@ function CsvConfigurationSftp(props) {
         productSyncFrequency,
       };
 
-      console.log("payload--->", payload);
+      setIsLoading(true)
       axios
         .post(`${API_PATH.CREATE_CSV_CONFIGURATION}`, payload)
         .then((response) => {
@@ -257,9 +258,7 @@ function CsvConfigurationSftp(props) {
           if (success) {
             toast.success(message);
             onSubmit();
-            localStorage.removeItem("supplierId");
-            localStorage.removeItem("supplierName");
-            localStorage.removeItem("currentPage")
+         
           } else {
             toast.error(message);
           }

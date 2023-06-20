@@ -79,7 +79,6 @@ function SupplierPage2(props) {
     const form = event.target;
     const formData = new FormData(form);
     const fileInput = document.querySelector('input[type="file"]');
-    console.log("fileInput--", fileInput.files);
     const { csvfile } = formData;
     if (csvName && !formData.update) {
       setPage("3");

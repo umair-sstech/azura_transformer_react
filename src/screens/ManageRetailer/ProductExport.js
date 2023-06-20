@@ -144,7 +144,6 @@ function ProductExport(props) {
         }
       });
 
-      console.log("requestData--", requestData);
 
       const isChecked = checkAnyCheckboxChecked(checkboxes);
       if (data.supplier_product.length > 0) {
