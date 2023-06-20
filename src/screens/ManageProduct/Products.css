@@ -72,6 +72,11 @@
     background-color: #f1f1f1 !important;
 }
 
+.product__parent__card.active {
+    background-color: #49c5b6 !important;
+    color: whitesmoke !important;
+}
+
 .product__parent .qty {
     border-bottom: 1px solid lightblue;
 }
