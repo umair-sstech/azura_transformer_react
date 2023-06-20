@@ -4,14 +4,16 @@ import { connect } from "react-redux";
 import { onLoading } from "../../actions";
 import axios from "axios";
 import "./SupplierPage.css";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
-import { Form, Spinner } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import CustomFields from "./CustomFields";
 import { debounce } from "lodash";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 function SuppilerPage3(props) {
   const { setPage } = props;
@@ -171,10 +173,8 @@ function SuppilerPage3(props) {
   const handleExtractChange = (index = 0, key, value) => {
     const updatedState = [...selectedOptions]
     updatedState[index][key].supplierExtract = value;
-    setSelectedOptions(updatedState)
-  }
-
-
+    setSelectedOptions(updatedState);
+  };
 
   const handleProductRadioChange = (value) => {
     setSlectedRadioPreference(value);
@@ -232,8 +232,7 @@ function SuppilerPage3(props) {
               if (selectedRadio[`${index}-${key}`].showTextbox) {
                 imageList = additionalTextValue;
               }
-            }
-            else if (
+            } else if (
               option.value === "hardcode_value" ||
               option.value === "use_AI" ||
               option.value === "extract"
@@ -252,7 +251,8 @@ function SuppilerPage3(props) {
                 typeof selectedOptions === "object" &&
                 selectedOptions !== null
               ) {
-                supplierExtract = selectedOptions[index]?.[key]?.supplierExtract;
+                supplierExtract =
+                  selectedOptions[index]?.[key]?.supplierExtract;
               } else {
                 supplierExtract = selectedOptions;
               }
@@ -359,8 +359,7 @@ function SuppilerPage3(props) {
               if (selectedRadio[`${index}-${key}`].showTextbox) {
                 imageList = additionalTextValue;
               }
-            }
-            else if (
+            } else if (
               option.value === "hardcode_value" ||
               option.value === "use_AI" ||
               option.value === "extract"
@@ -376,7 +375,8 @@ function SuppilerPage3(props) {
                 typeof selectedOptions === "object" &&
                 selectedOptions !== null
               ) {
-                supplierExtract = selectedOptions[index]?.[key]?.supplierExtract;
+                supplierExtract =
+                  selectedOptions[index]?.[key]?.supplierExtract;
               } else {
                 supplierExtract = selectedOptions;
               }
@@ -450,7 +450,6 @@ function SuppilerPage3(props) {
       }
     }
   };
-
 
   const validateForm = () => {
     const errors = [];
@@ -978,31 +977,64 @@ function SuppilerPage3(props) {
                               {selectedOption &&
                                 selectedOption.value === "extract" ? (
                                 <>
-                                  <div className="select-container">
-
-                                    <Form>
-                                      <Form.Group controlId="exampleForm.SelectCustom">
-                                        <Form.Control
-                                          as="select"
-                                          value={
-                                            selectedOptions[index]?.[key]
-                                              ?.supplierExtract
-                                          }
-                                          onChange={(e) => handleExtractChange(index, key, e.target.value)}
+                                  {/* <div className="custom-select-container">
+                                    <Form.Group controlId="exampleForm.SelectCustom">
+                                      <Form.Control
+                                        as="select"
+                                        value={
+                                          selectedOptions[index]?.[key]
+                                            ?.supplierExtract
+                                        }
+                                        className="custom-select rounded-0 shadow"
+                                        onChange={(e) =>
+                                          handleExtractChange(
+                                            index,
+                                            key,
+                                            e.target.value
+                                          )
+                                        }
+                                        size="lg"
+                                      >
+                                        <option
+                                          value={``}
+                                          disabled
+                                          style={{ fontWeight: "bold" }}
                                         >
-                                          <option value={``} style={{fontWeight: "bold"}}>Select...</option>
-                                          {csvOption.map((item, idx) => (
-                                            <option
-                                              key={idx}
-                                              value={item.value}
-                                            >
-                                              {item.label}
-                                            </option>
-                                          ))}
-                                        </Form.Control>
-                                      </Form.Group>
-                                    </Form>
-                                  </div>
+                                          Select...
+                                        </option>
+                                        {csvOption.map((item, idx) => (
+                                          <option
+                                            key={idx}
+                                            value={item.value}
+                                            className="all-options p-5"
+                                          >
+                                            {item.label}
+                                          </option>
+                                        ))}
+                                      </Form.Control>
+                                    </Form.Group>
+                                  </div> */}
+                                  <Autocomplete
+                                    disablePortal
+                                    id={`combo-box-demo-${index}`}
+                                    options={csvOption}
+                                    sx={{ width: 200, fontSize: "14px" }}
+                                    size="small"
+                                    onChange={(e, newVal) =>
+                                      handleExtractChange(
+                                        index,
+                                        key,
+                                        newVal?.value ? newVal.value : ""
+                                        // e.target.value
+                                      )
+                                    }
+                                    value={
+                                      selectedOptions[index]?.[key]
+                                        ?.supplierExtract
+                                    }
+                                    isOptionEqualToValue={(option, value) => option.value === value}
+                                    renderInput={(params) => <TextField {...params} label="Select..." />}
+                                  />
                                   <label className="ml-3 text-success">
                                     Note: Please select the field from where you
                                     want to extract.

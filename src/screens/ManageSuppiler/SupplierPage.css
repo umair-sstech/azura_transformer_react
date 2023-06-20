@@ -133,6 +133,11 @@ th {
 .supplier4__container > * {
   flex: 1;
 }
+
+svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeSmall.css-ptiqhd-MuiSvgIcon-root {
+  display: none;
+}
+
 /* .input-p4 {
   position: absolute;
   left: 27%;
