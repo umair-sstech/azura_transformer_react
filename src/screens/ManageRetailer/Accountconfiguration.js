@@ -41,6 +41,27 @@ function Accountconfiguration(props) {
     getAccountConfigurationData();
   }, []);
 
+  useEffect(() => {
+    const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+
+    const payload = {
+      id: retailerIntegrationId,
+    };
+    axios
+      .post(`${API_PATH.GET_ACCOUNT}`, payload)
+      .then((response) => {
+        const { success, data } = response.data;
+        if (success && data.length > 0) {
+          const retailerIntegration = data[0];
+
+          setSelectedValue(retailerIntegration?.settingType);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   const marketPlaceSettingName = localStorage.getItem("marketPlaceSettingName");
 
   const handleChange = (key, value) => {
@@ -142,21 +163,20 @@ function Accountconfiguration(props) {
   ];
 
   const handleSftpSubmit = () => {
-    // localStorage.removeItem("supplierSettingId");
-    // localStorage.removeItem("selectedSupplierName");
-    // localStorage.removeItem("retailerIntegrationId");
-    // localStorage.removeItem("currentPage");
+    localStorage.removeItem("supplierSettingId");
+    localStorage.removeItem("selectedSupplierName");
+    localStorage.removeItem("retailerIntegrationId");
+    localStorage.removeItem("currentPage");
 
-    // history.push("/setting-retailer-list");
+    history.push("/setting-retailer-list");
   };
 
   const handleHttpSubmit = () => {
-    console.log("sucess....")
-    // localStorage.removeItem("supplierSettingId");
-    // localStorage.removeItem("selectedSupplierName");
-    // localStorage.removeItem("retailerIntegrationId");
-    // localStorage.removeItem("currentPage");
-    // history.push("/setting-retailer-list");
+    localStorage.removeItem("supplierSettingId");
+    localStorage.removeItem("selectedSupplierName");
+    localStorage.removeItem("retailerIntegrationId");
+    localStorage.removeItem("currentPage");
+    history.push("/setting-retailer-list");
   };
 
   return (
