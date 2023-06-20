@@ -126,25 +126,7 @@ function FileUpload(props) {
     });
   };
 
-  // const downloadFile = async (localPath, fileName) => {
-  //   try {
-  //     const response = await axios.get('http://localhost:8004/uploads/csv/original/1686218595653_BGFeed_ParentChild.csv', {
-  //       responseType: 'blob',
-  //     });
-
-  //     const url = window.URL.createObjectURL(new Blob([response.data]));
-  //     const link = document.createElement('a');
-  //     link.href = url;
-  //     link.setAttribute('download', fileName);
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     document.body.removeChild(link);
-  //   } catch (error) {
-  //     console.error('Error downloading file:', error);
-  //     // Handle error
-  //   }
-  // };
-
+  
   return (
     <div
       style={{ flex: 1 }}

@@ -56,7 +56,10 @@ function CsvConfigurationSftp(props) {
       [name]: trimmedValue,
     }));
 
-    const updatedSyncFrequency = productSyncFrequency?.split(" ");
+    let updatedSyncFrequency = productSyncFrequency?.split(" ");
+    if (!updatedSyncFrequency) {
+      updatedSyncFrequency = [];
+    }
     switch (name) {
       case "minute":
         if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
@@ -200,6 +203,7 @@ function CsvConfigurationSftp(props) {
         if (success && data.length > 0) {
           const retailerIntegration = data[0];
           console.log("retailerIntegrationInfo", retailerIntegration);
+          
           const { productSyncFrequency } = retailerIntegration;
 
           setProductSyncFrequency(productSyncFrequency);
@@ -208,6 +212,7 @@ function CsvConfigurationSftp(props) {
             hostName: retailerIntegration.hostName,
             userName: retailerIntegration.userName,
             port: retailerIntegration.port,
+            password:retailerIntegration.password,
             urlPath: retailerIntegration.urlPath,
             protocol: retailerIntegration.protocol
           });
@@ -252,9 +257,9 @@ function CsvConfigurationSftp(props) {
           if (success) {
             toast.success(message);
             onSubmit();
-            // localStorage.removeItem("supplierId");
-            // localStorage.removeItem("supplierName");
-            // localStorage.removeItem("currentPage")
+            localStorage.removeItem("supplierId");
+            localStorage.removeItem("supplierName");
+            localStorage.removeItem("currentPage")
           } else {
             toast.error(message);
           }
@@ -450,7 +455,7 @@ function CsvConfigurationSftp(props) {
                         type="text"
                         placeholder="*"
                         name="minute"
-                        value={productSyncFrequency.split(" ")[0] || ""}
+                        value={productSyncFrequency?.split(" ")[0] || ""}
                         onChange={handleSyncFrequency}
                       />
                       <label>
@@ -468,7 +473,7 @@ function CsvConfigurationSftp(props) {
                         type="text"
                         placeholder="*"
                         name="hour"
-                        value={productSyncFrequency.split(" ")[1] || ""}
+                        value={productSyncFrequency?.split(" ")[1] || ""}
                         onChange={handleSyncFrequency}
                       />
                       <label>
@@ -486,7 +491,7 @@ function CsvConfigurationSftp(props) {
                         type="text"
                         placeholder="*"
                         name="day"
-                        value={productSyncFrequency.split(" ")[2] || ""}
+                        value={productSyncFrequency?.split(" ")[2] || ""}
                         onChange={handleSyncFrequency}
                       />
                       <label>
@@ -504,7 +509,7 @@ function CsvConfigurationSftp(props) {
                         type="text"
                         placeholder="*"
                         name="month"
-                        value={productSyncFrequency.split(" ")[3] || ""}
+                        value={productSyncFrequency?.split(" ")[3] || ""}
                         onChange={handleSyncFrequency}
                       />
                       <label>
@@ -522,7 +527,7 @@ function CsvConfigurationSftp(props) {
                         type="text"
                         placeholder="*"
                         name="week"
-                        value={productSyncFrequency.split(" ")[4] || ""}
+                        value={productSyncFrequency?.split(" ")[4] || ""}
                         onChange={handleSyncFrequency}
                       />
                       <label>

@@ -8,24 +8,24 @@ import { API_PATH } from "../ApiPath/Apipath";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 function CsvConfiguration(props) {
-  const {onSubmit, settingType} = props;
-  
+  const { onSubmit, settingType } = props;
+
   const [isLoading, setIsLoading] = useState(false);
   const { processCancel, formData, setFormData } = useContext(FormContext);
   const [initFormData, setInitFormData] = useState({
     bucketName: "",
     secretKey: "",
     secretPassword: "",
-    awsRegion:"",
-    productSyncFrequency:"",
-    settingType:""
+    awsRegion: "",
+    productSyncFrequency: "",
+    settingType: "",
   });
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [productSyncFrequency, setProductSyncFrequency] = useState("");
+  console.log("productSyncFrequency", productSyncFrequency);
 
-
-  const history=useHistory()
+  const history = useHistory();
 
   const marketPlaceSettingName = localStorage.getItem("marketPlaceSettingName");
 
@@ -39,9 +39,9 @@ function CsvConfiguration(props) {
     setIsFormValid(Object.keys(formErrors).length === 0);
   }, [formErrors]);
 
-  useEffect(()=>{
-    getAccountConfigurationData()
-  },[])
+  useEffect(() => {
+    getAccountConfigurationData();
+  }, []);
 
   const handleChange = (key, val) => {
     const formData = new FormData(document.forms.httpBucketForm);
@@ -49,7 +49,7 @@ function CsvConfiguration(props) {
     const errors = validateHttpBucket(formData);
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
-  }
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
@@ -71,7 +71,12 @@ function CsvConfiguration(props) {
       [name]: trimmedValue,
     }));
 
-    const updatedSyncFrequency = productSyncFrequency?.split(" ");
+    let updatedSyncFrequency = productSyncFrequency?.split(" ");
+    if (!updatedSyncFrequency) {
+      updatedSyncFrequency = [];
+    }
+
+ 
     switch (name) {
       case "minute":
         if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
@@ -189,7 +194,7 @@ function CsvConfiguration(props) {
         const { success, data } = response.data;
         if (success && data.length > 0) {
           const retailerIntegration = data[0];
-          console.log("retailerIntegrationInfo",retailerIntegration)
+          console.log("retailerIntegrationInfo", retailerIntegration);
           const { productSyncFrequency } = retailerIntegration;
 
           setProductSyncFrequency(productSyncFrequency);
@@ -199,7 +204,6 @@ function CsvConfiguration(props) {
             secretKey: retailerIntegration.secretKey,
             secretPassword: retailerIntegration.secretPassword,
             awsRegion: retailerIntegration.awsRegion,
-
           });
         }
       })
@@ -214,9 +218,11 @@ function CsvConfiguration(props) {
     const formData = new FormData(form);
     const errors = validateHttpBucket(formData);
     setFormErrors(errors);
-    
+
     if (Object.keys(errors).length === 0) {
-      const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+      const retailerIntegrationId = localStorage.getItem(
+        "retailerIntegrationId"
+      );
       const marketPlaceSettingId = localStorage.getItem("marketPlaceSettingId");
 
       const productSyncFrequency = `${formData.get("minute")} ${formData.get(
@@ -231,33 +237,32 @@ function CsvConfiguration(props) {
         bucketName: initFormData.bucketName,
         secretKey: initFormData.secretKey,
         secretPassword: initFormData.secretPassword,
-        awsRegion:initFormData.awsRegion,
+        awsRegion: initFormData.awsRegion,
         productSyncFrequency,
         settingType,
       };
 
-      setIsLoading(true)
+      setIsLoading(true);
       axios
-      .post(`${API_PATH.CREATE_CSV_CONFIGURATION}`, payload)
-      .then((response) => {
-        const { success, message } = response.data;
-        if (success) {
-        
-          toast.success(message);
-          onSubmit();
-          // localStorage.removeItem("supplierId");
-          // localStorage.removeItem("supplierName");
-          // localStorage.removeItem("currentPage")
-
-        } else {
-          toast.error(message);
-        }})
+        .post(`${API_PATH.CREATE_CSV_CONFIGURATION}`, payload)
+        .then((response) => {
+          const { success, message } = response.data;
+          if (success) {
+            toast.success(message);
+            onSubmit();
+            localStorage.removeItem("supplierId");
+            localStorage.removeItem("supplierName");
+            localStorage.removeItem("currentPage")
+          } else {
+            toast.error(message);
+          }
+        })
         .catch((error) => {
           console.error(error);
           setIsLoading(false);
         });
     }
-  }
+  };
 
   return (
     <div>
@@ -307,7 +312,9 @@ function CsvConfiguration(props) {
                   onChange={handleInputChange}
                   placeholder="Bucket Name"
                   defaultValue={
-                    initFormData && initFormData.bucketName ? initFormData.bucketName : ""
+                    initFormData && initFormData.bucketName
+                      ? initFormData.bucketName
+                      : ""
                   }
                 />
                 {formErrors.bucketName && !initFormData.bucketName && (
@@ -316,181 +323,210 @@ function CsvConfiguration(props) {
               </div>
             </div>
             <div className="col-sm-6">
-            <div className="form-group">
-              <label>
-                Secret Key / User Name<span style={{ color: "red" }}>*</span>
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                name="secretKey"
-                onChange={handleInputChange}
-                placeholder="Secret Key / User Name"
-                defaultValue={
-                  initFormData && initFormData.secretKey ? initFormData.secretKey : ""
-                }
-              />
-              {formErrors.secretKey && !initFormData.secretKey && (
-                <span className="text-danger">{formErrors.secretKey}</span>
-              )}
+              <div className="form-group">
+                <label>
+                  Secret Key / User Name<span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  name="secretKey"
+                  onChange={handleInputChange}
+                  placeholder="Secret Key / User Name"
+                  defaultValue={
+                    initFormData && initFormData.secretKey
+                      ? initFormData.secretKey
+                      : ""
+                  }
+                />
+                {formErrors.secretKey && !initFormData.secretKey && (
+                  <span className="text-danger">{formErrors.secretKey}</span>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="col-sm-6">
-          <div className="form-group">
-            <label>
-            Secret Password / Password<span style={{ color: "red" }}>*</span>
-            </label>
-            <input
-              className="form-control"
-              type="text"
-              name="secretPassword"
-              onChange={handleInputChange}
-              placeholder="Enter Password"
-              defaultValue={
-                initFormData && initFormData.secretPassword ? initFormData.secretPassword : ""
-              }
-            />
-            {formErrors.secretPassword && !initFormData.secretPassword && (
-              <span className="text-danger">{formErrors.secretPassword}</span>
-            )}
-          </div>
-        </div>
-          <div className="col-sm-6">
-          <div className="form-group">
-            <label>
-              AWS Region <span style={{ color: "red" }}>*</span>
-            </label>
-            <input
-              className="form-control"
-              type="text"
-              name="awsRegion"
-              onChange={handleInputChange}
-              placeholder="Enter AWS Region"
-              defaultValue={
-                initFormData && initFormData.awsRegion ? initFormData.awsRegion : ""
-              }
-            />
-            {formErrors.awsRegion && !initFormData.awsRegion && (
-              <span className="text-danger">{formErrors.awsRegion}</span>
-            )}
-          </div>
-        </div>
-        <div className="col-12">
-        <label>
-          Sync Frequency <span style={{ color: "red" }}>*</span>
-        </label>
-        <div className="row">
-          <div className="col-sm-4 col-lg-2">
-            <div className="form-group">
-              <input
-                className="form-control placeholder-color"
-                type="text"
-                placeholder="*"
-                name="minute"
-                value={productSyncFrequency?.split(" ")[0] || ""}
-                onChange={handleSyncFrequency}
-              />
-              <label>
-                Minute <span style={{ color: "red" }}>*</span>
-              </label>
-              {formErrors.minute && (
-                <p className="text-danger mt-n2">{formErrors.minute}</p>
-              )}
+            <div className="col-sm-6">
+              <div className="form-group">
+                <label>
+                  Secret Password / Password
+                  <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  name="secretPassword"
+                  onChange={handleInputChange}
+                  placeholder="Enter Password"
+                  defaultValue={
+                    initFormData && initFormData.secretPassword
+                      ? initFormData.secretPassword
+                      : ""
+                  }
+                />
+                {formErrors.secretPassword && !initFormData.secretPassword && (
+                  <span className="text-danger">
+                    {formErrors.secretPassword}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="col-sm-4 col-lg-2">
-            <div className="form-group">
-              <input
-                className="form-control placeholder-color"
-                type="text"
-                placeholder="*"
-                name="hour"
-                value={productSyncFrequency?.split(" ")[1] || ""}
-                onChange={handleSyncFrequency}
-              />
-              <label>
-                Hour <span style={{ color: "red" }}>*</span>
-              </label>
-              {formErrors.hour && (
-                <p className="text-danger mt-n2">{formErrors.hour}</p>
-              )}
+            <div className="col-sm-6">
+              <div className="form-group">
+                <label>
+                  AWS Region <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  name="awsRegion"
+                  onChange={handleInputChange}
+                  placeholder="Enter AWS Region"
+                  defaultValue={
+                    initFormData && initFormData.awsRegion
+                      ? initFormData.awsRegion
+                      : ""
+                  }
+                />
+                {formErrors.awsRegion && !initFormData.awsRegion && (
+                  <span className="text-danger">{formErrors.awsRegion}</span>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="col-sm-4 col-lg-2">
-            <div className="form-group">
-              <input
-                className="form-control placeholder-color"
-                type="text"
-                placeholder="*"
-                name="day"
-                value={productSyncFrequency?.split(" ")[2] || ""}
-                onChange={handleSyncFrequency}
-              />
+            <div className="col-12">
               <label>
-                Day(Month) <span style={{ color: "red" }}>*</span>
+                Sync Frequency <span style={{ color: "red" }}>*</span>
               </label>
-              {formErrors.day && (
-                <p className="text-danger mt-n2">{formErrors.day}</p>
-              )}
+              <div className="row">
+                <div className="col-sm-4 col-lg-2">
+                  <div className="form-group">
+                    <input
+                      className="form-control placeholder-color"
+                      type="text"
+                      placeholder="*"
+                      name="minute"
+                      value={
+                        (productSyncFrequency &&
+                          productSyncFrequency.split(" ")[0]) ||
+                        ""
+                      }
+                      onChange={handleSyncFrequency}
+                    />
+                    <label>
+                      Minute <span style={{ color: "red" }}>*</span>
+                    </label>
+                    {formErrors.minute && (
+                      <p className="text-danger mt-n2">{formErrors.minute}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="col-sm-4 col-lg-2">
+                  <div className="form-group">
+                    <input
+                      className="form-control placeholder-color"
+                      type="text"
+                      placeholder="*"
+                      name="hour"
+                      value={
+                        (productSyncFrequency &&
+                          productSyncFrequency.split(" ")[1]) ||
+                        ""
+                      }
+                      onChange={handleSyncFrequency}
+                    />
+                    <label>
+                      Hour <span style={{ color: "red" }}>*</span>
+                    </label>
+                    {formErrors.hour && (
+                      <p className="text-danger mt-n2">{formErrors.hour}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="col-sm-4 col-lg-2">
+                  <div className="form-group">
+                    <input
+                      className="form-control placeholder-color"
+                      type="text"
+                      placeholder="*"
+                      name="day"
+                      value={
+                        (productSyncFrequency &&
+                          productSyncFrequency.split(" ")[2]) ||
+                        ""
+                      }
+                      onChange={handleSyncFrequency}
+                    />
+                    <label>
+                      Day(Month) <span style={{ color: "red" }}>*</span>
+                    </label>
+                    {formErrors.day && (
+                      <p className="text-danger mt-n2">{formErrors.day}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="col-sm-4 col-lg-3">
+                  <div className="form-group">
+                    <input
+                      className="form-control placeholder-color"
+                      type="text"
+                      placeholder="*"
+                      name="month"
+                      value={
+                        (productSyncFrequency &&
+                          productSyncFrequency.split(" ")[3]) ||
+                        ""
+                      }
+                      onChange={handleSyncFrequency}
+                    />
+                    <label>
+                      Month <span style={{ color: "red" }}>*</span>
+                    </label>
+                    {formErrors.month && (
+                      <p className="text-danger mt-n2">{formErrors.month}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="col-sm-4 col-lg-3">
+                  <div className="form-group">
+                    <input
+                      className="form-control placeholder-color"
+                      type="text"
+                      placeholder="*"
+                      name="week"
+                      value={
+                        (productSyncFrequency &&
+                          productSyncFrequency.split(" ")[4]) ||
+                        ""
+                      }
+                      onChange={handleSyncFrequency}
+                    />
+                    <label>
+                      Day(Week) <span style={{ color: "red" }}>*</span>
+                    </label>
+                    {formErrors.week && (
+                      <p className="text-danger mt-n2">{formErrors.week}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <small
+                className="form-text text-muted csv-text"
+                style={{
+                  marginTop: "-20px",
+                  position: "relative",
+                  zIndex: "1",
+                }}
+              >
+                Learn more about Cronjob. &nbsp;{" "}
+                <a
+                  href="https://crontab.guru/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="csv-text"
+                  style={{ position: "relative", zIndex: "2" }}
+                >
+                  https://crontab.guru
+                </a>
+              </small>
             </div>
-          </div>
-          <div className="col-sm-4 col-lg-3">
-            <div className="form-group">
-              <input
-                className="form-control placeholder-color"
-                type="text"
-                placeholder="*"
-                name="month"
-                value={productSyncFrequency?.split(" ")[3] || ""}
-                onChange={handleSyncFrequency}
-              />
-              <label>
-                Month <span style={{ color: "red" }}>*</span>
-              </label>
-              {formErrors.month && (
-                <p className="text-danger mt-n2">{formErrors.month}</p>
-              )}
-            </div>
-          </div>
-          <div className="col-sm-4 col-lg-3">
-            <div className="form-group">
-              <input
-                className="form-control placeholder-color"
-                type="text"
-                placeholder="*"
-                name="week"
-                value={productSyncFrequency?.split(" ")[4] || ""}
-                onChange={handleSyncFrequency}
-              />
-              <label>
-                Day(Week) <span style={{ color: "red" }}>*</span>
-              </label>
-              {formErrors.week && (
-                <p className="text-danger mt-n2">{formErrors.week}</p>
-              )}
-            </div>
-          </div>
-        </div>
-        <small
-          className="form-text text-muted csv-text"
-          style={{
-            marginTop: "-20px",
-            position: "relative",
-            zIndex: "1",
-          }}
-        >
-          Learn more about Cronjob. &nbsp;{" "}
-          <a
-            href="https://crontab.guru/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="csv-text"
-            style={{ position: "relative", zIndex: "2" }}
-          >
-            https://crontab.guru
-          </a>
-        </small>
-      </div>
           </div>
         </div>
       </form>
