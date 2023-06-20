@@ -3,18 +3,25 @@ import { Spinner } from "react-bootstrap";
 import Select from "react-select";
 import { FormContext } from "./ManageRetailerSetting";
 import { validateSftpFtp } from "../Validations/Validation";
+import { API_PATH } from "../ApiPath/Apipath";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function CsvConfigurationSftp(props) {
+  const { onSubmit, settingType } = props;
+
   const [isLoading, setIsLoading] = useState(false);
-  const [accountSyncFrequency, setAccountSyncFrequency] = useState("");
+  const [productSyncFrequency, setProductSyncFrequency] = useState("");
   const marketPlaceSettingName = localStorage.getItem("marketPlaceSettingName");
   const [initFormData, setInitFormData] = useState({
     hostName: "",
     userName: "",
     password: "",
     port: "",
+    urlPath: "",
+    settingType: "",
     protocol: "",
-    accountSyncFrequency: "",
+    productSyncFrequency: "",
   });
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -31,6 +38,10 @@ function CsvConfigurationSftp(props) {
     setIsFormValid(Object.keys(formErrors).length === 0);
   }, [formErrors]);
 
+  useEffect(() => {
+    getAccountConfigurationData();
+  }, []);
+
   const options = [
     { value: "SFTP", label: "SFTP" },
     { value: "FTP", label: "FTP" },
@@ -45,7 +56,7 @@ function CsvConfigurationSftp(props) {
       [name]: trimmedValue,
     }));
 
-    const updatedSyncFrequency = accountSyncFrequency?.split(" ");
+    const updatedSyncFrequency = productSyncFrequency?.split(" ");
     switch (name) {
       case "minute":
         if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
@@ -147,7 +158,7 @@ function CsvConfigurationSftp(props) {
         break;
     }
 
-    setAccountSyncFrequency(updatedSyncFrequency.join(" "));
+    setProductSyncFrequency(updatedSyncFrequency.join(" "));
   };
 
   const handleChange = (key, val) => {
@@ -156,7 +167,7 @@ function CsvConfigurationSftp(props) {
     const errors = validateSftpFtp(formData);
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
-  }
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
@@ -175,6 +186,37 @@ function CsvConfigurationSftp(props) {
     handleChange("protocol", protocol);
   };
 
+  const getAccountConfigurationData = () => {
+    const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+
+    const payload = {
+      id: retailerIntegrationId,
+    };
+
+    axios
+      .post(`${API_PATH.GET_ACCOUNT}`, payload)
+      .then((response) => {
+        const { success, data } = response.data;
+        if (success && data.length > 0) {
+          const retailerIntegration = data[0];
+          console.log("retailerIntegrationInfo", retailerIntegration);
+          const { productSyncFrequency } = retailerIntegration;
+
+          setProductSyncFrequency(productSyncFrequency);
+
+          setFormData({
+            hostName: retailerIntegration.hostName,
+            userName: retailerIntegration.userName,
+            port: retailerIntegration.port,
+            urlPath: retailerIntegration.urlPath,
+            protocol: retailerIntegration.protocol
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -183,19 +225,44 @@ function CsvConfigurationSftp(props) {
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
+      const retailerIntegrationId = localStorage.getItem(
+        "retailerIntegrationId"
+      );
+      const marketPlaceSettingId = localStorage.getItem("marketPlaceSettingId");
 
-      const accountSyncFrequency = `${formData.get("minute")} ${formData.get(
+      const productSyncFrequency = `${formData.get("minute")} ${formData.get(
         "hour"
       )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
         "week"
       )}`;
 
       const payload = {
+        id: retailerIntegrationId,
+        marketPlaceId: marketPlaceSettingId,
         ...initFormData,
-        accountSyncFrequency
+        settingType,
+        productSyncFrequency,
       };
 
-      console.log("payload--", payload);
+      console.log("payload--->", payload);
+      axios
+        .post(`${API_PATH.CREATE_CSV_CONFIGURATION}`, payload)
+        .then((response) => {
+          const { success, message } = response.data;
+          if (success) {
+            toast.success(message);
+            onSubmit();
+            // localStorage.removeItem("supplierId");
+            // localStorage.removeItem("supplierName");
+            // localStorage.removeItem("currentPage")
+          } else {
+            toast.error(message);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsLoading(false);
+        });
     }
   };
 
@@ -219,7 +286,11 @@ function CsvConfigurationSftp(props) {
                   )}
                 </button>
 
-                <button className="btn btn-secondary w-auto btn-lg" type="button" onClick={processCancel}>
+                <button
+                  className="btn btn-secondary w-auto btn-lg"
+                  type="button"
+                  onClick={processCancel}
+                >
                   Exit
                 </button>
               </div>
@@ -232,7 +303,7 @@ function CsvConfigurationSftp(props) {
               </label>
             </div>
             <div className="row">
-              <div className="col-12">
+              <div className="col-sm-6">
                 <div className="form-group">
                   <label>
                     Host Name<span style={{ color: "red" }}>*</span>
@@ -244,7 +315,9 @@ function CsvConfigurationSftp(props) {
                     onChange={handleInputChange}
                     placeholder="Enter Host Name"
                     defaultValue={
-                      initFormData && initFormData.hostName ? initFormData.hostName : ""
+                      initFormData && initFormData.hostName
+                        ? initFormData.hostName
+                        : ""
                     }
                   />
                   {formErrors.hostName && (
@@ -265,7 +338,9 @@ function CsvConfigurationSftp(props) {
                     onChange={handleInputChange}
                     placeholder="Enter User Name"
                     defaultValue={
-                      initFormData && initFormData.userName ? initFormData.userName : ""
+                      initFormData && initFormData.userName
+                        ? initFormData.userName
+                        : ""
                     }
                   />
                   {formErrors.userName && (
@@ -280,12 +355,14 @@ function CsvConfigurationSftp(props) {
                   </label>
                   <input
                     className="form-control"
-                    type="password"
+                    type="text"
                     name="password"
                     onChange={handleInputChange}
                     placeholder="Enter Password"
                     defaultValue={
-                      initFormData && initFormData.password ? initFormData.password : ""
+                      initFormData && initFormData.password
+                        ? initFormData.password
+                        : ""
                     }
                   />
                   {formErrors.password && (
@@ -334,6 +411,33 @@ function CsvConfigurationSftp(props) {
                 </div>
               </div>
 
+              <div className="col-sm-6">
+                <div className="form-group">
+                  <label>
+                    URL / Path <span style={{ color: "red" }}>*</span>
+                  </label>
+                  <input
+                    className="form-control"
+                    type="urlPath"
+                    name="urlPath"
+                    onChange={handleInputChange}
+                    placeholder="Enter URL"
+                    defaultValue={
+                      initFormData && initFormData.urlPath
+                        ? initFormData.urlPath
+                        : ""
+                    }
+                  />
+                  {formErrors.urlPath && (
+                    <span className="text-danger">{formErrors.urlPath}</span>
+                  )}
+                  <small className="form-text text-muted csv-text">
+                    Please Enter Full Name With File. &nbsp;&nbsp;&nbsp; Ex:
+                    /var/www/html/abc.csv <br />
+                    The file path must have write permission.
+                  </small>
+                </div>
+              </div>
               <div className="col-12">
                 <label>
                   Sync Frequency <span style={{ color: "red" }}>*</span>
@@ -346,7 +450,7 @@ function CsvConfigurationSftp(props) {
                         type="text"
                         placeholder="*"
                         name="minute"
-                        value={accountSyncFrequency.split(" ")[0] || ""}
+                        value={productSyncFrequency.split(" ")[0] || ""}
                         onChange={handleSyncFrequency}
                       />
                       <label>
@@ -364,7 +468,7 @@ function CsvConfigurationSftp(props) {
                         type="text"
                         placeholder="*"
                         name="hour"
-                        value={accountSyncFrequency.split(" ")[1] || ""}
+                        value={productSyncFrequency.split(" ")[1] || ""}
                         onChange={handleSyncFrequency}
                       />
                       <label>
@@ -382,7 +486,7 @@ function CsvConfigurationSftp(props) {
                         type="text"
                         placeholder="*"
                         name="day"
-                        value={accountSyncFrequency.split(" ")[2] || ""}
+                        value={productSyncFrequency.split(" ")[2] || ""}
                         onChange={handleSyncFrequency}
                       />
                       <label>
@@ -400,7 +504,7 @@ function CsvConfigurationSftp(props) {
                         type="text"
                         placeholder="*"
                         name="month"
-                        value={accountSyncFrequency.split(" ")[3] || ""}
+                        value={productSyncFrequency.split(" ")[3] || ""}
                         onChange={handleSyncFrequency}
                       />
                       <label>
@@ -418,7 +522,7 @@ function CsvConfigurationSftp(props) {
                         type="text"
                         placeholder="*"
                         name="week"
-                        value={accountSyncFrequency.split(" ")[4] || ""}
+                        value={productSyncFrequency.split(" ")[4] || ""}
                         onChange={handleSyncFrequency}
                       />
                       <label>

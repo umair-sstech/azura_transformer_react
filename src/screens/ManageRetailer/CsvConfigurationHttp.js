@@ -2,19 +2,30 @@ import React, { useContext, useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import { FormContext } from "./ManageRetailerSetting";
 import { validateHttpBucket } from "../Validations/Validation";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { API_PATH } from "../ApiPath/Apipath";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 function CsvConfiguration(props) {
+  const {onSubmit, settingType} = props;
   
   const [isLoading, setIsLoading] = useState(false);
   const { processCancel, formData, setFormData } = useContext(FormContext);
-  // const [formData, setFormData] = useState({});
   const [initFormData, setInitFormData] = useState({
     bucketName: "",
     secretKey: "",
-    password: "",
+    secretPassword: "",
+    awsRegion:"",
+    productSyncFrequency:"",
+    settingType:""
   });
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
+  const [productSyncFrequency, setProductSyncFrequency] = useState("");
+
+
+  const history=useHistory()
 
   const marketPlaceSettingName = localStorage.getItem("marketPlaceSettingName");
 
@@ -27,6 +38,10 @@ function CsvConfiguration(props) {
   useEffect(() => {
     setIsFormValid(Object.keys(formErrors).length === 0);
   }, [formErrors]);
+
+  useEffect(()=>{
+    getAccountConfigurationData()
+  },[])
 
   const handleChange = (key, val) => {
     const formData = new FormData(document.forms.httpBucketForm);
@@ -47,6 +62,152 @@ function CsvConfiguration(props) {
     handleChange(name, value);
   };
 
+  const handleSyncFrequency = (e) => {
+    const { name, value, type } = e.target;
+    const trimmedValue = type === "text" ? value.trim() : value;
+
+    setInitFormData((prevState) => ({
+      ...prevState,
+      [name]: trimmedValue,
+    }));
+
+    const updatedSyncFrequency = productSyncFrequency?.split(" ");
+    switch (name) {
+      case "minute":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "Minute must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "Please Enter Minute between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            minute: "",
+          }));
+        }
+        updatedSyncFrequency[0] = trimmedValue;
+        break;
+
+      case "hour":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "Hour must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "Please Enter Hour between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            hour: "",
+          }));
+        }
+        updatedSyncFrequency[1] = trimmedValue;
+        break;
+      case "day":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "Day(Month) must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "Please Enter Day between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            day: "",
+          }));
+        }
+        updatedSyncFrequency[2] = trimmedValue;
+        break;
+      case "month":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "Month must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "Please Enter Month between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            month: "",
+          }));
+        }
+        updatedSyncFrequency[3] = trimmedValue;
+        break;
+      case "week":
+        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "Day(Week) must contain only digits or '*'",
+          }));
+        } else if (trimmedValue.length > 100) {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "Please Enter Day(Week) between 100 character",
+          }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            week: "",
+          }));
+        }
+        updatedSyncFrequency[4] = trimmedValue;
+        break;
+      default:
+        break;
+    }
+
+    setProductSyncFrequency(updatedSyncFrequency.join(" "));
+  };
+
+  const getAccountConfigurationData = () => {
+    const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+
+    const payload = {
+      id: retailerIntegrationId,
+    };
+
+    axios
+      .post(`${API_PATH.GET_ACCOUNT}`, payload)
+      .then((response) => {
+        const { success, data } = response.data;
+        if (success && data.length > 0) {
+          const retailerIntegration = data[0];
+          console.log("retailerIntegrationInfo",retailerIntegration)
+          const { productSyncFrequency } = retailerIntegration;
+
+          setProductSyncFrequency(productSyncFrequency);
+
+          setFormData({
+            bucketName: retailerIntegration.bucketName,
+            secretKey: retailerIntegration.secretKey,
+            secretPassword: retailerIntegration.secretPassword,
+            awsRegion: retailerIntegration.awsRegion,
+
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -55,12 +216,46 @@ function CsvConfiguration(props) {
     setFormErrors(errors);
     
     if (Object.keys(errors).length === 0) {
+      const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+      const marketPlaceSettingId = localStorage.getItem("marketPlaceSettingId");
+
+      const productSyncFrequency = `${formData.get("minute")} ${formData.get(
+        "hour"
+      )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
+        "week"
+      )}`;
 
       const payload = {
-        ...initFormData,
+        id: retailerIntegrationId,
+        marketPlaceId: marketPlaceSettingId,
+        bucketName: initFormData.bucketName,
+        secretKey: initFormData.secretKey,
+        secretPassword: initFormData.secretPassword,
+        awsRegion:initFormData.awsRegion,
+        productSyncFrequency,
+        settingType,
       };
 
-      console.log("payload--", payload);
+      setIsLoading(true)
+      axios
+      .post(`${API_PATH.CREATE_CSV_CONFIGURATION}`, payload)
+      .then((response) => {
+        const { success, message } = response.data;
+        if (success) {
+        
+          toast.success(message);
+          onSubmit();
+          // localStorage.removeItem("supplierId");
+          // localStorage.removeItem("supplierName");
+          // localStorage.removeItem("currentPage")
+
+        } else {
+          toast.error(message);
+        }})
+        .catch((error) => {
+          console.error(error);
+          setIsLoading(false);
+        });
     }
   }
 
@@ -115,51 +310,187 @@ function CsvConfiguration(props) {
                     initFormData && initFormData.bucketName ? initFormData.bucketName : ""
                   }
                 />
-                {formErrors.bucketName && (
+                {formErrors.bucketName && !initFormData.bucketName && (
                   <span className="text-danger">{formErrors.bucketName}</span>
-                )}
-              </div>
-            </div>
-            <div className="col-sm-6">
-              <div className="form-group">
-                <label>
-                  Secret Key / User Name <span style={{ color: "red" }}>*</span>
-                </label>
-                <input
-                  className="form-control"
-                  type="text"
-                  name="secretKey"
-                  onChange={handleInputChange}
-                  placeholder="Enter SecretKey / UserName"
-                  defaultValue={
-                    initFormData && initFormData.secretKey ? initFormData.secretKey : ""
-                  }
-                />
-                {formErrors.secretKey && (
-                  <span className="text-danger">{formErrors.secretKey}</span>
                 )}
               </div>
             </div>
             <div className="col-sm-6">
             <div className="form-group">
               <label>
-                Secret Password / Password <span style={{ color: "red" }}>*</span>
+                Secret Key / User Name<span style={{ color: "red" }}>*</span>
               </label>
               <input
                 className="form-control"
-                type="password"
-                name="password"
+                type="text"
+                name="secretKey"
                 onChange={handleInputChange}
-                placeholder="Enter Password"
+                placeholder="Secret Key / User Name"
                 defaultValue={
-                  initFormData && initFormData.password ? initFormData.password : ""
+                  initFormData && initFormData.secretKey ? initFormData.secretKey : ""
                 }
               />
-              {formErrors.password && (
-                  <span className="text-danger">{formErrors.password}</span>
+              {formErrors.secretKey && !initFormData.secretKey && (
+                <span className="text-danger">{formErrors.secretKey}</span>
               )}
             </div>
           </div>
+          <div className="col-sm-6">
+          <div className="form-group">
+            <label>
+            Secret Password / Password<span style={{ color: "red" }}>*</span>
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              name="secretPassword"
+              onChange={handleInputChange}
+              placeholder="Enter Password"
+              defaultValue={
+                initFormData && initFormData.secretPassword ? initFormData.secretPassword : ""
+              }
+            />
+            {formErrors.secretPassword && !initFormData.secretPassword && (
+              <span className="text-danger">{formErrors.secretPassword}</span>
+            )}
+          </div>
+        </div>
+          <div className="col-sm-6">
+          <div className="form-group">
+            <label>
+              AWS Region <span style={{ color: "red" }}>*</span>
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              name="awsRegion"
+              onChange={handleInputChange}
+              placeholder="Enter AWS Region"
+              defaultValue={
+                initFormData && initFormData.awsRegion ? initFormData.awsRegion : ""
+              }
+            />
+            {formErrors.awsRegion && !initFormData.awsRegion && (
+              <span className="text-danger">{formErrors.awsRegion}</span>
+            )}
+          </div>
+        </div>
+        <div className="col-12">
+        <label>
+          Sync Frequency <span style={{ color: "red" }}>*</span>
+        </label>
+        <div className="row">
+          <div className="col-sm-4 col-lg-2">
+            <div className="form-group">
+              <input
+                className="form-control placeholder-color"
+                type="text"
+                placeholder="*"
+                name="minute"
+                value={productSyncFrequency?.split(" ")[0] || ""}
+                onChange={handleSyncFrequency}
+              />
+              <label>
+                Minute <span style={{ color: "red" }}>*</span>
+              </label>
+              {formErrors.minute && (
+                <p className="text-danger mt-n2">{formErrors.minute}</p>
+              )}
+            </div>
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <div className="form-group">
+              <input
+                className="form-control placeholder-color"
+                type="text"
+                placeholder="*"
+                name="hour"
+                value={productSyncFrequency?.split(" ")[1] || ""}
+                onChange={handleSyncFrequency}
+              />
+              <label>
+                Hour <span style={{ color: "red" }}>*</span>
+              </label>
+              {formErrors.hour && (
+                <p className="text-danger mt-n2">{formErrors.hour}</p>
+              )}
+            </div>
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <div className="form-group">
+              <input
+                className="form-control placeholder-color"
+                type="text"
+                placeholder="*"
+                name="day"
+                value={productSyncFrequency?.split(" ")[2] || ""}
+                onChange={handleSyncFrequency}
+              />
+              <label>
+                Day(Month) <span style={{ color: "red" }}>*</span>
+              </label>
+              {formErrors.day && (
+                <p className="text-danger mt-n2">{formErrors.day}</p>
+              )}
+            </div>
+          </div>
+          <div className="col-sm-4 col-lg-3">
+            <div className="form-group">
+              <input
+                className="form-control placeholder-color"
+                type="text"
+                placeholder="*"
+                name="month"
+                value={productSyncFrequency?.split(" ")[3] || ""}
+                onChange={handleSyncFrequency}
+              />
+              <label>
+                Month <span style={{ color: "red" }}>*</span>
+              </label>
+              {formErrors.month && (
+                <p className="text-danger mt-n2">{formErrors.month}</p>
+              )}
+            </div>
+          </div>
+          <div className="col-sm-4 col-lg-3">
+            <div className="form-group">
+              <input
+                className="form-control placeholder-color"
+                type="text"
+                placeholder="*"
+                name="week"
+                value={productSyncFrequency?.split(" ")[4] || ""}
+                onChange={handleSyncFrequency}
+              />
+              <label>
+                Day(Week) <span style={{ color: "red" }}>*</span>
+              </label>
+              {formErrors.week && (
+                <p className="text-danger mt-n2">{formErrors.week}</p>
+              )}
+            </div>
+          </div>
+        </div>
+        <small
+          className="form-text text-muted csv-text"
+          style={{
+            marginTop: "-20px",
+            position: "relative",
+            zIndex: "1",
+          }}
+        >
+          Learn more about Cronjob. &nbsp;{" "}
+          <a
+            href="https://crontab.guru/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="csv-text"
+            style={{ position: "relative", zIndex: "2" }}
+          >
+            https://crontab.guru
+          </a>
+        </small>
+      </div>
           </div>
         </div>
       </form>

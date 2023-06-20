@@ -53,18 +53,6 @@ function SupplierPage5(props) {
           <i className="fa fa-refresh fa-spin"></i>
         </div>
         ) : (
-          // <div style={{ marginRight: "32px" }} className="select__container">
-          //   <label htmlFor="combo-box-demo" style={{ marginBottom: "8px" }}>
-          //     Type
-          //   </label>
-          //   <Select
-          //     options={options}
-          //     onChange={handleSelectChange}
-          //     className="select-option"
-          //     // value={selectedValue}
-          //     defaultValue={selectedValue || "Select Any Option"}
-          //   />
-          // </div>
           <div>
             <Form>
               <Form.Group controlId="exampleForm.SelectCustom" className="d-flex align-items-center justify-content-between" style={{gap: "20px"}}>

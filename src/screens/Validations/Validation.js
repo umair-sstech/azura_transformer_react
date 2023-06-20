@@ -655,7 +655,14 @@ export const validateHttpBucket = (formData) => {
   const errors = {};
   const bucketName = formData.get("bucketName");
   const secretKey = formData.get("secretKey");
-  const password = formData.get("password");
+  const secretPassword = formData.get("secretPassword");
+  const awsRegion = formData.get("awsRegion");
+  const minute = formData.get("minute");
+  const hour = formData.get("hour");
+  const day = formData.get("day");
+  const month = formData.get("month");
+  const week = formData.get("week");
+
 
   if(!bucketName) {
     errors.bucketName = "Bucket Name is Required.";
@@ -669,12 +676,56 @@ export const validateHttpBucket = (formData) => {
     errors.secretKey = "User name can not be whitespace only";
   }
 
-  if(!password) {
-    errors.password = "Password is required.";
-  } else if (password.trim().length === 0) {
-    errors.password = "Password can not be whitespace only";
-  } else if (password.length > 50) {
-    errors.password = "Password must be less than 50 characters."
+  if(!secretPassword) {
+    errors.secretPassword = "Password is required.";
+  } else if (secretPassword.trim().length === 0) {
+    errors.secretPassword = "Password can not be whitespace only";
+  } else if (secretPassword.length > 50) {
+    errors.secretPassword = "Password must be less than 50 characters."
+  }
+  if(!awsRegion) {
+    errors.awsRegion = "AWS Region Name is Required.";
+  } else if (awsRegion.trim().length === 0) {
+    errors.awsRegion = "AWS Region can not be whitespace only";
+  }
+  if (!minute) {
+    errors.minute = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(minute)) {
+    errors.minute = "Minute must contain only digits or '*'";
+  } else if(minute.length > 100) {
+    errors.minute = "Please Enter Minute between 100 characters";
+  }
+
+  if (!hour) {
+    errors.hour = "Hour is required";
+  } else if(!/^[0-9*]+$/.test(hour)) {
+    errors.hour = "Hour must contain only digits or '*'";
+  } else if(hour.length > 100) {
+    errors.hour = "Please Enter Hour between 100 characters";
+  }
+
+  if (!day) {
+    errors.day = "Day(Month) is required";
+  } else if(!/^[0-9*]+$/.test(day)) {
+    errors.day = "Day must contain only digits or '*'";
+  } else if(day.length > 100) {
+    errors.day = "Please Enter Day between 100 characters";
+  }
+
+  if (!month) {
+    errors.month = "Minute is required";
+  } else if(!/^[0-9*]+$/.test(month)) {
+    errors.month = "Month must contain only digits or '*'";
+  } else if(month.length > 100) {
+    errors.month = "Please Enter Month between 100 characters";
+  }
+
+  if (!week) {
+    errors.week = "Day(Week) is required";
+  } else if(!/^[0-9*]+$/.test(week)) {
+    errors.week = "Week must contain only digits or '*'";
+  } else if(week.length > 100) {
+    errors.week = "Please Enter Week between 100 characters";
   }
   
   return errors;
@@ -692,6 +743,7 @@ export const validateSftpFtp = (formData) => {
   const day = formData.get("day");
   const month = formData.get("month");
   const week = formData.get("week");
+  const urlPath = formData.get("urlPath");
 
   if(!hostName) {
     errors.hostName = "Host Name is Required.";
@@ -760,6 +812,14 @@ export const validateSftpFtp = (formData) => {
   if(!port) {
     errors.port = 'Port number is Required';
   }
+  if (!urlPath) {
+    errors.urlPath = "URL is required";
+  } else if (urlPath.trim().length === 0) {
+    errors.urlPath = "URL cannot be whitespace only";
+  } else if (!/([a-zA-Z0-9\s_\\.\-\(\):])+\.[^.]+/i.test(urlPath)) {
+    errors.urlPath = "URL must be a valid URL";
+  }
+
   
   return errors;
 };
