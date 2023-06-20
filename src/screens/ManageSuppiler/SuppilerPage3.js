@@ -301,6 +301,19 @@ function SuppilerPage3(props) {
         mappingArray.push(mappingObject);
       });
 
+      const supplierName = localStorage.getItem("supplierName")
+
+      const staticMappingObj = {
+        supplierId: localStorage.getItem("supplierId"),
+        supplierName,
+        standardField: "supplierName",
+        standardValue: "",
+        supplierField: "hardcode_value",
+        additionalValue: supplierName,
+      }
+
+      mappingArray.push(staticMappingObj)
+
       setIsLoading(true);
       try {
         const response = await axios.post(
@@ -425,6 +438,19 @@ function SuppilerPage3(props) {
 
         mappingArray.push(mappingObject);
       });
+
+      const supplierName = localStorage.getItem("supplierName")
+
+      const staticMappingObj = {
+        supplierId: localStorage.getItem("supplierId"),
+        supplierName,
+        standardField: "supplierName",
+        standardValue: "",
+        supplierField: "hardcode_value",
+        additionalValue: supplierName,
+      }
+
+      mappingArray.push(staticMappingObj);
 
       setIsLoadingExit(true);
       try {
@@ -950,7 +976,8 @@ function SuppilerPage3(props) {
                             <td>
                               <div className="select-container">
                                 <Select
-                                  options={options}
+                                  // options={options}
+                                  options={(key === "Parent_SKU" || key === "Variant_SKU") ? options?.filter(data => data.value !== "use_AI") : options}
                                   value={selectedOption}
                                   onChange={(selectedOption) =>
                                     handleFieldChange(
