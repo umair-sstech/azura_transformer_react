@@ -306,7 +306,7 @@ function SuppilerPage3(props) {
       const staticMappingObj = {
         supplierId: localStorage.getItem("supplierId"),
         supplierName,
-        standardField: "supplierName",
+        standardField: "Supplier",
         standardValue: "",
         supplierField: "hardcode_value",
         additionalValue: supplierName,
@@ -1062,7 +1062,7 @@ function SuppilerPage3(props) {
                                     isOptionEqualToValue={(option, value) => option.value === value}
                                     renderInput={(params) => <TextField {...params} label="Select..." />}
                                   />
-                                  <label className="ml-3 text-success">
+                                  <label className="mt-2 text-success">
                                     Note: Please select the field from where you
                                     want to extract.
                                   </label>

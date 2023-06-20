@@ -18,8 +18,6 @@ function ProductExport(props) {
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [selectedCheckbox, setSelectedCheckbox] = useState([]);
 
-  console.log("selected--", selectedCheckbox);
-
   const history = useHistory();
 
   useEffect(() => {
@@ -154,7 +152,7 @@ function ProductExport(props) {
           return;
         }
       }
-      // return;
+      
       setIsLoading(true);
       const response = await axios.post(
         `${API_PATH.CREATE_RETAILER_CATEGORY}`,

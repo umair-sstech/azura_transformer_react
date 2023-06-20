@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { Accordion, Button, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
 import "./Product.css"
+import Attributes from "./Attributes";
 
 const ProductAttributes = ({attribute,setAttributes}) => {
-  const product = useContext(ProductContext);
 
 
   const handleAttributeChange = (index, attr, value) => {

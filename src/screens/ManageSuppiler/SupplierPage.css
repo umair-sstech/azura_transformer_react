@@ -25,7 +25,6 @@ small.form-text.text-muted.csv-text {
   width: 100%;
 }
 table {
-  
   width: 80%;
   margin: 20px 0;
   border: 1px solid #ccc;
@@ -137,7 +136,17 @@ th {
 svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeSmall.css-ptiqhd-MuiSvgIcon-root {
   display: none;
 }
+input#combo-box-demo-0 {
+  font-size: 14px;
+}
+.MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth.MuiInputBase-formControl.MuiInputBase-sizeSmall.MuiInputBase-adornedEnd.MuiAutocomplete-inputRoot.css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
 
+label#combo-box-demo-0-label {
+  font-size: 13px;
+}
 /* .input-p4 {
   position: absolute;
   left: 27%;
@@ -161,6 +170,6 @@ svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeSmall.css-ptiqhd-MuiSvgIcon-root {
   }
 }
 input.form-control.placeholder-color::placeholder {
-  color: rgb(189, 189, 189); 
+  color: rgb(189, 189, 189);
   font-size: 15px;
 }

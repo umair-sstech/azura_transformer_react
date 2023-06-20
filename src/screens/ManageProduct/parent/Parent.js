@@ -32,6 +32,7 @@ const Parent = (props) => {
     Category_1: "",
     Category_2: "",
     Category_3: "",
+    gender:""
   });
   const [colorValue, setColorValue] = useState("");
   const [sizeValue, setSizeValue] = useState("");
