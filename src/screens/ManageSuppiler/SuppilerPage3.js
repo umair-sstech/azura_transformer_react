@@ -977,7 +977,7 @@ function SuppilerPage3(props) {
                               <div className="select-container">
                                 <Select
                                   // options={options}
-                                  options={(key === "Parent_SKU" || key === "Variant_SKU") ? options?.filter(data => data.value !== "use_AI") : options}
+                                  options={(key === "Parent_Title" || key === "Variant_Title") ? options?.filter(data => data.value !== "use_AI") : options}
                                   value={selectedOption}
                                   onChange={(selectedOption) =>
                                     handleFieldChange(
