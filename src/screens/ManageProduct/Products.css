@@ -84,6 +84,9 @@
     background-color: #b3cee5;
     padding: 2px;
 }
+button.btn.btn-link.collapsed{
+    padding: 6px 10px;
+}
 
 @media screen and (max-width: 850px) {
     .product__header {

@@ -14,7 +14,8 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
         Brand: product?.Brand || "",
         Category_1: product?.Category_1 || "",
         Category_2: product?.Category_2 || "",
-        Category_3: product?.Category_3 || ""
+        Category_3: product?.Category_3 || "",
+        Gender:product?.Gender||""
       });
     }
   }, [product]);
@@ -64,6 +65,16 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
                   onChange={handleChange}
                   value={identifiers.Brand}
                 />
+                <label style={{ marginTop: "10px" }}>GENDER</label>
+                <input
+                  type="text"
+                  placeholder="Gender..."
+                  name="Gender"
+                  disabled
+                  className="form-control"
+                  onChange={handleChange}
+                  value={identifiers.Gender}
+                />
               </Card.Body>
   {/*</Accordion.Collapse>*/}
           </Card>
@@ -93,6 +104,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
                   type="text"
                   placeholder="Category1..."
                   name="Category_1"
+                  disabled
                   className="form-control"
                   onChange={handleChange}
                   value={identifiers.Category_1}
@@ -102,6 +114,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
                   type="text"
                   placeholder="Category2..."
                   name="Category_2"
+                  disabled
                   className="form-control"
                   onChange={handleChange}
                   value={identifiers.Category_2}
@@ -111,6 +124,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
                   type="text"
                   placeholder="Category3..."
                   name="Category_3"
+                  disabled
                   className="form-control"
                   onChange={handleChange}
                   value={identifiers.Category_3}
