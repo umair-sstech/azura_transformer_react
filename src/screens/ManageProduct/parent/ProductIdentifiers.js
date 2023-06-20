@@ -41,7 +41,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
               >
                 <div className="d-flex justify-content-between align-items-center">
                   <span>Identifiers</span>
-                  <i className="fa fa-angle-down arrow color-arrow"></i>
+                  {/* <i className="fa fa-angle-down arrow color-arrow"></i> */}
                 </div>
               </Accordion.Toggle>
             </Card.Header>
@@ -93,7 +93,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
               >
                 <div className="d-flex justify-content-between align-items-center">
                   <span>Categories</span>
-                  <i className="fa fa-angle-down arrow color-arrow"></i>
+                  {/* <i className="fa fa-angle-down arrow color-arrow"></i> */}
                 </div>
               </Accordion.Toggle>
             </Card.Header>
