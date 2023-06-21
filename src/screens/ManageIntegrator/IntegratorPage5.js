@@ -269,7 +269,6 @@ function IntegratorPage5(props) {
         integrationName,
         type:"tracking"
       };
-      console.log("payloadTracking",payload)
       setIsLoadingExit(true);
       axios
         .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)

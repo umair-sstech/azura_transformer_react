@@ -202,7 +202,6 @@ function CsvConfigurationSftp(props) {
         const { success, data } = response.data;
         if (success && data.length > 0) {
           const retailerIntegration = data[0];
-          console.log("retailerIntegrationInfo", retailerIntegration);
           
           const { productSyncFrequency } = retailerIntegration;
 

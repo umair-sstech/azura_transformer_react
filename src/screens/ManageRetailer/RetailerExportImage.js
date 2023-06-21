@@ -16,7 +16,6 @@ function RetailerExportImage(props) {
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [supplierImageList, setSupplierImageList] = useState([]);
   const [selectedImageSizes, setSelectedImageSizes] = useState({});
-  console.log("selectedImageSizes", selectedImageSizes);
   const history = useHistory();
 
   useEffect(() => {
@@ -35,7 +34,6 @@ function RetailerExportImage(props) {
   //       if (success && data.length > 0) {
   //         const selectedSizes = data[0].supplierImageSize;
   //         setSelectedImageSizes(selectedSizes);
-  //         console.log("selectedsize", selectedSizes); // Set the pre-filled value
   //       }
   //     } catch (error) {
   //       console.error("Error:", error);

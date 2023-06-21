@@ -75,7 +75,6 @@ function IntegratorPage4(props) {
     }));
   
     const updatedSyncFrequency = orderSyncFrequency.split(" ");
-    console.log("sync",updatedSyncFrequency)
     switch (name) {
       case "minute":
         if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {

@@ -57,10 +57,6 @@ const UserList = (props) => {
         history.push('/user-permission')
     }
 
-    const filterChangeHandler = (value) => {
-        console.log(value);
-    }
-
     const activateDeactivate = (event, id) => {
         const status = event.target.checked
         Swal.fire({

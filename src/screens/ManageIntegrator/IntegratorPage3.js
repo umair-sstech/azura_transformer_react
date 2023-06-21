@@ -225,7 +225,6 @@ function IntegratoePage3(props) {
         integrationName,
         type: "product"
       };
-      console.log("paylodproduct", payload);
       setIsLoading(true);
       axios
         .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
