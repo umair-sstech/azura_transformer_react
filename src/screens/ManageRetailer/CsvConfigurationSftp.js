@@ -15,7 +15,7 @@ function CsvConfigurationSftp(props) {
   const marketPlaceSettingName = localStorage.getItem("marketPlaceSettingName");
   const [initFormData, setInitFormData] = useState({
     hostName: "",
-    userName: "",
+    ftpUserName: "",
     password: "",
     port: "",
     urlPath: "",
@@ -209,7 +209,7 @@ function CsvConfigurationSftp(props) {
 
           setFormData({
             hostName: retailerIntegration.hostName,
-            userName: retailerIntegration.userName,
+            ftpUserName: retailerIntegration.ftpUserName,
             port: retailerIntegration.port,
             password:retailerIntegration.password,
             urlPath: retailerIntegration.urlPath,
@@ -248,7 +248,7 @@ function CsvConfigurationSftp(props) {
         settingType,
         productSyncFrequency,
       };
-
+console.log("payload",payload)
       setIsLoading(true)
       axios
         .post(`${API_PATH.CREATE_CSV_CONFIGURATION}`, payload)
@@ -337,17 +337,17 @@ function CsvConfigurationSftp(props) {
                   <input
                     className="form-control"
                     type="text"
-                    name="userName"
+                    name="ftpUserName"
                     onChange={handleInputChange}
                     placeholder="Enter User Name"
                     defaultValue={
-                      initFormData && initFormData.userName
-                        ? initFormData.userName
+                      initFormData && initFormData.ftpUserName
+                        ? initFormData.ftpUserName
                         : ""
                     }
                   />
-                  {formErrors.userName && (
-                    <span className="text-danger">{formErrors.userName}</span>
+                  {formErrors.ftpUserName && (
+                    <span className="text-danger">{formErrors.ftpUserName}</span>
                   )}
                 </div>
               </div>

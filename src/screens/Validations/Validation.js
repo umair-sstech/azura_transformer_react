@@ -671,9 +671,9 @@ export const validateHttpBucket = (formData) => {
   }
 
   if(!secretKey) {
-    errors.secretKey = "UserName is Required." ;
+    errors.secretKey = "Secret Key is Required." ;
   } else if (secretKey.trim().length === 0) {
-    errors.secretKey = "User name can not be whitespace only";
+    errors.secretKey = "Secret Key can not be whitespace only";
   }
 
   if(!secretPassword) {
@@ -734,7 +734,7 @@ export const validateHttpBucket = (formData) => {
 export const validateSftpFtp = (formData) => {
   const errors = {};
   const hostName = formData.get("hostName");
-  const userName = formData.get("userName");
+  const ftpUserName = formData.get("ftpUserName");
   const password = formData.get("password");
   const port = formData.get("port");
   const protocol = formData.get("protocol");
@@ -751,10 +751,10 @@ export const validateSftpFtp = (formData) => {
     errors.hostName = "Host name can not be whitespace only";
   }
 
-  if(!userName) {
-    errors.userName = "UserName is Required." ;
-  } else if (userName.trim().length === 0) {
-    errors.userName = "User name can not be whitespace only";
+  if(!ftpUserName) {
+    errors.ftpUserName = "UserName is Required." ;
+  } else if (ftpUserName.trim().length === 0) {
+    errors.ftpUserName = "User name can not be whitespace only";
   }
 
   if(!password) {
