@@ -164,11 +164,19 @@ label#combo-box-demo-0-label {
   width: 8%;
 }
 
+.custom-table {
+  width: 50% !important;
+}
+
 @media screen and (max-width: 575px) {
   .supplier4__container {
     display: block;
   }
+  .custom-table {
+    width: 100% !important;
+  }
 }
+
 input.form-control.placeholder-color::placeholder {
   color: rgb(189, 189, 189);
   font-size: 15px;

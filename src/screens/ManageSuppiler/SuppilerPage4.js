@@ -94,11 +94,11 @@ function SuppilerPage4(props) {
         supplierId: localStorage.getItem("supplierId"),
         supplierName: localStorage.getItem("supplierName"),
         imageResize: selectedSizes.join(),
-        imagePrefix: prefix,
-        imageSuffix: suffix,
+        // imagePrefix: prefix,
+        // imageSuffix: suffix,
       })
       .then((response) => {
-        const { success, message, data } = response.data;
+        const { success, message } = response.data;
         if (success) {
           toast.success(message);
           setPage("5");
@@ -130,11 +130,11 @@ function SuppilerPage4(props) {
         supplierId: localStorage.getItem("supplierId"),
         supplierName: localStorage.getItem("supplierName"),
         imageResize: selectedSizes.join(),
-        imagePrefix: prefix,
-        imageSuffix: suffix,
+        // imagePrefix: prefix,
+        // imageSuffix: suffix,
       })
       .then((response) => {
-        const { success, message, data } = response.data;
+        const { success, message } = response.data;
         if (success) {
           toast.success(message);
           localStorage.removeItem("supplierId");
@@ -217,7 +217,7 @@ function SuppilerPage4(props) {
             {formErrors.checkbox && (
               <span className="text-danger">{formErrors.checkbox}</span>
             )}
-            <table className="table w-100">
+            <table className="table custom-table">
               <thead>
                 <tr>
                   <th>
@@ -254,7 +254,7 @@ function SuppilerPage4(props) {
               </tbody>
             </table>
           </div>
-          <div className="mt-3 input-p4">
+          {/* <div className="mt-3 input-p4">
             <div className="form-group mb-3">
               <label htmlFor="prefix">Prefix:</label>
               <input
@@ -278,7 +278,7 @@ function SuppilerPage4(props) {
                 onChange={handleSuffixChange}
               />
             </div>
-          </div>
+          </div> */}
         </div>
       </form>
     </>

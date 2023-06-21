@@ -241,7 +241,7 @@ function RetailerExportImage(props) {
             </div>
           </div>
         </div>
-        <div className="row mt-3">
+        <div className="row mt-3" style={{backgroundColor: "#6c757d0f"}}>
           {supplierImageList.length === 0 ? (
             <div className="loader-wrapper w-100" style={{ marginTop: "14%" }}>
               <i className="fa fa-refresh fa-spin"></i>
@@ -258,7 +258,7 @@ function RetailerExportImage(props) {
                       <Accordion.Toggle
                         className="btn btn-link collapsed text-decoration-none"
                         eventKey={index.toString()}
-                        style={{ border: "1px solid #49c5b6" }}
+                        style={{ borderBottom: "2px solid #49c5b6" }}
                       >
                         <i className="fa fa-angle-down arrow"></i>
                         <label className="">{supplierName}</label>

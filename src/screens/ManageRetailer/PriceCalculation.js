@@ -330,14 +330,14 @@ function PriceCalculation(props) {
             </div>
           </div>
         </div>
-        <div className="row mt-3">
-          {/* {supplierData.length === 0 ? (
+        <div className="row mt-3" style={{backgroundColor: "#6c757d0f"}}>
+          {supplierData.length === 0 ? (
             <div className="loader-wrapper w-100" style={{ marginTop: "14%" }}>
               <i className="fa fa-refresh fa-spin"></i>
             </div>
           ) : (
             ""
-          )} */}
+          )}
           <div className="col-12">
             <Accordion defaultActiveKey="0" className="accordian__main">
               {supplierData.map((supplier, index) => (
@@ -346,7 +346,7 @@ function PriceCalculation(props) {
                     <Accordion.Toggle
                       eventKey={index.toString()}
                       className="btn btn-link collapsed text-decoration-none"
-                      style={{ border: "1px solid #49c5b6" }}
+                      style={{ borderBottom: "2px solid #49c5b6" }}
                     >
                       {supplier.supplierNames[0]}
                     </Accordion.Toggle>
