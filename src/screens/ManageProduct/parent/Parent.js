@@ -12,7 +12,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { ProductContext } from "../../ProductContext/ProductContext";
 import { API_PATH } from "../../ApiPath/Apipath";
-import attributes from "./Attributes";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Spinner } from "react-bootstrap";
 
@@ -32,12 +31,53 @@ const Parent = (props) => {
     Category_1: "",
     Category_2: "",
     Category_3: "",
-    gender:""
+    gender:"",
+    Season:"",
+    
   });
   const [colorValue, setColorValue] = useState("");
   const [sizeValue, setSizeValue] = useState("");
   const [customField, setCustomFields] = useState([]);
-  const [attribute, setAttributes] = useState(attributes);
+  const [attribute, setAttributes] = useState({
+    Model:"" ,
+    Country_of_Origin:"" ,
+    Season:"" ,
+    Type:"" ,
+    Sleeves:"" ,
+    Collar:"" ,
+    Pattern:"" ,
+    Pockets:"" ,
+    Neck:"" ,
+    Sole:"" ,
+    Additonal_Details:"" ,
+    Closure:"" ,
+    Handle_Drop:"" ,
+    Strap_Drop:"" ,
+    Dust_Bag:"" ,
+    Box:"" ,
+    Diameter:"" ,
+    Circumference:"" ,
+    Carat:"" ,
+    'Sunglasses/Frames_Lens': "", // Add property for Sunglasses/Frames_Lens
+    'Sunglasses/Frames_Material': "",
+    Watch_Hardware_Color:"" ,
+    Watch_Band_Color:"" ,
+    Watch_Case_Material:"" ,
+    Watch_Case_Shape:"" ,
+    Watch_Case_Color:"" ,
+    Watch_Brand_of_Movement:"" ,
+    Watch_Display:"" ,
+    Watch_Case_Thickness:"" ,
+    Watch_Case_Diameter:"" ,
+    Watch_Band_Material:"" ,
+    Watch_Crown:"" ,
+    Waterproof:"" ,
+    Watch_Power_Supply:"" ,
+    Watch_Band_Width:"" ,
+    Watch_Movement_Type:"" ,
+    Watch_Glass:""
+  });
+
   const history = useHistory();
 
   useEffect(() => {

@@ -55,9 +55,9 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
   };
 
   return (
-    <Row style={{ marginBottom: "-15px" }}>
-      <Col>
-        <Accordion defaultActiveKey="0" className="accordian__main">
+    <div style={{ marginBottom: "-15px" }} className="d-flex">
+      {/* <Col> */}
+        <Accordion defaultActiveKey="0" className="accordian__main" style={{width: "350px"}}>
           <Card>
             <Card.Header>
               <Accordion.Toggle
@@ -73,13 +73,13 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
               </Accordion.Toggle>
             </Card.Header>
           {/*  <Accordion.Collapse eventKey="1" className="card-body">*/}
-              <Card.Body>
+              <Card.Body className="px-2 py-1">
                 <label>VARIANT SKU</label>
                 <input
                   type="text"
                   placeholder="Enter SKU"
                   name="Variant_SKU"
-                  className="form-control"
+                  className="form-control custom-height"
                   value={identifiers.Variant_SKU}
                   onChange={handleChange}
                 />
@@ -89,7 +89,7 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
                   type="text"
                   placeholder="Enter UPC"
                   name="UPC"
-                  className="form-control"
+                  className="form-control custom-height"
                   value={identifiers.UPC}
                   onChange={handleChange}
                 />
@@ -99,7 +99,7 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
                   type="text"
                   placeholder="Enter MPN"
                   name="MPN"
-                  className="form-control"
+                  className="form-control custom-height"
                   value={identifiers.MPN}
                   onChange={handleChange}
                 />
@@ -109,7 +109,7 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
                   type="text"
                   placeholder="Enter EAN"
                   name="EAN"
-                  className="form-control"
+                  className="form-control custom-height"
                   value={identifiers.EAN}
                   onChange={handleChange}
                 />
@@ -119,7 +119,7 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
                   type="text"
                   placeholder="Enter ASIN"
                   name="ASIN"
-                  className="form-control"
+                  className="form-control custom-height"
                   value={identifiers.ASIN}
                   onChange={handleChange}
                 />
@@ -127,10 +127,10 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
            {/* </Accordion.Collapse>*/}
           </Card>
         </Accordion>
-      </Col>
+      {/* </Col> */}
 
-      <Col>
-        <Accordion defaultActiveKey="0" className="accordian__main">
+      {/* <Col> */}
+        <Accordion defaultActiveKey="0" className="accordian__main" style={{width: "350px"}}>
           <Card>
             <Card.Header>
               <Accordion.Toggle
@@ -146,13 +146,13 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
               </Accordion.Toggle>
             </Card.Header>
            { /*<Accordion.Collapse eventKey="0" className="card-body">*/}
-              <Card.Body>
+              <Card.Body className="px-2 py-1">
                 <label style={{ marginTop: "10px" }}>COAST PRICE</label>
                 <input
                   type="text"
                   placeholder="Enter Price"
                   name="Cost_Price"
-                  className="form-control"
+                  className="form-control custom-height"
                   value={identifiers.Cost_Price}
                   onChange={handleChange}
                 />
@@ -162,7 +162,7 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
                   type="text"
                   placeholder="Enter Price"
                   name="Retail_Price"
-                  className="form-control"
+                  className="form-control custom-height"
                   value={identifiers.Retail_Price}
                   onChange={handleChange}
                 />
@@ -172,7 +172,7 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
                   type="text"
                   placeholder="Enter Price"
                   name="Suggested_Sell_Price"
-                  className="form-control"
+                  className="form-control custom-height"
                   value={identifiers.Suggested_Sell_Price}
                   onChange={handleChange}
                 />
@@ -180,8 +180,8 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
            {/* </Accordion.Collapse>*/}
           </Card>
         </Accordion>
-      </Col>
-    </Row>
+      {/* </Col> */}
+    </div>
   );
 };
 

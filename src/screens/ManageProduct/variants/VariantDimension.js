@@ -49,7 +49,7 @@ const VariantDimension = ({dimensionValue, setDimensionValue}) => {
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">
-              <Card.Body>
+              <Card.Body className="px-2 py-1">
                 <Row>
                   <div className="col-lg-6">
                     <label>DIMENSION UNIT</label>
@@ -57,7 +57,7 @@ const VariantDimension = ({dimensionValue, setDimensionValue}) => {
                       type="text"
                       placeholder="Enter Value"
                       name="Dimension_Units"
-                      className="form-control"
+                      className="form-control custom-height"
                       value={dimensionValue.Dimension_Units}
                       onChange={handleChange}
                     />
@@ -68,7 +68,7 @@ const VariantDimension = ({dimensionValue, setDimensionValue}) => {
                     type="text"
                     placeholder="Enter Value"
                     name="Weight_Unit"
-                    className="form-control"
+                    className="form-control custom-height"
                     value={dimensionValue.Weight_Unit}
                     onChange={handleChange}
                   />
@@ -82,7 +82,7 @@ const VariantDimension = ({dimensionValue, setDimensionValue}) => {
                       type="text"
                       placeholder="Enter Value"
                       name="Length"
-                      className="form-control"
+                      className="form-control custom-height"
                       value={dimensionValue.Length}
                       onChange={handleChange}
                     />
@@ -93,7 +93,7 @@ const VariantDimension = ({dimensionValue, setDimensionValue}) => {
                       type="text"
                       placeholder="Enter Value"
                       name="Weight"
-                      className="form-control"
+                      className="form-control custom-height"
                       value={dimensionValue.Weight}
                       onChange={handleChange}
                     />
@@ -107,7 +107,7 @@ const VariantDimension = ({dimensionValue, setDimensionValue}) => {
                       type="text"
                       placeholder="Enter Value"
                       name="Width"
-                      className="form-control"
+                      className="form-control custom-height"
                       value={dimensionValue.Width}
                       onChange={handleChange}
                     />
@@ -118,7 +118,7 @@ const VariantDimension = ({dimensionValue, setDimensionValue}) => {
                     type="text"
                     placeholder="Enter Value"
                     name="Height"
-                    className="form-control"
+                    className="form-control custom-height"
                     value={dimensionValue.Height}
                     onChange={handleChange}
                   />  

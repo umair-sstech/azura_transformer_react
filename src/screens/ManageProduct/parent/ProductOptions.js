@@ -70,7 +70,7 @@ const ProductOptions = (props) => {
                     type="text"
                     placeholder="Color"
                     name="color"
-                    className="form-control ml-3"
+                    className="form-control custom-height ml-3"
                     style={{ flex: "1 1 0" }}
                     disabled
                   />
@@ -78,7 +78,7 @@ const ProductOptions = (props) => {
                     type="text"
                     placeholder="Enter Color Name"
                     name="yellow"
-                    className="form-control ml-3"
+                    className="form-control custom-height ml-3"
                     style={{ flex: "2 1 0" }}
                     value={colorValue}
                     onChange={handleColorChange}
@@ -94,7 +94,7 @@ const ProductOptions = (props) => {
                     type="text"
                     placeholder="Size"
                     name="size"
-                    className="form-control ml-3"
+                    className="form-control custom-height ml-3"
                     style={{ flex: "1 1 0" }}
                     disabled
                   />
@@ -102,7 +102,7 @@ const ProductOptions = (props) => {
                     type="text"
                     placeholder="Enter Size"
                     name="nosize"
-                    className="form-control ml-3"
+                    className="form-control custom-height ml-3"
                     style={{ flex: "2 1 0" }}
                     value={sizeValue}
                     onChange={handleSizeChange}

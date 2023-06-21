@@ -24,11 +24,11 @@ const ProductParent = (props) => {
       {Object.keys(productData).length !== 0 ? (
         <Card className="product__parent__card">
           <Card.Body onClick={() => navigateToParent("parent", "variants")} style={{ cursor: "pointer" }}>
-            <Card.Subtitle style={{ textAlign: "center", marginTop: "10px" }}>
+            <Card.Subtitle style={{ textAlign: "center", marginTop: "10px", fontWeight: "600" }}>
               {productData.product[0]?.AI_TITLE != null ? productData.product[0].AI_TITLE.replace(/"/g, "") : productData.product?.[0]?.Variant_Title}
             </Card.Subtitle>
             <Card.Text>
-              <div className="d-flex px-3 justify-content-around align-items-center mt-3" style={{ gap: "2em" }}>
+              <div className="d-flex px-3 justify-content-around align-items-center mt-3 mb-2" style={{ gap: "2em" }}>
                 <a href={productData.product[0].Image_Parent_1_original} target="_blank" rel="noopener noreferrer">
                   <Image
                     src={productData?.product[0]?.Image_Parent_1_original}
@@ -70,24 +70,17 @@ const ProductParent = (props) => {
         <i className="fa fa-refresh fa-spin"></i>
       </div>
       }
-
-      {/*<div className="d-flex justify-content-between align-items-center">
-        <span className="ml-3">1 VARIANT</span>
-        <Button className="btn mr-3" variant="primary">
-          <i className="fa fa-plus"></i>
-        </Button>
-  </div>*/}
       <h3 className="ml-3 product__parent__title">PRODUCT VARIANT</h3>
       <div className="d-flex flex-column" style={{ height: "350px", overflowY: "auto" }}>
         <div className="product__parent">
           {variantData?.map((variant, idx) => (
             <Card key={variant.id} className="product__parent__card">
-              <Card.Body onClick={() => navigateToParent("variants", "parent")} style={{ cursor: "pointer" }}>
-                <Card.Subtitle style={{ textAlign: "center", marginTop: "10px" }}>
+              <Card.Body onClick={() => {navigateToParent(`variants`, "parent"); variantDetails(idx)}} style={{ cursor: "pointer" }}>
+                <Card.Subtitle style={{ textAlign: "center", marginTop: "10px", fontWeight: "600" }}>
                   {variant?.AI_TITLE ? variant.AI_TITLE.replace(/"/g, "") : variant.Variant_Title}
                 </Card.Subtitle>
-                <Card.Text onClick={() => variantDetails(idx)}>
-                  <div className="d-flex px-3 mt-3 justify-content-around align-items-center" style={{ gap: "2em" }}>
+                <Card.Text>
+                  <div className="d-flex px-3 mt-3 justify-content-around align-items-center mb-2" style={{ gap: "2em" }}>
                     <a href={variant.Image_Variant_1_original} target="_blank" rel="noopener noreferrer">
                       <Image
                         src={variant.Image_Variant_1_original}
@@ -99,12 +92,12 @@ const ProductParent = (props) => {
                     </a>
                     <div className="d-flex flex-column w-100 justify-content-center justify-content-sm-start">
                       <div className="row">
-                        <div className="col-5"><strong>Variant SKU</strong></div>
+                        <div className="col-5">Variant SKU</div>
                         <div> : </div>
                         <div className="col-6">{variant.Variant_SKU}</div>
                       </div>
                       <div className="row">
-                        <div className="col-5"><strong>QTY</strong></div>
+                        <div className="col-5">QTY</div>
                         <div> : </div>
                         <div className="col-6">{variant.Quantity}</div>
                       </div>

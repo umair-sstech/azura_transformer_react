@@ -28,9 +28,9 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
     }));
   }
   return (
-    <Row style={{ marginBottom: "-15px" }}>
-      <Col>
-        <Accordion defaultActiveKey="0" className="accordian__main">
+    <div style={{ marginBottom: "-15px" }} className="d-flex">
+      {/* <Col> */}
+        <Accordion defaultActiveKey="0" className="accordian__main" style={{width: "350px"}}>
           <Card>
             <Card.Header>
               <Accordion.Toggle
@@ -46,13 +46,13 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
               </Accordion.Toggle>
             </Card.Header>
             {/*<Accordion.Collapse eventKey="1" className="card-body">*/}
-              <Card.Body>
+              <Card.Body className="px-2 py-1">
                 <label>SKU</label>
                 <input
                   type="text"
                   placeholder="SKU..."
                   name="Parent_SKU"
-                  className="form-control"
+                  className="form-control custom-height"
                   onChange={handleChange}
                   value={identifiers.Parent_SKU}
                 />
@@ -61,7 +61,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
                   type="text"
                   placeholder="Brand..."
                   name="Brand"
-                  className="form-control"
+                  className="form-control custom-height"
                   onChange={handleChange}
                   value={identifiers.Brand}
                 />
@@ -71,7 +71,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
                   placeholder="Gender..."
                   name="Gender"
                   disabled
-                  className="form-control"
+                  className="form-control custom-height"
                   onChange={handleChange}
                   value={identifiers.Gender}
                 />
@@ -79,10 +79,10 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
   {/*</Accordion.Collapse>*/}
           </Card>
         </Accordion>
-      </Col>
+      {/* </Col> */}
 
-      <Col>
-        <Accordion defaultActiveKey="0" className="accordian__main">
+      {/* <Col> */}
+        <Accordion defaultActiveKey="0" className="accordian__main" style={{width: "350px"}}>
           <Card>
             <Card.Header>
               <Accordion.Toggle
@@ -98,14 +98,14 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
               </Accordion.Toggle>
             </Card.Header>
           {/*  <Accordion.Collapse eventKey="0" className="card-body">*/}
-              <Card.Body>
+              <Card.Body className="px-2 py-1">
                 <label>CATEGORY 1</label>
                 <input
                   type="text"
                   placeholder="Category1..."
                   name="Category_1"
                   disabled
-                  className="form-control"
+                  className="form-control custom-height"
                   onChange={handleChange}
                   value={identifiers.Category_1}
                 />
@@ -115,7 +115,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
                   placeholder="Category2..."
                   name="Category_2"
                   disabled
-                  className="form-control"
+                  className="form-control custom-height"
                   onChange={handleChange}
                   value={identifiers.Category_2}
                 />
@@ -125,7 +125,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
                   placeholder="Category3..."
                   name="Category_3"
                   disabled
-                  className="form-control"
+                  className="form-control custom-height"
                   onChange={handleChange}
                   value={identifiers.Category_3}
                 />
@@ -133,8 +133,8 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
             {/*</Accordion.Collapse>*/}
           </Card>
         </Accordion>
-      </Col>
-    </Row>
+      {/* </Col> */}
+    </div>
   );
 };
 

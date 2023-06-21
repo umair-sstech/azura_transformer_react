@@ -91,61 +91,34 @@ const CustomFields = ({ customField, setCustomFields }) => {
                   </p>
                 </div>
                 <hr />
+
                 {customField?.map((field, index) => (
-                  <div
-                    key={index}
-                    className="d-flex justify-content-around align-items-center mb-3"
-                  >
-                    <i
-                      className="fa fa-solid fa-trash fa-lg ml-2"
-                      style={{ color: "red" }}
-                      onClick={() => removeCustomField(field.id)}
-                    ></i>
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Field Name"
-                        name={`source_${index}`}
-                        className="form-control"
-                        value={field.customFieldName || ""}
-                        onChange={(e) =>
-                          handleCustomFieldChange(
-                            index,
-                            "customFieldName",
-                            e.target.value
-                          )
-                        }
-                      />
-                    </div>
+                  <div className="d-flex justify-content-around align-items-center mb-3 px-2" key={index}>
+                    <i className="fa fa-solid fa-trash fa-lg ml-2" style={{ color: "red" }} onClick={() => removeCustomField(field.id)}></i>
+                    <input
+                      type="text"
+                      placeholder="Enter Custom Field Name"
+                      name={`source_${index}`}
+                      className="form-control custom-height ml-3"
+                      value={field.customFieldName || ""}
+                      onChange={(e) => handleCustomFieldChange(index, "customFieldName", e.target.value)}
+                      style={{ flex: "1 1 0" }}
+                    />
                     <span className="ml-3">=</span>
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Field Value"
-                        name={`brands_distribution_${index}`}
-                        className="form-control"
-                        value={field.customValue || ""}
-                        onChange={(e) =>
-                          handleCustomFieldChange(
-                            index,
-                            "customValue",
-                            e.target.value
-                          )
-                        }
-                      />
-                    </div>
+                    <input
+                      type="text"
+                      placeholder="Entyer Custom Field Value"
+                      name={`brands_distribution_${index}`}
+                      className="form-control custom-height ml-3"
+                      value={field.customValue || ""}
+                      onChange={(e) => handleCustomFieldChange(index, "customValue", e.target.value)}
+                      style={{ flex: "2 1 0" }}
+                    />
                   </div>
                 ))}
-                <Row>
-                  {" "}
-                  <Button
-                    className="btn ml-3 mt-2 mb-2"
-                    variant="outline-primary"
-                    onClick={handleAddField}
-                  >
-                    <i className="fa fa-plus mr-2"></i>Add Custom Field
-                  </Button>
-                </Row>
+                <Row><Button className="btn ml-4 mt-2 mb-2" variant="outline-primary" onClick={handleAddField}>
+                  <i className="fa fa-plus mr-2"></i>Add Custom Field
+                </Button></Row>
               </Card.Body>
             </Accordion.Collapse>
           </Card>

@@ -43,7 +43,7 @@ const VariantTitle = (props) => {
               </Accordion.Toggle>
             </Card.Header>
             {/* <Accordion.Collapse eventKey="0"> */}
-              <Card.Body>
+              <Card.Body className="px-2 py-1">
                 <input
                   type="text"
                   placeholder="Enter Title..."
