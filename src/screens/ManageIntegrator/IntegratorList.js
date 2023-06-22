@@ -186,11 +186,14 @@ function IntegratorList(props) {
                           <td>{startIndex + idx}</td>
                           <td>
                             {integrator.logo ? (
-                              <img
-                                src={integrator.logo}
-                                alt={integrator.name}
-                                className="list-logo"
-                              />
+                              <div className="image-container">
+                                <img src={integrator.logo} alt={integrator.name}/>
+                              </div>
+                              // <img
+                              //   src={integrator.logo}
+                              //   alt={integrator.name}
+                              //   className="list-logo"
+                              // />
                             ) : (
                               <div className="list-logo placeholder">N/A</div>
                             )}

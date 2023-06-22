@@ -241,7 +241,9 @@ function IntegrationType(props) {
                           <td>{startIndex + index}</td>
                           <td>
                             {supplier.logo ? (
-                              <img src={supplier.logo} className="list-logo" />
+                              <div className="image-container">
+                                <img src={supplier.logo} alt={supplier.name}/>
+                              </div>
                             ) : (
                               <div className="list-logo placeholder">N/A</div>
                             )}

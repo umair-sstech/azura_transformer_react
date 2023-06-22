@@ -75,6 +75,35 @@
   padding: 5px;
 }
 
+.price__input__height {
+  height: 33px !important; 
+}
+
+.temp .css-13cymwt-control {
+  min-height: 30px !important;
+  height: 33px;
+}
+
+.temp .css-1dimb5e-singleValue {
+  font-size: 14px;
+  color: #495057;
+  font-weight: 400;
+  margin-top: -10px;
+}
+
+.temp span.css-1u9des2-indicatorSeparator {
+  margin-top: 0;
+}
+
+.temp .css-t3ipsp-control {
+  height: 33px;
+  min-height: 33px !important;
+}
+
+.temp svg {
+  margin-top: -10px;
+}
+
 span.text-danger.valiadtion {
   font-weight: 500;
   font-size: 13px;

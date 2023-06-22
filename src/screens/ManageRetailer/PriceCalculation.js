@@ -18,10 +18,8 @@ const customStyles = {
   getOptionStyle(base) {
     return {
       ...base,
-      // height: "33px",
-      color: "#444444",
+      color: "black",
       fontSize: "14px",
-      // minH
     };
   },
 };
@@ -396,7 +394,16 @@ function PriceCalculation(props) {
                                 name="costPriceField"
                                 className="temp"
                                 menuPlacement="top"
-                                styles={customStyles}
+                                // styles={customStyles}
+                                styles={{
+                                  option: (styles) => {
+                                    return {
+                                      ...styles,
+                                      color: "#545454",
+                                      fontSize: "14px",
+                                    };
+                                  },
+                                }}
                               />
                               {formErrors.costPriceField && (
                                 <span className="text-danger validation">

@@ -5,8 +5,8 @@ export const validateIntegrationInfoForm = (formData) => {
     errors.name = "Name is required";
   } else if (name.trim().length === 0) {
     errors.name = "Name cannot be whitespace only";
-  } else if (name.length > 15) {
-    errors.name = "Name must be less than or equal to 15 characters";
+  } else if (name.length > 50) {
+    errors.name = "Name must be less than or equal to 50 characters";
   } else if (!/^[a-zA-Z\s]+$/.test(name)) {
     errors.name = "Name can only contain alphabetic characters";
   }
