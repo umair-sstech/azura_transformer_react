@@ -22,27 +22,6 @@ function RetailerExportImage(props) {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const id = localStorage.getItem("retailerIntegrationId");
-  //       const response = await axios.post(API_PATH.GET_RETAILER_BY_ID, {
-  //         id: id,
-  //       });
-  //       const { success, data } = response.data;
-
-  //       if (success && data.length > 0) {
-  //         const selectedSizes = data[0].supplierImageSize;
-  //         setSelectedImageSizes(selectedSizes);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -241,7 +220,13 @@ function RetailerExportImage(props) {
             </div>
           </div>
         </div>
-        <div className="row mt-3" style={{backgroundColor: "#6c757d0f"}}>
+        <div className="alert alert-primary col-12 mt-3 ml-2" role="alert">
+        <strong>INFO:</strong> <br />
+        Please select the appropriate size option from the choices provided
+        by the supplier.
+      </div>
+        <div className="row mt-3" style={{ backgroundColor: "#6c757d0f" }}>
+         
           {supplierImageList.length === 0 ? (
             <div className="loader-wrapper w-100" style={{ marginTop: "14%" }}>
               <i className="fa fa-refresh fa-spin"></i>

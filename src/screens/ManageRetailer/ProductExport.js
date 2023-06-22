@@ -144,7 +144,6 @@ function ProductExport(props) {
         }
       });
 
-
       const isChecked = checkAnyCheckboxChecked(checkboxes);
       if (data.supplier_product.length > 0) {
         if (!isChecked) {
@@ -152,7 +151,7 @@ function ProductExport(props) {
           return;
         }
       }
-      
+
       setIsLoading(true);
       const response = await axios.post(
         `${API_PATH.CREATE_RETAILER_CATEGORY}`,
@@ -291,6 +290,11 @@ function ProductExport(props) {
           </div>
         </div>
         <div className="row">
+          <div className="alert alert-primary col-12 mt-3" role="alert">
+            <strong>INFO:</strong> <br />
+            Select the appropriate option from the list below to indicate the
+            data category you are interested in exporting.
+          </div>
           {!data ? (
             <div className="loader-wrapper w-100" style={{ marginTop: "14%" }}>
               <i className="fa fa-refresh fa-spin"></i>

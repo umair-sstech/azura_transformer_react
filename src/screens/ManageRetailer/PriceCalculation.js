@@ -80,8 +80,6 @@ function PriceCalculation(props) {
     setSelectedRadioOption(defaultSelectedRadioOption);
   }, [supplierData]);    
   
-
-
   const handleSelectChange = (selectedOption, supplierId) => {
     const updatedSelectedOptions = { ...selectedOptions };
     updatedSelectedOptions[supplierId] = selectedOption;
@@ -330,6 +328,10 @@ function PriceCalculation(props) {
             </div>
           </div>
         </div>
+        <div className="alert alert-primary col-12 mt-3 ml-2" role="alert">
+        <strong>INFO:</strong> <br />
+        Please specify the price calculation logic for each supplier.
+      </div>
         <div className="row mt-3" style={{backgroundColor: "#6c757d0f"}}>
           {supplierData.length === 0 ? (
             <div className="loader-wrapper w-100" style={{ marginTop: "14%" }}>
