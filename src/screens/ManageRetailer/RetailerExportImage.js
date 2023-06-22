@@ -22,6 +22,27 @@ function RetailerExportImage(props) {
     fetchData();
   }, []);
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const id = localStorage.getItem("retailerIntegrationId");
+  //       const response = await axios.post(API_PATH.GET_RETAILER_BY_ID, {
+  //         id: id,
+  //       });
+  //       const { success, data } = response.data;
+
+  //       if (success && data.length > 0) {
+  //         const selectedSizes = data[0].supplierImageSize;
+  //         setSelectedImageSizes(selectedSizes);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -245,8 +266,10 @@ function RetailerExportImage(props) {
                         eventKey={index.toString()}
                         style={{ borderBottom: "2px solid #49c5b6" }}
                       >
-                        <i className="fa fa-angle-down arrow"></i>
-                        <label className="">{supplierName}</label>
+                        <div className="d-flex justify-content-between align-items-center">
+                          <span>{supplierName}</span>
+                          <i className="fa fa-angle-down arrow color-arrow"></i>
+                        </div>
                       </Accordion.Toggle>
                     </Card.Header>
                     <Accordion.Collapse

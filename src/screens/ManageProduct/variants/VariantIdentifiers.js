@@ -147,7 +147,7 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
             </Card.Header>
            { /*<Accordion.Collapse eventKey="0" className="card-body">*/}
               <Card.Body className="px-2 py-1">
-                <label style={{ marginTop: "10px" }}>COAST PRICE</label>
+                <label>COAST PRICE</label>
                 <input
                   type="text"
                   placeholder="Enter Price"

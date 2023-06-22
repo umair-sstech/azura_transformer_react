@@ -14,6 +14,18 @@ const radioBtns = [
   { label: "Round up to Nearest Multiple of 5", value: "5" }
 ]
 
+const customStyles = {
+  getOptionStyle(base) {
+    return {
+      ...base,
+      // height: "33px",
+      color: "#444444",
+      fontSize: "14px",
+      // minH
+    };
+  },
+};
+
 function PriceCalculation(props) {
   const { setPage } = props;
   const { processCancel, formData, setFormData } = useContext(FormContext);
@@ -350,183 +362,187 @@ function PriceCalculation(props) {
                       className="btn btn-link collapsed text-decoration-none"
                       style={{ borderBottom: "2px solid #49c5b6" }}
                     >
-                      {supplier.supplierNames[0]}
+                      <div className="d-flex justify-content-between align-items-center">
+                        <span>{supplier.supplierNames[0]}</span>
+                        <i className="fa fa-angle-down arrow color-arrow"></i>
+                      </div>
                     </Accordion.Toggle>
                   </Card.Header>
                   <Accordion.Collapse eventKey={index.toString()}>
-                    <Card.Body>
-                      <div className="row ml-2">
-                        <label className="text-success">
-                          Price Calculation Formula: ((Cost * Multiple + Fixed )
-                          * Tax) - discount %)
-                        </label>
-                      </div>
-                      <div className="row mt-3 p-md-1">
-                        <div className="col-sm-6 col-md-4 col-lg-3">
-                          <div>
-                            <label htmlFor={`price-${index}`}>
-                              Select Price
-                            </label>
-                            <Select
-                              options={price}
-                              onChange={(selectedOption) =>
-                                handleSelectChange(
-                                  selectedOption,
-                                  supplier.supplierId
-                                )
-                              }
-                              value={selectedOptions[supplier.supplierId]}
-                              placeholder="Select Price"
-                              name="costPriceField"
-                              menuPlacement="top"
-                            />
-                            {formErrors.costPriceField && (
-                              <span className="text-danger validation">
-                                {formErrors.costPriceField}
-                              </span>
-                            )}
-                          </div>
+                    <Card.Body className="price-calc-card">
+                      <div className="price-calc-card-div">
+                        <div className="row ml-2">
+                          <label className="text-success">
+                            Price Calculation Formula: ((Cost * Multiple + Fixed )
+                            * Tax) - discount %)
+                          </label>
                         </div>
-                        <div className="col-sm-6 mt-3 mt-sm-0 col-md-4 col-lg-3">
-                          <div className="form-group">
-                            <label htmlFor="value2">Multiple</label>
-                            <input
-                              id="value1"
-                              className="form-control"
-                              placeholder="Enter Value"
-                              type="number"
-                              step="any"
-                              name="multipleValue"
-                              onChange={(e) =>
-                                handleInputChange(e, supplier.supplierId)
-                              }
-                              defaultValue={
-                                initFormData[supplier.supplierId]
-                                  ?.multipleValue || ""
-                              }
-                            />
-                            {formErrors && formErrors.multipleValue && (
-                              <span className="text-danger valiadtion">
-                                {formErrors.multipleValue}
-                              </span>
-                            )}
-                         
-                          </div>
-                        </div>
-                        <div className="col-sm-4 col-lg-2">
-                          <div className="form-group">
-                            <label htmlFor="value2">Fixed</label>
-                            <input
-                              id="value2"
-                              className="form-control"
-                              placeholder="Enter Value"
-                              step="any"
-                              type="number"
-                              name="fixedValue"
-                              onChange={(e) =>
-                                handleInputChange(e, supplier.supplierId)
-                              }
-                              defaultValue={
-                                initFormData[supplier.supplierId]?.fixedValue ||
-                                ""
-                              }
-                            />
-                            {formErrors && formErrors.fixedValue && (
-                              <span className="text-danger valiadtion">
-                                {formErrors.fixedValue}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="col-sm-4 col-lg-2">
-                          <div className="form-group">
-                            <label htmlFor="value3">Tax</label>
-                            <input
-                              id="value3"
-                              className="form-control"
-                              placeholder="Enter Value"
-                              type="number"
-                              step="any"
-                              name="taxValue"
-                              onChange={(e) =>
-                                handleInputChange(e, supplier.supplierId)
-                              }
-                              defaultValue={
-                                initFormData[supplier.supplierId]?.taxValue ||
-                                ""
-                              }
-                            />
-                            {formErrors && formErrors.taxValue && (
-                              <span className="text-danger valiadtion">
-                                {formErrors.taxValue}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="col-sm-4 col-lg-2">
-                          <div className="form-group">
-                            <label htmlFor="value4">Discount</label>
-                            <input
-                              id="value4"
-                              className="form-control"
-                              placeholder="Enter Value"
-                              type="number"
-                              step="any"
-                              name="discountValue"
-                              onChange={(e) =>
-                                handleInputChange(e, supplier.supplierId)
-                              }
-                              defaultValue={
-                                initFormData[supplier.supplierId]
-                                  ?.discountValue || ""
-                              }
-                            />
-                            {formErrors && formErrors.discountValue && (
-                              <span className="text-danger valiadtion">
-                                {formErrors.discountValue}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <label htmlFor="roundupRadio mt-3" style={{padding: "0 10px"}}>Round Up Amount</label>
-                      {radioBtns.map((option, idx) => (
-                        <div className="row px-2" key={idx}>
-                          <div className="col-12 mt-0">
-                            <div className="form-group">
-                              <input
-                                type="radio"
-                                value={option.value}
-                                name={`roundUp-${index}`}
-                                id={`roundupRadio-${index}-${idx}`}
-                                onChange={(e) => handleRadioChange(e, index)}
-                                checked={selectedRadioOption[index] === option.value}
-                              />
-                              <label className="radio-inline text-dark px-2">
-                                {option.label}
+                        <div className="row mt-3 p-md-1">
+                          <div className="col-sm-6 col-md-4 col-lg-3">
+                            <div>
+                              <label htmlFor={`price-${index}`}>
+                                Select Price
                               </label>
+                              <Select
+                                options={price}
+                                onChange={(selectedOption) =>
+                                  handleSelectChange(
+                                    selectedOption,
+                                    supplier.supplierId
+                                  )
+                                }
+                                value={selectedOptions[supplier.supplierId]}
+                                placeholder="Select Price"
+                                name="costPriceField"
+                                className="temp"
+                                menuPlacement="top"
+                                styles={customStyles}
+                              />
+                              {formErrors.costPriceField && (
+                                <span className="text-danger validation">
+                                  {formErrors.costPriceField}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="col-sm-6 mt-3 mt-sm-0 col-md-4 col-lg-3">
+                            <div className="form-group">
+                              <label htmlFor="value2">Multiple</label>
+                              <input
+                                id="value1"
+                                className="form-control price__input__height"
+                                placeholder="Enter Value"
+                                type="number"
+                                step="any"
+                                name="multipleValue"
+                                onChange={(e) =>
+                                  handleInputChange(e, supplier.supplierId)
+                                }
+                                defaultValue={
+                                  initFormData[supplier.supplierId]
+                                    ?.multipleValue || ""
+                                }
+                              />
+                              {formErrors && formErrors.multipleValue && (
+                                <span className="text-danger valiadtion">
+                                  {formErrors.multipleValue}
+                                </span>
+                              )}
+                          
+                            </div>
+                          </div>
+                          <div className="col-sm-4 col-lg-2">
+                            <div className="form-group">
+                              <label htmlFor="value2">Fixed</label>
+                              <input
+                                id="value2"
+                                className="form-control price__input__height"
+                                placeholder="Enter Value"
+                                step="any"
+                                type="number"
+                                name="fixedValue"
+                                onChange={(e) =>
+                                  handleInputChange(e, supplier.supplierId)
+                                }
+                                defaultValue={
+                                  initFormData[supplier.supplierId]?.fixedValue ||
+                                  ""
+                                }
+                              />
+                              {formErrors && formErrors.fixedValue && (
+                                <span className="text-danger valiadtion">
+                                  {formErrors.fixedValue}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="col-sm-4 col-lg-2">
+                            <div className="form-group">
+                              <label htmlFor="value3">Tax</label>
+                              <input
+                                id="value3"
+                                className="form-control price__input__height"
+                                placeholder="Enter Value"
+                                type="number"
+                                step="any"
+                                name="taxValue"
+                                onChange={(e) =>
+                                  handleInputChange(e, supplier.supplierId)
+                                }
+                                defaultValue={
+                                  initFormData[supplier.supplierId]?.taxValue ||
+                                  ""
+                                }
+                              />
+                              {formErrors && formErrors.taxValue && (
+                                <span className="text-danger valiadtion">
+                                  {formErrors.taxValue}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="col-sm-4 col-lg-2">
+                            <div className="form-group">
+                              <label htmlFor="value4">Discount</label>
+                              <input
+                                id="value4"
+                                className="form-control price__input__height"
+                                placeholder="Enter Value"
+                                type="number"
+                                step="any"
+                                name="discountValue"
+                                onChange={(e) =>
+                                  handleInputChange(e, supplier.supplierId)
+                                }
+                                defaultValue={
+                                  initFormData[supplier.supplierId]
+                                    ?.discountValue || ""
+                                }
+                              />
+                              {formErrors && formErrors.discountValue && (
+                                <span className="text-danger valiadtion">
+                                  {formErrors.discountValue}
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
-                      ))}
-                      <div className="col-lg-12">
-                        {selectedRadioOption[index] && supplier && (
-                          <div className="col-lg-12 text-success">
-                            {selectedRadioOption[index] === "decimal" ? (
-                              <div>
-                                {supplier.supplierName}e.g. Price = 17.4, Output = 18
+                        <label htmlFor="roundupRadio mt-3" style={{padding: "0 10px"}}>Round Up Amount</label>
+                        {radioBtns.map((option, idx) => (
+                          <div className="row px-2" key={idx}>
+                            <div className="col-12 mt-0">
+                              <div className="form-group">
+                                <input
+                                  type="radio"
+                                  value={option.value}
+                                  name={`roundUp-${index}`}
+                                  id={`roundupRadio-${index}-${idx}`}
+                                  onChange={(e) => handleRadioChange(e, index)}
+                                  checked={selectedRadioOption[index] === option.value}
+                                />
+                                <label className="radio-inline text-dark px-2">
+                                  {option.label}
+                                </label>
                               </div>
-                            ) : (
-                              <div>
-                                {supplier.supplierName}e.g. Price = 17, Output = 20
-                              </div>
-                            )}
+                            </div>
                           </div>
-                        )}
+                        ))}
+                        <div className="col-lg-12">
+                          {selectedRadioOption[index] && supplier && (
+                            <div className="col-lg-12 text-success">
+                              {selectedRadioOption[index] === "decimal" ? (
+                                <div>
+                                  {supplier.supplierName}e.g. Price = 17.4, Output = 18
+                                </div>
+                              ) : (
+                                <div>
+                                  {supplier.supplierName}e.g. Price = 17, Output = 20
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                        {/* {radioMsg.split("\n").map((line, index) => (
-                          <div key={index}>{line}</div>
-                        ))} */}
                     </Card.Body>
                   </Accordion.Collapse>
                 </Card>

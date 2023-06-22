@@ -223,7 +223,7 @@ const Parent = (props) => {
         <ProductContext.Provider
           value={
             productData.product?.[0]?.AI_TITLE != null
-              ? productData.product?.[0]?.AI_TITLE.replace(/"/g, "")
+              ? productData.product?.[0]?.AI_TITLE?.replace(/"/g, "")
               : productData.product?.[0]?.Variant_Title
           }
         >
