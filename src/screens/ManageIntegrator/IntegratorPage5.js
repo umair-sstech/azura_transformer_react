@@ -69,11 +69,16 @@ function IntegratorPage5(props) {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
 
+    let formattedValue = trimmedValue;
+
+    if (/^[1-9]$/.test(trimmedValue)) {
+      formattedValue = `0${trimmedValue}`; 
+    }
+
     setInitFormData((prevState) => ({
       ...prevState,
-      [name]: trimmedValue,
+      [name]: formattedValue,
     }));
-
     const updatedSyncFrequency = trackingSyncFrequency.split(" ");
     switch (name) {
       case "minute":
@@ -260,6 +265,13 @@ function IntegratorPage5(props) {
 
       // const {value, label} = initFormData.trackingTimeZone || {};
       // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
+      const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+        const value = formData.get(name);
+        const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
+        return formattedValue;
+      });
+  
+      const trackingSyncFrequency = syncFrequencyValues.join(" ");
 
       const payload = {
         // ...initFormData,

@@ -69,9 +69,15 @@ function IntegratorPage4(props) {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
   
+    let formattedValue = trimmedValue;
+
+    if (/^[1-9]$/.test(trimmedValue)) {
+      formattedValue = `0${trimmedValue}`; 
+    }
+
     setInitFormData((prevState) => ({
       ...prevState,
-      [name]: trimmedValue,
+      [name]: formattedValue,
     }));
   
     const updatedSyncFrequency = orderSyncFrequency.split(" ");
@@ -210,11 +216,13 @@ const handleSubmit = (e) => {
     // const {value, label} = initFormData.orderTimeZone || {};
     // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
-    const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
-      "hour"
-    )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
-      "week"
-    )}`;
+    const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+      const value = formData.get(name);
+      const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
+      return formattedValue;
+    });
+
+    const orderSyncFrequency = syncFrequencyValues.join(" ");
 
     const payload = {
       // ...initFormData,
@@ -262,11 +270,13 @@ const handleSubmit = (e) => {
     // const {value, label} = initFormData.orderTimeZone || {};
     // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
-    const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
-      "hour"
-    )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
-      "week"
-    )}`;
+    const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+      const value = formData.get(name);
+      const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
+      return formattedValue;
+    });
+
+    const orderSyncFrequency = syncFrequencyValues.join(" ");
 
     const payload = {
       // ...initFormData,

@@ -11,6 +11,7 @@ import { onLoading } from "../../actions";
 import { Spinner } from "react-bootstrap";
 import { FormContext } from "./ManageSuppiler";
 import { API_PATH } from "../ApiPath/Apipath";
+import { FALSE } from "sass";
 
 function SupplierSftpForm(props) {
   const { onSubmit, settingType } = props;
@@ -124,9 +125,15 @@ function SupplierSftpForm(props) {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
 
+    let formattedValue = trimmedValue;
+
+    if (/^[1-9]$/.test(trimmedValue)) {
+      formattedValue = `0${trimmedValue}`; 
+    }
+
     setInitFormData((prevState) => ({
       ...prevState,
-      [name]: trimmedValue,
+      [name]: formattedValue,
     }));
 
     const updatedSyncFrequency = syncFrequency.split(" ");
@@ -272,11 +279,13 @@ function SupplierSftpForm(props) {
       // const { value, label } = initFormData.timeZone || {};
       // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
-      const syncFrequency = `${formData.get("minute")} ${formData.get(
-        "hour"
-      )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
-        "week"
-      )}`;
+      const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+        const value = formData.get(name);
+        const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
+        return formattedValue;
+      });
+  
+      const syncFrequency = syncFrequencyValues.join(" ");
 
       const payload = {
         ...initFormData,
@@ -286,7 +295,7 @@ function SupplierSftpForm(props) {
         supplierName,
         syncFrequency,
       };
-
+      console.log("payload",payload)
       setIsLoading(true);
       axios
         .post(`${API_PATH.IMPORT_SETTING}`, payload)
@@ -322,11 +331,20 @@ function SupplierSftpForm(props) {
       const supplierName = localStorage.getItem("supplierName");
       // const { value, label } = initFormData.timeZone || {};
       // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
-      const syncFrequency = `${formData.get("minute")} ${formData.get(
-        "hour"
-      )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
-        "week"
-      )}`;
+      // const syncFrequency = `${formData.get("minute")} ${formData.get(
+      //   "hour"
+      // )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
+      //   "week"
+      // )}`;
+
+      
+      const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+        const value = formData.get(name);
+        const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
+        return formattedValue;
+      });
+  
+      const syncFrequency = syncFrequencyValues.join(" ");
 
       const payload = {
         ...initFormData,

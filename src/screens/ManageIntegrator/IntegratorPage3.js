@@ -69,11 +69,16 @@ function IntegratoePage3(props) {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
 
+    let formattedValue = trimmedValue;
+
+    if (/^[1-9]$/.test(trimmedValue)) {
+      formattedValue = `0${trimmedValue}`; 
+    }
+
     setInitFormData((prevState) => ({
       ...prevState,
-      [name]: trimmedValue,
+      [name]: formattedValue,
     }));
-
     const updatedSyncFrequency = productSyncFrequency.split(" ");
     switch (name) {
       case "minute":
@@ -211,11 +216,13 @@ function IntegratoePage3(props) {
       // const { value, label } = initFormData.productTimeZone || {};
       // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
-      const productSyncFrequency = `${formData.get("minute")} ${formData.get(
-        "hour"
-      )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
-        "week"
-      )}`;
+      const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+        const value = formData.get(name);
+        const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
+        return formattedValue;
+      });
+  
+      const productSyncFrequency = syncFrequencyValues.join(" ");
 
       const payload = {
         // ...initFormData,
@@ -262,11 +269,13 @@ function IntegratoePage3(props) {
       // const { value, label } = initFormData.productTimeZone || {};
       // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
-      const productSyncFrequency = `${formData.get("minute")} ${formData.get(
-        "hour"
-      )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
-        "week"
-      )}`;
+      const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+        const value = formData.get(name);
+        const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
+        return formattedValue;
+      });
+  
+      const productSyncFrequency = syncFrequencyValues.join(" ");
 
       const payload = {
         // ...initFormData,

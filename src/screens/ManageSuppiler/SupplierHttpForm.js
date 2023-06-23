@@ -76,9 +76,15 @@ function SupplierHttpForm(props) {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
 
+    let formattedValue = trimmedValue;
+
+    if (/^[1-9]$/.test(trimmedValue)) {
+      formattedValue = `0${trimmedValue}`; 
+    }
+
     setInitFormData((prevState) => ({
       ...prevState,
-      [name]: trimmedValue,
+      [name]: formattedValue,
     }));
 
     const updatedSyncFrequency = syncFrequency.split(" ");
@@ -209,15 +215,22 @@ function SupplierHttpForm(props) {
     if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
-      const syncFrequency = `${formData.get("minute")} ${formData.get("hour")} ${formData.get("day")} ${formData.get("month")} ${formData.get("week")}`;
 
+      // const syncFrequency = `${formData.get("minute")} ${formData.get("hour")} ${formData.get("day")} ${formData.get("month")} ${formData.get("week")}`;
+
+      const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+        const value = formData.get(name);
+        const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
+        return formattedValue;
+      });
+  
+      const syncFrequency = syncFrequencyValues.join(" ");
       const payload = {
         ...initFormData,
         settingType,
         supplierId,
         supplierName,
         syncFrequency,
-
         password: "",
         hostName: "",
         userName: "",
@@ -259,6 +272,14 @@ function SupplierHttpForm(props) {
     if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("supplierId");
       const supplierName = localStorage.getItem("supplierName");
+
+      const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+        const value = formData.get(name);
+        const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
+        return formattedValue;
+      });
+  
+      const syncFrequency = syncFrequencyValues.join(" ");
       const payload = { ...initFormData, settingType, supplierId, supplierName, syncFrequency };
       setIsLoadingExit(true);
       axios
@@ -270,7 +291,7 @@ function SupplierHttpForm(props) {
             toast.success(message);
             localStorage.removeItem("supplierId");
             localStorage.removeItem("supplierName");
-        localStorage.removeItem("currentPage")
+           localStorage.removeItem("currentPage")
 
           } else {
             toast.error(message);
