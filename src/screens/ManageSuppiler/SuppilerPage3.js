@@ -139,8 +139,7 @@ function SuppilerPage3(props) {
 
         return newSelectedOptions;
       });
-    },
-    300
+    }
   );
 
   const debouncedRadioTextChange = debounce((index, key, e) => {
