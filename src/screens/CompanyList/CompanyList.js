@@ -152,7 +152,11 @@ const CompanyList = (props) => {
                                                     <td>{data.company_code}</td>
                                                     <td>
                                                         {data.logo?.contentType ?
-                                                            (<div className='list-logo'><img src={`${process.env.REACT_APP_COMPANY_SERVICE}/company-logo/${data._id}`} /></div>) :
+                                                        <div className="image-container">
+                                                            <img src={`${process.env.REACT_APP_COMPANY_SERVICE}/company-logo/${data._id}`} alt="Company Logo"/>
+                                                        </div>    
+                                                            // (<div className='list-logo'><img src={`${process.env.REACT_APP_COMPANY_SERVICE}/company-logo/${data._id}`} /></div>) 
+                                                            :
                                                             (<div className='list-logo placeholder'>N/A</div>)}
                                                     </td>
                                                     <td>{data.name}</td>

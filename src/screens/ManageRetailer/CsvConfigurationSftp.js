@@ -50,10 +50,15 @@ function CsvConfigurationSftp(props) {
   const handleSyncFrequency = (e) => {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
+    let formattedValue = trimmedValue;
+
+    if (/^[1-9]$/.test(trimmedValue)) {
+      formattedValue = `0${trimmedValue}`; 
+    }
 
     setInitFormData((prevState) => ({
       ...prevState,
-      [name]: trimmedValue,
+      [name]: formattedValue,
     }));
 
     let updatedSyncFrequency = productSyncFrequency?.split(" ");
@@ -235,11 +240,13 @@ function CsvConfigurationSftp(props) {
       );
       const marketPlaceSettingId = localStorage.getItem("marketPlaceSettingId");
 
-      const productSyncFrequency = `${formData.get("minute")} ${formData.get(
-        "hour"
-      )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
-        "week"
-      )}`;
+      const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+        const value = formData.get(name);
+        const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
+        return formattedValue;
+      });
+
+      const productSyncFrequency = syncFrequencyValues.join(" ");
 
       const payload = {
         id: retailerIntegrationId,
@@ -248,7 +255,6 @@ function CsvConfigurationSftp(props) {
         settingType,
         productSyncFrequency,
       };
-console.log("payload",payload)
       setIsLoading(true)
       axios
         .post(`${API_PATH.CREATE_CSV_CONFIGURATION}`, payload)

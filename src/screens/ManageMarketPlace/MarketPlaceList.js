@@ -186,10 +186,13 @@ function MarketPlaceList(props) {
                           <td>{startIndex + idx}</td>
                           <td>
                             {market_place.logo ? (
-                              <img
-                                src={market_place.logo}
-                                className="list-logo"
-                              />
+                              <div className="image-container">
+                                <img src={market_place.logo} alt={market_place.name}/>
+                              </div>
+                              // <img
+                              //   src={market_place.logo}
+                              //   className="list-logo"
+                              // />
                             ) : (
                               <div className="list-logo placeholder">N/A</div>
                             )}
