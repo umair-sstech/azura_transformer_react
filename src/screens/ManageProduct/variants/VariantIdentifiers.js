@@ -73,7 +73,7 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
               </Accordion.Toggle>
             </Card.Header>
           {/*  <Accordion.Collapse eventKey="1" className="card-body">*/}
-              <Card.Body className="px-2 py-1">
+              <Card.Body className="custom-padding-card">
                 <label>VARIANT SKU</label>
                 <input
                   type="text"
@@ -146,7 +146,7 @@ const VariantIdentifiers = ({ identifiers, setIdentifiers }) => {
               </Accordion.Toggle>
             </Card.Header>
            { /*<Accordion.Collapse eventKey="0" className="card-body">*/}
-              <Card.Body className="px-2 py-1">
+              <Card.Body className="custom-padding-card">
                 <label>COAST PRICE</label>
                 <input
                   type="text"

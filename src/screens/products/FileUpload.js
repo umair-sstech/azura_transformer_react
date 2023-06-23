@@ -180,7 +180,7 @@ function FileUpload(props) {
                     </thead>
                     <tbody>
                       {fileData.map((filedata, idx) => (
-                        <tr key={filedata.id}>
+                        <tr key={filedata.id} className="custom-border-table">
                           <td>{startIndex + idx}</td>
                           <td>{filedata.supplierName}</td>
 

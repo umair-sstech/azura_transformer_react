@@ -235,7 +235,7 @@ function SuppilerPage4(props) {
               </thead>
               <tbody className="image-size-list">
                 {imageSize.map((size, index) => (
-                  <tr key={index}>
+                  <tr key={index} className="custom-border-table">
                     <td>
                       <div className="checkbox-container">
                         <input

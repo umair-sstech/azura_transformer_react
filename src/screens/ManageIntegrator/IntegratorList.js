@@ -182,7 +182,7 @@ function IntegratorList(props) {
                     </thead>
                     <tbody>
                       {integratorList.map((integrator, idx) => (
-                        <tr key={integrator.id}>
+                        <tr key={integrator.id} className="custom-border-table">
                           <td>{startIndex + idx}</td>
                           <td>
                             {integrator.logo ? (

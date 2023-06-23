@@ -182,7 +182,7 @@ function MarketPlaceList(props) {
                     </thead>
                     <tbody>
                       {marketPlaceList.map((market_place, idx) => (
-                        <tr key={market_place.id}>
+                        <tr key={market_place.id} className="custom-border-table">
                           <td>{startIndex + idx}</td>
                           <td>
                             {market_place.logo ? (

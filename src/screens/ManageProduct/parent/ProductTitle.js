@@ -30,7 +30,7 @@ const ProductTitle = (props) => {
               </Accordion.Toggle>
             </Card.Header>
             {/* <Accordion.Collapse eventKey="0"> */}
-              <Card.Body className="px-2 py-1">
+              <Card.Body className="custom-padding-card">
                 <input
                   type="text"
                   placeholder="Title..."

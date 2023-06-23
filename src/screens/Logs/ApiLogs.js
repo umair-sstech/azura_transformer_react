@@ -115,7 +115,7 @@ let filterList = [
                     </thead>
                     <tbody>
                       {apiLog?.map((apiLog, idx) => (
-                        <tr key={apiLog._id}>
+                        <tr key={apiLog._id} className="custom-border-table">
                           <td>{startIndex + idx}</td>
                           <td>{apiLog.method}</td>
                           <td style={{whiteSpace: "pre-wrap"}}>{apiLog.url}</td>

@@ -38,3 +38,6 @@
   .customSelect {
     z-index: 9999;
   }
+.custom-border-table {
+  border-bottom: 1px solid lightgray;
+}

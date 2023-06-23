@@ -49,7 +49,7 @@ const VariantDimension = ({dimensionValue, setDimensionValue}) => {
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">
-              <Card.Body className="px-2 py-1">
+              <Card.Body className="custom-padding-card">
                 <Row>
                   <div className="col-lg-6">
                     <label>DIMENSION UNIT</label>

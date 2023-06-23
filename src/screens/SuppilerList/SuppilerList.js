@@ -184,7 +184,7 @@ function SuppilerList(props) {
                     </thead>
                     <tbody>
                       {supplierList?.map((supplier, index) => (
-                        <tr key={supplier.id}>
+                        <tr key={supplier.id} className="custom-border-table">
                           <td>{startIndex + index}</td>
                           <td>
                             {supplier.logo ? (

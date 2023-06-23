@@ -46,7 +46,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
               </Accordion.Toggle>
             </Card.Header>
             {/*<Accordion.Collapse eventKey="1" className="card-body">*/}
-              <Card.Body className="px-2 py-1">
+              <Card.Body className="custom-padding-card">
                 <label>SKU</label>
                 <input
                   type="text"
@@ -98,7 +98,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
               </Accordion.Toggle>
             </Card.Header>
           {/*  <Accordion.Collapse eventKey="0" className="card-body">*/}
-              <Card.Body className="px-2 py-1">
+              <Card.Body className="custom-padding-card">
                 <label>CATEGORY 1</label>
                 <input
                   type="text"

@@ -180,7 +180,7 @@ const RetailerList = (props) => {
                           return null;
                         }
                         return (
-                          <tr key={data._id}>
+                          <tr key={data._id} className="custom-border-table">
                             <td>{startIndex + idx}</td>
                             <td>{data.retailer_code}</td>
                             <td>

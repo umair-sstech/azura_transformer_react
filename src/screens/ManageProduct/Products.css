@@ -72,6 +72,10 @@
   padding: 2px !important;
 }
 
+.custom-padding-card {
+  padding: 2px 10px 5px 10px !important;
+}
+
 .card-body label {
   font-size: 13px !important;
   color: #545454 !important;

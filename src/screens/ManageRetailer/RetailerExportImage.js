@@ -276,7 +276,7 @@ function RetailerExportImage(props) {
                       eventKey={index.toString()}
                       className="card-body"
                     >
-                      <Card.Body>
+                      <Card.Body className="custom-export-card">
                         <table className="table w-100 table-bordered">
                           <thead>
                             <tr>
@@ -322,7 +322,7 @@ function RetailerExportImage(props) {
                                 {item?.imageResize
                                   ?.split(",")
                                   .map((size, idx) => (
-                                    <tr key={idx}>
+                                    <tr key={idx} className="custom-border-table">
                                       <td>
                                         <div className="checkbox-container">
                                           <input

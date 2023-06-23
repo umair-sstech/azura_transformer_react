@@ -104,9 +104,19 @@
   margin-top: -10px;
 }
 
+.custom-export-card.card-body {
+  margin-top: -13px;
+  margin-bottom: -13px;
+  padding: 0px 5px !important;
+}
+
 span.text-danger.valiadtion {
   font-weight: 500;
   font-size: 13px;
+}
+
+.custom-border-table {
+  border-bottom: 1px solid lightgray;
 }
 
 @media screen and (max-width: 360px) {

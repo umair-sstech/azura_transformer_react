@@ -147,7 +147,7 @@ const CompanyList = (props) => {
                                         </thead>
                                         <tbody>
                                             {companyList.map((data, index) => {
-                                                return (<tr key={data._id}>
+                                                return (<tr key={data._id} className="custom-border-table">
                                                     <td>{startIndex + index}</td>
                                                     <td>{data.company_code}</td>
                                                     <td>
