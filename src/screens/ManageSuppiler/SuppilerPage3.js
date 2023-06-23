@@ -156,7 +156,7 @@ function SuppilerPage3(props) {
 
       return newTextVals;
     });
-  }, 300);
+  });
 
   const handleRadioTextChange = (index, key, e) => {
     debouncedRadioTextChange(index, key, e);
