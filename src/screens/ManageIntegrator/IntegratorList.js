@@ -23,8 +23,6 @@ function IntegratorList(props) {
   const history = useHistory();
   const [autoId, setAutoId] = useState(1);
 
-  const startIndex = (currentPage - 1) * dataLimit + 1
-
   const getSupplierInfo = async (currentPage, dataLimit) => {
     props.onLoading(true);
 
@@ -181,9 +179,9 @@ function IntegratorList(props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {integratorList.map((integrator, idx) => (
+                      {integratorList.map((integrator) => (
                         <tr key={integrator.id} className="custom-border-table">
-                          <td>{startIndex + idx}</td>
+                          <td>{integrator.id}</td>
                           <td>
                             {integrator.logo ? (
                               <div className="image-container">
