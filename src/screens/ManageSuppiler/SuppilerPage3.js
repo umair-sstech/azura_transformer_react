@@ -407,6 +407,8 @@ function SuppilerPage3(props) {
               if (imageType !== "folder_only") {
                 imageList = "";
               }
+            } else if (key === "Cost_Price" || key === "Retail_Price" || key === "Suggested_Sell_Price") {
+              additionalValue = selectedOption[key]?.additionalValue ? selectedOption[key].additionalValue : ""
             } else if (
               option.value === "hardcode_value" ||
               option.value === "use_AI" ||
