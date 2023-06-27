@@ -305,9 +305,8 @@ function ProductExport(props) {
           <table className="product-table  w-100 table-responsive-sm">
             <thead>
               <tr>
-                <th>
-                  <input type="checkbox" onChange={handleCheckboxChange} />
-                </th>
+              
+              <th></th>
                 <th>SuplierId</th>
                 <th>Supplier Name</th>
                 <th>Category</th>
