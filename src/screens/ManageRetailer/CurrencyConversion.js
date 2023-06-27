@@ -50,7 +50,7 @@ function CurrencyConversion(props) {
 
   };
 
-  const setDefaultCurrency = currencyList?.find((data) => data?.label?.includes("USD"))
+  const setDefaultCurrency = currencyList?.find((data) => data?.label?.includes("AUD"))
 
   const handleSelectChange = (selectedOptions) => {
     setSelectedCurrency(selectedOptions);
@@ -97,8 +97,8 @@ function CurrencyConversion(props) {
 
       if (success && data.length > 0) {
         const selectedCurrencyOption = {
-          value: data[0].currencyId === null ? "645b88c21dc294747c33338e" : data[0].currencyId,
-          label: data[0].currencyNames === undefined ? "USD" : data[0].currencyNames ,
+          value: data[0].currencyId === null ? "6459dc1f10e28f0b389bc1d3" : data[0].currencyId,
+          label: data[0].currencyNames === undefined ? "AUD" : data[0].currencyNames ,
         };
         setSelectedCurrency(selectedCurrencyOption);
       }

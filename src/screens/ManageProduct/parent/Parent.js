@@ -31,51 +31,51 @@ const Parent = (props) => {
     Category_1: "",
     Category_2: "",
     Category_3: "",
-    gender:"",
-    Season:"",
-    
+    gender: "",
+    Season: "",
+
   });
   const [colorValue, setColorValue] = useState("");
   const [sizeValue, setSizeValue] = useState("");
   const [customField, setCustomFields] = useState([]);
   const [attribute, setAttributes] = useState({
-    Model:"" ,
-    Country_of_Origin:"" ,
-    Season:"" ,
-    Type:"" ,
-    Sleeves:"" ,
-    Collar:"" ,
-    Pattern:"" ,
-    Pockets:"" ,
-    Neck:"" ,
-    Sole:"" ,
-    Additonal_Details:"" ,
-    Closure:"" ,
-    Handle_Drop:"" ,
-    Strap_Drop:"" ,
-    Dust_Bag:"" ,
-    Box:"" ,
-    Diameter:"" ,
-    Circumference:"" ,
-    Carat:"" ,
+    Model: "",
+    Country_of_Origin: "",
+    Season: "",
+    Type: "",
+    Sleeves: "",
+    Collar: "",
+    Pattern: "",
+    Pockets: "",
+    Neck: "",
+    Sole: "",
+    Additonal_Details: "",
+    Closure: "",
+    Handle_Drop: "",
+    Strap_Drop: "",
+    Dust_Bag: "",
+    Box: "",
+    Diameter: "",
+    Circumference: "",
+    Carat: "",
     'Sunglasses/Frames_Lens': "", // Add property for Sunglasses/Frames_Lens
     'Sunglasses/Frames_Material': "",
-    Watch_Hardware_Color:"" ,
-    Watch_Band_Color:"" ,
-    Watch_Case_Material:"" ,
-    Watch_Case_Shape:"" ,
-    Watch_Case_Color:"" ,
-    Watch_Brand_of_Movement:"" ,
-    Watch_Display:"" ,
-    Watch_Case_Thickness:"" ,
-    Watch_Case_Diameter:"" ,
-    Watch_Band_Material:"" ,
-    Watch_Crown:"" ,
-    Waterproof:"" ,
-    Watch_Power_Supply:"" ,
-    Watch_Band_Width:"" ,
-    Watch_Movement_Type:"" ,
-    Watch_Glass:""
+    Watch_Hardware_Color: "",
+    Watch_Band_Color: "",
+    Watch_Case_Material: "",
+    Watch_Case_Shape: "",
+    Watch_Case_Color: "",
+    Watch_Brand_of_Movement: "",
+    Watch_Display: "",
+    Watch_Case_Thickness: "",
+    Watch_Case_Diameter: "",
+    Watch_Band_Material: "",
+    Watch_Crown: "",
+    Waterproof: "",
+    Watch_Power_Supply: "",
+    Watch_Band_Width: "",
+    Watch_Movement_Type: "",
+    Watch_Glass: ""
   });
 
   const history = useHistory();
@@ -170,7 +170,7 @@ const Parent = (props) => {
   //       ...attribute,
   //       custom_fields: customField,
   //     };
-      
+
   //     if (title !== null) {
   //       payload.AI_TITLE = title;
   //     } else {
@@ -179,7 +179,7 @@ const Parent = (props) => {
   //     console.log("payload",payload)
   //     // return false
   //     const response = await axios.post(`${API_PATH.UPDATE_PRODUCT_DATA}`, payload);
-      
+
   //     const { success, message } = response.data;
   //     if (success) {
   //       variantDetails(activeKey);
@@ -193,7 +193,11 @@ const Parent = (props) => {
   //     setIsLoading(false);
   //   }
   // };
-  
+
+  const aiTitle = productData?.product?.[0] !== null ? productData?.product?.[0]?.AI_TITLE?.replace(/"/g, "") : productData?.product?.[0]?.Parent_Title;
+  const parentTitle = productData?.product?.[0] !== null ? productData?.product?.[0]?.Parent_Title : productData?.product?.[0]?.Variant_Title
+
+  const mainTitle = aiTitle ? aiTitle : parentTitle;
 
   return (
     <div className="product__container">
@@ -220,13 +224,7 @@ const Parent = (props) => {
           </div>
         </div>
 
-        <ProductContext.Provider
-          value={
-            productData.product?.[0]?.AI_TITLE != null
-              ? productData.product?.[0]?.AI_TITLE?.replace(/"/g, "")
-              : productData.product?.[0]?.Variant_Title
-          }
-        >
+        <ProductContext.Provider value={mainTitle} >
           <ProductTitle title={title} setTitle={setTitle} />
         </ProductContext.Provider>
 

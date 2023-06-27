@@ -153,12 +153,13 @@ function MarketPlacePage3(props) {
   
     setSyncFrequency(updatedSyncFrequency.join(" "));
   };
+
   const handleChange = (key, value) => {
-    const formData = new FormData(document.forms.form);
+    const formData = new FormData(document.forms.marketPlace3);
     formData.set(key, value);
-    // const errors = validateMarketPlaceProductSync(formData);
-    // setFormErrors(errors);
-    // setIsFormValid(Object.keys(errors).length === 0);
+    const errors = validateMarketPlaceProductSync(formData);
+    setFormErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
   };
 
   const handleInputChange = (e) => {
@@ -175,17 +176,17 @@ function MarketPlacePage3(props) {
     const protocol = selectedOption.value;
     setInitFormData({ ...initFormData, protocol });
     handleChange("protocol", protocol);
-    // setFormErrors({ ...formErrors, protocol: "" });
+    setFormErrors({ ...formErrors, protocol: "" });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    // const errors = validateMarketPlaceProductSync(formData);
-    // setFormErrors(errors);
+    const errors = validateMarketPlaceProductSync(formData);
+    setFormErrors(errors);
 
-    // if (Object.keys(errors).length === 0) {
+    if (Object.keys(errors).length === 0) {
       const supplierId = localStorage.getItem("marketPlaceId");
       const supplierName = localStorage.getItem("marketPlaceName");
 
@@ -221,7 +222,7 @@ function MarketPlacePage3(props) {
           console.error(error);
         })
         .finally(() => setIsLoading(false));
-    // }
+    }
   };
 
   const handleOnClick = (e) => {

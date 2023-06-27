@@ -12,6 +12,11 @@ const ProductParent = (props) => {
       ? productData?.variant
       : productData?.product;
 
+  const aiTitle = productData?.product?.[0] !== null ? productData?.product?.[0]?.AI_TITLE?.replace(/"/g, "") : productData?.product?.[0]?.Parent_Title;
+  const parentTitle = productData?.product?.[0] !== null ? productData?.product?.[0]?.Parent_Title : productData?.product?.[0]?.Variant_Title
+
+  const mainTitle = aiTitle ? aiTitle : parentTitle;
+
   const navigateToParent = (mainKey, key) => {
     if (activeKey === key) {
       setKey(mainKey);
@@ -25,7 +30,7 @@ const ProductParent = (props) => {
         <Card className="product__parent__card">
           <Card.Body onClick={() => navigateToParent("parent", "variants")} style={{ cursor: "pointer" }}>
             <Card.Subtitle style={{ textAlign: "center", marginTop: "10px", fontWeight: "600" }}>
-              {productData.product[0]?.AI_TITLE != null ? productData.product[0].AI_TITLE.replace(/"/g, "") : productData.product?.[0]?.Variant_Title}
+              {mainTitle}
             </Card.Subtitle>
             <Card.Text>
               <div className="d-flex px-3 justify-content-around align-items-center mt-3 mb-2" style={{ gap: "2em" }}>
@@ -74,8 +79,9 @@ const ProductParent = (props) => {
       <div className="d-flex flex-column" style={{ height: "350px", overflowY: "auto" }}>
         <div className="product__parent">
           {variantData?.map((variant, idx) => (
-            <Card key={variant.id} className="product__parent__card">
-              <Card.Body onClick={() => {navigateToParent(`variants`, "parent"); variantDetails(idx)}} style={{ cursor: "pointer" }}>
+            <Card key={variant.id} onClick={() => 
+              navigateToParent(`variants`, "parent")}>
+              <Card.Body className={`product__parent__card`} onClick={() => variantDetails(idx)} style={{ cursor: "pointer" }}>
                 <Card.Subtitle style={{ textAlign: "center", marginTop: "10px", fontWeight: "600" }}>
                   {variant?.AI_TITLE ? variant.AI_TITLE.replace(/"/g, "") : variant.Variant_Title}
                 </Card.Subtitle>
