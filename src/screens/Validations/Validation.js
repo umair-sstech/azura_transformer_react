@@ -46,41 +46,41 @@ export const validateSftpForm = (formData) => {
 
   if (!minute) {
     errors.minute = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(minute)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(minute)) {
     errors.minute = "Minute must contain only digits or '*'";
-  } else if(minute.length > 100) {
+  } else if (minute.length > 100) {
     errors.minute = "Please Enter Minute between 100 characters";
   }
 
   if (!hour) {
     errors.hour = "Hour is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(hour)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(hour)) {
     errors.hour = "Hour must contain only digits or '*'";
-  } else if(hour.length > 100) {
+  } else if (hour.length > 100) {
     errors.hour = "Please Enter Hour between 100 characters";
   }
 
   if (!day) {
     errors.day = "Day(Month) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(day)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(day)) {
     errors.day = "Day must contain only digits or '*'";
-  } else if(day.length > 100) {
+  } else if (day.length > 100) {
     errors.day = "Please Enter Day between 100 characters";
   }
 
   if (!month) {
     errors.month = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(month)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(month)) {
     errors.month = "Month must contain only digits or '*'";
-  } else if(month.length > 100) {
+  } else if (month.length > 100) {
     errors.month = "Please Enter Month between 100 characters";
   }
 
   if (!week) {
     errors.week = "Day(Week) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(week)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(week)) {
     errors.week = "week must contain only digits or '*'";
-  } else if(week.length > 100) {
+  } else if (week.length > 100) {
     errors.week = "Please Enter week between 100 characters";
   }
 
@@ -143,6 +143,7 @@ export const validateSftpForm = (formData) => {
 
   return errors;
 };
+
 export const validateHttpForm = (formData) => {
   const errors = {};
   const urlPath = formData.get("urlPath");
@@ -154,42 +155,42 @@ export const validateHttpForm = (formData) => {
 
   if (!minute) {
     errors.minute = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(minute)) {
-    errors.minute = "Minute must contain only digits or '*'";
-  } else if(minute.length > 100) {
-    errors.minute = "Please Enter Minute between 100 characters";
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(minute)) {
+    errors.minute =
+      "Minute must contain only digits, '*', or '*/' followed by digits";
+  } else if (minute.length > 100) {
+    errors.minute = "Please enter minute within 100 characters";
   }
-
   if (!hour) {
     errors.hour = "Hour is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(hour)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(hour)) {
     errors.hour = "Hour must contain only digits or '*'";
-  } else if(hour.length > 100) {
-    errors.hour = "Please Enter Hour between 100 characters";
+  } else if (hour.length > 100) {
+    errors.hour = "Please enter hour up to 100 characters";
   }
 
   if (!day) {
     errors.day = "Day(Month) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(day)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(day)) {
     errors.day = "Day must contain only digits or '*'";
-  } else if(day.length > 100) {
+  } else if (day.length > 100) {
     errors.day = "Please Enter Day between 100 characters";
   }
 
   if (!month) {
-    errors.month = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(month)) {
+    errors.month = "Month is required";
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(month)) {
     errors.month = "Month must contain only digits or '*'";
-  } else if(month.length > 100) {
-    errors.month = "Please Enter Month between 100 characters";
+  } else if (month.length > 100) {
+    errors.month = "Please enter month up to 100 characters";
   }
 
   if (!week) {
-    errors.week = "Day(Week) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(week)) {
+    errors.week = "Day (Week) is required";
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(week)) {
     errors.week = "Week must contain only digits or '*'";
-  } else if(week.length > 100) {
-    errors.week = "Please Enter Week between 100 characters";
+  } else if (week.length > 100) {
+    errors.week = "Please enter week up to 100 characters";
   }
 
   if (!urlPath) {
@@ -202,10 +203,8 @@ export const validateHttpForm = (formData) => {
 
   return errors;
 };
-
 export const validateMarketPlaceInfoForm = (formData) => {
   let errors = {};
-  
 
   if (!formData.get("name")) {
     errors.name = "Market Place name is required";
@@ -229,41 +228,41 @@ export const validateMarketPlaceProductSync = (formData) => {
 
   if (!minute) {
     errors.minute = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(minute)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(minute)) {
     errors.minute = "Minute must contain only digits or '*'";
-  } else if(minute.length > 100) {
+  } else if (minute.length > 100) {
     errors.minute = "Please Enter Minute between 100 characters";
   }
 
   if (!hour) {
     errors.hour = "Hour is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(hour)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(hour)) {
     errors.hour = "Hour must contain only digits or '*'";
-  } else if(hour.length > 100) {
+  } else if (hour.length > 100) {
     errors.hour = "Please Enter Hour between 100 characters";
   }
 
   if (!day) {
     errors.day = "Day(Month) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(day)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(day)) {
     errors.day = "Day must contain only digits or '*'";
-  } else if(day.length > 100) {
+  } else if (day.length > 100) {
     errors.day = "Please Enter Day between 100 characters";
   }
 
   if (!month) {
     errors.month = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(month)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(month)) {
     errors.month = "Month must contain only digits or '*'";
-  } else if(month.length > 100) {
+  } else if (month.length > 100) {
     errors.month = "Please Enter Month between 100 characters";
   }
 
   if (!week) {
     errors.week = "Day(Week) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(week)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(week)) {
     errors.week = "Week must contain only digits or '*'";
-  } else if(week.length > 100) {
+  } else if (week.length > 100) {
     errors.week = "Please Enter Week between 100 characters";
   }
 
@@ -284,41 +283,41 @@ export const validateMarketPlaceOrderSync = (formData) => {
 
   if (!minute) {
     errors.minute = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(minute)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(minute)) {
     errors.minute = "Minute must contain only digits or '*'";
-  } else if(minute.length > 100) {
+  } else if (minute.length > 100) {
     errors.minute = "Please Enter Minute between 100 characters";
   }
 
   if (!hour) {
     errors.hour = "Hour is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(hour)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(hour)) {
     errors.hour = "Hour must contain only digits or '*'";
-  } else if(hour.length > 100) {
+  } else if (hour.length > 100) {
     errors.hour = "Please Enter Hour between 100 characters";
   }
 
   if (!day) {
     errors.day = "Day(Month) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(day)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(day)) {
     errors.day = "Day must contain only digits or '*'";
-  } else if(day.length > 100) {
+  } else if (day.length > 100) {
     errors.day = "Please Enter Day between 100 characters";
   }
 
   if (!month) {
     errors.month = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(month)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(month)) {
     errors.month = "Month must contain only digits or '*'";
-  } else if(month.length > 100) {
+  } else if (month.length > 100) {
     errors.month = "Please Enter Month between 100 characters";
   }
 
   if (!week) {
     errors.week = "Day(Week) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(week)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(week)) {
     errors.week = "Week must contain only digits or '*'";
-  } else if(week.length > 100) {
+  } else if (week.length > 100) {
     errors.week = "Please Enter Week between 100 characters";
   }
 
@@ -339,41 +338,41 @@ export const validateMarketPlaceTrackingSync = (formData) => {
 
   if (!minute) {
     errors.minute = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(minute)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(minute)) {
     errors.minute = "Minute must contain only digits or '*'";
-  } else if(minute.length > 100) {
+  } else if (minute.length > 100) {
     errors.minute = "Please Enter Minute between 100 characters";
   }
 
   if (!hour) {
     errors.hour = "Hour is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(hour)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(hour)) {
     errors.hour = "Hour must contain only digits or '*'";
-  } else if(hour.length > 100) {
+  } else if (hour.length > 100) {
     errors.hour = "Please Enter Hour between 100 characters";
   }
 
   if (!day) {
     errors.day = "Day(Month) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(day)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(day)) {
     errors.day = "Day must contain only digits or '*'";
-  } else if(day.length > 100) {
+  } else if (day.length > 100) {
     errors.day = "Please Enter Day between 100 characters";
   }
 
   if (!month) {
     errors.month = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(month)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(month)) {
     errors.month = "Month must contain only digits or '*'";
-  } else if(month.length > 100) {
+  } else if (month.length > 100) {
     errors.month = "Please Enter Month between 100 characters";
   }
 
   if (!week) {
     errors.week = "Day(Week) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(week)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(week)) {
     errors.week = "Week must contain only digits or '*'";
-  } else if(week.length > 100) {
+  } else if (week.length > 100) {
     errors.week = "Please Enter Week between 100 characters";
   }
 
@@ -497,44 +496,44 @@ export const validateIntegratorProductSync = (formData) => {
 
   if (!minute) {
     errors.minute = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(minute)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(minute)) {
     errors.minute = "Minute must contain only digits or '*'";
-  } else if(minute.length > 100) {
+  } else if (minute.length > 100) {
     errors.minute = "Please Enter Minute between 100 characters";
   }
 
   if (!hour) {
     errors.hour = "Hour is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(hour)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(hour)) {
     errors.hour = "Hour must contain only digits or '*'";
-  } else if(hour.length > 100) {
+  } else if (hour.length > 100) {
     errors.hour = "Please Enter Hour between 100 characters";
   }
 
   if (!day) {
     errors.day = "Day(Month) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(day)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(day)) {
     errors.day = "Day must contain only digits or '*'";
-  } else if(day.length > 100) {
+  } else if (day.length > 100) {
     errors.day = "Please Enter Day between 100 characters";
   }
 
   if (!month) {
     errors.month = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(month)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(month)) {
     errors.month = "Month must contain only digits or '*'";
-  } else if(month.length > 100) {
+  } else if (month.length > 100) {
     errors.month = "Please Enter Month between 100 characters";
   }
 
   if (!week) {
     errors.week = "Day(Week) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(week)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(week)) {
     errors.week = "Week must contain only digits or '*'";
-  } else if(week.length > 100) {
+  } else if (week.length > 100) {
     errors.week = "Please Enter Week between 100 characters";
   }
-  
+
   // if (!productTimeZone) {
   //   errors.productTimeZone = "Please Select TimeZone";
   // }
@@ -552,41 +551,41 @@ export const validateIntegratorOrderSync = (formData) => {
 
   if (!minute) {
     errors.minute = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(minute)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(minute)) {
     errors.minute = "Minute must contain only digits or '*'";
-  } else if(minute.length > 100) {
+  } else if (minute.length > 100) {
     errors.minute = "Please Enter Minute between 100 characters";
   }
 
   if (!hour) {
     errors.hour = "Hour is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(hour)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(hour)) {
     errors.hour = "Hour must contain only digits or '*'";
-  } else if(hour.length > 100) {
+  } else if (hour.length > 100) {
     errors.hour = "Please Enter Hour between 100 characters";
   }
 
   if (!day) {
     errors.day = "Day(Month) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(day)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(day)) {
     errors.day = "Day must contain only digits or '*'";
-  } else if(day.length > 100) {
+  } else if (day.length > 100) {
     errors.day = "Please Enter Day between 100 characters";
   }
 
   if (!month) {
     errors.month = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(month)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(month)) {
     errors.month = "Month must contain only digits or '*'";
-  } else if(month.length > 100) {
+  } else if (month.length > 100) {
     errors.month = "Please Enter Month between 100 characters";
   }
 
   if (!week) {
     errors.week = "Day(Week) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(week)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(week)) {
     errors.week = "Week must contain only digits or '*'";
-  } else if(week.length > 100) {
+  } else if (week.length > 100) {
     errors.week = "Please Enter Week between 100 characters";
   }
 
@@ -607,41 +606,41 @@ export const validateIntegratorTrackingSync = (formData) => {
 
   if (!minute) {
     errors.minute = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(minute)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(minute)) {
     errors.minute = "Minute must contain only digits or '*'";
-  } else if(minute.length > 100) {
+  } else if (minute.length > 100) {
     errors.minute = "Please Enter Minute between 100 characters";
   }
 
   if (!hour) {
     errors.hour = "Hour is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(hour)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(hour)) {
     errors.hour = "Hour must contain only digits or '*'";
-  } else if(hour.length > 100) {
+  } else if (hour.length > 100) {
     errors.hour = "Please Enter Hour between 100 characters";
   }
 
   if (!day) {
     errors.day = "Day(Month) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(day)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(day)) {
     errors.day = "Day must contain only digits or '*'";
-  } else if(day.length > 100) {
+  } else if (day.length > 100) {
     errors.day = "Please Enter Day between 100 characters";
   }
 
   if (!month) {
     errors.month = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(month)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(month)) {
     errors.month = "Month must contain only digits or '*'";
-  } else if(month.length > 100) {
+  } else if (month.length > 100) {
     errors.month = "Please Enter Month between 100 characters";
   }
 
   if (!week) {
     errors.week = "Day(Week) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(week)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(week)) {
     errors.week = "Week must contain only digits or '*'";
-  } else if(week.length > 100) {
+  } else if (week.length > 100) {
     errors.week = "Please Enter Week between 100 characters";
   }
 
@@ -663,71 +662,70 @@ export const validateHttpBucket = (formData) => {
   const month = formData.get("month");
   const week = formData.get("week");
 
-
-  if(!bucketName) {
+  if (!bucketName) {
     errors.bucketName = "Bucket Name is Required.";
   } else if (bucketName.trim().length === 0) {
     errors.bucketName = "Bucket name can not be whitespace only";
   }
 
-  if(!secretKey) {
-    errors.secretKey = "Secret Key is Required." ;
+  if (!secretKey) {
+    errors.secretKey = "Secret Key is Required.";
   } else if (secretKey.trim().length === 0) {
     errors.secretKey = "Secret Key can not be whitespace only";
   }
 
-  if(!secretPassword) {
+  if (!secretPassword) {
     errors.secretPassword = "Password is required.";
   } else if (secretPassword.trim().length === 0) {
     errors.secretPassword = "Password can not be whitespace only";
   } else if (secretPassword.length > 50) {
-    errors.secretPassword = "Password must be less than 50 characters."
+    errors.secretPassword = "Password must be less than 50 characters.";
   }
-  if(!awsRegion) {
+  if (!awsRegion) {
     errors.awsRegion = "AWS Region Name is Required.";
   } else if (awsRegion.trim().length === 0) {
     errors.awsRegion = "AWS Region can not be whitespace only";
   }
   if (!minute) {
     errors.minute = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(minute)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(minute)) {
     errors.minute = "Minute must contain only digits or '*'";
-  } else if(minute.length > 100) {
+  } else if (minute.length > 100) {
     errors.minute = "Please Enter Minute between 100 characters";
   }
 
   if (!hour) {
     errors.hour = "Hour is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(hour)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(hour)) {
     errors.hour = "Hour must contain only digits or '*'";
-  } else if(hour.length > 100) {
+  } else if (hour.length > 100) {
     errors.hour = "Please Enter Hour between 100 characters";
   }
 
   if (!day) {
     errors.day = "Day(Month) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(day)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(day)) {
     errors.day = "Day must contain only digits or '*'";
-  } else if(day.length > 100) {
+  } else if (day.length > 100) {
     errors.day = "Please Enter Day between 100 characters";
   }
 
   if (!month) {
     errors.month = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(month)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(month)) {
     errors.month = "Month must contain only digits or '*'";
-  } else if(month.length > 100) {
+  } else if (month.length > 100) {
     errors.month = "Please Enter Month between 100 characters";
   }
 
   if (!week) {
     errors.week = "Day(Week) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(week)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(week)) {
     errors.week = "Week must contain only digits or '*'";
-  } else if(week.length > 100) {
+  } else if (week.length > 100) {
     errors.week = "Please Enter Week between 100 characters";
   }
-  
+
   return errors;
 };
 
@@ -745,63 +743,63 @@ export const validateSftpFtp = (formData) => {
   const week = formData.get("week");
   const urlPath = formData.get("urlPath");
 
-  if(!hostName) {
+  if (!hostName) {
     errors.hostName = "Host Name is Required.";
   } else if (hostName.trim().length === 0) {
     errors.hostName = "Host name can not be whitespace only";
   }
 
-  if(!ftpUserName) {
-    errors.ftpUserName = "UserName is Required." ;
+  if (!ftpUserName) {
+    errors.ftpUserName = "UserName is Required.";
   } else if (ftpUserName.trim().length === 0) {
     errors.ftpUserName = "User name can not be whitespace only";
   }
 
-  if(!password) {
+  if (!password) {
     errors.password = "Password is required.";
   } else if (password.trim().length === 0) {
     errors.password = "Password can not be whitespace only";
   } else if (password.length > 50) {
-    errors.password = "Password must be less than 50 characters"
+    errors.password = "Password must be less than 50 characters";
   }
 
   if (!minute) {
     errors.minute = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(minute)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(minute)) {
     errors.minute = "Minute must contain only digits or '*'";
-  } else if(minute.length > 100) {
+  } else if (minute.length > 100) {
     errors.minute = "Please Enter Minute between 100 characters";
   }
 
   if (!hour) {
     errors.hour = "Hour is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(hour)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(hour)) {
     errors.hour = "Hour must contain only digits or '*'";
-  } else if(hour.length > 100) {
+  } else if (hour.length > 100) {
     errors.hour = "Please Enter Hour between 100 characters";
   }
 
   if (!day) {
     errors.day = "Day(Month) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(day)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(day)) {
     errors.day = "Day must contain only digits or '*'";
-  } else if(day.length > 100) {
+  } else if (day.length > 100) {
     errors.day = "Please Enter Day between 100 characters";
   }
 
   if (!month) {
     errors.month = "Minute is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(month)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(month)) {
     errors.month = "Month must contain only digits or '*'";
-  } else if(month.length > 100) {
+  } else if (month.length > 100) {
     errors.month = "Please Enter Month between 100 characters";
   }
 
   if (!week) {
     errors.week = "Day(Week) is required";
-  } else if(!/^(\d+\/?)*\d+$/.test(week)) {
+  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(week)) {
     errors.week = "Week must contain only digits or '*'";
-  } else if(week.length > 100) {
+  } else if (week.length > 100) {
     errors.week = "Please Enter Week between 100 characters";
   }
 
@@ -809,8 +807,8 @@ export const validateSftpFtp = (formData) => {
     errors.protocol = "Protocol is required";
   }
 
-  if(!port) {
-    errors.port = 'Port number is Required';
+  if (!port) {
+    errors.port = "Port number is Required";
   }
   if (!urlPath) {
     errors.urlPath = "URL is required";
@@ -820,6 +818,5 @@ export const validateSftpFtp = (formData) => {
     errors.urlPath = "URL must be a valid URL";
   }
 
-  
   return errors;
 };
