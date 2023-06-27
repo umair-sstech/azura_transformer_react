@@ -32,7 +32,9 @@ function MarketPlacePage1(props) {
     { value: "Integrator", label: "Integrator", isDisabled: true },
   ];
 
-  const opt = [{ value: "Mysale", label: "Mysale" }];
+  // const opt = [{ value: "Mysale", label: "Mysale" }];
+  const opt = [{ value: "Next", label: "Next" }];
+
   const [initFormData, setInitFormData] = useState({
     prefixName: "",
     name: "",
@@ -57,34 +59,7 @@ function MarketPlacePage1(props) {
   useEffect(() => {
     getSupplierDataById();
   }, []);
-
-  // const generatePrefixName = (name) => {
-  //   let prefix = "";
-  //   const words = name.split(" ");
-  //   for (let i = 0; i < words.length && i < 3; i++) {
-  //     prefix += words[i].charAt(0);
-  //   }
-  //   prefix = prefix.toUpperCase();
-  //   if (prefix.length < 3) {
-  //     const remainingChars = 3 - prefix.length;
-  //     prefix += name.substring(0, remainingChars).toUpperCase();
-  //   }
-  //   return prefix;
-  // };
-
-  // const generatePrefixName = (name) => {
-  //   let prefix = "";
-  //   const words = name.split(" ");
-  //   for (let i = 0; i < words.length && i < 3; i++) {
-  //     prefix += words[i].charAt(0);
-  //   }
-  //   prefix = prefix.toUpperCase();
-  //   if (prefix.length < 3) {
-  //     const remainingChars = 3 - prefix.length;
-  //     prefix += name.substring(0, remainingChars).toUpperCase();
-  //   }
-  //   return prefix;
-  // };
+  
   const handleChange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };

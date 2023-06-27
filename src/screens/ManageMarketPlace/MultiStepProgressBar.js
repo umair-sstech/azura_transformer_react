@@ -4,10 +4,10 @@ import { ProgressBar, Step } from "react-step-progress-bar";
 
 const stepNames = [
   "Market Place Info",
-  "Category Mapping",
-  "Product Sync Settings",
-  "Order Sync Settings",
-  "Tracking Settings",
+  // "Category Mapping",
+  "Product Export Sync Settings",
+  "Order Settings",
+  // "Tracking Settings",
   // "Extra Settings",
 ];
 
@@ -64,9 +64,9 @@ const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
                     accomplished ? "accomplished" : null
                   }`}
                   onClick={() => {
-                    // if (page > index + 1) {
+                     if (page > index + 1) {
                       setPage(index + 1);
-                    // }
+                     }
                   }}
                 ></div>
               )}

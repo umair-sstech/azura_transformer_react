@@ -69,15 +69,15 @@ function ManageMarketPlace(props) {
       case "3":
         setPage("3");
         break;
-      case "4":
-        setPage("4");
-        break;
-      case "5":
-        setPage("5");
-        break;
-      case "6":
-        setPage("6");
-        break;
+      // case "4":
+      //   setPage("4");
+      //   break;
+      // case "5":
+      //   setPage("5");
+      //   break;
+      // case "6":
+      //   setPage("6");
+      //   break;
       default:
         setPage("1");
     }
@@ -149,30 +149,30 @@ function ManageMarketPlace(props) {
                             setPage={setPage}
                           />
                         ),
+                        // 2: (
+                        //   <MarketPlacePage2
+                        //     onButtonClick={nextPage}
+                        //     setPage={setPage}
+                        //   />
+                        // ),
                         2: (
-                          <MarketPlacePage2
-                            onButtonClick={nextPage}
-                            setPage={setPage}
-                          />
-                        ),
-                        3: (
                           <MarketPlacePage3
                             onButtonClick={nextPage}
                             setPage={setPage}
                           />
                         ),
-                        4: (
+                        3: (
                           <MarketPlacePage4
                             onButtonClick={nextPage}
                             setPage={setPage}
                           />
                         ),
-                        5: (
-                          <MarketPlacePage5
-                            onButtonClick={nextPage}
-                            setPage={setPage}
-                          />
-                        ),
+                        // 5: (
+                        //   <MarketPlacePage5
+                        //     onButtonClick={nextPage}
+                        //     setPage={setPage}
+                        //   />
+                        // ),
                         // 6: (
                         //   <MarketPlacePage6
                         //     onButtonClick={nextPage}

@@ -61,114 +61,81 @@ function MarketPlacePage4(props) {
   const handleSyncFrequency = (e) => {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
-
+  
+    let formattedValue = trimmedValue;
+  
+    if (/^[1-9]$/.test(trimmedValue)) {
+      formattedValue = `0${trimmedValue}`;
+    }
+  
     setInitFormData((prevState) => ({
       ...prevState,
-      [name]: trimmedValue,
+      [name]: formattedValue,
     }));
-
+  
     const updatedSyncFrequency = orderSyncFrequency.split(" ");
+    let error = "";
+  
     switch (name) {
       case "minute":
-        if (trimmedValue !== "*" && !/^(\d+\/?)*\d+$/.test(trimmedValue)) {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            minute: "Minute must contain only digits or '*'",
-          }));
-        } else if (trimmedValue.length > 100) {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            minute: "Please Enter Minute between 100 character",
-          }));
-        } else {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            minute: "",
-          }));
+        if (
+          !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
+          trimmedValue.length > 100
+        ) {
+          error = "Minute must contain only digits or '*'";
         }
         updatedSyncFrequency[0] = trimmedValue;
         break;
-
+  
       case "hour":
-        if (trimmedValue !== "*" && !/^(\d+\/?)*\d+$/.test(trimmedValue)) {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            hour: "Hour must contain only digits or '*'",
-          }));
-        } else if (trimmedValue.length > 100) {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            hour: "Please Enter Hour between 100 character",
-          }));
-        } else {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            hour: "",
-          }));
+        if (
+          !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
+          trimmedValue.length > 100
+        ) {
+          error = "Hour must contain only digits or '*'";
         }
         updatedSyncFrequency[1] = trimmedValue;
         break;
+  
       case "day":
-        if (trimmedValue !== "*" && !/^(\d+\/?)*\d+$/.test(trimmedValue)) {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            day: "Day(Month) must contain only digits or '*'",
-          }));
-        } else if (trimmedValue.length > 100) {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            day: "Please Enter Day between 100 character",
-          }));
-        } else {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            day: "",
-          }));
+        if (
+          !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
+          trimmedValue.length > 100
+        ) {
+          error = "Day(Month) must contain only digits or '*'";
         }
         updatedSyncFrequency[2] = trimmedValue;
         break;
+  
       case "month":
-        if (trimmedValue !== "*" && !/^(\d+\/?)*\d+$/.test(trimmedValue)) {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            month: "Month must contain only digits or '*'",
-          }));
-        } else if (trimmedValue.length > 100) {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            month: "Please Enter Month between 100 character",
-          }));
-        } else {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            month: "",
-          }));
+        if (
+          !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
+          trimmedValue.length > 100
+        ) {
+          error = "Month must contain only digits or '*'";
         }
         updatedSyncFrequency[3] = trimmedValue;
         break;
+  
       case "week":
-        if (trimmedValue !== "*" && !/^(\d+\/?)*\d+$/.test(trimmedValue)) {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            week: "Day(Week) must contain only digits or '*'",
-          }));
-        } else if (trimmedValue.length > 100) {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            week: "Please Enter Day(Week) between 100 character",
-          }));
-        } else {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            week: "",
-          }));
+        if (
+          !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
+          trimmedValue.length > 100
+        ) {
+          error = "Day(Week) must contain only digits or '*'";
         }
         updatedSyncFrequency[4] = trimmedValue;
         break;
+  
       default:
         break;
     }
-
+  
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: error,
+    }));
+  
     setOrderSyncFrequency(updatedSyncFrequency.join(" "));
   };
 
@@ -179,14 +146,6 @@ function MarketPlacePage4(props) {
     setFormErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   };
-
-  // const findDefaultTimeZone = timeZoneData.find((val) => val.text.toLowerCase().includes("sydney"))
-
-  // const handleTimeZoneChange = (selectedOption) => {
-  //   const orderTimeZone = selectedOption;
-  //   setInitFormData({ ...initFormData, orderTimeZone });
-  //   handleChange("orderTimeZone", orderTimeZone);
-  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -199,19 +158,15 @@ function MarketPlacePage4(props) {
       const integrationId = localStorage.getItem("marketPlaceId");
       const integrationName = localStorage.getItem("marketPlaceName");
 
-      // const {value, label} = initFormData.orderTimeZone || {};
-      // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
-
-      const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
-        "hour"
-      )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
-        "week"
-      )}`;
+      const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+        const value = formData.get(name);
+        const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
+        return formattedValue;
+      });
+      const orderSyncFrequency = syncFrequencyValues.join(" ");
 
       const payload = {
-        // ...initFormData,
         orderSyncFrequency,
-        // orderTimeZone: timeZoneString,
         integrationId,
         integrationName,
         type:"order"
@@ -250,19 +205,15 @@ function MarketPlacePage4(props) {
       const integrationId = localStorage.getItem("marketPlaceId");
       const integrationName = localStorage.getItem("marketPlaceName");
 
-      // const {value, label} = initFormData.orderTimeZone || {};
-      // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
-
-      const orderSyncFrequency = `${formData.get("minute")} ${formData.get(
-        "hour"
-      )} ${formData.get("day")} ${formData.get("month")} ${formData.get(
-        "week"
-      )}`;
+     const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+        const value = formData.get(name);
+        const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
+        return formattedValue;
+      });
+      const orderSyncFrequency = syncFrequencyValues.join(" ");
 
       const payload = {
-        // ...initFormData,
         orderSyncFrequency,
-        // orderTimeZone: timeZoneString,
         integrationId,
         integrationName,
         type:"order"
@@ -326,7 +277,7 @@ function MarketPlacePage4(props) {
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
             <div className="d-flex">
-              <button
+             {/* <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="submit"
               >
@@ -337,7 +288,7 @@ function MarketPlacePage4(props) {
                 ) : (
                   "Save & Next"
                 )}
-              </button>
+                </button>*/}
               <button
                 className="btn btn-primary w-auto btn-lg mr-2"
                 type="button"
