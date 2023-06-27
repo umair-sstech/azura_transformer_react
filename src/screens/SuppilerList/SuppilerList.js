@@ -23,8 +23,6 @@ function SuppilerList(props) {
   const [type, setType] = useState("Supplier");
   const [autoId, setAutoId] = useState(1);
 
-  const startIndex = (currentPage - 1) * dataLimit + 1
-
   const history = useHistory();
 
   const getSupplierInfo = async (currentPage, dataLimit) => {
@@ -183,9 +181,9 @@ function SuppilerList(props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {supplierList?.map((supplier, index) => (
+                      {supplierList?.map((supplier) => (
                         <tr key={supplier.id} className="custom-border-table">
-                          <td>{startIndex + index}</td>
+                          <td>{supplier.id}</td>
                           <td>
                             {supplier.logo ? (
                               <div className="image-container">

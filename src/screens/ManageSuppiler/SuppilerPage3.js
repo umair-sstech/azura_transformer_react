@@ -20,24 +20,33 @@ function SuppilerPage3(props) {
 
   const [options, setOptions] = useState([
     {
+      value: "",
+      label: "Select",
+      disabled: true,
+    },
+    {
       value: "do_nothing",
       label: "Do Nothing",
+      disabled: false,
     },
     {
       value: "hardcode_value",
       label: "Hardcode Value",
+      disabled: false,
       textbox: true,
     },
     {
       value: "use_AI",
       label: "Use AI",
       textbox: true,
+      disabled: false,
       message: "{Parent_Title}",
     },
     {
       value: "extract",
       label: "Extract",
       textbox: true,
+      disabled: false,
     },
   ]);
 
@@ -244,6 +253,8 @@ function SuppilerPage3(props) {
               if (imageType !== "folder_only") {
                 imageList = "";
               }
+            } else if (key === "Cost_Price" || key === "Retail_Price" || key === "Suggested_Sell_Price") {
+              additionalValue = selectedOption[key]?.additionalValue ? selectedOption[key].additionalValue : ""
             } else if (
               option.value === "hardcode_value" ||
               option.value === "use_AI" ||
@@ -396,6 +407,8 @@ function SuppilerPage3(props) {
               if (imageType !== "folder_only") {
                 imageList = "";
               }
+            } else if (key === "Cost_Price" || key === "Retail_Price" || key === "Suggested_Sell_Price") {
+              additionalValue = selectedOption[key]?.additionalValue ? selectedOption[key].additionalValue : ""
             } else if (
               option.value === "hardcode_value" ||
               option.value === "use_AI" ||
@@ -530,6 +543,7 @@ function SuppilerPage3(props) {
           ...csvJSON.map((option) => ({
             value: option,
             label: option,
+            disabled: false,
           })),
         ];
         const csvJSON1 = supplierData.csvJSON || [];
@@ -889,6 +903,66 @@ function SuppilerPage3(props) {
                               />
                             </div>
                           );
+                        } else if (key === "Cost_Price") {
+                          additionalInfo = (
+                            <>
+                              <textarea
+                                placeholder="Enter a value"
+                                value={
+                                  selectedOptions[index]?.[key]
+                                    ?.additionalValue
+                                }
+                                className="additional-textbox rounded"
+                                onChange={(e) => {
+                                  handleAdditionalValueChange(
+                                    index,
+                                    key,
+                                    e.target.value
+                                  );
+                                }}
+                              ></textarea>
+                            </>
+                          );
+                        } else if (key === "Retail_Price") {
+                          additionalInfo = (
+                            <>
+                              <textarea
+                                placeholder="Enter a value"
+                                value={
+                                  selectedOptions[index]?.[key]
+                                    ?.additionalValue
+                                }
+                                className="additional-textbox rounded"
+                                onChange={(e) => {
+                                  handleAdditionalValueChange(
+                                    index,
+                                    key,
+                                    e.target.value
+                                  );
+                                }}
+                              ></textarea>
+                            </>
+                          );
+                        } else if (key === "Suggested_Sell_Price") {
+                          additionalInfo = (
+                            <>
+                              <textarea
+                                placeholder="Enter a value"
+                                value={
+                                  selectedOptions[index]?.[key]
+                                    ?.additionalValue
+                                }
+                                className="additional-textbox rounded"
+                                onChange={(e) => {
+                                  handleAdditionalValueChange(
+                                    index,
+                                    key,
+                                    e.target.value
+                                  );
+                                }}
+                              ></textarea>
+                            </>
+                          );
                         } else {
                           additionalInfo = (
                             <>
@@ -993,6 +1067,7 @@ function SuppilerPage3(props) {
                                       selectedOption
                                     )
                                   }
+                                  isOptionDisabled={(option) => option.disabled}
                                   isSearchable={true}
                                   className="select"
                                   styles={{

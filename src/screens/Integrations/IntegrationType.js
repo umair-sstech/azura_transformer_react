@@ -32,8 +32,6 @@ function IntegrationType(props) {
 
   const history = useHistory();
 
-  const startIndex = (currentPage - 1) * dataLimit + 1;
-
   const handleChange = (selectedOption) => {
     setSelectedOption(selectedOption);
     if (selectedOption.value === "Supplier") {
@@ -236,9 +234,9 @@ function IntegrationType(props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {supplierList?.map((supplier, index) => (
+                      {supplierList?.map((supplier) => (
                         <tr key={supplier.id} className="custom-border-table">
-                          <td>{startIndex + index}</td>
+                          <td>{supplier.id}</td>
                           <td>
                             {supplier.logo ? (
                               <div className="image-container">

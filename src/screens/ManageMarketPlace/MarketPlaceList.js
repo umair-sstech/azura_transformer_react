@@ -23,8 +23,6 @@ function MarketPlaceList(props) {
   const [type, setType] = useState("MarketPlace");
   const [autoId, setAutoId] = useState(1);
 
-  const startIndex = (currentPage - 1) * dataLimit + 1
-
   const history = useHistory();
 
   const getSupplierInfo = async (currentPage, dataLimit) => {
@@ -181,9 +179,9 @@ function MarketPlaceList(props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {marketPlaceList.map((market_place, idx) => (
+                      {marketPlaceList.map((market_place) => (
                         <tr key={market_place.id} className="custom-border-table">
-                          <td>{startIndex + idx}</td>
+                          <td>{market_place.id}</td>
                           <td>
                             {market_place.logo ? (
                               <div className="image-container">

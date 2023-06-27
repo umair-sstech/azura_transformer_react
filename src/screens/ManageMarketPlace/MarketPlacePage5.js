@@ -74,7 +74,7 @@ function MarketPlacePage5(props) {
     const updatedSyncFrequency = trackingSyncFrequency.split(" ");
     switch (name) {
       case "minute":
-        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+        if (trimmedValue !== "*" && !/^(\d+\/?)*\d+$/.test(trimmedValue)) {
           setFormErrors((prevErrors) => ({
             ...prevErrors,
             minute: "Minute must contain only digits or '*'",
@@ -94,7 +94,7 @@ function MarketPlacePage5(props) {
         break;
 
       case "hour":
-        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+        if (trimmedValue !== "*" && !/^(\d+\/?)*\d+$/.test(trimmedValue)) {
           setFormErrors((prevErrors) => ({
             ...prevErrors,
             hour: "Hour must contain only digits or '*'",
@@ -113,7 +113,7 @@ function MarketPlacePage5(props) {
         updatedSyncFrequency[1] = trimmedValue;
         break;
       case "day":
-        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+        if (trimmedValue !== "*" && !/^(\d+\/?)*\d+$/.test(trimmedValue)) {
           setFormErrors((prevErrors) => ({
             ...prevErrors,
             day: "Day(Month) must contain only digits or '*'",
@@ -132,7 +132,7 @@ function MarketPlacePage5(props) {
         updatedSyncFrequency[2] = trimmedValue;
         break;
       case "month":
-        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+        if (trimmedValue !== "*" && !/^(\d+\/?)*\d+$/.test(trimmedValue)) {
           setFormErrors((prevErrors) => ({
             ...prevErrors,
             month: "Month must contain only digits or '*'",
@@ -151,7 +151,7 @@ function MarketPlacePage5(props) {
         updatedSyncFrequency[3] = trimmedValue;
         break;
       case "week":
-        if (trimmedValue !== "*" && !/^\d*$/.test(trimmedValue)) {
+        if (trimmedValue !== "*" && !/^(\d+\/?)*\d+$/.test(trimmedValue)) {
           setFormErrors((prevErrors) => ({
             ...prevErrors,
             week: "Day(Week) must contain only digits or '*'",
