@@ -17,6 +17,7 @@ function ProductExport(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [selectedCheckbox, setSelectedCheckbox] = useState([]);
+  const [selectedAllCheckbox, setSelectedAllCheckbox] = useState(false);
 
   const history = useHistory();
 
@@ -43,10 +44,17 @@ function ProductExport(props) {
             supplierNames: val.supplierNames,
           }));
         setProductData(selectedDataFromApi);
-        const selectedSupplierIds = selectedDataFromApi.map((item) =>
-          item.categoryId.split(",")
+        const selectedSupplierIds = selectedDataFromApi.map((item) => ({
+          category_id: item.categoryId,
+          supplierId: item.supplierId
+        })
         );
-        setSelectedCheckbox(selectedSupplierIds.flat());
+        const temp = selectedSupplierIds?.flatMap(item => {
+          const categoryIds = item.category_id.split(',');
+          return categoryIds.map(categoryId => ({ categoryId, supplierId: item.supplierId }));
+        });
+        setSelectedCheckbox(temp);
+        // setSelectedCheckbox(selectedSupplierIds.flat());
       }
     } catch (error) {
       console.error("Error:", error);
@@ -79,24 +87,48 @@ function ProductExport(props) {
     checkboxes.forEach((checkbox) => {
       checkbox.checked = e.target.checked;
     });
+    if (e.target.checked) {
+      const allCheckboxValues = data?.supplier_product.map((item) => ({
+        categoryId: String(item.category_id),
+        supplierId: String(item.supplierId)
+      }));
+      setSelectedCheckbox(allCheckboxValues);
+    } else {
+      setSelectedCheckbox([]);
+    }
+
+    setSelectedAllCheckbox(e.target.checked);
   };
 
-  const getCheckedCheckboxVal = (id) => {
-    // return selectedCheckbox?.some(data => data.includes(String(id)));
-    return selectedCheckbox?.some((data) =>
-      data.split(",").includes(String(id))
-    );
+  const getCheckedCheckboxVal = (id, supplierId) => {
+    // return selectedCox?.some((data) =>
+    //   data.split(",").includes(String(id))heckb
+    // );
+    return selectedCheckbox?.some(data => (data.categoryId === String(id) && data.supplierId === String(supplierId)));
   };
 
-  const handleCheckboxChange1 = (event) => {
+  const handleCheckboxChange1 = (event, supplierId) => {
     const { value, checked } = event.target;
     const id = value;
 
     if (checked) {
-      setSelectedCheckbox([...selectedCheckbox, id]);
+      setSelectedCheckbox((prevSelected) => [
+        ...prevSelected,
+        { categoryId: String(id), supplierId: String(supplierId) }
+      ]);
+      // setSelectedCheckbox([...selectedCheckbox, id]);
     } else {
-      setSelectedCheckbox(selectedCheckbox.filter((rowId) => rowId !== id));
+      setSelectedCheckbox((prevSelected) =>
+        prevSelected.filter(
+          (selection) =>
+            selection.categoryId !== id || selection.supplierId !== String(supplierId)
+        )
+      );
+      // setSelectedCheckbox(selectedCheckbox.filter((rowId) => rowId !== id));
     }
+
+    const checkboxes = document.querySelectorAll('.product-table tbody input[type="checkbox"]');
+    setSelectedAllCheckbox(Array.from(checkboxes).every((checkbox) => checkbox.checked));
   };
 
   const checkAnyCheckboxChecked = (checkboxes) => {
@@ -305,11 +337,13 @@ function ProductExport(props) {
           <table className="product-table  w-100 table-responsive-sm">
             <thead>
               <tr>
-              
-              <th></th>
+                <th>
+                  <input type="checkbox" onChange={handleCheckboxChange} />
+                </th>
                 <th>SuplierId</th>
                 <th>Supplier Name</th>
                 <th>Category</th>
+                {/* <th>CategoryId</th> */}
                 <th>Product Count</th>
               </tr>
             </thead>
@@ -322,13 +356,15 @@ function ProductExport(props) {
                         type="checkbox"
                         // value={product.supplierId}
                         value={product.category_id}
-                        checked={getCheckedCheckboxVal(product?.category_id)}
-                        onChange={handleCheckboxChange1}
+                        // checked={getCheckedCheckboxVal(product?.category_id, product?.supplierId)}
+                        checked={selectedCheckbox?.some((box) => box.categoryId === String(product.category_id) && box.supplierId === String(product.supplierId))}
+                        onChange={(e) => handleCheckboxChange1(e, product.supplierId)}
                       />
                     </td>
                     <td style={{ width: "6%" }}>{product.supplierId}</td>
                     <td style={{ width: "30%" }}>{product.supplierData}</td>
                     <td>{product.azura_category_tree}</td>
+                    {/* <td>{product.category_id}</td> */}
                     <td>{product.product_count}</td>
                   </tr>
                 ))}
