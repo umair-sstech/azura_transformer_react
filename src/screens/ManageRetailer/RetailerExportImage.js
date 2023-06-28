@@ -187,6 +187,7 @@ function RetailerExportImage(props) {
         localStorage.removeItem("supplierSettingId");
         localStorage.removeItem("selectedSupplierName");
         localStorage.removeItem("retailerIntegrationId");
+        localStorage.removeItem("currentPage");
         toast.success(message);
         history.push("/setting-retailer-list");
       } else {

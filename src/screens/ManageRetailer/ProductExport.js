@@ -338,7 +338,7 @@ function ProductExport(props) {
             <thead>
               <tr>
                 <th>
-                  <input type="checkbox" onChange={handleCheckboxChange} />
+                  <input type="checkbox" checked={selectedCheckbox?.length === data?.supplier_product?.length} onChange={handleCheckboxChange} />
                 </th>
                 <th>SuplierId</th>
                 <th>Supplier Name</th>

@@ -89,13 +89,14 @@
       font-size: 6px;
     }
   }
-  .stepNamesContainer {
+  .marketPlaceContainer {
     display: flex;
     /* margin-bottom: 10px */
     margin-bottom: 19px;
     margin-left: 0%;
     justify-content: space-between;
-    margin-right: -5%
+    margin-right: -5%;
+    max-width: 1070px;
   }
   
   .stepName {
