@@ -76,7 +76,12 @@ function CsvConfiguration(props) {
       [name]: formattedValue,
     }));
   
-    const updatedSyncFrequency = productSyncFrequency.split(" ");
+    let updatedSyncFrequency = [];
+  
+    if (productSyncFrequency) {
+      updatedSyncFrequency = productSyncFrequency.split(" ");
+    }
+  
     let error = "";
   
     switch (name) {
@@ -209,7 +214,6 @@ function CsvConfiguration(props) {
         productSyncFrequency,
         settingType,
       };
-
       setIsLoading(true);
       axios
         .post(`${API_PATH.CREATE_CSV_CONFIGURATION}`, payload)

@@ -62,7 +62,12 @@ function CsvConfigurationSftp(props) {
       [name]: formattedValue,
     }));
   
-    const updatedSyncFrequency = productSyncFrequency.split(" ");
+    let updatedSyncFrequency = [];
+  
+    if (productSyncFrequency) {
+      updatedSyncFrequency = productSyncFrequency.split(" ");
+    }
+  
     let error = "";
   
     switch (name) {
@@ -166,7 +171,7 @@ function CsvConfigurationSftp(props) {
         const { success, data } = response.data;
         if (success && data.length > 0) {
           const retailerIntegration = data[0];
-          
+
           const { productSyncFrequency } = retailerIntegration;
 
           setProductSyncFrequency(productSyncFrequency);
@@ -175,9 +180,9 @@ function CsvConfigurationSftp(props) {
             hostName: retailerIntegration.hostName,
             ftpUserName: retailerIntegration.ftpUserName,
             port: retailerIntegration.port,
-            password:retailerIntegration.password,
+            password: retailerIntegration.password,
             urlPath: retailerIntegration.urlPath,
-            protocol: retailerIntegration.protocol
+            protocol: retailerIntegration.protocol,
           });
         }
       })
@@ -185,7 +190,7 @@ function CsvConfigurationSftp(props) {
         console.error(error);
       });
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -199,7 +204,13 @@ function CsvConfigurationSftp(props) {
       );
       const marketPlaceSettingId = localStorage.getItem("marketPlaceSettingId");
 
-      const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+      const syncFrequencyValues = [
+        "minute",
+        "hour",
+        "day",
+        "month",
+        "week",
+      ].map((name) => {
         const value = formData.get(name);
         const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
         return formattedValue;
@@ -214,7 +225,7 @@ function CsvConfigurationSftp(props) {
         settingType,
         productSyncFrequency,
       };
-      setIsLoading(true)
+      setIsLoading(true);
       axios
         .post(`${API_PATH.CREATE_CSV_CONFIGURATION}`, payload)
         .then((response) => {
@@ -222,7 +233,6 @@ function CsvConfigurationSftp(props) {
           if (success) {
             toast.success(message);
             onSubmit();
-         
           } else {
             toast.error(message);
           }
@@ -312,7 +322,9 @@ function CsvConfigurationSftp(props) {
                     }
                   />
                   {formErrors.ftpUserName && (
-                    <span className="text-danger">{formErrors.ftpUserName}</span>
+                    <span className="text-danger">
+                      {formErrors.ftpUserName}
+                    </span>
                   )}
                 </div>
               </div>
