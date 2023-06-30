@@ -370,6 +370,9 @@ function ProductExport(props) {
                 ))}
             </tbody>
           </table>
+          {data?.supplier_product.length === 0 && (
+            <h4 className="no-data">No Data Found</h4>
+          )}
         </div>
       </form>
     </>

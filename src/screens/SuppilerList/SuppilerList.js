@@ -181,13 +181,13 @@ function SuppilerList(props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {supplierList?.map((supplier) => (
+                      {supplierList?.length > 0 && supplierList?.map((supplier) => (
                         <tr key={supplier.id} className="custom-border-table">
                           <td>{supplier.id}</td>
                           <td>
                             {supplier.logo ? (
                               <div className="image-container">
-                                <img src={supplier.logo} alt={supplier.name}/>
+                                <img src={supplier.logo} alt={supplier.name} />
                               </div>
                             ) : (
                               <div className="list-logo placeholder">N/A</div>
@@ -199,11 +199,11 @@ function SuppilerList(props) {
                           <td>
                             {supplier.updated
                               ? moment(supplier.updated_on).format(
-                                "MM/DD/YYYY hh:mm a"
-                              )
+                                  "MM/DD/YYYY hh:mm a"
+                                )
                               : moment(supplier.created_on).format(
-                                "MM/DD/YYYY hh:mm a"
-                              )}
+                                  "MM/DD/YYYY hh:mm a"
+                                )}
                           </td>
 
                           <>
@@ -242,28 +242,34 @@ function SuppilerList(props) {
                       ))}
                     </tbody>
                   </table>
-                  <div className="pagination-wrapper">
-                    <Pagination
-                      current={currentPage}
-                      total={totalPages}
-                      onPageChange={setCurrentPage}
-                      maxWidth={400}
-                    />
-                    <select
-                      name="companyOwner"
-                      className="form-control"
-                      onChange={(e) => {
-                        setCurrentPage(1);
-                        setdataLimit(e.target.value);
-                      }}
-                    >
-                     
-                      <option value={10}>10</option>
-                      <option value={20}>20</option>
-                      <option value={50}>50</option>
-                      <option value={100}>100</option>
-                    </select>
-                  </div>
+                  {
+                    supplierList?.length === 0 && (
+                      <h4 className="no-data" style={{color: props.loading ? 'white' : '#8b8a8a'}}>No Data Found</h4>
+                    )
+                  }
+                  {supplierList?.length > 0 && (
+                    <div className="pagination-wrapper">
+                      <Pagination
+                        current={currentPage}
+                        total={totalPages}
+                        onPageChange={setCurrentPage}
+                        maxWidth={400}
+                      />
+                      <select
+                        name="companyOwner"
+                        className="form-control"
+                        onChange={(e) => {
+                          setCurrentPage(1);
+                          setdataLimit(e.target.value);
+                        }}
+                      >
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                      </select>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

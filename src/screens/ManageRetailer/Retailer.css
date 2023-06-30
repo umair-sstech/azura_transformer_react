@@ -119,6 +119,12 @@ span.text-danger.valiadtion {
   border-bottom: 1px solid lightgray;
 }
 
+.no-data {
+  width: 100%;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
 @media screen and (max-width: 360px) {
   .btn-lg {
     padding: 5px !important;

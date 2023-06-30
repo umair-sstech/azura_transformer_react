@@ -25,7 +25,7 @@ const RetailerList = (props) => {
   const [retailerId, setRetailerId] = useState("");
   const [autoId, setAutoId] = useState(1);
 
-  const startIndex = (currentPage - 1) * dataLimit + 1
+  const startIndex = (currentPage - 1) * dataLimit + 1;
 
   const companyList = useCompanyList(props.user.data.role);
 
@@ -34,7 +34,7 @@ const RetailerList = (props) => {
     setUserRole(user.role);
     setRetailerId(user.retailer);
     getDataFromApi(searchText);
-  }, [currentPage, dataLimit,props.user.data]);
+  }, [currentPage, dataLimit, props.user.data]);
 
   useEffect(() => {
     getDataFromApi(searchText);
@@ -42,11 +42,11 @@ const RetailerList = (props) => {
 
   const getDataFromApi = (search = "active") => {
     props.onLoading(true);
-      //   let apiURL = `${process.env.REACT_APP_RETAILER_SERVICE}/get-retailer-list?page=${currentPage}&limit=${dataLimit}&searchText=${search}`;
-  
-  //   if (userRole === "RETAILER_ADMIN") {
-  //     apiURL += `&retailerId=${retailerId}`;
-  //   }
+    //   let apiURL = `${process.env.REACT_APP_RETAILER_SERVICE}/get-retailer-list?page=${currentPage}&limit=${dataLimit}&searchText=${search}`;
+
+    //   if (userRole === "RETAILER_ADMIN") {
+    //     apiURL += `&retailerId=${retailerId}`;
+    //   }
     axios
       .get(
         `${process.env.REACT_APP_RETAILER_SERVICE}/get-retailer-list?page=${currentPage}&limit=${dataLimit}&searchText=${search}`
@@ -66,15 +66,14 @@ const RetailerList = (props) => {
       });
   };
 
-
   const updateCompanyHandler = (id) => {
     localStorage.setItem("newlyAddedRetailer", id);
     history.push("/manage-retailer");
   };
 
   const retailerSetting = (id) => {
-    localStorage.setItem("newlyAddedRetailer", id)
-  }
+    localStorage.setItem("newlyAddedRetailer", id);
+  };
 
   const activateDeactivate = (event, id) => {
     const status = event.target.checked;
@@ -124,9 +123,7 @@ const RetailerList = (props) => {
         <div className="container-fluid">
           <PageHeader
             HeaderText="Retailer List"
-            Breadcrumb={[
-              { name: "Retailer List", navigate: "#" },
-            ]}
+            Breadcrumb={[{ name: "Retailer List", navigate: "#" }]}
           />
           <div className="tab-component">
             <div className="card">
@@ -176,7 +173,10 @@ const RetailerList = (props) => {
                     </thead>
                     <tbody>
                       {retailerList.map((data, idx) => {
-                        if (userRole === "RETAILER_ADMIN" && data._id !== retailerId) {
+                        if (
+                          userRole === "RETAILER_ADMIN" &&
+                          data._id !== retailerId
+                        ) {
                           return null;
                         }
                         return (
@@ -186,14 +186,17 @@ const RetailerList = (props) => {
                             <td>
                               {data.logo?.contentType ? (
                                 <div className="image-container">
-                                  <img src={`${process.env.REACT_APP_RETAILER_SERVICE}/retailer-logo/${data._id}`} alt="name"/>
+                                  <img
+                                    src={`${process.env.REACT_APP_RETAILER_SERVICE}/retailer-logo/${data._id}`}
+                                    alt="name"
+                                  />
                                 </div>
+                              ) : (
                                 // <div className="list-logo">
                                 //   <img
                                 //     src={`${process.env.REACT_APP_RETAILER_SERVICE}/retailer-logo/${data._id}`}
                                 //   />
                                 // </div>
-                              ) : (
                                 <div className="list-logo placeholder">N/A</div>
                               )}
                             </td>
@@ -201,8 +204,8 @@ const RetailerList = (props) => {
                             <td>
                               {data.updated_on
                                 ? moment(data.updated_on).format(
-                                  "MM/DD/YYYY hh:mm a"
-                                )
+                                    "MM/DD/YYYY hh:mm a"
+                                  )
                                 : "N/A"}
                             </td>
                             {props.user.permissions.update_retailer ? (
@@ -230,39 +233,45 @@ const RetailerList = (props) => {
                               </>
                             ) : null}
                             <td>
-                              <Link className="link-btn  px-2 py-1" to={'/setting-retailer-list'} onClick={() => retailerSetting(data._id)}>
+                              <Link
+                                className="link-btn  px-2 py-1"
+                                to={"/setting-retailer-list"}
+                                onClick={() => retailerSetting(data._id)}
+                              >
                                 Add Setting
                               </Link>
-
                             </td>
                           </tr>
                         );
                       })}
                     </tbody>
                   </table>
-                  <div className="pagination-wrapper">
-                  <Pagination
-                    current={currentPage}
-                    total={totalPages}
-                    onPageChange={setCurrentPage}
-                    maxWidth={400}
-                  />
-                  <select
-                    name="companyOwner"
-                    className="form-control"
-                    onChange={(e) => {
-                      setCurrentPage(1);
-                      setdataLimit(e.target.value);
-                    }}
-                  >
-                    
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                    <option value={50}>50</option>
-                    <option value={100}>100</option>
-                  </select>
-                </div>
-                
+                  {retailerList?.length === 0 && (
+                    <h4 className="no-data" style={{color: props.loading ? 'white' : '#8b8a8a'}}>No Data Found</h4>
+                  )}
+                  {retailerList?.length > 0 && (
+                    <div className="pagination-wrapper">
+                      <Pagination
+                        current={currentPage}
+                        total={totalPages}
+                        onPageChange={setCurrentPage}
+                        maxWidth={400}
+                      />
+                      <select
+                        name="companyOwner"
+                        className="form-control"
+                        onChange={(e) => {
+                          setCurrentPage(1);
+                          setdataLimit(e.target.value);
+                        }}
+                      >
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                      </select>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

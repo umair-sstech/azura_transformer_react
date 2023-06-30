@@ -27,15 +27,12 @@ function IntegratorList(props) {
     props.onLoading(true);
 
     try {
-      const response = await axios.post(
-        `${API_PATH.GET_LIST}`,
-        {
-          page: currentPage,
-          limit: dataLimit,
-          type: type,
-          status: status !== "all" ? (status === "active" ? 1 : 0) : null,
-        }
-      );
+      const response = await axios.post(`${API_PATH.GET_LIST}`, {
+        page: currentPage,
+        limit: dataLimit,
+        type: type,
+        status: status !== "all" ? (status === "active" ? 1 : 0) : null,
+      });
 
       return response.data;
     } catch (error) {
@@ -174,8 +171,8 @@ function IntegratorList(props) {
 
                         <th>Prefix Name</th>
                         <th>Last Update(UTC)</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                        <th>Status</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -185,30 +182,32 @@ function IntegratorList(props) {
                           <td>
                             {integrator.logo ? (
                               <div className="image-container">
-                                <img src={integrator.logo} alt={integrator.name}/>
+                                <img
+                                  src={integrator.logo}
+                                  alt={integrator.name}
+                                />
                               </div>
+                            ) : (
                               // <img
                               //   src={integrator.logo}
                               //   alt={integrator.name}
                               //   className="list-logo"
                               // />
-                            ) : (
                               <div className="list-logo placeholder">N/A</div>
                             )}
                           </td>
                           <td>{integrator.name}</td>
 
-
                           <td>{integrator.prefixName}</td>
                           <td>
-                          {integrator.updated
-                            ? moment(integrator.updated_on).format(
-                              "MM/DD/YYYY hh:mm a"
-                            )
-                            : moment(integrator.created_on).format(
-                              "MM/DD/YYYY hh:mm a"
-                            )}
-                        </td>
+                            {integrator.updated
+                              ? moment(integrator.updated_on).format(
+                                  "MM/DD/YYYY hh:mm a"
+                                )
+                              : moment(integrator.created_on).format(
+                                  "MM/DD/YYYY hh:mm a"
+                                )}
+                          </td>
 
                           <>
                             <td>
@@ -236,40 +235,41 @@ function IntegratorList(props) {
                                     "integratorName",
                                     integrator.name
                                   );
-                                  history.push(
-                                    `/manage-integrator`
-                                  );
+                                  history.push(`/manage-integrator`);
                                 }}
                               ></i>
                             </td>
                           </>
-
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                  <div className="pagination-wrapper">
-                    <Pagination
-                      current={currentPage}
-                      total={totalPages}
-                      onPageChange={setCurrentPage}
-                      maxWidth={400}
-                    />
-                    <select
-                      name="companyOwner"
-                      className="form-control"
-                      onChange={(e) => {
-                        setCurrentPage(1);
-                        setdataLimit(e.target.value);
-                      }}
-                    >
-                     
-                      <option value={10}>10</option>
-                      <option value={20}>20</option>
-                      <option value={50}>50</option>
-                      <option value={100}>100</option>
-                    </select>
-                  </div>
+                  {integratorList?.length === 0 && (
+                    <h4 className="no-data" style={{color: props.loading ? 'white' : '#8b8a8a'}}>No Data Found</h4>
+                  )}
+                  {integratorList?.length > 0 && (
+                    <div className="pagination-wrapper">
+                      <Pagination
+                        current={currentPage}
+                        total={totalPages}
+                        onPageChange={setCurrentPage}
+                        maxWidth={400}
+                      />
+                      <select
+                        name="companyOwner"
+                        className="form-control"
+                        onChange={(e) => {
+                          setCurrentPage(1);
+                          setdataLimit(e.target.value);
+                        }}
+                      >
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                      </select>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

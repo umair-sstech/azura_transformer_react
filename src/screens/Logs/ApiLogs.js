@@ -30,41 +30,41 @@ function ApiLogs(props) {
   }, [currentPage, dataLimit, searchText]);
 
   const getAPILogList = () => {
-  props.onLoading(true);
-  axios
-    .get(
-      `${API_PATH.GET_API_LOG}?page=${currentPage}&limit=${dataLimit}&searchText=${searchText}`
-    )
-    .then((res) => {
-      let totlePage = Math.ceil(res.data.totalRecord / res.data.limit);
-      setTotalPages(totlePage);
-      setApiLog(res.data.apiLog);
-      if (currentPage === 1) {
-        setAutoId((currentPage - 1) * dataLimit + 1);
-      }
-      props.onLoading(false);
-    })
-    .catch((e) => {
-      setApiLog([]);
-      props.onLoading(false);
-    });
-};
+    props.onLoading(true);
+    axios
+      .get(
+        `${API_PATH.GET_API_LOG}?page=${currentPage}&limit=${dataLimit}&searchText=${searchText}`
+      )
+      .then((res) => {
+        let totlePage = Math.ceil(res.data.totalRecord / res.data.limit);
+        setTotalPages(totlePage);
+        setApiLog(res.data.apiLog);
+        if (currentPage === 1) {
+          setAutoId((currentPage - 1) * dataLimit + 1);
+        }
+        props.onLoading(false);
+      })
+      .catch((e) => {
+        setApiLog([]);
+        props.onLoading(false);
+      });
+  };
 
- const openModal = (id) => {
-  setSelectedId(id);
-  setShowModal(true);
- }
+  const openModal = (id) => {
+    setSelectedId(id);
+    setShowModal(true);
+  };
 
-const handleFilterChange = (selectedOption) => {
-  setCurrentPage(1);
-  setSearchText(selectedOption.value);
-};
+  const handleFilterChange = (selectedOption) => {
+    setCurrentPage(1);
+    setSearchText(selectedOption.value);
+  };
 
-let filterList = [
-  { label: "Success", value: "Success" },
-  { label: "Error", value: "Error" },
-  { label: "All", value: "all" },
-];
+  let filterList = [
+    { label: "Success", value: "Success" },
+    { label: "Error", value: "Error" },
+    { label: "All", value: "all" },
+  ];
   return (
     <div
       style={{ flex: 1 }}
@@ -83,11 +83,11 @@ let filterList = [
               <div className="body">
                 <div className="mb-3 top__header">
                   <div style={{ minWidth: "140px" }}>
-                  <Select
-                  options={filterList}
-                  onChange={handleFilterChange}
-                  defaultValue={filterList[0]}
-                />
+                    <Select
+                      options={filterList}
+                      onChange={handleFilterChange}
+                      defaultValue={filterList[0]}
+                    />
                   </div>
                 </div>
 
@@ -95,11 +95,9 @@ let filterList = [
                   {props.isLoading ? (
                     <div className="loader-wrapper">
                       {" "}
-                      <i className="fa fa-refresh fa-spin"></i>
-                      {" "}
+                      <i className="fa fa-refresh fa-spin"></i>{" "}
                     </div>
-                  ) : null}
-                  {" "}
+                  ) : null}{" "}
                   <table className="table w-100 table-responsive-lg">
                     <thead>
                       <tr>
@@ -118,48 +116,58 @@ let filterList = [
                         <tr key={apiLog._id} className="custom-border-table">
                           <td>{startIndex + idx}</td>
                           <td>{apiLog.method}</td>
-                          <td style={{whiteSpace: "pre-wrap"}}>{apiLog.url}</td>
+                          <td style={{ whiteSpace: "pre-wrap" }}>
+                            {apiLog.url}
+                          </td>
                           <td>{apiLog.statusCode}</td>
                           <td>{apiLog.status}</td>
-                          <td style={{whiteSpace: "pre-wrap"}}>{moment(apiLog.created_on).format(
-                                "MM/DD/YYYY hh:mm a"
-                              )}</td>
-                          <td style={{whiteSpace: "pre-wrap"}}>{apiLog.message}</td>
+                          <td style={{ whiteSpace: "pre-wrap" }}>
+                            {moment(apiLog.created_on).format(
+                              "MM/DD/YYYY hh:mm a"
+                            )}
+                          </td>
+                          <td style={{ whiteSpace: "pre-wrap" }}>
+                            {apiLog.message}
+                          </td>
                           <td className="action-group">
                             <i
                               data-placement="top"
                               title="Edit"
-                              style={{color: "#49c5b6"}}
+                              style={{ color: "#49c5b6" }}
                               className="fa fa-eye"
                               onClick={() => openModal(apiLog._id)}
                             ></i>
-                            </td>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                  <div className="pagination-wrapper">
-                    <Pagination
-                      current={currentPage}
-                      total={totalPages}
-                      onPageChange={setCurrentPage}
-                      maxWidth={400}
-                    />
-                    <select
-                      name="companyOwner"
-                      className="form-control"
-                      onChange={(e) => {
-                        setCurrentPage(1);
-                        setdataLimit(e.target.value);
-                      }}
-                    >
-                      
-                      <option value={10}>10</option>
-                      <option value={20}>20</option>
-                      <option value={50}>50</option>
-                      <option value={100}>100</option>
-                    </select>
-                  </div>
+                  {apiLog?.length === 0 && (
+                    <h4 className="no-data" style={{color: props.isLoading ? 'white' : '#8b8a8a'}}>No Data Found</h4>
+                  )}
+                  {apiLog?.length > 0 && (
+                    <div className="pagination-wrapper">
+                      <Pagination
+                        current={currentPage}
+                        total={totalPages}
+                        onPageChange={setCurrentPage}
+                        maxWidth={400}
+                      />
+                      <select
+                        name="companyOwner"
+                        className="form-control"
+                        onChange={(e) => {
+                          setCurrentPage(1);
+                          setdataLimit(e.target.value);
+                        }}
+                      >
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                      </select>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -167,7 +175,11 @@ let filterList = [
         </div>
       </div>
 
-      <LogModal showModal={showModal} setShowModal={setShowModal} selectedId={selectedId} />
+      <LogModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        selectedId={selectedId}
+      />
     </div>
   );
 }

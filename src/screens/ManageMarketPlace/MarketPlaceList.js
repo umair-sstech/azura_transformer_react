@@ -29,15 +29,12 @@ function MarketPlaceList(props) {
     props.onLoading(true);
 
     try {
-      const response = await axios.post(
-        `${API_PATH.GET_LIST}`,
-        {
-          page: currentPage,
-          limit: dataLimit,
-          type: type,
-          status: status !== "all" ? (status === "active" ? 1 : 0) : null,
-        }
-      );
+      const response = await axios.post(`${API_PATH.GET_LIST}`, {
+        page: currentPage,
+        limit: dataLimit,
+        type: type,
+        status: status !== "all" ? (status === "active" ? 1 : 0) : null,
+      });
 
       return response.data;
     } catch (error) {
@@ -174,24 +171,30 @@ function MarketPlaceList(props) {
 
                         <th>Prefix Name</th>
                         <th>Last Update(UTC)</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                        <th>Status</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       {marketPlaceList.map((market_place) => (
-                        <tr key={market_place.id} className="custom-border-table">
+                        <tr
+                          key={market_place.id}
+                          className="custom-border-table"
+                        >
                           <td>{market_place.id}</td>
                           <td>
                             {market_place.logo ? (
                               <div className="image-container">
-                                <img src={market_place.logo} alt={market_place.name}/>
+                                <img
+                                  src={market_place.logo}
+                                  alt={market_place.name}
+                                />
                               </div>
+                            ) : (
                               // <img
                               //   src={market_place.logo}
                               //   className="list-logo"
                               // />
-                            ) : (
                               <div className="list-logo placeholder">N/A</div>
                             )}
                           </td>
@@ -199,14 +202,14 @@ function MarketPlaceList(props) {
 
                           <td>{market_place.prefixName}</td>
                           <td>
-                          {market_place.updated
-                            ? moment(market_place.updated_on).format(
-                              "MM/DD/YYYY hh:mm a"
-                            )
-                            : moment(market_place.created_on).format(
-                              "MM/DD/YYYY hh:mm a"
-                            )}
-                        </td>
+                            {market_place.updated
+                              ? moment(market_place.updated_on).format(
+                                  "MM/DD/YYYY hh:mm a"
+                                )
+                              : moment(market_place.created_on).format(
+                                  "MM/DD/YYYY hh:mm a"
+                                )}
+                          </td>
 
                           <>
                             <td>
@@ -244,28 +247,32 @@ function MarketPlaceList(props) {
                       ))}
                     </tbody>
                   </table>
-                  <div className="pagination-wrapper">
-                    <Pagination
-                      current={currentPage}
-                      total={totalPages}
-                      onPageChange={setCurrentPage}
-                      maxWidth={400}
-                    />
-                    <select
-                      name="companyOwner"
-                      className="form-control"
-                      onChange={(e) => {
-                        setCurrentPage(1);
-                        setdataLimit(e.target.value);
-                      }}
-                    >
-                      
-                      <option value={10}>10</option>
-                      <option value={20}>20</option>
-                      <option value={50}>50</option>
-                      <option value={100}>100</option>
-                    </select>
-                  </div>
+                  {marketPlaceList?.length === 0 && (
+                    <h4 className="no-data" style={{color: props.loading ? 'white' : '#8b8a8a'}}>No Data Found</h4>
+                  )}
+                  {marketPlaceList?.length > 0 && (
+                    <div className="pagination-wrapper">
+                      <Pagination
+                        current={currentPage}
+                        total={totalPages}
+                        onPageChange={setCurrentPage}
+                        maxWidth={400}
+                      />
+                      <select
+                        name="companyOwner"
+                        className="form-control"
+                        onChange={(e) => {
+                          setCurrentPage(1);
+                          setdataLimit(e.target.value);
+                        }}
+                      >
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                      </select>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

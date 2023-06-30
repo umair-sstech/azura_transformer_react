@@ -24,18 +24,20 @@ function RetailerSettingList(props) {
   const history = useHistory();
   const startIndex = (currentPage - 1) * dataLimit + 1;
 
-
   const getSupplierInfo = async (currentPage, dataLimit) => {
     props.onLoading(true);
 
     try {
-      const retailerId=localStorage.getItem("newlyAddedRetailer")
-      const response = await axios.post(`${API_PATH.GET_RETAILER_INTEGRATION_LIST}`, {
-        page: currentPage,
-        limit: dataLimit,
-        status: status !== "all" ? (status === "active" ? 1 : 0) : null,
-        retailerId:retailerId
-      });
+      const retailerId = localStorage.getItem("newlyAddedRetailer");
+      const response = await axios.post(
+        `${API_PATH.GET_RETAILER_INTEGRATION_LIST}`,
+        {
+          page: currentPage,
+          limit: dataLimit,
+          status: status !== "all" ? (status === "active" ? 1 : 0) : null,
+          retailerId: retailerId,
+        }
+      );
       return response.data;
     } catch (error) {
       console.log("error", error);
@@ -63,11 +65,9 @@ function RetailerSettingList(props) {
           if (currentPage === 1) {
             setAutoId((currentPage - 1) * dataLimit + 1);
           }
-          
         }
       }
       props.onLoading(false);
-
     };
     fetchSupplierInfo();
   }, [currentPage, dataLimit, status]);
@@ -86,8 +86,7 @@ function RetailerSettingList(props) {
         props.onLoading(true);
 
         axios
-          .post(`${API_PATH.CHANGE_STATUS}`
-          , {
+          .post(`${API_PATH.CHANGE_STATUS}`, {
             id: id,
             status: status,
           })
@@ -107,12 +106,10 @@ function RetailerSettingList(props) {
               ...prevState.slice(index + 1),
             ]);
             props.onLoading(false);
-
           })
           .catch((e) => {
             toast.error("Something Went Wrong");
             props.onLoading(false);
-
           });
       }
     });
@@ -134,27 +131,30 @@ function RetailerSettingList(props) {
         <div className="container-fluid">
           <PageHeader
             HeaderText="Retailer Setting List"
-
             Breadcrumb={[
-              { name: "Retailer", navigate: "/retailer", items: ["newlyAddedRetailer","currentPage"] },
+              {
+                name: "Retailer",
+                navigate: "/retailer",
+                items: ["newlyAddedRetailer", "currentPage"],
+              },
               { name: "Retailer Setting List", navigate: "#" },
             ]}
           />
-          
+
           <div className="tab-component">
             <div className="card">
               <div className="body">
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                <div style={{ minWidth: "110px" }}>
-                <Select
-                  options={filterList}
-                  onChange={(data) => {
-                    setStatus(data.value);
-                    setCurrentPage(1);
-                  }}
-                  defaultValue={filterList[0]}
-                />
-              </div>
+                  <div style={{ minWidth: "110px" }}>
+                    <Select
+                      options={filterList}
+                      onChange={(data) => {
+                        setStatus(data.value);
+                        setCurrentPage(1);
+                      }}
+                      defaultValue={filterList[0]}
+                    />
+                  </div>
                   <Link className="link-btn" to={`/setting-retailer`}>
                     Add Setting
                   </Link>
@@ -169,93 +169,99 @@ function RetailerSettingList(props) {
                   <table className="table w-100 table-responsive-md">
                     <thead>
                       <tr>
-                      <th>id</th>
+                        <th>id</th>
                         <th>Supplier Name</th>
                         <th>Currency</th>
                         <th>MarketPlace/Integrator</th>
                         <th>Last Update(UTC)</th>
-                            <th>Status</th>
-                            <th>Action</th>
-
+                        <th>Status</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {retailerSetting.map((retailer,index) => (
+                      {retailerSetting.map((retailer, index) => (
                         <tr key={retailer.id} className="custom-border-table">
-                        <td>{startIndex + index}</td>
+                          <td>{startIndex + index}</td>
                           <td>{retailer.supplierNames?.join(" / ")}</td>
                           <td>{retailer.currencyNames}</td>
                           <td>{retailer.marketPlaceNames}</td>
-                          
+
                           <td>
-                          {retailer.updated
-                            ? moment(retailer.updated_on).format(
-                              "MM/DD/YYYY hh:mm a"
-                            )
-                            : moment(retailer.created_on).format(
-                              "MM/DD/YYYY hh:mm a"
-                            )}
-                        </td>
+                            {retailer.updated
+                              ? moment(retailer.updated_on).format(
+                                  "MM/DD/YYYY hh:mm a"
+                                )
+                              : moment(retailer.created_on).format(
+                                  "MM/DD/YYYY hh:mm a"
+                                )}
+                          </td>
 
                           <>
-                          <td>
-                            <Form.Check
-                              type="switch"
-                              id={`${retailer.id}`}
-                              checked={retailer.status}
-                              onChange={(e) =>
-                                activateDeactivate(e, retailer.id)
-                              }
-                            />
-                          </td>
+                            <td>
+                              <Form.Check
+                                type="switch"
+                                id={`${retailer.id}`}
+                                checked={retailer.status}
+                                onChange={(e) =>
+                                  activateDeactivate(e, retailer.id)
+                                }
+                              />
+                            </td>
 
-                          <td className="action-group">
-                            <i
-                              data-placement="top"
-                              title="Edit"
-                              className="fa fa-edit edit"
-                              onClick={() => {
-                                localStorage.setItem(
-                                  "retailerIntegrationId",
-                                  retailer.id
-                                );
-                                localStorage.setItem("supplierSettingId",retailer.supplierId)
-                                localStorage.setItem(
-                                  "selectedSupplierName",
-                                 retailer.supplierNames
-                                );
+                            <td className="action-group">
+                              <i
+                                data-placement="top"
+                                title="Edit"
+                                className="fa fa-edit edit"
+                                onClick={() => {
+                                  localStorage.setItem(
+                                    "retailerIntegrationId",
+                                    retailer.id
+                                  );
+                                  localStorage.setItem(
+                                    "supplierSettingId",
+                                    retailer.supplierId
+                                  );
+                                  localStorage.setItem(
+                                    "selectedSupplierName",
+                                    retailer.supplierNames
+                                  );
 
-                                history.push(`/setting-retailer`);
-                              }}
-                            ></i>
-                          </td>
-                        </>
+                                  history.push(`/setting-retailer`);
+                                }}
+                              ></i>
+                            </td>
+                          </>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                  <div className="pagination-wrapper">
-                  <Pagination
-                  current={currentPage}
-                  total={totalPages}
-                  onPageChange={setCurrentPage}
-                  maxWidth={400}
-                />
-                <select
-                name="companyOwner"
-                className="form-control"
-                onChange={(e) => {
-                  setCurrentPage(1);
-                  setdataLimit(e.target.value);
-                }}
-              >
-                
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-              </select>
-                  </div>
+                  {retailerSetting?.length === 0 && (
+                    <h4 className="no-data" style={{color: props.loading ? 'white' : '#8b8a8a'}}>No Data Found</h4>
+                  )}
+                  {retailerSetting?.length > 0 && (
+                    <div className="pagination-wrapper">
+                      <Pagination
+                        current={currentPage}
+                        total={totalPages}
+                        onPageChange={setCurrentPage}
+                        maxWidth={400}
+                      />
+                      <select
+                        name="companyOwner"
+                        className="form-control"
+                        onChange={(e) => {
+                          setCurrentPage(1);
+                          setdataLimit(e.target.value);
+                        }}
+                      >
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                      </select>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
