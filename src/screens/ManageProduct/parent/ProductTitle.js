@@ -3,17 +3,14 @@ import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
 
 const ProductTitle = (props) => {
-  const titleValue = useContext(ProductContext);
-  const [title, setTitle] = useState("");
+  const { aiTitleValue, parentTitleValue } = useContext(ProductContext);
+  const [aiTitle, setAiTitle] = useState("");
+  const [parentTitle, setParentTitle] = useState("");
 
   useEffect(() => {
-    setTitle(titleValue);
-  }, [titleValue]);
-
-  const handleChange = (event) => {
-    setTitle(event.target.value);
-    props.setTitle(event.target.value); 
-  };
+    setAiTitle(aiTitleValue);
+    setParentTitle(parentTitleValue);
+  }, [aiTitleValue, parentTitleValue]);
 
   return (
     <Row style={{ marginBottom: "-15px" }}>
@@ -31,13 +28,29 @@ const ProductTitle = (props) => {
             </Card.Header>
             {/* <Accordion.Collapse eventKey="0"> */}
               <Card.Body className="custom-padding-card">
+                <label>Parent Title</label>
                 <input
                   type="text"
-                  placeholder="Title..."
-                  name="title"
-                  className="form-control mt-2"
-                  value={title ? title : ""}
-                  onChange={handleChange}
+                  placeholder="Parent Title"
+                  name="parentTitle"
+                  className="form-control"
+                  value={parentTitle ? parentTitle : ""}
+                  onChange={(e) => {
+                    setParentTitle(e.target.value);
+                    props.setParentTitle(e.target.value);
+                  }}
+                />
+                <label style={{marginTop: "10px"}}>AI Title</label>
+                <input
+                  type="text"
+                  placeholder="AI Title"
+                  name="aiTitle"
+                  className="form-control"
+                  onChange={(e) => {
+                    setAiTitle(e.target.value);
+                    props.setAiTitle(e.target.value);
+                  }}
+                  value={aiTitle && (aiTitle.includes("AI Generated") ? aiTitle.slice(13) : aiTitle)}
                 />
               </Card.Body>
             {/* </Accordion.Collapse> */}

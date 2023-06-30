@@ -22,7 +22,8 @@ const Variant = (props) => {
   const [singleVariantData, setSingleVariantData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isExitLoading, setIsExitLoading] = useState(false);
-  const [title, setTitle] = useState("");
+  const [aiTitle, setAiTitle] = useState("");
+  const [variantTitle, setVariantTitle] = useState("");
   const [description, setDescription] = useState("");
   const [bulletDescription, setBulletDescription] = useState("");
   const [identifiers, setIdentifiers] = useState({
@@ -110,7 +111,8 @@ const Variant = (props) => {
           productId: productData?.variant?.[0]?.id || id,
           supplierId:supplierId ,
           type: "VARIANT",
-          AI_TITLE: title,
+          AI_TITLE: aiTitle,
+          Variant_Title: variantTitle,
           AI_Description: description,
           AI_Bullet_Description: bulletDescription,
           ...identifiers,
@@ -174,7 +176,7 @@ const Variant = (props) => {
           </div>
 
           <ProductContext.Provider value={{ productData, singleVariantData }}>
-            <VariantTitle title={title} setTitle={setTitle} />
+            <VariantTitle aiTitle={aiTitle} variantTitle={variantTitle} setAiTitle={setAiTitle} setVariantTitle={setVariantTitle} />
           </ProductContext.Provider>
 
           {/* Identifiers */}

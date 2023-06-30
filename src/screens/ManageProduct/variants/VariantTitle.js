@@ -4,7 +4,8 @@ import { ProductContext } from "../../ProductContext/ProductContext";
 
 const VariantTitle = (props) => {
   const { productData, singleVariantData } = useContext(ProductContext)
-  const [title, setTitle] = useState("");
+  const [aiTitle, setAiTitle] = useState("");
+  const [variantTitle, setVariantTitle] = useState("");
 
   const variantData =
   productData?.product?.[0]?.Preference === "PARENT"
@@ -13,20 +14,15 @@ const VariantTitle = (props) => {
 
   // const variantTitle = singleVariantData !== null ? singleVariantData?.Variant_Title : variantData?.[0]?.Variant_Title;
 
-  const variantTitle1 = singleVariantData !== null ? singleVariantData?.AI_TITLE?.replace(/"/g, "") : variantData?.[0]?.AI_TITLE?.replace(/"/g, "");
-  const variantTitle2 = singleVariantData !== null ? singleVariantData?.Variant_Title : variantData?.[0]?.Variant_Title
+  const aiTitleValue = singleVariantData !== null ? singleVariantData?.AI_TITLE?.replace(/"/g, "") : variantData?.[0]?.AI_TITLE?.replace(/"/g, "");
+  const variantTitleValue = singleVariantData !== null ? singleVariantData?.Variant_Title : variantData?.[0]?.Variant_Title
 
-  const variantTitle = variantTitle1 ? variantTitle1 : variantTitle2;
+  // const variantTitle = variantTitle1 ? variantTitle1 : variantTitle2;
 
   useEffect(() => {
-    setTitle(variantTitle);
-  }, [variantTitle]);
-
-  const handleChange = (event) => {
-    const newTitle = event.target.value;
-    setTitle(newTitle);
-    props.setTitle(newTitle); // Pass the new title to the parent component
-  };
+    setAiTitle(aiTitleValue);
+    setVariantTitle(variantTitleValue);
+  }, [variantTitleValue, aiTitleValue]);
 
   return (
     <Row style={{marginBottom: "-15px"}}>
@@ -44,13 +40,29 @@ const VariantTitle = (props) => {
             </Card.Header>
             {/* <Accordion.Collapse eventKey="0"> */}
               <Card.Body className="custom-padding-card">
+                <label>Variant Title</label>
                 <input
                   type="text"
-                  placeholder="Enter Title..."
-                  name="title"
-                  className="form-control mt-2"
-                  value={title ? title : ""}
-                  onChange={handleChange}
+                  placeholder="Variant Title"
+                  name="varientTitle"
+                  className="form-control"
+                  value={variantTitle ? variantTitle : ""}
+                  onChange={(e) => {
+                    setVariantTitle(e.target.value);
+                    props.setVariantTitle(e.target.value);
+                  }}
+                />
+                <label style={{marginTop: "10px"}}>AI Title</label>
+                <input
+                  type="text"
+                  placeholder="AI Title"
+                  name="aiTitle"
+                  className="form-control"
+                  onChange={(e) => {
+                    setAiTitle(e.target.value);
+                    props.setAiTitle(e.target.value);
+                  }}
+                  value={aiTitle && (aiTitle.includes("AI Generated") ? aiTitle.slice(13) : aiTitle)}
                 />
               </Card.Body>
             {/* </Accordion.Collapse> */}

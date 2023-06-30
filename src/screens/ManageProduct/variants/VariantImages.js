@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Accordion, Button, Card, Col, Image, Row } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
+import imageNotFound from "../../../assets/images/product-image-notFound.jpg";
 import "../parent/Product.css"
-
 
 const VariantImages = () => {
   const { productData, singleVariantData } = useContext(ProductContext)
@@ -55,7 +55,7 @@ const VariantImages = () => {
               </>
                   
                 )) : (
-                  <h5>No Image to display...</h5>
+                  <Image src={imageNotFound} alt="Image Not available..." height={150} width={150} />
                 )}
               </Card.Body>
             </Accordion.Collapse>

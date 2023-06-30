@@ -21,7 +21,8 @@ const Parent = (props) => {
   const [productData, setProductData] = useState({});
   const [singleVariantData, setSingleVariantData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [title, setTitle] = useState("");
+  const [aiTitle, setAiTitle] = useState("");
+  const [parentTitle, setParentTitle] = useState("");
   const [description, setDescription] = useState("");
   const [bulletDescription, setBulletDescription] = useState("");
 
@@ -131,7 +132,8 @@ const Parent = (props) => {
         productId: id,
         supplierId: supplierId,
         type: "PARENT",
-        AI_TITLE: title,
+        AI_TITLE: aiTitle,
+        Parent_Title: parentTitle,
         AI_Description: description,
         AI_Bullet_Description: bulletDescription,
         ...identifiers,
@@ -194,10 +196,10 @@ const Parent = (props) => {
   //   }
   // };
 
-  const aiTitle = productData?.product?.[0] !== null ? productData?.product?.[0]?.AI_TITLE?.replace(/"/g, "") : productData?.product?.[0]?.Parent_Title;
-  const parentTitle = productData?.product?.[0] !== null ? productData?.product?.[0]?.Parent_Title : productData?.product?.[0]?.Variant_Title
+  const aiTitleValue = productData?.product?.[0] !== null ? productData?.product?.[0]?.AI_TITLE?.replace(/"/g, "") : productData?.product?.[0]?.Parent_Title;
+  const parentTitleValue = productData?.product?.[0] !== null ? productData?.product?.[0]?.Parent_Title : productData?.product?.[0]?.Variant_Title
 
-  const mainTitle = aiTitle ? aiTitle : parentTitle;
+  // const mainTitle = aiTitle ? aiTitle : parentTitle;
 
   return (
     <div className="product__container">
@@ -224,8 +226,8 @@ const Parent = (props) => {
           </div>
         </div>
 
-        <ProductContext.Provider value={mainTitle} >
-          <ProductTitle title={title} setTitle={setTitle} />
+        <ProductContext.Provider value={{ aiTitleValue, parentTitleValue }} >
+          <ProductTitle aiTitle={aiTitle} parentTitle={parentTitle} setAiTitle={setAiTitle} setParentTitle={setParentTitle} />
         </ProductContext.Provider>
 
         {/* Identifiers */}

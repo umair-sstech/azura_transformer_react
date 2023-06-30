@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Button, Card, Image } from "react-bootstrap";
 import { ProductContext } from "../../ProductContext/ProductContext";
+import imageNotFound from "../../../assets/images/product-image-notFound.jpg";
 
 const ProductParent = (props) => {
   const { activeKey, setKey, variantDetails } = props;
@@ -23,6 +24,11 @@ const ProductParent = (props) => {
     }
   };
 
+  const setVariantTitle = (variant) => {
+    const variantTitle = variant?.AI_TITLE ? variant.AI_TITLE.replace(/"/g, "") : variant.Variant_Title
+    return variantTitle.includes("AI Generated") ? variantTitle.slice(13) : variantTitle;
+  }
+
   return (
     <>
       <h3 className="ml-3 product__parent__title">PRODUCT PARENT</h3>
@@ -30,13 +36,13 @@ const ProductParent = (props) => {
         <Card className="product__parent__card">
           <Card.Body onClick={() => navigateToParent("parent", "variants")} style={{ cursor: "pointer" }}>
             <Card.Subtitle style={{ textAlign: "center", marginTop: "10px", fontWeight: "600" }}>
-              {mainTitle}
+              {mainTitle && (mainTitle.includes("AI Generated") ? mainTitle.slice(13) : mainTitle)}
             </Card.Subtitle>
             <Card.Text>
               <div className="d-flex px-3 justify-content-around align-items-center mt-3 mb-2" style={{ gap: "2em" }}>
                 <a href={productData.product[0].Image_Parent_1_original} target="_blank" rel="noopener noreferrer">
                   <Image
-                    src={productData?.product[0]?.Image_Parent_1_original}
+                    src={productData?.product[0]?.Image_Parent_1_original ? productData?.product[0]?.Image_Parent_1_original : imageNotFound}
                     alt="img"
                     className="align-self-center"
                     width={100}
@@ -83,13 +89,13 @@ const ProductParent = (props) => {
               navigateToParent(`variants`, "parent")}>
               <Card.Body className={`product__parent__card`} onClick={() => variantDetails(idx)} style={{ cursor: "pointer" }}>
                 <Card.Subtitle style={{ textAlign: "center", marginTop: "10px", fontWeight: "600" }}>
-                  {variant?.AI_TITLE ? variant.AI_TITLE.replace(/"/g, "") : variant.Variant_Title}
+                  {setVariantTitle(variant)}
                 </Card.Subtitle>
                 <Card.Text>
                   <div className="d-flex px-3 mt-3 justify-content-around align-items-center mb-2" style={{ gap: "2em" }}>
                     <a href={variant.Image_Variant_1_original} target="_blank" rel="noopener noreferrer">
                       <Image
-                        src={variant.Image_Variant_1_original}
+                        src={variant.Image_Variant_1_original ? variant.Image_Variant_1_original : imageNotFound}
                         // alt="img1"
                         className="align-self-center"
                         width={100}
