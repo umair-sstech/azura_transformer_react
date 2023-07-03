@@ -23,7 +23,7 @@ function IntegratorList(props) {
   const history = useHistory();
   const [autoId, setAutoId] = useState(1);
 
-  const getMarketPlaceInfo = async () => {
+  const getIntegratorInfo = async () => {
     props.onLoading(true);
     try {
       const response = await axios.post(`${API_PATH.GET_LIST_BY_TYPE}`, {
@@ -36,6 +36,8 @@ function IntegratorList(props) {
       if (response.data.success) {
         setIntegratorList(response.data.data);
         setTotalPages(Math.ceil(response.data.totalRecord / dataLimit));
+      } else {
+        setIntegratorList([]);
       }
       props.onLoading(false);
     } catch (error) {
@@ -45,7 +47,7 @@ function IntegratorList(props) {
   };
 
   useEffect(() => {
-    getMarketPlaceInfo();
+    getIntegratorInfo();
   }, [currentPage, dataLimit, status]);
 
   const activateDeactivate = (event, supplierId) => {
@@ -69,21 +71,24 @@ function IntegratorList(props) {
             toast.success(res.data.message);
 
             // Find the index of the supplier object in the array
-            const index = integratorList.findIndex(
-              (integrator) => integrator.id === supplierId
-            );
+            // const index = integratorList.findIndex(
+            //   (integrator) => integrator.id === supplierId
+            // );
 
             // Update the status property of the supplier object
-            setIntegratorList((prevState) => [
-              ...prevState.slice(0, index),
-              {
-                ...prevState[index],
-                status: status,
-              },
-              ...prevState.slice(index + 1),
-            ]);
+            // setIntegratorList((prevState) => [
+            //   ...prevState.slice(0, index),
+            //   {
+            //     ...prevState[index],
+            //     status: status,
+            //   },
+            //   ...prevState.slice(index + 1),
+            // ]);
+            getIntegratorInfo();
+            setTimeout(() => {
+              props.onLoading(false);
+            }, 2000);
 
-            props.onLoading(false);
           })
           .catch((e) => {
             toast.error("Something Went Wrong");

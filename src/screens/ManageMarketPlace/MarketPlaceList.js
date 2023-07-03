@@ -38,6 +38,8 @@ function MarketPlaceList(props) {
       if (response.data.success) {
         setMarketPlaceList(response.data.data);
         setTotalPages(Math.ceil(response.data.totalRecord / dataLimit));
+      } else {
+        setMarketPlaceList([]);
       }
       props.onLoading(false);
     } catch (error) {
@@ -70,20 +72,22 @@ function MarketPlaceList(props) {
           .then((res) => {
             toast.success(res.data.message);
 
-            const index = marketPlaceList.findIndex(
-              (market_place) => market_place.id === supplierId
-            );
+            // const index = marketPlaceList.findIndex(
+            //   (market_place) => market_place.id === supplierId
+            // );
 
-            setMarketPlaceList((prevState) => [
-              ...prevState.slice(0, index),
-              {
-                ...prevState[index],
-                status: status,
-              },
-              ...prevState.slice(index + 1),
-            ]);
-
-            props.onLoading(false);
+            // setMarketPlaceList((prevState) => [
+            //   ...prevState.slice(0, index),
+            //   {
+            //     ...prevState[index],
+            //     status: status,
+            //   },
+            //   ...prevState.slice(index + 1),
+            // ]);
+            getMarketPlaceInfo();
+            setTimeout(() => {
+              props.onLoading(false);
+            }, 2000);
           })
           .catch((e) => {
             toast.error("Something Went Wrong");

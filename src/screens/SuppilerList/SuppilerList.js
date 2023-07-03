@@ -38,6 +38,8 @@ function SuppilerList(props) {
       if (response.data.success) {
         setSupplierList(response.data.data);
         setTotalPages(Math.ceil(response.data.totalRecord / dataLimit));
+      } else {
+        setSupplierList([]);
       }
       props.onLoading(false);
     } catch (error) {
@@ -70,20 +72,22 @@ function SuppilerList(props) {
           .then((res) => {
             toast.success(res.data.message);
 
-            const index = supplierList.findIndex(
-              (supplier) => supplier.id === supplierId
-            );
+            // const index = supplierList.findIndex(
+            //   (supplier) => supplier.id === supplierId
+            // );
 
-            setSupplierList((prevState) => [
-              ...prevState.slice(0, index),
-              {
-                ...prevState[index],
-                status: status,
-              },
-              ...prevState.slice(index + 1),
-            ]);
-
-            props.onLoading(false);
+            // setSupplierList((prevState) => [
+            //   ...prevState.slice(0, index),
+            //   {
+            //     ...prevState[index],
+            //     status: status,
+            //   },
+            //   ...prevState.slice(index + 1),
+            // ]);
+            getSupplierInfo();
+            setTimeout(() => {
+              props.onLoading(false);
+            }, 2000);  
           })
           .catch((e) => {
             toast.error("Something Went Wrong");

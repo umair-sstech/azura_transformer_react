@@ -95,7 +95,9 @@ const RetailerList = (props) => {
           .then((res) => {
             toast.success(res.data.message);
             getDataFromApi(searchText);
-            props.onLoading(false);
+            setTimeout(() => {
+              props.onLoading(false);
+            }, 2000);
           })
           .catch((e) => {
             toast.error("Something Went Wrong");

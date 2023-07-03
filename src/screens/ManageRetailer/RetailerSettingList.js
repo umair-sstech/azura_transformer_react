@@ -46,29 +46,30 @@ function RetailerSettingList(props) {
     }
   };
 
-  useEffect(() => {
-    const fetchSupplierInfo = async () => {
-      const response = await getSupplierInfo(currentPage, dataLimit);
-      if (response) {
-        let totalPage = Math.ceil(response.totalRecord / response.limit);
-        setTotalPages(totalPage);
-        if (status === "deactive") {
-          setRetailerSetting(
-            response.data.filter((retailer) => retailer.status === 0)
-          );
-        } else if (status === "all") {
-          setRetailerSetting(response.data);
-        } else {
-          setRetailerSetting(
-            response.data.filter((retailer) => retailer.status === 1)
-          );
-          if (currentPage === 1) {
-            setAutoId((currentPage - 1) * dataLimit + 1);
-          }
+  const fetchSupplierInfo = async () => {
+    const response = await getSupplierInfo(currentPage, dataLimit);
+    if (response) {
+      let totalPage = Math.ceil(response.totalRecord / response.limit);
+      setTotalPages(totalPage);
+      if (status === "deactive") {
+        setRetailerSetting(
+          response.data.filter((retailer) => retailer.status === 0)
+        );
+      } else if (status === "all") {
+        setRetailerSetting(response.data);
+      } else {
+        setRetailerSetting(
+          response.data.filter((retailer) => retailer.status === 1)
+        );
+        if (currentPage === 1) {
+          setAutoId((currentPage - 1) * dataLimit + 1);
         }
       }
-      props.onLoading(false);
-    };
+    }
+    props.onLoading(false);
+  };
+
+  useEffect(() => {
     fetchSupplierInfo();
   }, [currentPage, dataLimit, status]);
 
@@ -93,19 +94,22 @@ function RetailerSettingList(props) {
           .then((res) => {
             toast.success(res.data.message);
 
-            const index = retailerSetting.findIndex(
-              (supplier) => supplier.id === id
-            );
+            // const index = retailerSetting.findIndex(
+            //   (supplier) => supplier.id === id
+            // );
 
-            setRetailerSetting((prevState) => [
-              ...prevState.slice(0, index),
-              {
-                ...prevState[index],
-                status: status,
-              },
-              ...prevState.slice(index + 1),
-            ]);
-            props.onLoading(false);
+            // setRetailerSetting((prevState) => [
+            //   ...prevState.slice(0, index),
+            //   {
+            //     ...prevState[index],
+            //     status: status,
+            //   },
+            //   ...prevState.slice(index + 1),
+            // ]);
+            fetchSupplierInfo();
+            setTimeout(() => {
+              props.onLoading(false);
+            }, 2000);
           })
           .catch((e) => {
             toast.error("Something Went Wrong");
