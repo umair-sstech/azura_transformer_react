@@ -132,6 +132,13 @@ function ProductsList(props) {
     setSearch(value);
     setCurrentPage(1); // Reset the current page when a new search is performed
   };
+
+  const setProductAiTitle = (product) => {
+    const parentTitle = product?.Parent_Title ? product.Parent_Title : product.Variant_Title;
+    const aiTitle = product?.AI_TITLE ? product.AI_TITLE.replace(/"/g, "") : parentTitle;
+    return aiTitle.includes("AI Generated") ? aiTitle.slice(13) : aiTitle;
+  }
+
   return (
     <div
       style={{ flex: 1 }}
@@ -223,9 +230,7 @@ function ProductsList(props) {
 
                           <td>{product.Azura_Category_Tree}</td>
                           <td>
-                            {product.AI_TITLE != null
-                              ? product.AI_TITLE.replace(/"/g, "")
-                              : product.Variant_Title}
+                              {setProductAiTitle(product)}
                           </td>
                           <td>{product.Cost_Price}</td>
                           <td>{product.Retail_Price}</td>

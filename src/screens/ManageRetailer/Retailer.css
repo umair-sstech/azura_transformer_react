@@ -122,7 +122,7 @@ span.text-danger.valiadtion {
 .no-data {
   width: 100%;
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 1rem;
 }
 
 @media screen and (max-width: 360px) {
