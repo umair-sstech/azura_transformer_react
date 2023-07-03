@@ -33,12 +33,14 @@ const VariantDescription = (props) => {
 
   const renderDescription = () => {
     const lines = description?.split("\n");
-    return lines?.join("<br>");
+    const cleanedLines = lines?.map(line => line.replace(/["\[\]]/g, ''));
+    return cleanedLines?.join('<br>');
   };
 
   const bulletDescription = () => {
     const lines = bullteDescription?.split("\n");
-    return lines?.join("<br>");
+    const cleanedLines = lines?.map(line => line.replace(/["\[\]]/g, ''));
+    return cleanedLines?.join('<br>')
   };
   return (
     <>

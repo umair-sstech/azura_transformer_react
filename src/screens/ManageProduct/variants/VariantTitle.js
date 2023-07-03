@@ -14,7 +14,7 @@ const VariantTitle = (props) => {
 
   // const variantTitle = singleVariantData !== null ? singleVariantData?.Variant_Title : variantData?.[0]?.Variant_Title;
 
-  const aiTitleValue = singleVariantData !== null ? singleVariantData?.AI_TITLE?.replace(/"/g, "") : variantData?.[0]?.AI_TITLE?.replace(/"/g, "");
+  const aiTitleValue = singleVariantData !== null ? singleVariantData?.AI_TITLE?.replace(/[\s\[\]"]/g, "") : variantData?.[0]?.AI_TITLE?.replace(/[\s\[\]"]/g, "");
   const variantTitleValue = singleVariantData !== null ? singleVariantData?.Variant_Title : variantData?.[0]?.Variant_Title
 
   // const variantTitle = variantTitle1 ? variantTitle1 : variantTitle2;
