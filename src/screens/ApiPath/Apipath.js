@@ -12,6 +12,7 @@ UPDATE_USER_PROFILE:`${API_USER}/user/update`,
 FETCH_USER_PROFILE_DETAILS:`${API_USER}/user`,
 
   GET_LIST: `${API_BASE_URL}/integration/getIntegrationInfo`,
+  GET_LIST_BY_TYPE: `${API_BASE_URL}/integration/getIntegrationInfoByType`,
   CREATE_INTEGRATION_INFO: `${API_BASE_URL}/integration/createIntegrationInfo`,
   UPDATE_INTEGRATION_INFO: `${API_BASE_URL}/integration/updateIntegrationInfo`,
   GET_INTEGRATION_INFO_BY_ID: `${API_BASE_URL}/integration/getIntegrationInfoById?supplierId`,

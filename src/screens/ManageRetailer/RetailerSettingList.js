@@ -181,7 +181,7 @@ function RetailerSettingList(props) {
                     <tbody>
                       {retailerSetting.map((retailer, index) => (
                         <tr key={retailer.id} className="custom-border-table">
-                          <td>{startIndex + index}</td>
+                          <td>{retailer.id}</td>
                           <td>{retailer.supplierNames?.join(" / ")}</td>
                           <td>{retailer.currencyNames}</td>
                           <td>{retailer.marketPlaceNames}</td>

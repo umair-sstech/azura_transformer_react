@@ -25,10 +25,9 @@ function IntegrationType(props) {
   const [supplierList, setSupplierList] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(2);
+  const [totalPages, setTotalPages] = useState(1);
   const [dataLimit, setdataLimit] = useState(10);
   const [status, setStatus] = useState("active");
-  const [autoId, setAutoId] = useState(1);
 
   const history = useHistory();
 
@@ -44,52 +43,32 @@ function IntegrationType(props) {
       history.push("/integrator");
     }
   };
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
-  useEffect(() => {
-    getSupplierInfo();
-  }, []);
-  const getSupplierInfo = async (currentPage, dataLimit) => {
+  const getSupplierInfo = async () => {
     props.onLoading(true);
-
     try {
       const response = await axios.post(`${API_PATH.GET_LIST}`, {
         page: currentPage,
         limit: dataLimit,
         status: status !== "all" ? (status === "active" ? 1 : 0) : null,
       });
-      return response.data;
+
+      if (response.data.success) {
+        setSupplierList(response.data.data);
+        setTotalPages(Math.ceil(response.data.totalRecord / dataLimit));
+      }
+      props.onLoading(false);
     } catch (error) {
       console.log("error", error);
-
-      return null;
+      props.onLoading(false);
     }
   };
 
   useEffect(() => {
-    const fetchSupplierInfo = async () => {
-      const response = await getSupplierInfo(currentPage, dataLimit);
-      if (response) {
-        let totalPage = Math.ceil(response.totlaRecord / response.limit);
-        setTotalPages(totalPage);
-        if (status === "deactive") {
-          setSupplierList(
-            response.data.filter((supplier) => supplier.status === 0)
-          );
-        } else if (status === "all") {
-          setSupplierList(response.data);
-        } else {
-          setSupplierList(
-            response.data.filter((supplier) => supplier.status === 1)
-          );
-          if (currentPage === 1) {
-            setAutoId((currentPage - 1) * dataLimit + 1);
-          }
-        }
-
-        props.onLoading(false);
-      }
-    };
-    fetchSupplierInfo();
+    getSupplierInfo();
   }, [currentPage, dataLimit, status]);
 
   const getIntegrationTypes = (id) => {
@@ -216,7 +195,7 @@ function IntegrationType(props) {
                       <i className="fa fa-refresh fa-spin"></i>
                     </div>
                   ) : null}
-                  <table className="table w-100 table-responsive-sm">
+                  <table className="table w-100 table-responsive-lg">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -249,8 +228,8 @@ function IntegrationType(props) {
                           <td>
                             {supplier.updatedAt
                               ? moment(supplier.updated_on).format(
-                                  "MM/DD/YYYY hh:mm a"
-                                )
+                                "MM/DD/YYYY hh:mm a"
+                              )
                               : "N/A"}
                           </td>
 
@@ -281,16 +260,49 @@ function IntegrationType(props) {
                     </tbody>
                   </table>
                   {supplierList?.length === 0 && (
-                    <h4 className="no-data" style={{color: props.loading ? 'white' : '#8b8a8a'}}>No Data Found</h4>
+                    <h4
+                      className="no-data"
+                      style={{ color: props.loading ? "white" : "#8b8a8a" }}
+                    >
+                      No Data Found
+                    </h4>
                   )}
                   {supplierList?.length > 0 && (
                     <div className="pagination-wrapper">
-                      <Pagination
-                        current={currentPage}
-                        total={totalPages}
-                        onPageChange={setCurrentPage}
-                        maxWidth={400}
-                      />
+                      <ul className="pagination">
+                        <li className="page-item">
+                          <button
+                            className="page-link"
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                          >
+                            &laquo;
+                          </button>
+                        </li>
+                        {[...Array(totalPages)].map((_, index) => (
+                          <li
+                            className={`page-item ${currentPage === index + 1 ? "active" : ""
+                              }`}
+                            key={index + 1}
+                          >
+                            <button
+                              className="page-link"
+                              onClick={() => handlePageChange(index + 1)}
+                            >
+                              {index + 1}
+                            </button>
+                          </li>
+                        ))}
+                        <li className="page-item">
+                          <button
+                            className="page-link"
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                          >
+                            &raquo;
+                          </button>
+                        </li>
+                      </ul>
                       <select
                         name="companyOwner"
                         className="form-control"

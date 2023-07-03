@@ -25,51 +25,29 @@ function MarketPlaceList(props) {
 
   const history = useHistory();
 
-  const getSupplierInfo = async (currentPage, dataLimit) => {
+  const getMarketPlaceInfo = async () => {
     props.onLoading(true);
-
     try {
-      const response = await axios.post(`${API_PATH.GET_LIST}`, {
+      const response = await axios.post(`${API_PATH.GET_LIST_BY_TYPE}`, {
         page: currentPage,
         limit: dataLimit,
-        type: type,
+        type,
         status: status !== "all" ? (status === "active" ? 1 : 0) : null,
       });
 
-      return response.data;
+      if (response.data.success) {
+        setMarketPlaceList(response.data.data);
+        setTotalPages(Math.ceil(response.data.totalRecord / dataLimit));
+      }
+      props.onLoading(false);
     } catch (error) {
       console.log("error", error);
-
-      return null;
+      props.onLoading(false);
     }
   };
 
   useEffect(() => {
-    const fetchMarketPlaceInfo = async () => {
-      const response = await getSupplierInfo(currentPage, dataLimit);
-      if (response) {
-        let totalPage = Math.ceil(response.totlaRecord / response.limit);
-        setTotalPages(totalPage);
-        if (status === "deactive") {
-          setMarketPlaceList(
-            response.data.filter((market_place) => market_place.status === 0)
-          );
-        } else if (status === "all") {
-          setMarketPlaceList(response.data);
-        } else {
-          setMarketPlaceList(
-            response.data.filter((market_place) => market_place.status === 1)
-          );
-          if (currentPage === 1) {
-            setAutoId((currentPage - 1) * dataLimit + 1);
-          }
-        }
-        setType(type);
-
-        props.onLoading(false);
-      }
-    };
-    fetchMarketPlaceInfo();
+    getMarketPlaceInfo();
   }, [currentPage, dataLimit, status]);
 
   const activateDeactivate = (event, supplierId) => {
@@ -114,6 +92,10 @@ function MarketPlaceList(props) {
           });
       }
     });
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   let filterList = [
@@ -162,7 +144,7 @@ function MarketPlaceList(props) {
                       <i className="fa fa-refresh fa-spin"></i>
                     </div>
                   ) : null}
-                  <table className="table w-100 table-responsive-sm">
+                  <table className="table w-100 table-responsive-lg">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -252,12 +234,40 @@ function MarketPlaceList(props) {
                   )}
                   {marketPlaceList?.length > 0 && (
                     <div className="pagination-wrapper">
-                      <Pagination
-                        current={currentPage}
-                        total={totalPages}
-                        onPageChange={setCurrentPage}
-                        maxWidth={400}
-                      />
+                      <ul className="pagination">
+                        <li className="page-item">
+                          <button
+                            className="page-link"
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                          >
+                            &laquo;
+                          </button>
+                        </li>
+                        {[...Array(totalPages)].map((_, index) => (
+                          <li
+                            className={`page-item ${currentPage === index + 1 ? "active" : ""
+                              }`}
+                            key={index + 1}
+                          >
+                            <button
+                              className="page-link"
+                              onClick={() => handlePageChange(index + 1)}
+                            >
+                              {index + 1}
+                            </button>
+                          </li>
+                        ))}
+                        <li className="page-item">
+                          <button
+                            className="page-link"
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                          >
+                            &raquo;
+                          </button>
+                        </li>
+                      </ul>
                       <select
                         name="companyOwner"
                         className="form-control"

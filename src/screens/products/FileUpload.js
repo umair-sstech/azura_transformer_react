@@ -75,7 +75,7 @@ function FileUpload(props) {
         currentPage,
         dataLimit,
         null,
-        supplier.value
+        supplier?.value
       );
       if (response) {
         let totalPage = Math.ceil(response.totalRecord / response.limit);
