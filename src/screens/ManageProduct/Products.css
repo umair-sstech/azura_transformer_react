@@ -140,6 +140,10 @@ button.btn.btn-link.collapsed {
     margin-bottom: 10px;
     font-weight: 700;
   }
+
+  .product--details {
+    max-width: 100% !important;
+  }
 }
 
 @media (min-width: 701px) and (max-width: 991px) {
@@ -148,8 +152,23 @@ button.btn.btn-link.collapsed {
   }
 }
 
+@media (min-width: 786px) and (max-width: 991px) {
+  .product__container .right {
+    max-width: 37%;
+  }
+}
+
 @media screen and (min-width: 992px) {
   .product__container .left {
     min-width: 65%;
+  }
+  .product__container .right {
+    max-width: 35%;
+  }
+}
+
+@media screen and (min-width: 1370px) {
+  .product__container .right {
+    max-width: 35%;
   }
 }

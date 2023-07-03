@@ -51,21 +51,21 @@ const ProductParent = (props) => {
                   />
                 </a>
                 <div className="d-flex flex-column w-100 justify-content-center justify-content-sm-start">
-                  <div className="row">
+                  <div className="row product--details" style={{maxWidth: productData?.product[0]?.Parent_SKU?.length > 20 ? "225px" : ""}}>
                     <div className="col-5">Parent SKU</div>
                     <div className=""> : </div>
                     <div className="col-6">
                       {productData?.product[0]?.Parent_SKU ? productData.product[0].Parent_SKU : "--"}
                     </div>
                   </div>
-                  <div className="row">
+                  <div className="row product--details" style={{maxWidth: productData?.product[0]?.Brand?.length > 20 ? "225px" : ""}}>
                     <div className="col-5">Brand</div>
                     <div className=""> : </div>
                     <div className="col-6">
                       {productData?.product[0]?.Brand ? productData.product[0].Brand : "--"}
                     </div>
                   </div>
-                  <div className="row">
+                  <div className="row product--details" style={{maxWidth: productData?.product[0]?.Category_1?.length > 20 ? "225px" : ""}}>
                     <div className="col-5">Category</div>
                     <div className=""> : </div>
                     <div className="col-6">
@@ -103,7 +103,7 @@ const ProductParent = (props) => {
                       />
                     </a>
                     <div className="d-flex flex-column w-100 justify-content-center justify-content-sm-start">
-                      <div className="row">
+                      <div className="row product--details" style={{maxWidth: variant.Variant_SKU?.length > 20 ? "225px" : ""}}>
                         <div className="col-5">Variant SKU</div>
                         <div> : </div>
                         <div className="col-6">{variant.Variant_SKU}</div>

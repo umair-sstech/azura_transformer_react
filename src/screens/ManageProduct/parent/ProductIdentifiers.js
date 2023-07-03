@@ -30,7 +30,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
   return (
     <div style={{ marginBottom: "-15px" }} className="d-flex">
       {/* <Col> */}
-        <Accordion defaultActiveKey="0" className="accordian__main" style={{width: "350px"}}>
+        <Accordion defaultActiveKey="0" className="accordian__main" style={{width: "361px"}}>
           <Card>
             <Card.Header>
               <Accordion.Toggle
@@ -82,7 +82,7 @@ const ProductIdentifiers = ({ identifiers, setIdentifiers }) => {
       {/* </Col> */}
 
       {/* <Col> */}
-        <Accordion defaultActiveKey="0" className="accordian__main" style={{width: "350px"}}>
+        <Accordion defaultActiveKey="0" className="accordian__main" style={{width: "361px"}}>
           <Card>
             <Card.Header>
               <Accordion.Toggle
