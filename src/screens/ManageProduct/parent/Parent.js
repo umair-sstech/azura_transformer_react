@@ -156,47 +156,8 @@ const Parent = (props) => {
     }
   };
 
-  // const handleSubmit = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     const supplierId = productData.product?.[0]?.supplierId;
-  //     const payload = {
-  //       productId: id,
-  //       supplierId: supplierId,
-  //       type: "PARENT",
-  //       AI_Description: description,
-  //       AI_Bullet_Description: bulletDescription,
-  //       ...identifiers,
-  //       Main_Color: colorValue,
-  //       Size_Only: sizeValue,
-  //       ...attribute,
-  //       custom_fields: customField,
-  //     };
 
-  //     if (title !== null) {
-  //       payload.AI_TITLE = title;
-  //     } else {
-  //       payload.Parent_Title = title;
-  //     }
-  //     console.log("payload",payload)
-  //     // return false
-  //     const response = await axios.post(`${API_PATH.UPDATE_PRODUCT_DATA}`, payload);
-
-  //     const { success, message } = response.data;
-  //     if (success) {
-  //       variantDetails(activeKey);
-  //       toast.success(message);
-  //       // history.push("/products");
-  //     } else {
-  //       toast.error(message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Failed to submit title:", error);
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  const aiTitleValue = productData?.product?.[0] !== null ? productData?.product?.[0]?.AI_TITLE?.replace(/"/g, "") : productData?.product?.[0]?.Parent_Title;
+  const aiTitleValue = productData?.product?.[0] !== null ? productData?.product?.[0]?.AI_TITLE?.replace(/[\s\[\]"]/g, "") : productData?.product?.[0]?.Parent_Title;
   const parentTitleValue = productData?.product?.[0] !== null ? productData?.product?.[0]?.Parent_Title : productData?.product?.[0]?.Variant_Title
 
   // const mainTitle = aiTitle ? aiTitle : parentTitle;

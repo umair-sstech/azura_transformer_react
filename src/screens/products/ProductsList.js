@@ -135,7 +135,7 @@ function ProductsList(props) {
 
   const setProductAiTitle = (product) => {
     const parentTitle = product?.Parent_Title ? product.Parent_Title : product.Variant_Title;
-    const aiTitle = product?.AI_TITLE ? product.AI_TITLE.replace(/"/g, "") : parentTitle;
+    const aiTitle = product?.AI_TITLE ? product.AI_TITLE.replace(/[\s\[\]"]/g, "") : parentTitle;
     return aiTitle.includes("AI Generated") ? aiTitle.slice(13) : aiTitle;
   }
 

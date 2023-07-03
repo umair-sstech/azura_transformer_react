@@ -11,12 +11,14 @@ const ProductDescription = (props) => {
  
   const renderDescription = () => {
     const lines = aiDesc?.split('\n');
-    return lines?.join('<br>');
+    const cleanedLines = lines?.map(line => line.replace(/["\[\]]/g, ''));
+    return cleanedLines?.join('<br>');
   };
 
   const bulletDescription = () => {
     const lines = aiDescBullet?.split('\n');
-    return lines?.join('<br>');
+    const cleanedLines = lines?.map(line => line.replace(/["\[\]]/g, ''));
+    return cleanedLines?.join('<br>');
   };
   return (
     <>
