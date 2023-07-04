@@ -12,9 +12,8 @@ import MarketPlacePage3 from "./MarketPlacePage3";
 import MarketPlacePage4 from "./MarketPlacePage4";
 import MarketPlacePage5 from "./MarketPlacePage5";
 import MarketPlacePage6 from "./MarketPlacePage6";
-import  "./MarketPlace.css"
+import "./MarketPlace.css";
 import Swal from "sweetalert2";
-
 
 export const FormContext = createContext();
 
@@ -34,7 +33,18 @@ function ManageMarketPlace(props) {
     },
     []
   );
- 
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
   const processCancel = () => {
     Swal.fire({
       title: "Are you sure, <br> you want to exit ? ",
@@ -48,10 +58,10 @@ function ManageMarketPlace(props) {
       if (result.isConfirmed) {
         history.push("/market-place");
         localStorage.removeItem("marketPlaceId");
-        localStorage.removeItem("marketPlaceName")
+        localStorage.removeItem("marketPlaceName");
+        localStorage.removeItem("currentPage");
       }
     });
- 
   };
 
   const nextPage = (page) => {
@@ -90,6 +100,16 @@ function ManageMarketPlace(props) {
       setActiveStepIndex(0);
     }
   };
+  useEffect(() => {
+    const storedPage = localStorage.getItem("currentPage");
+    if (storedPage) {
+      setPage(Number(storedPage));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("currentPage", page);
+  }, [page]);
 
   const history = useHistory();
   return (
@@ -102,18 +122,30 @@ function ManageMarketPlace(props) {
       >
         <div>
           <div className="container-fluid">
-          <PageHeader 
-          HeaderText={isMarketPlaceAdded ? "Market Place Update" : "Market Place Add"}
-          Breadcrumb={[
-            { name: "Integration", navigate: "/integration", items: ["marketPlaceId", "marketPlaceName"] },
-            { name: "Market Place List", navigate: "/market-place", items: ["marketPlaceId", "marketPlaceName"] },
-            {
-              name: isMarketPlaceAdded ? "Market Place Update" : "Market Place Add",
-              navigate: "#",
-            },
-          ]}
-          className="page-header"
-        />
+            <PageHeader
+              HeaderText={
+                isMarketPlaceAdded ? "Market Place Update" : "Market Place Add"
+              }
+              Breadcrumb={[
+                {
+                  name: "Integration",
+                  navigate: "/integration",
+                  items: ["marketPlaceId", "marketPlaceName"],
+                },
+                {
+                  name: "Market Place List",
+                  navigate: "/market-place",
+                  items: ["marketPlaceId", "marketPlaceName"],
+                },
+                {
+                  name: isMarketPlaceAdded
+                    ? "Market Place Update"
+                    : "Market Place Add",
+                  navigate: "#",
+                },
+              ]}
+              className="page-header"
+            />
             <div className="tab-component">
               <div className="card">
                 <div className="body">
@@ -135,7 +167,6 @@ function ManageMarketPlace(props) {
                       processCancel,
                     }}
                   >
-                
                     <MultiStepProgressBar
                       setPage={setPage}
                       page={page}
@@ -179,7 +210,6 @@ function ManageMarketPlace(props) {
                         //     setPage={setPage}
                         //   />
                         // ),
-                       
                       }[page]
                     }
                   </FormContext.Provider>

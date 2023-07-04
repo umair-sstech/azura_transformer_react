@@ -14,7 +14,6 @@ import { Form } from "react-bootstrap";
 import { API_PATH } from "../ApiPath/Apipath";
 
 function FileUpload(props) {
-  const [supplierList, setSupplierList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [dataLimit, setdataLimit] = useState(10);
@@ -35,12 +34,12 @@ function FileUpload(props) {
 
   const getSupplierList = async () => {
     try {
-      const response = await axios.post(`${API_PATH.GET_LIST}`, {
-        type: "Supplier",
+      const response = await axios.post(`${API_PATH.GET_LIST_BY_NAME}`, {
+        type:type
       });
-      const suppliers = response.data.data;
-      setSupplier(suppliers);
-      const supplierNames = suppliers.map((supplier) => ({
+      const { data } = response.data;
+      console.log("data----",data)
+      const supplierNames = data.map((supplier) => ({
         value: supplier.id,
         label: supplier.name,
       }));
@@ -49,6 +48,7 @@ function FileUpload(props) {
       console.error("Error fetching suppliers:", error);
     }
   };
+  
 
   const getFileList = async (currentPage, dataLimit, search, supplierId) => {
     props.onLoading(true);

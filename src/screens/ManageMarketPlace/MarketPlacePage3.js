@@ -29,7 +29,7 @@ function MarketPlacePage3(props) {
     port: "",
     protocol: "",
     urlPath: "",
-    syncFrequency: "",
+    productSyncFrequency: "",
     // productTimeZone: "",
     // type: "product",
   });
@@ -88,7 +88,7 @@ function MarketPlacePage3(props) {
       [name]: formattedValue,
     }));
   
-    const updatedSyncFrequency = syncFrequency.split(" ");
+    let updatedSyncFrequency = syncFrequency ? syncFrequency.split(" ") : [];
     let error = "";
   
     switch (name) {
@@ -187,27 +187,26 @@ function MarketPlacePage3(props) {
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      const supplierId = localStorage.getItem("marketPlaceId");
-      const supplierName = localStorage.getItem("marketPlaceName");
+      const integrationId = localStorage.getItem("marketPlaceId");
+      const integrationName = localStorage.getItem("marketPlaceName");
 
       const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
         const value = formData.get(name);
         const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
         return formattedValue;
       });
-      const syncFrequency = syncFrequencyValues.join(" ");
+      const productSyncFrequency = syncFrequencyValues.join(" ");
 
       const payload = {
         ...initFormData,
-        syncFrequency,
+        productSyncFrequency,
         settingType:"SFTP",
-        supplierId,
-        supplierName,
+        integrationId,
+        integrationName,
       };
-      console.log("payload",payload)
       setIsLoading(true);
       axios
-        .post(`${API_PATH.IMPORT_SETTING}`, payload)
+        .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
         .then((response) => {
           const { success, message, data } = response.data;
           if (success) {
@@ -237,26 +236,26 @@ function MarketPlacePage3(props) {
 
     if (Object.keys(errors).length === 0) {
 
-      const supplierId = localStorage.getItem("marketPlaceId");
-      const supplierName = localStorage.getItem("marketPlaceName");
+      const integrationId = localStorage.getItem("marketPlaceId");
+      const integrationName = localStorage.getItem("marketPlaceName");
 
       const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
         const value = formData.get(name);
         const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
         return formattedValue;
       });
-      const syncFrequency = syncFrequencyValues.join(" ");
+      const productSyncFrequency = syncFrequencyValues.join(" ");
 
       const payload = {
         ...initFormData,
-        syncFrequency,
+        productSyncFrequency,
         settingType:"SFTP",
-        supplierId,
-        supplierName,
+        integrationId,
+        integrationName,
       };
       setIsLoadingExit(true);
       axios
-        .post(`${API_PATH.IMPORT_SETTING}`, payload)
+        .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
         .then((response) => {
           const { success, message, data } = response.data;
           if (success) {
@@ -264,7 +263,9 @@ function MarketPlacePage3(props) {
             setFormData({});
             history.push("/market-place");
             localStorage.removeItem("marketPlaceId");
-            localStorage.removeItem("marketPLaceName");
+            localStorage.removeItem("marketPlaceName");
+            localStorage.removeItem("currentPage");
+
           } else {
             toast.error(message);
           }
@@ -307,19 +308,19 @@ function MarketPlacePage3(props) {
 
 
   const getProductData=(e)=>{
-    const supplierId = localStorage.getItem("marketPlaceId");
+    const integrationId = localStorage.getItem("marketPlaceId");
 
-    if (supplierId) {
+    if (integrationId) {
       axios
-        .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
+        .get(`${API_PATH.GET_SYNC_SETTING}?integrationId=${integrationId}`)
         .then((response) => {
-          const supplierData = response.data.data;
+          const integrationData = response.data.data;
           setFormData({
-            ...supplierData,
-            protocol: supplierData.protocol,
+            ...integrationData,
+            protocol: integrationData.protocol,
           });
-          const { syncFrequency } = supplierData;
-          setSyncFrequency(syncFrequency);
+          const { productSyncFrequency } = integrationData;
+          setSyncFrequency(productSyncFrequency);
         })
         .catch((error) => {
           console.log("error", error);
@@ -535,7 +536,7 @@ function MarketPlacePage3(props) {
                       type="text"
                       placeholder="*"
                       name="minute"
-                      value={syncFrequency.split(" ")[0] || ""}
+                      value={syncFrequency?.split(" ")[0] || ""}
                       onChange={handleSyncFrequency}
                     />
                     <label>
@@ -553,7 +554,7 @@ function MarketPlacePage3(props) {
                       type="text"
                       placeholder="*"
                       name="hour"
-                      value={syncFrequency.split(" ")[1] || ""}
+                      value={syncFrequency?.split(" ")[1] || ""}
                       onChange={handleSyncFrequency}
                     />
                     <label>
@@ -571,7 +572,7 @@ function MarketPlacePage3(props) {
                       type="text"
                       placeholder="*"
                       name="day"
-                      value={syncFrequency.split(" ")[2] || ""}
+                      value={syncFrequency?.split(" ")[2] || ""}
                       onChange={handleSyncFrequency}
                     />
                     <label>
@@ -589,7 +590,7 @@ function MarketPlacePage3(props) {
                       type="text"
                       placeholder="*"
                       name="month"
-                      value={syncFrequency.split(" ")[3] || ""}
+                      value={syncFrequency?.split(" ")[3] || ""}
                       onChange={handleSyncFrequency}
                     />
                     <label>
@@ -607,7 +608,7 @@ function MarketPlacePage3(props) {
                       type="text"
                       placeholder="*"
                       name="week"
-                      value={syncFrequency.split(" ")[4] || ""}
+                      value={syncFrequency?.split(" ")[4] || ""}
                       onChange={handleSyncFrequency}
                     />
                     <label>

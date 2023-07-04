@@ -46,7 +46,7 @@ function UploadFailedData() {
 
   const getSupplierList = async () => {
     try {
-      const response = await axios.post(`${API_PATH.GET_LIST}`, {
+      const response = await axios.post(`${API_PATH.GET_LIST_BY_NAME}`, {
         type: "Supplier",
       });
       const suppliers = response.data.data;

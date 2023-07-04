@@ -228,7 +228,8 @@ function MarketPlacePage4(props) {
             setFormData({});
             history.push("/market-place");
             localStorage.removeItem("marketPlaceId");
-            localStorage.removeItem("marketPLaceName");
+            localStorage.removeItem("marketPlaceName");
+            localStorage.removeItem("currentPage");
           } else {
             toast.error(message);
           }

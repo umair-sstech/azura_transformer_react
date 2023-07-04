@@ -7,12 +7,12 @@ const API_USER=process.env.REACT_APP_USER_SERVICE
 const FILE_UPLOAD=process.env.REACT_APP_URL_FILE_UPLOAD
 
 export const API_PATH = {
-GET_DASHBOARD_DATA:`${API_DASHBOARD}/dashboard/get_dashboard`,
-UPDATE_USER_PROFILE:`${API_USER}/user/update`,
-FETCH_USER_PROFILE_DETAILS:`${API_USER}/user`,
+  GET_DASHBOARD_DATA:`${API_DASHBOARD}/dashboard/get_dashboard`,
+  UPDATE_USER_PROFILE:`${API_USER}/user/update`,
+  FETCH_USER_PROFILE_DETAILS:`${API_USER}/user`,
 
   GET_LIST: `${API_BASE_URL}/integration/getIntegrationInfo`,
-  GET_LIST_BY_TYPE: `${API_BASE_URL}/integration/getIntegrationInfoByType`,
+  GET_LIST_BY_NAME: `${API_BASE_URL}/integration/getIntegrationName`,
   CREATE_INTEGRATION_INFO: `${API_BASE_URL}/integration/createIntegrationInfo`,
   UPDATE_INTEGRATION_INFO: `${API_BASE_URL}/integration/updateIntegrationInfo`,
   GET_INTEGRATION_INFO_BY_ID: `${API_BASE_URL}/integration/getIntegrationInfoById?supplierId`,
@@ -61,5 +61,6 @@ FETCH_USER_PROFILE_DETAILS:`${API_USER}/user`,
   CREATE_RETAILER_SUPPLIER: `${API_RETAILER_URL}/createOrUpdateRetailerIntegration`,
   GET_RETAILER_INTEGRATION_LIST: `${API_RETAILER_URL}/getRetailerIntegrationList`,
   CHANGE_STATUS: `${API_RETAILER_URL}/changeRetailerIntegrationStatus`,
+  
   API_LOGS: `${API_RETAILER_URL}/changeRetailerIntegrationStatus`,
 };

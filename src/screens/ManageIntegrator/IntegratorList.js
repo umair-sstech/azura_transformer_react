@@ -26,7 +26,7 @@ function IntegratorList(props) {
   const getIntegratorInfo = async () => {
     props.onLoading(true);
     try {
-      const response = await axios.post(`${API_PATH.GET_LIST_BY_TYPE}`, {
+      const response = await axios.post(`${API_PATH.GET_LIST}`, {
         page: currentPage,
         limit: dataLimit,
         type,

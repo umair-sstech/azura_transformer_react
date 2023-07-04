@@ -247,6 +247,7 @@ function MarketPlacePage1(props) {
 
               localStorage.removeItem("marketPlaceId");
               localStorage.removeItem("marketPlaceName");
+              localStorage.removeItem("currentPage");
             } else {
               toast.error(message);
             }
