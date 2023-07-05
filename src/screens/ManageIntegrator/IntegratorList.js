@@ -236,7 +236,7 @@ function IntegratorList(props) {
                   )}
                   {integratorList?.length > 0 && (
                     <div className="pagination-wrapper">
-                    {  /*<ul className="pagination">
+                  <ul className="pagination">
                         <li className="page-item">
                           <button
                             className="page-link"
@@ -269,7 +269,7 @@ function IntegratorList(props) {
                             &raquo;
                           </button>
                         </li>
-                            </ul>*/}
+                            </ul>
                       <select
                         name="companyOwner"
                         className="form-control"
