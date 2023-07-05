@@ -136,7 +136,7 @@ function SupplierSftpForm(props) {
       [name]: formattedValue,
     }));
   
-    const updatedSyncFrequency = syncFrequency.split(" ");
+    const updatedSyncFrequency = syncFrequency?syncFrequency.split(" "):[];
     let error = "";
   
     switch (name) {
@@ -529,7 +529,7 @@ function SupplierSftpForm(props) {
                       type="text"
                       placeholder="*"
                       name="minute"
-                      value={syncFrequency.split(" ")[0] || ""}
+                      value={syncFrequency?.split(" ")[0] || ""}
                       onChange={handleSyncFrequency}
                     />
                     <label>
@@ -547,7 +547,7 @@ function SupplierSftpForm(props) {
                       type="text"
                       placeholder="*"
                       name="hour"
-                      value={syncFrequency.split(" ")[1] || ""}
+                      value={syncFrequency?.split(" ")[1] || ""}
                       onChange={handleSyncFrequency}
                     />
                     <label>
@@ -565,7 +565,7 @@ function SupplierSftpForm(props) {
                       type="text"
                       placeholder="*"
                       name="day"
-                      value={syncFrequency.split(" ")[2] || ""}
+                      value={syncFrequency?.split(" ")[2] || ""}
                       onChange={handleSyncFrequency}
                     />
                     <label>
@@ -583,7 +583,7 @@ function SupplierSftpForm(props) {
                       type="text"
                       placeholder="*"
                       name="month"
-                      value={syncFrequency.split(" ")[3] || ""}
+                      value={syncFrequency?.split(" ")[3] || ""}
                       onChange={handleSyncFrequency}
                     />
                     <label>
@@ -601,7 +601,7 @@ function SupplierSftpForm(props) {
                       type="text"
                       placeholder="*"
                       name="week"
-                      value={syncFrequency.split(" ")[4] || ""}
+                      value={syncFrequency?.split(" ")[4] || ""}
                       onChange={handleSyncFrequency}
                     />
                     <label>

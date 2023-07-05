@@ -15,7 +15,7 @@ const ProductParent = (props) => {
 
   const aiTitle =
     productData?.product?.[0] !== null
-      ? productData?.product?.[0]?.AI_TITLE?.replace(/[\s\[\]"]/g, "")
+      ? productData?.product?.[0]?.AI_TITLE?.replace(/["-]/g, '')
       : productData?.product?.[0]?.Parent_Title;
   const parentTitle =
     productData?.product?.[0] !== null
@@ -32,7 +32,7 @@ const ProductParent = (props) => {
 
   const setVariantTitle = (variant) => {
     const variantTitle = variant?.AI_TITLE
-      ? variant.AI_TITLE.replace(/[\s\[\]"]/g, "")
+      ? variant.AI_TITLE.replace(/["-]/g, '')
       : variant.Variant_Title;
     return variantTitle.includes("AI Generated")
       ? variantTitle.slice(13)

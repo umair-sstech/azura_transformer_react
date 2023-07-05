@@ -157,8 +157,8 @@ const Parent = (props) => {
   };
 
 
-  const aiTitleValue = productData?.product?.[0] !== null ? productData?.product?.[0]?.AI_TITLE?.replace(/[\s\[\]"]/g, "") : productData?.product?.[0]?.Parent_Title;
-  const parentTitleValue = productData?.product?.[0] !== null ? productData?.product?.[0]?.Parent_Title?.replace(/[\s\[\]"]/g, "") : productData?.product?.[0]?.Variant_Title
+  const aiTitleValue = productData?.product?.[0] !== null ? productData?.product?.[0]?.AI_TITLE?.replace(/["-]/g, '') : productData?.product?.[0]?.Parent_Title;
+  const parentTitleValue = productData?.product?.[0] !== null ? productData?.product?.[0]?.Parent_Title?.replace(/["-]/g, '') : productData?.product?.[0]?.Variant_Title
 
   // const mainTitle = aiTitle ? aiTitle : parentTitle;
 

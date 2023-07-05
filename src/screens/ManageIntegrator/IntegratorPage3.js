@@ -10,7 +10,6 @@ import { FormContext } from "./ManageIntegrator";
 import { validateIntegratorProductSync } from "../Validations/Validation";
 import "./Integrator.css";
 
-
 function IntegratoePage3(props) {
   const { setPage } = props;
   const { processCancel, formData, setFormData } = useContext(FormContext);
@@ -68,21 +67,23 @@ function IntegratoePage3(props) {
   const handleSyncFrequency = (e) => {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
-  
+
     let formattedValue = trimmedValue;
-  
+
     if (/^[1-9]$/.test(trimmedValue)) {
       formattedValue = `0${trimmedValue}`;
     }
-  
+
     setInitFormData((prevState) => ({
       ...prevState,
       [name]: formattedValue,
     }));
-  
-    const updatedSyncFrequency = productSyncFrequency.split(" ");
+
+    const updatedSyncFrequency = productSyncFrequency
+      ? productSyncFrequency.split(" ")
+      : [];
     let error = "";
-  
+
     switch (name) {
       case "minute":
         if (
@@ -93,7 +94,7 @@ function IntegratoePage3(props) {
         }
         updatedSyncFrequency[0] = trimmedValue;
         break;
-  
+
       case "hour":
         if (
           !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
@@ -103,7 +104,7 @@ function IntegratoePage3(props) {
         }
         updatedSyncFrequency[1] = trimmedValue;
         break;
-  
+
       case "day":
         if (
           !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
@@ -113,7 +114,7 @@ function IntegratoePage3(props) {
         }
         updatedSyncFrequency[2] = trimmedValue;
         break;
-  
+
       case "month":
         if (
           !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
@@ -123,7 +124,7 @@ function IntegratoePage3(props) {
         }
         updatedSyncFrequency[3] = trimmedValue;
         break;
-  
+
       case "week":
         if (
           !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
@@ -133,16 +134,16 @@ function IntegratoePage3(props) {
         }
         updatedSyncFrequency[4] = trimmedValue;
         break;
-  
+
       default:
         break;
     }
-  
+
     setFormErrors((prevErrors) => ({
       ...prevErrors,
       [name]: error,
     }));
-  
+
     setProductSyncFrequency(updatedSyncFrequency.join(" "));
   };
   const handleChange = (key, value) => {
@@ -177,12 +178,18 @@ function IntegratoePage3(props) {
       // const { value, label } = initFormData.productTimeZone || {};
       // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
-      const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+      const syncFrequencyValues = [
+        "minute",
+        "hour",
+        "day",
+        "month",
+        "week",
+      ].map((name) => {
         const value = formData.get(name);
         const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
         return formattedValue;
       });
-  
+
       const productSyncFrequency = syncFrequencyValues.join(" ");
 
       const payload = {
@@ -191,7 +198,7 @@ function IntegratoePage3(props) {
         // productTimeZone: timeZoneString,
         integrationId,
         integrationName,
-        type: "product"
+        type: "product",
       };
       setIsLoading(true);
       axios
@@ -230,12 +237,18 @@ function IntegratoePage3(props) {
       // const { value, label } = initFormData.productTimeZone || {};
       // const timeZoneString = value ? `${value}` : findDefaultTimeZone.abbr;
 
-      const syncFrequencyValues = ["minute", "hour", "day", "month", "week"].map((name) => {
+      const syncFrequencyValues = [
+        "minute",
+        "hour",
+        "day",
+        "month",
+        "week",
+      ].map((name) => {
         const value = formData.get(name);
         const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
         return formattedValue;
       });
-  
+
       const productSyncFrequency = syncFrequencyValues.join(" ");
 
       const payload = {
@@ -244,7 +257,7 @@ function IntegratoePage3(props) {
         // productTimeZone: timeZoneString,
         integrationId,
         integrationName,
-        type: "product"
+        type: "product",
       };
       setIsLoadingExit(true);
       axios
@@ -258,7 +271,6 @@ function IntegratoePage3(props) {
             localStorage.removeItem("integratorId");
             localStorage.removeItem("integratorName");
             localStorage.removeItem("currentPage");
-
           } else {
             toast.error(message);
           }
@@ -377,7 +389,7 @@ function IntegratoePage3(props) {
                     type="text"
                     placeholder="*"
                     name="minute"
-                    value={productSyncFrequency.split(" ")[0] || ""}
+                    value={productSyncFrequency?.split(" ")[0] || ""}
                     onChange={handleSyncFrequency}
                   />
                   <label>
@@ -395,7 +407,7 @@ function IntegratoePage3(props) {
                     type="text"
                     placeholder="*"
                     name="hour"
-                    value={productSyncFrequency.split(" ")[1] || ""}
+                    value={productSyncFrequency?.split(" ")[1] || ""}
                     onChange={handleSyncFrequency}
                   />
                   <label>
@@ -413,7 +425,7 @@ function IntegratoePage3(props) {
                     type="text"
                     placeholder="*"
                     name="day"
-                    value={productSyncFrequency.split(" ")[2] || ""}
+                    value={productSyncFrequency?.split(" ")[2] || ""}
                     onChange={handleSyncFrequency}
                   />
                   <label>
@@ -431,7 +443,7 @@ function IntegratoePage3(props) {
                     type="text"
                     placeholder="*"
                     name="month"
-                    value={productSyncFrequency.split(" ")[3] || ""}
+                    value={productSyncFrequency?.split(" ")[3] || ""}
                     onChange={handleSyncFrequency}
                   />
                   <label>
@@ -449,7 +461,7 @@ function IntegratoePage3(props) {
                     type="text"
                     placeholder="*"
                     name="week"
-                    value={productSyncFrequency.split(" ")[4] || ""}
+                    value={productSyncFrequency?.split(" ")[4] || ""}
                     onChange={handleSyncFrequency}
                   />
                   <label>
