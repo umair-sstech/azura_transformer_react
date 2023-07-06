@@ -5,7 +5,7 @@ import { ProgressBar, Step } from "react-step-progress-bar";
 const stepNames = [
   "Market Place Info",
   // "Category Mapping",
-  "Product Export Sync Settings",
+  "Product Sync Settings",
   "Order Settings",
   // "Tracking Settings",
   // "Extra Settings",

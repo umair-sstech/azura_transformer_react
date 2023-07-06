@@ -1,26 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import Select from "react-select";
+import { FormContext } from "./ManageRetailerSetting";
 import { toast } from "react-toastify";
-import timeZoneData from "../../Data/timeZone";
-import { API_PATH } from "../ApiPath/Apipath";
-import { FormContext } from "./ManageMarketPlace";
-import { useHistory } from "react-router-dom";
-import { validateMarketPlaceProductSync } from "../Validations/Validation";
 import { Spinner } from "react-bootstrap";
+import axios from "axios";
+import { API_PATH } from "../ApiPath/Apipath";
+import { validateSftpFtp } from "../Validations/Validation";
+import Select from "react-select";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
-function MarketPlacePage3(props) {
-  const { setPage } = props;
+function NextCsvConfiguration(props) {
   const { processCancel, formData, setFormData } = useContext(FormContext);
-
-  const history = useHistory();
-
   const dropdownOptions = [{ value: "SFTP", label: "SFTP / FTP" }];
-
   const [initFormData, setInitFormData] = useState({
+    hostName: "",
+    ftpUserName: "",
+    password: "",
+    port: "",
+    urlPath: "",
+    protocol: "",
     productSyncFrequency: "",
-    type: "product",
   });
+  console.log("initformData----", initFormData);
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [syncFrequencyOptions, setSyncFrequencyOptions] = useState([]);
@@ -28,6 +28,12 @@ function MarketPlacePage3(props) {
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [productSyncFrequency, setProductSyncFrequency] = useState("");
   const [selectedOption, setSelectedOption] = useState(dropdownOptions[0]);
+
+  const history = useHistory();
+  const option = [
+    { value: "SFTP", label: "SFTP" },
+    { value: "FTP", label: "FTP" },
+  ];
 
   useEffect(() => {
     if (formData) {
@@ -40,9 +46,12 @@ function MarketPlacePage3(props) {
   }, [formErrors]);
 
   useEffect(() => {
-    getCronTimeData();
+    getAccountConfigurationData();
   }, []);
 
+  useEffect(() => {
+    getCronTimeData();
+  }, []);
   const getCronTimeData = () => {
     try {
       axios
@@ -60,6 +69,30 @@ function MarketPlacePage3(props) {
     }
   };
 
+  const handleChange = (key, val) => {
+    const formData = new FormData(document.forms.sftpftpForm);
+    formData.set(key, val);
+    const errors = validateSftpFtp(formData);
+    setFormErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, type } = e.target;
+    const trimmedValue = type === "text" ? value.trim() : value;
+
+    setInitFormData((prevState) => ({
+      ...prevState,
+      [name]: trimmedValue,
+    }));
+    handleChange(name, value);
+  };
+
+  const handleProtocolChange = (selectedOption) => {
+    const protocol = selectedOption.value;
+    setInitFormData({ ...initFormData, protocol });
+    handleChange("protocol", protocol);
+  };
   const handleSyncFrequency = (e) => {
     const { name, value, type } = e.target;
     const trimmedValue = type === "text" ? value.trim() : value;
@@ -75,7 +108,9 @@ function MarketPlacePage3(props) {
       [name]: formattedValue,
     }));
 
-    let updatedSyncFrequency = productSyncFrequency ? productSyncFrequency.split(" ") : [];
+    let updatedSyncFrequency = productSyncFrequency
+      ? productSyncFrequency.split(" ")
+      : [];
     let error = "";
 
     switch (name) {
@@ -141,41 +176,18 @@ function MarketPlacePage3(props) {
     setProductSyncFrequency(updatedSyncFrequency.join(" "));
   };
 
-  // const handleChange = (key, value) => {
-  //   const formData = new FormData(document.forms.marketPlace3);
-  //   formData.set(key, value);
-  //   const errors = validateMarketPlaceProductSync(formData);
-  //   setFormErrors(errors);
-  //   setIsFormValid(Object.keys(errors).length === 0);
-  // };
-
-  // const handleInputChange = (e) => {
-  //   const { name, value, type } = e.target;
-  //   const trimmedValue = type === "text" ? value.trim() : value;
-
-  //   setInitFormData((prevState) => ({
-  //     ...prevState,
-  //     [name]: trimmedValue,
-  //   }));
-  //   handleChange(name, value);
-  // };
-  // const handleProtocolChange = (selectedOption) => {
-  //   const protocol = selectedOption.value;
-  //   setInitFormData({ ...initFormData, protocol });
-  //   handleChange("protocol", protocol);
-  //   setFormErrors({ ...formErrors, protocol: "" });
-  // };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    const errors = validateMarketPlaceProductSync(formData);
+    const errors = validateSftpFtp(formData);
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      const integrationId = localStorage.getItem("marketPlaceId");
-      const integrationName = localStorage.getItem("marketPlaceName");
+      const retailerIntegrationId = localStorage.getItem(
+        "retailerIntegrationId"
+      );
+      const marketPlaceSettingId = localStorage.getItem("marketPlaceSettingId");
 
       const syncFrequencyValues = [
         "minute",
@@ -188,152 +200,77 @@ function MarketPlacePage3(props) {
         const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
         return formattedValue;
       });
+
       const productSyncFrequency = syncFrequencyValues.join(" ");
 
       const payload = {
+        id: retailerIntegrationId,
+        marketPlaceId: marketPlaceSettingId,
+        ...initFormData,
+        settingType: "SFTP",
         productSyncFrequency,
-        integrationId,
-        integrationName,
-        type: "product",
       };
-      console.log("payload----",payload)
       setIsLoading(true);
       axios
-        .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
+        .post(`${API_PATH.CREATE_CSV_CONFIGURATION}`, payload)
         .then((response) => {
-          const { success, message, data } = response.data;
+          const { success, message } = response.data;
           if (success) {
             toast.success(message);
-            setFormData({});
-            setPage(3);
-          } else {
-            toast.error(message);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-        .finally(() => setIsLoading(false));
-    }
-  };
-
-  const handleOnClick = (e) => {
-    e.preventDefault();
-    const form = e.currentTarget.closest("form");
-    if (!form) {
-      return;
-    }
-    const formData = new FormData(form);
-    const errors = validateMarketPlaceProductSync(formData);
-    setFormErrors(errors);
-
-    if (Object.keys(errors).length === 0) {
-      const integrationId = localStorage.getItem("marketPlaceId");
-      const integrationName = localStorage.getItem("marketPlaceName");
-
-      const syncFrequencyValues = [
-        "minute",
-        "hour",
-        "day",
-        "month",
-        "week",
-      ].map((name) => {
-        const value = formData.get(name);
-        const formattedValue = /^[1-9]$/.test(value) ? `0${value}` : value;
-        return formattedValue;
-      });
-      const productSyncFrequency = syncFrequencyValues.join(" ");
-
-      const payload = {
-        productSyncFrequency,
-        integrationId,
-        integrationName,
-        type:"product"
-      };
-      setIsLoadingExit(true);
-      axios
-        .post(`${API_PATH.MARKET_PLACE_SYNCSETTING}`, payload)
-        .then((response) => {
-          const { success, message, data } = response.data;
-          if (success) {
-            toast.success(message);
-            setFormData({});
-            history.push("/market-place");
-            localStorage.removeItem("marketPlaceId");
-            localStorage.removeItem("marketPlaceName");
+            localStorage.removeItem("supplierSettingId");
+            localStorage.removeItem("selectedSupplierName");
+            localStorage.removeItem("retailerIntegrationId");
+            localStorage.removeItem("marketPlaceSettingId");
+            localStorage.removeItem("marketPlaceSettingName");
             localStorage.removeItem("currentPage");
+            history.push("/setting-retailer-list");
           } else {
             toast.error(message);
           }
         })
         .catch((error) => {
           console.error(error);
-        })
-        .finally(() => setIsLoadingExit(false));
+          setIsLoading(false);
+        });
     }
   };
 
-  const getProductData = () => {
-    const integrationId = localStorage.getItem("marketPlaceId");
+  const getAccountConfigurationData = () => {
+    const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+    const marketPlaceSettingId = localStorage.getItem("marketPlaceSettingId");
+
+    const payload = {
+      id: retailerIntegrationId,
+    };
 
     axios
-      .get(`${API_PATH.GET_SYNC_SETTING}?integrationId=${integrationId}`)
+      .post(`${API_PATH.GET_ACCOUNT}`, payload)
       .then((response) => {
-        const { success, message, data } = response.data;
-        if (success) {
-          let productTimeZone = timeZoneData.find(
-            (tz) => tz.abbr == data.productTimeZone
-          );
-          setFormData({
-            // productTimeZone: {
-            //   value: productTimeZone.abbr,
-            //   label: productTimeZone.text,
-            // },
-            type: "product",
-          });
-          const { productSyncFrequency } = data;
+        const { success, data } = response.data;
+        if (success && data.length > 0) {
+          const retailerIntegration = data[0];
+          console.log("integrationData----", retailerIntegration);
+
+          const { productSyncFrequency } = retailerIntegration;
 
           setProductSyncFrequency(productSyncFrequency);
-        } else {
+
+          setFormData({
+            hostName: retailerIntegration.hostName,
+            ftpUserName: retailerIntegration.ftpUserName,
+            port: retailerIntegration.port,
+            password: retailerIntegration.password,
+            urlPath: retailerIntegration.urlPath,
+            protocol: retailerIntegration.protocol,
+          });
         }
       })
       .catch((error) => {
         console.error(error);
       });
   };
-
-  // const getProductData = (e) => {
-  //   const integrationId = localStorage.getItem("marketPlaceId");
-
-  //   if (integrationId) {
-  //     axios
-  //       .get(`${API_PATH.GET_SYNC_SETTING}?integrationId=${integrationId}`)
-  //       .then((response) => {
-  //         const integrationData = response.data.data;
-  //         setFormData({
-  //           ...integrationData,
-  //           protocol: integrationData.protocol,
-  //         });
-  //         console.log("response---", response);
-  //         const { productSyncFrequency } = integrationData;
-  //         setProductSyncFrequency(productSyncFrequency);
-  //       })
-  //       .catch((error) => {
-  //         console.log("error", error);
-  //       });
-  //   }
-  // };
-  useEffect(() => {
-    getProductData();
-  }, []);
-
-  // const option = [
-  //   { value: "SFTP", label: "SFTP" },
-  //   { value: "FTP", label: "FTP" },
-  // ];
-
   return (
-    <form onSubmit={handleSubmit} name="marketPlace3">
+    <form onSubmit={handleSubmit} name="sftpftpForm">
       <div style={{ marginTop: "30px" }}>
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12 button-class">
@@ -343,19 +280,6 @@ function MarketPlacePage3(props) {
                 type="submit"
               >
                 {isLoading ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Please wait...
-                  </>
-                ) : (
-                  "Save & Next"
-                )}
-              </button>
-              <button
-                className="btn btn-primary w-auto btn-lg mr-2"
-                type="submit"
-                onClick={handleOnClick}
-              >
-                {isLoadingExit ? (
                   <>
                     <Spinner animation="border" size="sm" /> Please wait...
                   </>
@@ -374,7 +298,7 @@ function MarketPlacePage3(props) {
             </div>
           </div>
         </div>
-      {/*  <div className="row mt-1">
+        <div className="row mt-1">
           <div className="col-12">
             <label htmlFor="combo-box-demo">Type of Integration</label>
             <Select
@@ -384,9 +308,9 @@ function MarketPlacePage3(props) {
               name="type"
             />
           </div>
-                </div>*/}
+        </div>
         <div className="row mt-5">
-        {  /*<div className="col-12">
+          <div className="col-12">
             <div className="form-group">
               <label>
                 Host Name <span style={{ color: "red" }}>*</span>
@@ -416,17 +340,17 @@ function MarketPlacePage3(props) {
               <input
                 className="form-control"
                 type="text"
-                name="userName"
+                name="ftpUserName"
                 placeholder="Enter User Name"
                 onChange={handleInputChange}
                 defaultValue={
-                  initFormData && initFormData.userName
-                    ? initFormData.userName
+                  initFormData && initFormData.ftpUserName
+                    ? initFormData.ftpUserName
                     : ""
                 }
               />
-              {formErrors && formErrors.userName && (
-                <span className="text-danger">{formErrors.userName}</span>
+              {formErrors && formErrors.ftpUserName && (
+                <span className="text-danger">{formErrors.ftpUserName}</span>
               )}
             </div>
           </div>
@@ -517,8 +441,8 @@ function MarketPlacePage3(props) {
                 /var/www/html/abc.csv
               </small>
             </div>
-          </div>*/}
-              <div className="col-12">
+          </div>
+          <div className="col-12">
             <label>
               Sync Frequency <span style={{ color: "red" }}>*</span>
             </label>
@@ -640,4 +564,4 @@ function MarketPlacePage3(props) {
   );
 }
 
-export default MarketPlacePage3;
+export default NextCsvConfiguration;

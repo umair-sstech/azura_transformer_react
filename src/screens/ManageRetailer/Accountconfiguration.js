@@ -9,17 +9,21 @@ import { API_PATH } from "../ApiPath/Apipath";
 import Select from "react-select";
 import CsvConfiguration from "./CsvConfigurationHttp";
 import CsvConfigurationSftp from "./CsvConfigurationSftp";
+import NextCsvConfiguration from "./NextCsvConfiguration";
 
 function Accountconfiguration(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const { processCancel, formData, setFormData } = useContext(FormContext);
+  const dropdownOptions = [{ value: "SFTP", label: "SFTP / FTP" }];
 
   const [initFormData, setInitFormData] = useState({
     storeName: "",
     endpointURL: "",
     authorizationToken: "",
   });
+  const [selectedOption, setSelectedOption] = useState(dropdownOptions[0]);
+
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [selectedValue, setSelectedValue] = useState(null);
@@ -116,7 +120,6 @@ function Accountconfiguration(props) {
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-
       const retailerIntegrationId = localStorage.getItem(
         "retailerIntegrationId"
       );
@@ -223,6 +226,8 @@ function Accountconfiguration(props) {
             />
           )}
         </div>
+      ) : marketPlaceSettingName === "Next" ? (
+        <NextCsvConfiguration/>
       ) : (
         <form onSubmit={handleSubmit} name="accountForm">
           <div className="row">

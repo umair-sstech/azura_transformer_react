@@ -220,12 +220,12 @@ export const validateMarketPlaceInfoForm = (formData) => {
 export const validateMarketPlaceProductSync = (formData) => {
   const errors = {};
 
-  const hostName = formData.get("hostName");
-  const userName = formData.get("userName");
-  const password = formData.get("password");
-  const port = formData.get("port");
-  const protocol = formData.get("protocol");
-  const urlPath = formData.get("urlPath");
+  // const hostName = formData.get("hostName");
+  // const userName = formData.get("userName");
+  // const password = formData.get("password");
+  // const port = formData.get("port");
+  // const protocol = formData.get("protocol");
+  // const urlPath = formData.get("urlPath");
   const minute = formData.get("minute");
   const hour = formData.get("hour");
   const day = formData.get("day");
@@ -274,49 +274,49 @@ export const validateMarketPlaceProductSync = (formData) => {
   }
 
 
-  if (!hostName) {
-    errors.hostName = "Host Name is required";
-  } else if (hostName.trim().length === 0) {
-    errors.hostName = "Host Name cannot be whitespace only";
-  } else if (hostName.length > 40) {
-    errors.hostName = "Host Name must be less than or equal to 40 characters";
-  }
+  // if (!hostName) {
+  //   errors.hostName = "Host Name is required";
+  // } else if (hostName.trim().length === 0) {
+  //   errors.hostName = "Host Name cannot be whitespace only";
+  // } else if (hostName.length > 40) {
+  //   errors.hostName = "Host Name must be less than or equal to 40 characters";
+  // }
 
-  if (!userName) {
-    errors.userName = "User Name is required";
-  } else if (userName.trim().length === 0) {
-    errors.userName = "User Name cannot be whitespace only";
-  } else if (userName.length > 40) {
-    errors.userName = "User Name must be less than or equal to 40 characters";
-  }
+  // if (!userName) {
+  //   errors.userName = "User Name is required";
+  // } else if (userName.trim().length === 0) {
+  //   errors.userName = "User Name cannot be whitespace only";
+  // } else if (userName.length > 40) {
+  //   errors.userName = "User Name must be less than or equal to 40 characters";
+  // }
 
-  if (!password) {
-    errors.password = "Password is required";
-  } else if (password.trim().length === 0) {
-    errors.password = "Password cannot be whitespace only";
-  }
+  // if (!password) {
+  //   errors.password = "Password is required";
+  // } else if (password.trim().length === 0) {
+  //   errors.password = "Password cannot be whitespace only";
+  // }
 
-  if (!port) {
-    errors.port = "Port is required";
-  } else if (
-    !/^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))$/gi.test(
-      port
-    )
-  ) {
-    errors.port = "Port must be a number between 1 and 65535";
-  }
+  // if (!port) {
+  //   errors.port = "Port is required";
+  // } else if (
+  //   !/^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))$/gi.test(
+  //     port
+  //   )
+  // ) {
+  //   errors.port = "Port must be a number between 1 and 65535";
+  // }
 
-  if (!protocol) {
-    errors.protocol = "Protocol is required";
-  }
+  // if (!protocol) {
+  //   errors.protocol = "Protocol is required";
+  // }
 
-  if (!urlPath) {
-    errors.urlPath = "URL is required";
-  } else if (urlPath.trim().length === 0) {
-    errors.urlPath = "URL cannot be whitespace only";
-  } else if (!/([a-zA-Z0-9\s_\\.\-\(\):])+\.[^.]+/i.test(urlPath)) {
-    errors.urlPath = "URL must be a valid URL";
-  }
+  // if (!urlPath) {
+  //   errors.urlPath = "URL is required";
+  // } else if (urlPath.trim().length === 0) {
+  //   errors.urlPath = "URL cannot be whitespace only";
+  // } else if (!/([a-zA-Z0-9\s_\\.\-\(\):])+\.[^.]+/i.test(urlPath)) {
+  //   errors.urlPath = "URL must be a valid URL";
+  // }
 
   // if (!productTimeZone) {
   //   errors.productTimeZone = "Please Select TimeZone";

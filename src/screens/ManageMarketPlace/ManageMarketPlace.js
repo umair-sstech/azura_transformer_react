@@ -130,12 +130,12 @@ function ManageMarketPlace(props) {
                 {
                   name: "Integration",
                   navigate: "/integration",
-                  items: ["marketPlaceId", "marketPlaceName"],
+                  items: ["marketPlaceId", "marketPlaceName","currentPage"]
                 },
                 {
                   name: "Market Place List",
                   navigate: "/market-place",
-                  items: ["marketPlaceId", "marketPlaceName"],
+                  items: ["marketPlaceId", "marketPlaceName","currentPage"],
                 },
                 {
                   name: isMarketPlaceAdded
