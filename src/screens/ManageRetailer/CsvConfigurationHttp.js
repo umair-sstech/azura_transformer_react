@@ -11,6 +11,7 @@ function CsvConfiguration(props) {
   const { onSubmit, settingType } = props;
 
   const [isLoading, setIsLoading] = useState(false);
+  const [formLoader, setFormLoader] = useState(false);
   const { processCancel, formData, setFormData } = useContext(FormContext);
   const [initFormData, setInitFormData] = useState({
     bucketName: "",
@@ -154,6 +155,8 @@ function CsvConfiguration(props) {
       id: retailerIntegrationId,
     };
 
+    setFormLoader(true);
+
     axios
       .post(`${API_PATH.GET_ACCOUNT}`, payload)
       .then((response) => {
@@ -174,6 +177,8 @@ function CsvConfiguration(props) {
       })
       .catch((error) => {
         console.error(error);
+      }).finally(() => {
+        setFormLoader(false);
       });
   };
 
@@ -262,6 +267,11 @@ function CsvConfiguration(props) {
             </div>
           </div>
         </div>
+        {formLoader && (
+          <div className="loader-wrapper w-100" style={{ marginTop: "14%" }}>
+            <i className="fa fa-refresh fa-spin"></i>
+          </div>
+        )}
         <div className="col-row mt-3 mt-sm-0">
           <div>
             <label style={{ color: "#49c5b6" }}>

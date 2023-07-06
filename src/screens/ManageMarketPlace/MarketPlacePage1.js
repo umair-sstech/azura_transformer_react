@@ -49,6 +49,7 @@ function MarketPlacePage1(props) {
   const [selectedOpt, setSelectedOpt] = useState(opt[0]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
+  const [marketPlace1Data, setMarketPlace1Data] = useState({});
 
   useEffect(() => {
     if (formData) {
@@ -88,7 +89,12 @@ function MarketPlacePage1(props) {
     const name = selectedOpt ? selectedOpt.value : "";
     setFormErrors({});
     const formData = new FormData(document.forms.myForm);
-    const errors = validateIntegrationInfoForm(formData);
+    let errors = validateIntegrationInfoForm(formData);
+    if(Object.values(marketPlace1Data)?.length !== 0) {
+      if(marketPlace1Data?.logo.includes(".jpg") || marketPlace1Data?.logo.includes(".jpeg") || marketPlace1Data?.logo.includes(".png")) {
+        errors = {};
+      }
+    }
     setFormErrors(errors);
     const prefixName = generatePrefixName(name);
     setPrefixName(prefixName);
@@ -202,6 +208,7 @@ function MarketPlacePage1(props) {
           label: marketPlaceData.type,
         });
         setPrefixName(marketPlaceData.prefixName);
+        setMarketPlace1Data(marketPlaceData);
         setFormData(marketPlaceData);
       })
       .catch((error) => {

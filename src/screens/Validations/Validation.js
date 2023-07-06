@@ -303,7 +303,7 @@ export const validateMarketPlaceProductSync = (formData) => {
       port
     )
   ) {
-    errors.port = "Port must be a number between 1 and 65535";
+    errors.port = "Port must be a number between 0 and 65535";
   }
 
   if (!protocol) {
