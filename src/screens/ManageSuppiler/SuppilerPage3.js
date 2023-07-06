@@ -19,34 +19,34 @@ function SuppilerPage3(props) {
   const { setFormData, processCancel } = useContext(FormContext);
 
   const [options, setOptions] = useState([
-    {
-      value: "",
-      label: "Select",
-      disabled: true,
-    },
+    // {
+    //   value: "",
+    //   label: "Select",
+    //   disabled: false,
+    // },
     {
       value: "do_nothing",
       label: "Do Nothing",
-      disabled: false,
+      // disabled: false,
     },
     {
       value: "hardcode_value",
       label: "Hardcode Value",
-      disabled: false,
+      // disabled: false,
       textbox: true,
     },
     {
       value: "use_AI",
       label: "Use AI",
       textbox: true,
-      disabled: false,
+      // disabled: false,
       message: "{Parent_Title}",
     },
     {
       value: "extract",
       label: "Extract",
       textbox: true,
-      disabled: false,
+      // disabled: false,
     },
   ]);
 
@@ -222,23 +222,28 @@ function SuppilerPage3(props) {
 
             const mapping =
               mappingData.find((item) => item.standardField === key) || {};
-            const filteredImageType = mappingData.filter(data => data.standardField.includes("Image"));
-            const filteredImageList = filteredImageType?.map(data => ({
-              imageList: data.imageList,
-              imageType: data.imageType,
-              standardField: data.standardField
-            })).filter(data => data.imageList !== "");
+            const filteredImageType = mappingData.filter((data) =>
+              data.standardField.includes("Image")
+            );
+            const filteredImageList = filteredImageType
+              ?.map((data) => ({
+                imageList: data.imageList,
+                imageType: data.imageType,
+                standardField: data.standardField,
+              }))
+              .filter((data) => data.imageList !== "");
             const radioValue =
-              selectedRadio[`0-${key}`] &&
-                selectedRadio[`0-${key}`].value
+              selectedRadio[`0-${key}`] && selectedRadio[`0-${key}`].value
                 ? selectedRadio[`0-${key}`].value
                 : mapping.imageType || null;
             if (
               key.startsWith("Image") &&
-              (option.value !== "do_nothing" && option.value !== "hardcode_value" && option.value !== "use_AI" && option.value !== "extract")
+              option.value !== "do_nothing" &&
+              option.value !== "hardcode_value" &&
+              option.value !== "use_AI" &&
+              option.value !== "extract"
             ) {
-              additionalValue =
-                selectedRadio[`${index}-${key}`]?.value || "";
+              additionalValue = selectedRadio[`${index}-${key}`]?.value || "";
               imageType = radioValue || "";
 
               if (additionalTextValue.length === 0) {
@@ -247,14 +252,23 @@ function SuppilerPage3(props) {
               } else {
                 const existingImageList = filteredImageList[index]?.imageList;
                 const updatedImageList = additionalTextValue[0]?.[key]?.e;
-                imageList = updatedImageList !== undefined ? updatedImageList : existingImageList;
+                imageList =
+                  updatedImageList !== undefined
+                    ? updatedImageList
+                    : existingImageList;
                 index++;
               }
               if (imageType !== "folder_only") {
                 imageList = "";
               }
-            } else if (key === "Cost_Price" || key === "Retail_Price" || key === "Suggested_Sell_Price") {
-              additionalValue = selectedOption[key]?.additionalValue ? selectedOption[key].additionalValue : ""
+            } else if (
+              key === "Cost_Price" ||
+              key === "Retail_Price" ||
+              key === "Suggested_Sell_Price"
+            ) {
+              additionalValue = selectedOption[key]?.additionalValue
+                ? selectedOption[key].additionalValue
+                : "";
             } else if (
               option.value === "hardcode_value" ||
               option.value === "use_AI" ||
@@ -274,8 +288,7 @@ function SuppilerPage3(props) {
                 typeof selectedOptions === "object" &&
                 selectedOptions !== null
               ) {
-                supplierExtract =
-                  selectedOptions[0]?.[key]?.supplierExtract;
+                supplierExtract = selectedOptions[0]?.[key]?.supplierExtract;
               } else {
                 supplierExtract = selectedOptions;
               }
@@ -296,18 +309,9 @@ function SuppilerPage3(props) {
         });
       });
 
-      {
-        /*customFieldsData.forEach((customField) => {
-        const mappingObject = {
-          supplierId: localStorage.getItem("supplierId"),
-          supplierName: localStorage.getItem("supplierName"),
-          customFieldName: customField.customFieldName,
-          customValue: customField.customValue,
-          isCustomField: true,
-        };
-        mappingArray.push(mappingObject);
-      });*/
-      }
+      // if (mappingArray.length === 0) {
+      //   return;
+      // }
 
       productRadio.forEach((product) => {
         const additionalValue = selectedRadioPreference || "";
@@ -324,7 +328,7 @@ function SuppilerPage3(props) {
         mappingArray.push(mappingObject);
       });
 
-      const supplierName = localStorage.getItem("supplierName")
+      const supplierName = localStorage.getItem("supplierName");
 
       const staticMappingObj = {
         supplierId: localStorage.getItem("supplierId"),
@@ -333,11 +337,9 @@ function SuppilerPage3(props) {
         standardValue: "",
         supplierField: "hardcode_value",
         additionalValue: supplierName,
-      }
+      };
 
       mappingArray.push(staticMappingObj);
-      // console.log("payload--", mappingArray);
-      // return;
       setIsLoading(true);
       try {
         const response = await axios.post(
@@ -543,7 +545,7 @@ function SuppilerPage3(props) {
           ...csvJSON.map((option) => ({
             value: option,
             label: option,
-            disabled: false,
+            // disabled: false,
           })),
         ];
         const csvJSON1 = supplierData.csvJSON || [];
@@ -1067,7 +1069,13 @@ function SuppilerPage3(props) {
                                       selectedOption
                                     )
                                   }
-                                  isOptionDisabled={(option) => option.disabled}
+                                  // placeholder={
+                                  //   selectedOption &&
+                                  //     selectedOption.value !== ""
+                                  //     ? `Select ${selectedOption.label}`
+                                  //     : "Select..."
+                                  //
+                                  // isOptionDisabled={(option) => option.disabled}
                                   isSearchable={true}
                                   className="select"
                                   styles={{
@@ -1075,6 +1083,7 @@ function SuppilerPage3(props) {
                                       return {
                                         ...styles,
                                         background: data.color,
+                                        // background: getOptionsIndex?.indexOf(data.index) !== -1 ? data.color : "transparent",
                                       };
                                     },
                                   }}

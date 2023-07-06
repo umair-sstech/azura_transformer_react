@@ -116,7 +116,7 @@ function ApiLogs(props) {
                         <tr key={apiLog._id} className="custom-border-table">
                           <td>{startIndex + idx}</td>
                           <td>{apiLog.method}</td>
-                          <td style={{ whiteSpace: "pre-wrap" }}>
+                          <td style={{ whiteSpace: "pre-wrap", maxWidth: "400px" }}>
                             {apiLog.url}
                           </td>
                           <td>{apiLog.statusCode}</td>

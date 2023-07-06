@@ -165,6 +165,10 @@ function PriceCalculation(props) {
         return toast.error("Please select Price.");
       }
 
+      if(selectedRadioOption[0] === null) {
+        return toast.error("Round up Amount is required.");
+      }
+
         const checkNegativeValue = checkAnyValueIsNegative(payload);
         if (checkNegativeValue) {
           return toast.error("Values can not be negative.");
