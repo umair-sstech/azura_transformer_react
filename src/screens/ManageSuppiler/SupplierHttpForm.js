@@ -24,6 +24,7 @@ function SupplierHttpForm(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [syncFrequency, setSyncFrequency] = useState("");
+  const [formLoader, setFormLoader] = useState(false);
 
   const history = useHistory();
 
@@ -70,86 +71,86 @@ function SupplierHttpForm(props) {
   //   setIsFormValid(Object.keys(errors).length === 0);
   // };
 
-const handleSyncFrequency = (e) => {
-  const { name, value, type } = e.target;
-  const trimmedValue = type === "text" ? value.trim() : value;
+  const handleSyncFrequency = (e) => {
+    const { name, value, type } = e.target;
+    const trimmedValue = type === "text" ? value.trim() : value;
 
-  let formattedValue = trimmedValue;
+    let formattedValue = trimmedValue;
 
-  if (/^[1-9]$/.test(trimmedValue)) {
-    formattedValue = `0${trimmedValue}`;
-  }
+    if (/^[1-9]$/.test(trimmedValue)) {
+      formattedValue = `0${trimmedValue}`;
+    }
 
-  setInitFormData((prevState) => ({
-    ...prevState,
-    [name]: formattedValue,
-  }));
+    setInitFormData((prevState) => ({
+      ...prevState,
+      [name]: formattedValue,
+    }));
 
-  const updatedSyncFrequency =syncFrequency? syncFrequency.split(" "):[];
-  let error = "";
+    const updatedSyncFrequency = syncFrequency ? syncFrequency.split(" ") : [];
+    let error = "";
 
-  switch (name) {
-    case "minute":
-      if (
-        !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
-        trimmedValue.length > 100
-      ) {
-        error = "Minute must contain only digits or '*'";
-      }
-      updatedSyncFrequency[0] = trimmedValue;
-      break;
+    switch (name) {
+      case "minute":
+        if (
+          !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
+          trimmedValue.length > 100
+        ) {
+          error = "Minute must contain only digits or '*'";
+        }
+        updatedSyncFrequency[0] = trimmedValue;
+        break;
 
-    case "hour":
-      if (
-        !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
-        trimmedValue.length > 100
-      ) {
-        error = "Hour must contain only digits or '*'";
-      }
-      updatedSyncFrequency[1] = trimmedValue;
-      break;
+      case "hour":
+        if (
+          !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
+          trimmedValue.length > 100
+        ) {
+          error = "Hour must contain only digits or '*'";
+        }
+        updatedSyncFrequency[1] = trimmedValue;
+        break;
 
-    case "day":
-      if (
-        !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
-        trimmedValue.length > 100
-      ) {
-        error = "Day(Month) must contain only digits or '*'";
-      }
-      updatedSyncFrequency[2] = trimmedValue;
-      break;
+      case "day":
+        if (
+          !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
+          trimmedValue.length > 100
+        ) {
+          error = "Day(Month) must contain only digits or '*'";
+        }
+        updatedSyncFrequency[2] = trimmedValue;
+        break;
 
-    case "month":
-      if (
-        !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
-        trimmedValue.length > 100
-      ) {
-        error = "Month must contain only digits or '*'";
-      }
-      updatedSyncFrequency[3] = trimmedValue;
-      break;
+      case "month":
+        if (
+          !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
+          trimmedValue.length > 100
+        ) {
+          error = "Month must contain only digits or '*'";
+        }
+        updatedSyncFrequency[3] = trimmedValue;
+        break;
 
-    case "week":
-      if (
-        !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
-        trimmedValue.length > 100
-      ) {
-        error = "Day(Week) must contain only digits or '*'";
-      }
-      updatedSyncFrequency[4] = trimmedValue;
-      break;
+      case "week":
+        if (
+          !/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(trimmedValue) ||
+          trimmedValue.length > 100
+        ) {
+          error = "Day(Week) must contain only digits or '*'";
+        }
+        updatedSyncFrequency[4] = trimmedValue;
+        break;
 
-    default:
-      break;
-  }
+      default:
+        break;
+    }
 
-  setFormErrors((prevErrors) => ({
-    ...prevErrors,
-    [name]: error,
-  }));
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: error,
+    }));
 
-  setSyncFrequency(updatedSyncFrequency.join(" "));
-};
+    setSyncFrequency(updatedSyncFrequency.join(" "));
+  };
 
 
   const handleInputChange = (e) => {
@@ -285,6 +286,7 @@ const handleSyncFrequency = (e) => {
     const supplierId = localStorage.getItem("supplierId");
 
     if (supplierId) {
+      setFormLoader(true);
       axios
         .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
         .then((response) => {
@@ -298,6 +300,8 @@ const handleSyncFrequency = (e) => {
         })
         .catch((error) => {
           console.log("error", error);
+        }).finally(() => {
+          setFormLoader(false);
         });
     }
   };
@@ -344,6 +348,11 @@ const handleSyncFrequency = (e) => {
               </div>
             </div>
           </div>
+          {formLoader && (
+            <div className="loader-wrapper">
+              <i className="fa fa-refresh fa-spin"></i>
+            </div>
+          )}
           <div className="row mt-3 mt-sm-0">
             <div className="col-12">
               <div className="form-group">

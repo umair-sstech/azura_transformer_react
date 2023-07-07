@@ -38,6 +38,7 @@ function SupplierSftpForm(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
   const [syncFrequency, setSyncFrequency] = useState("");
+  const [formLoader, setFormLoader] = useState(false);
 
   useEffect(() => {
     if (formData) {
@@ -53,6 +54,7 @@ function SupplierSftpForm(props) {
     const supplierId = localStorage.getItem("supplierId");
 
     if (supplierId) {
+      setFormLoader(true);
       axios
         .get(`${API_PATH.GET_IMPORT_SETTING_DATA_BY_ID}=${supplierId}`)
         .then((response) => {
@@ -77,6 +79,8 @@ function SupplierSftpForm(props) {
         })
         .catch((error) => {
           console.log("error", error);
+        }).finally(() => {
+          setFormLoader(false);
         });
     }
   }, []);
@@ -384,6 +388,11 @@ function SupplierSftpForm(props) {
               </div>
             </div>
           </div>
+          {formLoader && (
+            <div className="loader-wrapper">
+              <i className="fa fa-refresh fa-spin"></i>
+            </div>
+          )}
           <div className="row mt-3 mt-sm-0">
             <div className="col-12">
               <div className="form-group">
