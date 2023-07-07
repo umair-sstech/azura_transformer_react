@@ -1,39 +1,38 @@
 .table-class table {
-    border-collapse: collapse;
-    width: auto;
-    margin: 20px 0;
-    border: 1px solid #ccc;
-  }
-  .table-class table td:nth-child(1) {
-    width: 17%;
-  }
-  .table-class table td:nth-child(2) {
-    width: 16%;
-  }
-  
-  .table-class table td:nth-child(3) {
-    width: 17%;
-  }
-  
-  .table-class table td:nth-child(4) {
-    width: 25%;
-  }
-  
-  
-  td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
-    width: 41%;
-  }
-  
-  th {
-    border: 1px solid #ccc;
-    background-color: #eee;
-    padding: 10px;
-  }
+  border-collapse: collapse;
+  width: auto;
+  margin: 20px 0;
+  border: 1px solid #ccc;
+}
+.table-class table td:nth-child(1) {
+  width: 17%;
+}
+.table-class table td:nth-child(2) {
+  width: 16%;
+}
 
-.table.product-table.table{
+.table-class table td:nth-child(3) {
+  width: 17%;
+}
+
+.table-class table td:nth-child(4) {
+  width: 25%;
+}
+
+td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+  width: 41%;
+}
+
+th {
+  border: 1px solid #ccc;
+  background-color: #eee;
+  padding: 10px;
+}
+
+.table.product-table.table {
   border-collapse: collapse;
   margin: 20px 60px;
   border: 1px solid #ccc;
@@ -63,10 +62,10 @@
 }
 
 .checkbox-size input[type="checkbox"] {
-  margin-right: 9px; 
+  margin-right: 9px;
 }
 
-.price-calc-card.card-body{
+.price-calc-card.card-body {
   padding: 10px !important;
 }
 
@@ -76,7 +75,7 @@
 }
 
 .price__input__height {
-  height: 33px !important; 
+  height: 33px !important;
 }
 
 .temp .css-13cymwt-control {
@@ -124,7 +123,10 @@ span.text-danger.valiadtion {
   text-align: center;
   font-size: 1rem;
 }
-
+.next-csv-setting {
+  font-weight: 400;
+  font-size: 13.5px;
+}
 @media screen and (max-width: 360px) {
   .btn-lg {
     padding: 5px !important;

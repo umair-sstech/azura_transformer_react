@@ -23,7 +23,6 @@ function Accountconfiguration(props) {
     authorizationToken: "",
   });
   const [selectedOption, setSelectedOption] = useState(dropdownOptions[0]);
-
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [selectedValue, setSelectedValue] = useState(null);
@@ -158,6 +157,7 @@ function Accountconfiguration(props) {
         });
     }
   };
+
   const options = [
     { value: "HTTP", label: "HTTP / S3 BUCKET" },
     { value: "SFTP", label: "SFTP / FTP" },
@@ -227,7 +227,9 @@ function Accountconfiguration(props) {
           )}
         </div>
       ) : marketPlaceSettingName === "Next" ? (
-        <NextCsvConfiguration/>
+        <>
+            <NextCsvConfiguration />
+        </>
       ) : (
         <form onSubmit={handleSubmit} name="accountForm">
           <div className="row">

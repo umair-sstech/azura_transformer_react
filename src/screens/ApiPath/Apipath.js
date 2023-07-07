@@ -51,6 +51,7 @@ export const API_PATH = {
   GET_RETAILER_MARKETPLACE: `${API_RETAILER_URL}/getMarketplaceList`,
   CREATE_RETAILER_MARKETPLACE: `${API_RETAILER_URL}/createOrUpdateRetailerMarketplace`,
   CREATE_CSV_CONFIGURATION:`${API_RETAILER_URL}/createOrUpdateRetailerExportCSVConfig`,
+  CREATE_NEXT_CSV_CONFIGURATION:`${API_RETAILER_URL}/createOrUpdateRetailerNextConfig`,
   GET_RETAILER_PRICE_LIST: `${API_RETAILER_URL}/getPriceList`,
   CREATE_RETAILER_PRICE: `${API_RETAILER_URL}/createOrUpdateRetailerPriceCalculation`,
   GET_RETAILER_PRODUCT: `${API_RETAILER_URL}/getSupplierProduct`,

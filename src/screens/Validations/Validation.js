@@ -273,7 +273,6 @@ export const validateMarketPlaceProductSync = (formData) => {
     errors.week = "Please Enter Week between 100 characters";
   }
 
-
   // if (!hostName) {
   //   errors.hostName = "Host Name is required";
   // } else if (hostName.trim().length === 0) {
@@ -788,12 +787,13 @@ export const validateSftpFtp = (formData) => {
   const password = formData.get("password");
   const port = formData.get("port");
   const protocol = formData.get("protocol");
-  const minute = formData.get("minute");
-  const hour = formData.get("hour");
-  const day = formData.get("day");
-  const month = formData.get("month");
-  const week = formData.get("week");
   const urlPath = formData.get("urlPath");
+  const orderHostName = formData.get("orderHostName");
+  const orderFtpUserName = formData.get("orderFtpUserName");
+  const orderPassword = formData.get("orderPassword");
+  const orderPort = formData.get("orderPort");
+  const orderProtocol = formData.get("orderProtocol");
+  const orderUrlPath = formData.get("orderUrlPath");
 
   if (!hostName) {
     errors.hostName = "Host Name is Required.";
@@ -815,46 +815,6 @@ export const validateSftpFtp = (formData) => {
     errors.password = "Password must be less than 50 characters";
   }
 
-  if (!minute) {
-    errors.minute = "Minute is required";
-  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(minute)) {
-    errors.minute = "Minute must contain only digits or '*'";
-  } else if (minute.length > 100) {
-    errors.minute = "Please Enter Minute between 100 characters";
-  }
-
-  if (!hour) {
-    errors.hour = "Hour is required";
-  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(hour)) {
-    errors.hour = "Hour must contain only digits or '*'";
-  } else if (hour.length > 100) {
-    errors.hour = "Please Enter Hour between 100 characters";
-  }
-
-  if (!day) {
-    errors.day = "Day(Month) is required";
-  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(day)) {
-    errors.day = "Day must contain only digits or '*'";
-  } else if (day.length > 100) {
-    errors.day = "Please Enter Day between 100 characters";
-  }
-
-  if (!month) {
-    errors.month = "Minute is required";
-  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(month)) {
-    errors.month = "Month must contain only digits or '*'";
-  } else if (month.length > 100) {
-    errors.month = "Please Enter Month between 100 characters";
-  }
-
-  if (!week) {
-    errors.week = "Day(Week) is required";
-  } else if (!/^(?:\d+|\*)+(?:\/(?:\d+|\*)+)*$/.test(week)) {
-    errors.week = "Week must contain only digits or '*'";
-  } else if (week.length > 100) {
-    errors.week = "Please Enter Week between 100 characters";
-  }
-
   if (!protocol) {
     errors.protocol = "Protocol is required";
   }
@@ -868,6 +828,41 @@ export const validateSftpFtp = (formData) => {
     errors.urlPath = "URL cannot be whitespace only";
   } else if (!/([a-zA-Z0-9\s_\\.\-\(\):])+\.[^.]+/i.test(urlPath)) {
     errors.urlPath = "URL must be a valid URL";
+  }
+
+  if (!orderHostName) {
+    errors.orderHostName = "Host Name is Required.";
+  } else if (orderHostName.trim().length === 0) {
+    errors.orderHostName = "Host name can not be whitespace only";
+  }
+
+  if (!orderFtpUserName) {
+    errors.orderFtpUserName = "UserName is Required.";
+  } else if (orderFtpUserName.trim().length === 0) {
+    errors.orderFtpUserName = "User name can not be whitespace only";
+  }
+
+  if (!orderPassword) {
+    errors.orderPassword = "Password is required.";
+  } else if (orderPassword.trim().length === 0) {
+    errors.orderPassword = "Password can not be whitespace only";
+  } else if (orderPassword.length > 50) {
+    errors.orderPassword = "Password must be less than 50 characters";
+  }
+
+  if (!orderProtocol) {
+    errors.orderProtocol = "Protocol is required";
+  }
+
+  if (!orderPort) {
+    errors.orderPort = "Port number is Required";
+  }
+  if (!orderUrlPath) {
+    errors.orderUrlPath = "URL is required";
+  } else if (orderUrlPath.trim().length === 0) {
+    errors.orderUrlPath = "URL cannot be whitespace only";
+  } else if (!/([a-zA-Z0-9\s_\\.\-\(\):])+\.[^.]+/i.test(orderUrlPath)) {
+    errors.orderUrlPath = "URL must be a valid URL";
   }
 
   return errors;
