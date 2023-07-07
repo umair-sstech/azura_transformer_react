@@ -35,7 +35,7 @@ const ProductImages = () => {
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">
-              <Card.Body className="d-flex justify-content-center">
+              <Card.Body className="d-flex justify-content-center flex-wrap">
                 {imageCount > 0 ? imageKeys
                   .filter(key => product[key])
                   .map(key => (

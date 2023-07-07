@@ -38,7 +38,7 @@ const VariantImages = () => {
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="0" className="card-body">
-              <Card.Body className="d-flex justify-content-center">
+              <Card.Body className="d-flex justify-content-center flex-wrap">
              {variantImageUrls?.length > 0 ? variantImageUrls.map((imageUrl, index) => (
               <>
               <div className="image-box-variant">
