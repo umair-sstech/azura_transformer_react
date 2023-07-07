@@ -30,7 +30,7 @@ function IntegratorInfo(props) {
     { value: "TMS", label: "TMS", isDisabled: true },
     { value: "WMS", label: "WMS", isDisabled: true },
   ];
-  const opt = [{ value: "Flaxpoint", label: "Flaxpoint" }];
+  const opt = [{ value: "Flxpoint", label: "Flxpoint" }];
   const [initFormData, setInitFormData] = useState({
     prefixName: "",
     name: "",
