@@ -11,16 +11,33 @@ function SuppilerPage4(props) {
   const { setPage } = props;
   const { processCancel, setFormData } = useContext(FormContext);
   const history = useHistory();
-  const imageSize = ["762x1100", "1200x1600", "1000x1000", "1600x2000","1500x1500"];
   useEffect(() => {
     getSupplierDataById();
+    getImageSizes();
   }, []);
   const [selectedSizes, setSelectedSizes] = useState([]);
+  const [imageSize, setImageSize] = useState([]);
   const [formErrors, setFormErrors] = useState({});
   const [prefix, setPrefix] = useState("");
   const [suffix, setSuffix] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
+  const [formLoader, setFormLoader] = useState(false);
+
+  const getImageSizes = async () => {
+    try {
+      setFormLoader(true);
+      const images = await axios.get(`${API_PATH.GET_ALL_IMAGE_SIZES}`);
+      const { data } = images;
+      if (data.success) {
+        setImageSize(data.data);
+      }
+    } catch (error) {
+      console.log("catch", error);
+    } finally {
+      setFormLoader(false);
+    }
+  }
 
   const handleParentCheckboxChange = (e) => {
     const childCheckboxes = document.querySelectorAll(
@@ -139,7 +156,7 @@ function SuppilerPage4(props) {
           toast.success(message);
           localStorage.removeItem("supplierId");
           localStorage.removeItem("supplierName");
-        localStorage.removeItem("currentPage")
+          localStorage.removeItem("currentPage")
 
           history.push("/supplier");
         } else {
@@ -212,6 +229,11 @@ function SuppilerPage4(props) {
             </div>
           </div>
         </div>
+        {formLoader && (
+          <div className="loader-wrapper">
+            <i className="fa fa-refresh fa-spin"></i>
+          </div>
+        )}
         <div className="supplier4__container">
           <div>
             {formErrors.checkbox && (
@@ -226,6 +248,7 @@ function SuppilerPage4(props) {
                         type="checkbox"
                         id="parent-checkbox"
                         onChange={handleParentCheckboxChange}
+                        checked={selectedSizes?.length === imageSize?.length}
                       />
                       <label htmlFor="parent-checkbox"></label>
                     </div>
@@ -234,7 +257,7 @@ function SuppilerPage4(props) {
                 </tr>
               </thead>
               <tbody className="image-size-list">
-                {imageSize.map((size, index) => (
+                {imageSize?.map((size, index) => (
                   <tr key={index} className="custom-border-table">
                     <td>
                       <div className="checkbox-container">

@@ -10,15 +10,16 @@ import { API_PATH } from '../ApiPath/Apipath';
 
 
 function ExportChannel(props) {
-  const {setPage}=props
+  const { setPage } = props
   const {
     processCancel,
   } = useContext(FormContext);
   const [selectedOptions, setSelectedOptions] = useState([]);
-  const [channel,setChannel]=useState([])
+  const [channel, setChannel] = useState([])
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingExit, setIsLoadingExit] = useState(false);
-  const history=useHistory()
+  const [formLoader, setFormLoader] = useState(false);
+  const history = useHistory()
 
 
   useEffect(() => {
@@ -29,7 +30,7 @@ function ExportChannel(props) {
   const handleSelectChange = (selectedOptions) => {
     setSelectedOptions(selectedOptions);
   };
-  
+
   const getMarketPlaceList = () => {
     try {
       axios
@@ -53,8 +54,9 @@ function ExportChannel(props) {
       console.log(error);
     }
   };
-  
+
   const getRetailerIntegrationData = () => {
+    setFormLoader(true);
     try {
       const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
       axios
@@ -71,6 +73,8 @@ function ExportChannel(props) {
         })
         .catch((error) => {
           console.error("Failed to retrieve retailer integration data:", error);
+        }).finally(() => {
+          setFormLoader(false);
         });
     } catch (error) {
       console.log(error);
@@ -79,14 +83,14 @@ function ExportChannel(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-  const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+    const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
 
     const payload = {
       id: retailerIntegrationId,
       marketPlaceId: selectedOptions.value
     };
-    
-    if(!payload.marketPlaceId) {
+
+    if (!payload.marketPlaceId) {
       toast.error("Must select atleast one account.")
       return;
     }
@@ -96,8 +100,8 @@ function ExportChannel(props) {
         const { success, message } = response.data;
         if (success) {
           toast.success(message);
-          localStorage.setItem("marketPlaceSettingId",selectedOptions.value)
-          localStorage.setItem("marketPlaceSettingName",selectedOptions.label)
+          localStorage.setItem("marketPlaceSettingId", selectedOptions.value)
+          localStorage.setItem("marketPlaceSettingName", selectedOptions.label)
 
           setPage(7)
         } else {
@@ -112,21 +116,21 @@ function ExportChannel(props) {
         setIsLoading(false);
       });
   };
-  
- const handleOnClick=async(e)=>{
-  e.preventDefault()
-  const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
+
+  const handleOnClick = async (e) => {
+    e.preventDefault()
+    const retailerIntegrationId = localStorage.getItem("retailerIntegrationId");
 
     const payload = {
       id: retailerIntegrationId,
       marketPlaceId: selectedOptions.value
     };
-    if(!payload.marketPlaceId) {
+    if (!payload.marketPlaceId) {
       toast.error("Must select atlease one account.")
       return;
     }
     setIsLoadingExit(true);
-  
+
     axios.post(`${API_PATH.CREATE_RETAILER_MARKETPLACE}`, payload)
       .then(response => {
         const { success, message } = response.data;
@@ -134,7 +138,7 @@ function ExportChannel(props) {
           localStorage.removeItem("supplierSettingId");
           localStorage.removeItem("selectedSupplierName");
           localStorage.removeItem("retailerIntegrationId");
-        localStorage.removeItem("currentPage");
+          localStorage.removeItem("currentPage");
 
           toast.success(message);
           history.push("/setting-retailer-list")
@@ -149,8 +153,8 @@ function ExportChannel(props) {
       .finally(() => {
         setIsLoadingExit(false);
       });
- }
-  
+  }
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -189,15 +193,20 @@ function ExportChannel(props) {
             </div>
           </div>
         </div>
+        {formLoader && (
+          <div className="loader-wrapper">
+            <i className="fa fa-refresh fa-spin"></i>
+          </div>
+        )}
         <div className="row mt-3 mt-sm-0">
           <div className="col-12">
             <label>Type of Integration</label>
             <Select
-            options={channel}
-            onChange={handleSelectChange}
-            value={selectedOptions}
-            placeholder="Select accounts"
-          />
+              options={channel}
+              onChange={handleSelectChange}
+              value={selectedOptions}
+              placeholder="Select accounts"
+            />
           </div>
         </div>
       </form>

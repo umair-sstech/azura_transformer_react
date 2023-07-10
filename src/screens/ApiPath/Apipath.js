@@ -30,6 +30,7 @@ export const API_PATH = {
   GET_SYNC_SETTING:`${API_BASE_URL}/integration/getMarketplaceIntegratorSyncSetting`,
   CHANGE_SUPPLIER_STATUS: `${API_BASE_URL}/integration/changeIntegrationStatus`,
   GET_SUPPLIER_FILE_MAPPING: `${API_BASE_URL}/Integration/getSupplierFields?supplierId`,
+  GET_ALL_IMAGE_SIZES: `${API_BASE_URL}/integration/getAllImageSize`,
 
   GET_PRODUCT_CATALOG: `${PRODUCT_API_URL}/product/getStanderdProductCatalog`,
   GET_FILE_UPLOAD:`${PRODUCT_API_URL}/product/getFileList`,
