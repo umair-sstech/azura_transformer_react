@@ -821,7 +821,14 @@ export const validateSftpFtp = (formData) => {
 
   if (!port) {
     errors.port = "Port number is Required";
+  } else if (
+    !/^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))$/gi.test(
+      port
+    )
+  ) {
+    errors.port = "Port must be a number between 0 and 65535";
   }
+
   if (!urlPath) {
     errors.urlPath = "URL is required";
   } else if (urlPath.trim().length === 0) {
@@ -856,7 +863,14 @@ export const validateSftpFtp = (formData) => {
 
   if (!orderPort) {
     errors.orderPort = "Port number is Required";
+  } else if (
+    !/^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))$/gi.test(
+      orderPort
+    )
+  ) {
+    errors.orderPort = "Port must be a number between 0 and 65535";
   }
+
   if (!orderUrlPath) {
     errors.orderUrlPath = "URL is required";
   } else if (orderUrlPath.trim().length === 0) {

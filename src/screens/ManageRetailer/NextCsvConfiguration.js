@@ -31,6 +31,7 @@ function NextCsvConfiguration(props) {
   const [isFormValid, setIsFormValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState(dropdownOptions[0]);
+  const [formLoader, setFormLoader] = useState(false);
 
   const history = useHistory();
   const option = [
@@ -38,11 +39,11 @@ function NextCsvConfiguration(props) {
     { value: "FTP", label: "FTP" },
   ];
 
-  useEffect(() => {
-    if (formData) {
-      setInitFormData(formData);
-    }
-  }, [props]);
+  // useEffect(() => {
+  //   if (formData) {
+  //     setInitFormData(formData);
+  //   }
+  // }, [props]);
 
   useEffect(() => {
     setIsFormValid(Object.keys(formErrors).length === 0);
@@ -76,7 +77,7 @@ function NextCsvConfiguration(props) {
     setInitFormData({ ...initFormData, protocol });
     handleChange("protocol", protocol);
   };
-  const orderProtocolChange=(selectedOption)=>{
+  const orderProtocolChange = (selectedOption) => {
     const orderProtocol = selectedOption.value;
     setInitFormData({ ...initFormData, orderProtocol });
     handleChange("orderProtocol", orderProtocol);
@@ -135,6 +136,8 @@ function NextCsvConfiguration(props) {
       id: retailerIntegrationId,
     };
 
+    setFormLoader(true);
+
     axios
       .post(`${API_PATH.GET_ACCOUNT}`, payload)
       .then((response) => {
@@ -159,6 +162,8 @@ function NextCsvConfiguration(props) {
       })
       .catch((error) => {
         console.error(error);
+      }).finally(() => {
+        setFormLoader(false);
       });
   };
   return (
@@ -191,6 +196,12 @@ function NextCsvConfiguration(props) {
             </div>
           </div>
         </div>
+
+        {formLoader && (
+          <div className="loader-wrapper">
+            <i className="fa fa-refresh fa-spin"></i>
+          </div>
+        )}
 
         <Accordion defaultActiveKey="0" className="accordian__main">
           <Card>
@@ -333,6 +344,7 @@ function NextCsvConfiguration(props) {
                           value={option.find(
                             (option) => option.value === initFormData.protocol
                           )}
+                          menuPlacement="top"
                         />
                         {formErrors.protocol && (
                           <span className="text-danger next-csv-setting">
@@ -520,6 +532,7 @@ function NextCsvConfiguration(props) {
                             (option) =>
                               option.value === initFormData.orderProtocol
                           )}
+                          menuPlacement="top"
                         />
                         {formErrors.orderProtocol && (
                           <span className="text-danger next-csv-setting">
