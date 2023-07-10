@@ -94,6 +94,7 @@ import ApiLogs from "./screens/Logs/ApiLogs";
 import Profile from "./screens/Profile/Profile";
 import { UserProvider } from "./context/UserContext";
 import UploadFailedData from "./screens/products/UploadFailedData";
+import ExportCsv from "./screens/ExportCsv/ExportCsv";
 window.__DEV__ = true;
 
 class App extends React.Component {
@@ -365,6 +366,12 @@ class App extends React.Component {
                   <Route exact path={`/upload-failed-data`} component={UploadFailedData} />
 
 
+                </>
+              ) : null}
+
+              {this.props.user?.data.role === "SUPER_ADMIN" ? (
+                <>
+                  <Route exact path={`/exportcsv`} component={ExportCsv} />
                 </>
               ) : null}
 

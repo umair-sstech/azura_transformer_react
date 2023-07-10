@@ -808,6 +808,30 @@ class NavbarMenu extends React.Component {
                         </ul>
                       </li>
 
+                      <li className="" id="exportCsvDropDown">
+                        <a
+                          href="#!"
+                          className="has-arrow"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            this.activeMenutabContainer("exportCsvDropDown");
+                          }}
+                        >
+                          <i className="fa fa-file"></i> <span>Export</span>
+                        </a>
+                        <ul className="collapse">
+                          {this.props.user?.data.role === "SUPER_ADMIN" ? (
+                            <li
+                              className={
+                                activeKey === "dashboard" ? "active" : ""
+                              }
+                            >
+                              <Link to="/exportcsv">Scan Order</Link>
+                            </li>
+                          ) : null}
+                        </ul>
+                      </li>
+
                       {/* <li className="" id="reportDropDown">
                     <a
                       href="#!"

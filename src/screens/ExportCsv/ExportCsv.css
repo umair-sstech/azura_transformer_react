@@ -1,0 +1,28 @@
+.csv__header {
+    display: flex;
+    align-items: center;
+}
+.csv__header span {
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 9px;
+}
+.csv__header > input {
+    flex: 1;
+}
+.search__input {
+    outline: none;
+    padding: 8px 15px;
+    border: 1px solid lightgray;
+}
+.csv__header button {
+    padding: 9px;
+    width: 100px;
+    border: none;
+    background-color: #49c5b6;
+    color: white;
+}
+
+.csv__header button:hover {
+    background-color: #2f8b7f;
+}
