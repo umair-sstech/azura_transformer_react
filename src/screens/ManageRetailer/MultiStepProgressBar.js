@@ -66,9 +66,9 @@ const MultiStepProgressBar = ({ page, onPageNumberClick, setPage }) => {
                     accomplished ? "accomplished" : null
                   }`}
                   onClick={() => {
-                    // if (page > index + 1) {
+                    if (page > index + 1) {
                       setPage(index + 1);
-                    // }
+                    }
                   }}
                 ></div>
               )}
