@@ -6,7 +6,7 @@ const stepNames = [
   "Market Place Info",
   // "Category Mapping",
   "Product Sync Settings",
-  "Order Settings",
+  "Order Sync Settings",
   // "Tracking Settings",
   // "Extra Settings",
 ];
